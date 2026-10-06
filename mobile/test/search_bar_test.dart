@@ -12,7 +12,7 @@ void main() {
   late PlaceSearch search;
 
   Future<void> mount(WidgetTester tester, SearchFn fn) async {
-    trip = TripState();
+    trip = TripState((from, to, mode) async => throw UnimplementedError('no route fetch without a start'));
     search = PlaceSearch(fn, delay: const Duration(milliseconds: 10));
     await tester.pumpWidget(
       MaterialApp(home: Scaffold(body: PlaceSearchBar(search: search, trip: trip))),

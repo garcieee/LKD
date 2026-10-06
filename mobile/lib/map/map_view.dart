@@ -38,7 +38,7 @@ class MapView extends StatefulWidget {
 class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   final _layers = LayersState();
   final _location = LocationState();
-  final _trip = TripState();
+  final _trip = TripState((from, to, mode) => api.route(from: from, to: to, mode: mode));
   late final _search = PlaceSearch((text, near) => api.geocode(text, near: near));
   MapboxMap? _map;
   Timer? _timer;
