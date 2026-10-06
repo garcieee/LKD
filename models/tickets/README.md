@@ -6,11 +6,11 @@ Everything that decides **what a report is**, **whether it is the same place as 
 |---|---|
 | `settings.py` | What are all the tunable numbers? (weights, radii, floors, bands) |
 | `types.py` | What shape is a Report, a Ticket, a Breakdown? |
-| `engine.py` | The only door: submit a report, vote, change status, list ranked tickets, nearby tickets |
+| `engine.py` | The only door: `attach` one report, `sync_once` for the server's loop (see `ATTACH.md`) |
 | `matching/` | Is this the same place? |
 | `ranking/` | What do we fix first, and why? |
 | `classification/` | What is it, how urgent, who fixes it? |
-| `storage/` | The memory: the JSON inbox and the SQLite database (code). The only folder that touches disk; it reads and writes the top-level `db/` |
+| `storage/` | The memory: Supabase Postgres, written by the server only. The only folder that touches a database |
 | `resources/` | Static inputs: word lists, nearby places, offices |
 | `sim/` | The experiments behind the numbers in `settings.py` |
 | `eval/` | Datasets, metrics, splits and the evaluations of every model here. See `EVALUATION.md` |
@@ -23,7 +23,7 @@ Everything that decides **what a report is**, **whether it is the same place as 
 3. Imports go one way: rules, then storage, then engine, then server.
 4. Every tunable number is in `settings.py`. Nothing hides in the code.
 5. The dashboard and the phone never score, rank or merge. They display what `/tickets` returns.
-6. Runtime data (inbox, database, photos) lives in the top-level `db/` folder, which is git-ignored. `db/` is data only; the code that uses it is `storage/`.
+6. The cache (`reports.json`) and the photos live in the top-level `db/` folder, which is git-ignored, and belong to the server. Long-term memory is Supabase Postgres, behind row level security (`supabase/`).
 7. Additive only: `/reports` keeps its URL and shape and only gains fields, and a ticket reuses its first report's id, so nothing the dashboard, the phone or the routing code reads today breaks.
 
 ## Tuning
@@ -36,4 +36,4 @@ Edit `settings.py`, run the tests. The weights are judgment calls: show a few pe
 
 **Evaluated:** see the Results section of `EVALUATION.md` for what met its targets, what missed, and the decisions waiting for the team. Nothing in the rules or `settings.py` was changed because of it.
 
-**Not built:** `engine.py` and `storage/` are still stubs, so the server does not call any of this yet and `/reports` behaves as before.
+**Not built:** `engine.py` and `storage/` are scaffolds, so the server does not call any of this yet and `/reports` behaves as before. The plan to attach them, the Supabase part and the district logins is `ATTACH.md`.
