@@ -19,10 +19,10 @@ final _layer = {
   'minzoom': 15,
   'paint': {
     // Darker than light-v11's near-white ground, or the blocks vanish into it.
-    'fill-extrusion-color': '#bab6b0', // 10% darker than the first try, for a firmer block
+    'fill-extrusion-color': '#cfcac4',
     'fill-extrusion-height': ['case', ['>', _height, 0], _height, 10],
     'fill-extrusion-base': ['to-number', ['get', 'min_height'], 0],
-    'fill-extrusion-opacity': 1,
+    'fill-extrusion-opacity': 0.8,
     'fill-extrusion-vertical-gradient': true, // walls darken towards the ground
   },
 };
