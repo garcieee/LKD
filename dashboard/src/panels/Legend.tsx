@@ -16,7 +16,7 @@ export default function Legend() {
         <span>Free flow</span>
         <span>Standstill</span>
       </div>
-      <div className="legend-note">Speed against free-flow speed · TomTom</div>
+      <div className="legend-note">Speed vs free flow · Traffic © TomTom</div>
     </div>
   );
 }

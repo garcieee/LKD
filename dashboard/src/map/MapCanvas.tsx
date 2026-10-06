@@ -34,7 +34,6 @@ export default function MapCanvas({ congestionOn, stamp }: Props) {
     // Default (responsive) attribution: full text on desktop, so "Traffic © TomTom"
     // stays readable; Mapbox collapses it below 640px.
     map.current.addControl(new mapboxgl.AttributionControl(), "bottom-right");
-    (window as unknown as { __map: mapboxgl.Map }).__map = map.current; // TEMP-DEV-HOOK remove before finishing
     // The lock follows the viewport's shape: redo it, and re-frame the city, when that changes.
     map.current.on("resize", () => {
       const b = lockBounds(el.clientWidth, el.clientHeight);
