@@ -97,6 +97,14 @@ def test_an_sos_never_merges_and_tops_the_queue():
     assert (a2.ticket["priority"], a2.ticket["band"]) == (100.0, "Critical") and a2.ticket["breakdown"]["sos"]
 
 
+def test_an_sos_brings_the_kind_its_report_has_and_a_hazard_has_no_kind_at_all():
+    _, unsorted = joined(report("s1", category="sos"), [])
+    _, sorted_ = joined(report("s2", category="sos", sos_kind="medical"), [])  # sorted before the loop got to it
+    _, hazard = joined(report("p", sos_kind="police"), [])
+    assert (unsorted.ticket["sos_kind"], sorted_.ticket["sos_kind"]) == (None, "medical")
+    assert "sos_kind" not in hazard.ticket and unsorted.ticket["breakdown"] == {"sos": True, "review": []}
+
+
 def test_other_never_merges():
     first, _ = joined(report("a", category="other"), [])
     assert joined(report("b", category="other"), [first])[1].ticket["id"] == "b"
@@ -295,6 +303,7 @@ def test_each_scope_sees_exactly_its_tickets_newest_first(db, three):
 def test_any_other_scope_sees_nothing(db, three, scope):
     assert ids(db, scope) == []
     assert engine.set_status(db, three, "d1", "fixed", scope, "x", now=NOW) is None
+    assert engine.set_sos_kind(db, three, "d1", "police", scope, now=NOW) is None  # the scope first, not a ValueError
 
 
 def test_a_change_outside_the_scope_is_refused_exactly_like_a_missing_ticket_and_changes_nothing(db, three):
@@ -314,3 +323,21 @@ def test_a_change_inside_the_scope_lands_everywhere_and_names_who_made_it(db, th
     fixed = engine.set_status(db, three, "none", "fixed", "all", "city-1", now=NOW + 120)  # citywide reaches no district
     assert fixed["fixed_at"] == iso(NOW + 120) and events(db, "none") == [("city-1", "open", "fixed")]
     assert engine.set_status(db, three, "none", "open", "all", "city-1", now=NOW + 180)["fixed_at"] is None
+
+
+def test_sorting_an_sos_lands_on_the_ticket_and_its_report_inside_the_scope_only(db):
+    cache = FakeCache([report("s", category="sos"), report("p"),
+                       report("t", category="sos", where=BGC, sos_kind="fire_rescue")])
+    engine.sync_once(cache, WORLD, db, NOW)
+    assert {t["id"]: t["sos_kind"] for t in db.tickets()} == {"s": None, "p": None, "t": "fire_rescue"}  # t came sorted
+    before, reports = db.tickets(), cache.all()
+    assert engine.set_sos_kind(db, cache, "s", "police", frozenset({2}), now=NOW + 60) is None  # s is in District 1
+    with pytest.raises(ValueError, match="Unknown SOS kind"):
+        engine.set_sos_kind(db, cache, "s", "firefighters", "all", now=NOW + 60)
+    with pytest.raises(ValueError, match="Only an SOS has a kind"):
+        engine.set_sos_kind(db, cache, "p", "police", "all", now=NOW + 60)
+    assert db.tickets() == before and cache.all() == reports  # a refused change changes nothing
+    ticket = engine.set_sos_kind(db, cache, "s", "police", frozenset({1}), now=NOW + 60)
+    assert (ticket["sos_kind"], ticket["status"], ticket["updated_at"]) == ("police", "open", iso(NOW + 60))
+    assert (cache.get("s")["sos_kind"], cache.get("s")["updated_at"]) == ("police", iso(NOW + 60))
+    assert events(db, "s") == []  # the history holds status changes only

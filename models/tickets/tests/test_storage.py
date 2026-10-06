@@ -38,7 +38,7 @@ def db(tmp_path):
 
 
 def test_the_tables_have_exactly_the_columns_the_engine_writes(db):
-    assert columns(db, "tickets") == list(engine.TICKET_COLUMNS)
+    assert columns(db, "tickets") == list(engine.TICKET_COLUMNS) and engine.TICKET_COLUMNS[-1] == "sos_kind"
     assert columns(db, "sightings") == list(engine.SIGHTING_COLUMNS)
     assert columns(db, "ticket_events") == ["id", "ticket_id", "actor", "from_status", "to_status", "at"]
 
@@ -123,6 +123,30 @@ def test_a_failed_migration_changes_nothing_and_lets_go_of_the_file(tmp_path, mo
     assert [t["id"] for t in after.tickets()] == ["u", "t"]
 
 
+def test_the_sos_kind_migration_keeps_every_row_and_only_an_sos_takes_a_kind(tmp_path):
+    old = Db(tmp_path / "lakad.db")
+    old._conn.executescript("pragma foreign_keys = off; drop table ticket_events; drop table sightings; drop table tickets;"
+                            f"{MIGRATIONS[0]} {MIGRATIONS[1]} pragma user_version = 2; pragma foreign_keys = on;")
+    old.save(ticket(status="open"), sighting(), AT)  # a file from before, with a row in every table
+    old.save(ticket("s", category="sos", status="open"), sighting("s", "s"), AT)
+    old.set_status("t", "assigned", "analyst-1", AT, allowed=lambda t: True)
+    assert "sos_kind" not in columns(old, "tickets")
+
+    new = Db(tmp_path / "lakad.db")
+    assert new._conn.execute("pragma user_version").fetchone()[0] == len(MIGRATIONS)
+    kept = [(t["id"], t["status"], t["sos_kind"]) for t in new.tickets()]
+    assert kept == [("t", "assigned", None), ("s", "open", None)]
+    assert new._conn.execute("select count(*) from sightings").fetchone()[0] == 2
+    assert events(new) == [("t", "analyst-1", "open", "assigned", AT)]
+    assert new.set_sos_kind("s", "medical", LATER, allowed=lambda t: True)["sos_kind"] == "medical"
+    with pytest.raises(sqlite3.IntegrityError):  # the check came with the column: never on the old hazard
+        new.save(ticket(sos_kind="police"), sighting(), LATER)
+    assert new._conn.execute("pragma foreign_key_check").fetchall() == []
+    assert new._conn.execute("pragma foreign_keys").fetchone()[0] == 1
+    with pytest.raises(sqlite3.IntegrityError):  # the foreign key still holds
+        new.save(ticket("x"), sighting("x", tid="nowhere"), LATER)
+
+
 def test_a_save_without_a_status_keeps_the_one_an_analyst_set(db):
     db.save(ticket(status="open"), sighting(), AT)
     db.set_status("t", "assigned", "analyst-1", AT, allowed=lambda t: True)
@@ -153,11 +177,34 @@ def test_the_same_status_again_is_not_a_change(db):
     assert db.set_status("t", "open", "a", LATER, allowed=lambda t: True)["updated_at"] == AT and events(db) == []
 
 
+def test_sorting_an_sos_sets_its_kind_and_nothing_else_and_is_not_logged(db):
+    db.save(ticket("s", category="sos", status="open"), sighting("s", "s"), AT)
+    got = db.set_sos_kind("s", "police", LATER, allowed=lambda t: True)
+    assert (got["sos_kind"], got["status"], got["updated_at"]) == ("police", "open", LATER) and events(db) == []
+    assert db.set_sos_kind("s", "medical", LATER, allowed=lambda t: True)["sos_kind"] == "medical"  # sorted again
+
+
+def test_a_kind_for_a_missing_ticket_one_not_allowed_or_a_hazard_changes_nothing(db):
+    db.save(ticket(status="open"), sighting(), AT)
+    db.save(ticket("s", category="sos", status="open"), sighting("s", "s"), AT)
+    before = db.tickets()
+    assert db.set_sos_kind("missing", "police", LATER, allowed=lambda t: True) is None
+    assert db.set_sos_kind("s", "police", LATER, allowed=lambda t: False) is None
+    assert db.set_sos_kind("t", "police", LATER, allowed=lambda t: False) is None  # a hazard outside it looks missing
+    with pytest.raises(ValueError, match="Only an SOS has a kind."):
+        db.set_sos_kind("t", "police", LATER, allowed=lambda t: True)
+    assert db.tickets() == before and events(db) == []
+
+
 def test_bad_values_never_reach_the_table(db):
     with pytest.raises(sqlite3.IntegrityError):
         db.save(ticket(status="done"), sighting(), AT)
     with pytest.raises(sqlite3.IntegrityError):
         db.save(ticket(category="ufo"), sighting(), AT)
+    with pytest.raises(sqlite3.IntegrityError):  # only an SOS has a kind
+        db.save(ticket(sos_kind="police"), sighting(), AT)
+    with pytest.raises(sqlite3.IntegrityError):  # and only one of the three
+        db.save(ticket(category="sos", sos_kind="firefighters"), sighting(), AT)
     with pytest.raises(sqlite3.IntegrityError):  # a sighting needs its ticket; the failed save leaves no ticket either
         db.save(ticket(), sighting(tid="nowhere"), AT)
     assert db.tickets() == []
