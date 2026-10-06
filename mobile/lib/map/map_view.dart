@@ -18,6 +18,7 @@ import '../features/search/search_bar.dart';
 import '../layers/congestion_layer.dart';
 import '../layers/destination_layer.dart';
 import '../layers/reports_layer.dart';
+import '../layers/route_layer.dart';
 import '../state/layers_state.dart';
 import '../state/location_state.dart';
 import '../state/trip_state.dart';
@@ -78,8 +79,9 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     _layers.addListener(_apply);
     _location.addListener(_syncPuck);
+    _location.addListener(_planWhenLocated);
     _location.start();
-    _trip.addListener(_onDestination);
+    _trip.addListener(_onTrip);
     _timer = Timer.periodic(congestionRefresh, (_) {
       if (_layers.congestionOn) _layers.refresh();
     });
@@ -136,23 +138,45 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     return fix == null ? null : (lat: fix.latitude, lng: fix.longitude);
   }
 
-  // A place was picked (or cleared): draw its pin, then frame it with the user's pin.
-  void _onDestination() {
+  // The destination was picked, cleared, or a route arrived or changed mode: redraw the pin and the line.
+  // The camera moves twice per destination: to the user and the pin at once, then to the whole route when
+  // the first one lands. Changing mode leaves the camera alone.
+  Place? _framedTrip;
+  bool _routeFramed = false;
+
+  void _onTrip() {
     _queue = _queue.then((_) async {
-      final map = _map, place = _trip.destination;
+      final map = _map, place = _trip.destination, route = _trip.route;
       if (map == null) return;
       try {
         if (!await map.isStyleLoaded()) return; // _ready() draws it once the style is up
         await showDestination(map, place);
-        if (place != null) await _frameTrip(map, place);
+        await showRoute(map, route);
+        if (place != _framedTrip) {
+          _framedTrip = place;
+          _routeFramed = false;
+          if (place != null) await _frameTrip(map, place);
+        }
+        if (place != null && route != null && !_routeFramed) {
+          _routeFramed = true;
+          await _fit(map, [for (final p in route.line) Point(coordinates: Position(p[0], p[1]))]);
+        }
       } catch (e) {
-        debugPrint('destination: $e');
+        debugPrint('trip: $e');
       }
     });
   }
 
-  // Both pins on screen, clear of the search field above and the buttons below; just the
-  // destination when we do not know where the user is (or they are outside the city).
+  // The GPS fix can arrive after the destination was picked: plan the routes as soon as it does.
+  void _planWhenLocated() {
+    final fix = _location.fix;
+    if (fix != null && _trip.destination != null && !_trip.planned) {
+      _trip.plan((lat: fix.latitude, lng: fix.longitude));
+    }
+  }
+
+  // Both pins on screen; just the destination when we do not know where the user is (or they are
+  // outside the city).
   Future<void> _frameTrip(MapboxMap map, Place place) async {
     final fix = _location.fix;
     final dest = Point(coordinates: Position(place.lng, place.lat));
@@ -160,13 +184,18 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
       await map.flyTo(CameraOptions(center: dest, zoom: 16, bearing: 0, pitch: 0), MapAnimationOptions(duration: 1000));
       return;
     }
+    await _fit(map, [Point(coordinates: Position(fix.longitude, fix.latitude)), dest]);
+  }
+
+  // Frames [points] clear of the search field above and the buttons below.
+  Future<void> _fit(MapboxMap map, List<Point> points) async {
     final fit = await map.cameraForCoordinates(
-      [Point(coordinates: Position(fix.longitude, fix.latitude)), dest],
+      points,
       MbxEdgeInsets(top: 190, left: 60, bottom: 300, right: 60),
       0,
       0,
     );
-    // Two close points would zoom to street-corner level: stop at 17.
+    // Points close together would zoom to street-corner level: stop at 17.
     final zoom = fit.zoom;
     final camera = zoom != null && zoom.isFinite ? CameraOptions(center: fit.center, zoom: math.min(zoom, 17), bearing: 0, pitch: 0) : fit;
     await map.flyTo(camera, MapAnimationOptions(duration: 1000));
@@ -274,7 +303,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _loadReports();
     _puckOn = false; // a new style drops the puck
     _syncPuck();
-    if (_trip.destination != null) showDestination(map, _trip.destination); // and the destination pin
+    if (_trip.destination != null) _onTrip(); // and the destination pin and route line
     try {
       // Mercator, whatever the style asks for: the lock below is worked out for it.
       await map.setProjection(StyleProjection(name: StyleProjectionName.mercator));

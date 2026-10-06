@@ -41,7 +41,7 @@ class _PlaceSearchBarState extends State<PlaceSearchBar> {
     _text.text = place.label;
     _focus.unfocus();
     widget.search.clear();
-    widget.trip.setDestination(place);
+    widget.trip.setDestination(place, from: widget.near?.call());
   }
 
   void _clear() {
