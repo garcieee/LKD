@@ -40,3 +40,11 @@ FOOTFALL_DIR = SERVER_DIR / "data" / "footfall"
 # OpenRouteService key (openrouteservice.org, free tier): place search now, walking routes next.
 # Empty means /geocode answers 503 and everything else keeps working.
 ORS_API_KEY = os.getenv("ORS_API_KEY", "")
+
+# Analyst sign-in (Supabase Auth, free tier): the project URL and its publishable key, which is not a secret. Empty
+# means /tickets answers 503 and /reports works as it always has. The server needs no Supabase secret key.
+SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+SUPABASE_PUBLISHABLE_KEY = os.getenv("SUPABASE_PUBLISHABLE_KEY", "")
+
+# The ticket loop (services/ticket_sync.py): 1 gives each new report its ticket, district and priority in db/lakad.db.
+TICKETS_SYNC = os.getenv("TICKETS_SYNC", "1") == "1"

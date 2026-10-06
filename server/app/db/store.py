@@ -36,6 +36,16 @@ class ReportStore:
                     return report
         return None
 
+    def remove(self, report_ids) -> int:
+        """Drops these reports from the file and returns how many went. Their tickets keep them in lakad.db."""
+        ids = set(report_ids)
+        with self._lock:
+            reports = self._read()
+            kept = [r for r in reports if r["id"] not in ids]
+            if len(kept) < len(reports):
+                self._write(kept)
+        return len(reports) - len(kept)
+
     def _read(self) -> list[dict]:
         try:
             return json.loads(self.path.read_text())

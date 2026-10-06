@@ -1,4 +1,4 @@
-"""The report shape. Mirrored by dashboard/src/types/api.ts and mobile/lib/api/api_client.dart."""
+"""The report and ticket shapes. Mirrored by dashboard/src/types/api.ts and mobile/lib/api/api_client.dart."""
 from typing import Literal
 
 from pydantic import BaseModel
@@ -12,7 +12,9 @@ Category = Literal[
 Status = Literal["open", "verified", "assigned", "fixed", "rejected"]
 
 
-class Report(BaseModel):
+class Hazard(BaseModel):
+    """What a report and a ticket both show."""
+
     id: str
     category: Category
     severity: int  # 1 low .. 3 urgent, from the category (services/priority.py)
@@ -25,6 +27,24 @@ class Report(BaseModel):
     status: Status
     created_at: str  # ISO 8601, UTC
     updated_at: str
+
+
+class Report(Hazard):
+    # Set by the ticket loop (models/tickets/engine.py) a few seconds after the report arrives.
+    ticket_id: str | None = None  # the ticket this report is a sighting of; a ticket's id is its first report's
+    district_id: int | None = None  # 1 or 2, or None outside both districts
+    priority: float | None = None  # 0..100, the ticket's
+    band: str | None = None  # Critical, High, Medium or Low
+
+
+class Ticket(Hazard):
+    """One hazard, however many reports it has: GET and PATCH /tickets, analysts only. Its id is its first report's,
+    and its photo, note and heading are that report's; lat and lng are its most accurate sighting's."""
+
+    priority: float  # 0..100
+    band: str  # Critical, High, Medium or Low
+    district_id: int | None  # 1 or 2; None outside both, seen by citywide analysts only
+    reporters: int
 
 
 class StatusUpdate(BaseModel):

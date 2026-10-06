@@ -10,17 +10,18 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import CORS_ORIGINS, FOOTFALL_DIR, STORAGE_DIR, TRANSIT_DIR
 from app.db.store import ReportStore
-from app.routers import commute as commute_routes, footfall as footfall_routes, geocode, reports, routes, transit as transit_routes
-from app.services import commute, footfall, transit
+from app.routers import commute as commute_routes, footfall as footfall_routes, geocode, reports, routes, tickets, transit as transit_routes
+from app.services import commute, footfall, ticket_sync, transit
 
 
 def create_app(storage: Path = STORAGE_DIR) -> FastAPI:
-    app = FastAPI(title="Lakad API")
+    app = FastAPI(title="Lakad API", lifespan=ticket_sync.lifespan)
     photo_dir = storage / "photos"
     photo_dir.mkdir(parents=True, exist_ok=True)
     video_dir = storage / "videos"
     video_dir.mkdir(parents=True, exist_ok=True)
     app.state.store = ReportStore(storage / "reports.json")
+    app.state.sync = ticket_sync.TicketSync(app.state.store, storage / "lakad.db")
     app.state.photo_dir = photo_dir
     app.state.video_dir = video_dir
     app.state.hubs = transit.load_hubs(TRANSIT_DIR)
@@ -31,6 +32,7 @@ def create_app(storage: Path = STORAGE_DIR) -> FastAPI:
         CORSMiddleware, allow_origins=CORS_ORIGINS, allow_methods=["*"], allow_headers=["*"]
     )
     app.include_router(reports.router)
+    app.include_router(tickets.router)
     app.include_router(geocode.router)
     app.include_router(routes.router)
     app.include_router(commute_routes.router)
@@ -41,7 +43,7 @@ def create_app(storage: Path = STORAGE_DIR) -> FastAPI:
 
     @app.get("/health")
     def health():
-        return {"ok": True}
+        return {"ok": True, "tickets": app.state.sync.counters()}
 
     return app
 
