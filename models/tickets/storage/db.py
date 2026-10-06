@@ -155,8 +155,8 @@ class Db:
                    (ticket_id, actor, old, new, at))
 
     def save(self, ticket: dict, sighting: dict, at: str) -> None:
-        """Upsert a ticket and one sighting of it, together. Only the ticket's given columns change, so the status an
-        analyst set survives unless the row carries one (a new ticket, or a reopen, which is logged with no actor)."""
+        """Upsert a ticket and one sighting of it, together. Only the ticket's given columns change, so a status set at
+        the dashboard survives unless the row carries one (a new ticket, or a reopen, which is logged with no actor)."""
         row = {**ticket, "breakdown": json.dumps(ticket.get("breakdown", {})), "updated_at": at}
         with self._tx() as db:
             old = db.execute("select status from tickets where id = ?", (row["id"],)).fetchone()

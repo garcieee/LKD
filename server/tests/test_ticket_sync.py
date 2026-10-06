@@ -53,6 +53,25 @@ def test_a_tick_puts_reports_metres_apart_on_one_ticket(app, client):
     assert app.state.sync.tick().attached == 0  # a second turn finds nothing to do
 
 
+def test_a_change_on_one_row_goes_to_its_ticket_and_every_report_of_it(app, client):
+    a, b = post(client), post(client, lat=AYALA[0] + FIVE_M)
+    app.state.sync.tick()
+    assert client.patch(f"/reports/{b['id']}", json={"status": "assigned"}).json()["status"] == "assigned"
+    assert {r["id"]: r["status"] for r in client.get("/reports").json()} == {a["id"]: "assigned", b["id"]: "assigned"}
+    assert [t["status"] for t in app.state.sync.db.tickets()] == ["assigned"]
+    events = app.state.sync.db._conn.execute("select ticket_id, actor, from_status, to_status from ticket_events")
+    assert [tuple(e) for e in events] == [(a["id"], None, "open", "assigned")]
+
+
+def test_an_sos_sorted_after_the_loop_has_its_kind_on_the_ticket_too(app, client):
+    sid = sos(client)["id"]
+    app.state.sync.tick()
+    saved = client.patch(f"/reports/{sid}", json={"sos_kind": "police", "status": "verified"}).json()
+    assert (saved["sos_kind"], saved["status"]) == ("police", "verified")
+    t = app.state.sync.db.tickets()[0]
+    assert (t["sos_kind"], t["status"]) == ("police", "verified")
+
+
 def test_every_category_the_server_takes_gets_its_ticket(app, client):
     # The server's categories and lakad.db's category check are written separately: a drift would 201 the report
     # and then fail the loop quietly, three times.
