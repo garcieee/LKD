@@ -32,7 +32,7 @@ import '../state/layers_state.dart';
 import '../state/location_state.dart';
 import '../state/trip_state.dart';
 import '../theme.dart';
-import '../widgets/layer_sheet.dart';
+import '../widgets/map_menu.dart';
 import 'pin_chip.dart';
 
 // Strip at the bottom kept free of chips for the Mapbox logo and the attribution button.
@@ -75,7 +75,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   );
 
   // The tilt every camera move ends on: flat in 2D.
-  bool _threeDShown = true; // what the camera and the buildings layer last matched
+  bool _threeDShown = false; // what the camera and the buildings layer last matched
   double get _pitch => _layers.threeD ? Makati.pitch : 0;
 
   // Where the camera is when the whole city cannot be fitted: Makati.zoom frames it on a ~390px phone.
@@ -281,6 +281,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   // Start puts the camera on the user, turning with them; End returns it to north-up. Off a trip the map stays
   // north-up and only the arrow turns.
   void _syncFollow() {
+    _layers.setNavigating(_trip.started); // before the camera moves: Auto's tilt follows it
     if (_trip.started == _wasStarted) return;
     _wasStarted = _trip.started;
     if (_wasStarted) {
@@ -630,7 +631,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            _LocateRow(location: _location, onLocate: _locate),
+                            _LocateRow(location: _location, onLocate: _locate, onMenu: () => showMapMenu(context, _layers)),
                             const SizedBox(height: 10),
                             _ReportButton(onPressed: _report),
                             const SizedBox(height: 10),
@@ -643,7 +644,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                                   listenable: _trip,
                                   builder: (context, _) =>
                                       _trip.destination == null
-                                      ? LayerSheet(layers: _layers)
+                                      ? const SizedBox.shrink()
                                       : _trip.started
                                       ? NavBar(trip: _trip)
                                       : RouteCard(trip: _trip),
@@ -667,10 +668,11 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
 
 // The GPS accuracy (or why there is no pin) next to the locate button.
 class _LocateRow extends StatelessWidget {
-  const _LocateRow({required this.location, required this.onLocate});
+  const _LocateRow({required this.location, required this.onLocate, required this.onMenu});
 
   final LocationState location;
   final VoidCallback onLocate;
+  final VoidCallback onMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -714,6 +716,15 @@ class _LocateRow extends StatelessWidget {
                 tooltip: 'Show my location',
                 onPressed: onLocate,
                 icon: const Icon(Icons.my_location, size: 22, color: navy),
+              ),
+            ),
+            const SizedBox(width: 10),
+            ChipCard(
+              padding: EdgeInsets.zero,
+              child: IconButton(
+                tooltip: 'Map menu',
+                onPressed: onMenu,
+                icon: const Icon(Icons.menu, size: 22, color: navy),
               ),
             ),
           ],

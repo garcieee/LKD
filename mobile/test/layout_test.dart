@@ -19,7 +19,7 @@ import 'package:lakad/features/transfer_walk/route_card.dart';
 import 'package:lakad/map/pin_chip.dart';
 import 'package:lakad/state/layers_state.dart';
 import 'package:lakad/state/trip_state.dart';
-import 'package:lakad/widgets/layer_sheet.dart';
+import 'package:lakad/widgets/map_menu.dart';
 
 import 'test_support.dart';
 
@@ -232,12 +232,9 @@ void main() {
     await fitsEveryPhone(tester, () => opens((c) => showReportSheet(c, report)), after: tapOpen);
   });
 
-  testWidgets('the traffic panel fits', (tester) async {
+  testWidgets('the map menu fits', (tester) async {
     final layers = LayersState();
-    await fitsEveryPhone(
-      tester,
-      () => onTheMap(LayerSheet(layers: layers)),
-    );
+    await fitsEveryPhone(tester, () => opens((c) => showMapMenu(c, layers)));
   });
 
   testWidgets('the category picker fits with a PWD barrier chosen', (tester) async {
