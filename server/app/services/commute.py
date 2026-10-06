@@ -30,6 +30,17 @@ def _walk(a, b, label: str) -> dict:
     return {"kind": "walk", "duration_s": m / WALK_MPS, "distance_m": m, "label": label, "geometry": _line(a, b)}
 
 
+def rank(options: list[dict]) -> list[dict]:
+    """Sorts quickest first and tags the earliest and the least walking. Call again if times change."""
+    options.sort(key=lambda o: o["total_s"])
+    for o in options:
+        o["tags"] = []
+    if options:
+        options[0]["tags"].append("earliest")
+        min(options, key=lambda o: o["walk_s"])["tags"].append("least_walking")
+    return options
+
+
 def plan(hubs: list[dict], rides: dict, start: tuple, end: tuple, limit: int = 3) -> list[dict]:
     """Up to `limit` options, quickest first, each {id, total_s, walk_s, tags, legs}.
 
@@ -79,11 +90,6 @@ def plan(hubs: list[dict], rides: dict, start: tuple, end: tuple, limit: int = 3
             chosen.append(o)
     chosen = chosen[:limit]
     chosen += [o for o in options if o not in chosen][: limit - len(chosen)]
-    chosen.sort(key=lambda o: o["total_s"])
     for o in chosen:
         o.pop("mode")
-        o["tags"] = []
-    if chosen:
-        chosen[0]["tags"].append("earliest")
-        min(chosen, key=lambda o: o["walk_s"])["tags"].append("least_walking")
-    return chosen
+    return rank(chosen)
