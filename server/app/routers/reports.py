@@ -116,15 +116,20 @@ def create_sos(
 
 
 @router.get("/reports", response_model=list[Report])
-def list_reports(request: Request, include_sos: bool = False):
+def list_reports(request: Request, include_sos: bool = False, include_rejected: bool = False):
     """Newest first. SOS tickets are left out unless asked for (`include_sos=true`, which the dashboard does),
-    so the public app's map and AR view never show where someone called for help.
+    so the public app's map and AR view never show where someone called for help. Rejected tickets (judged not
+    real at the dashboard) are left out unless `include_rejected=true`.
 
     ponytail: the API has no accounts yet, so this only keeps SOS out of the app's own lists; anyone who knows
     the query can still ask. Put the dashboard behind a login before anyone real depends on SOS.
     """
     # Stored in arrival order, so reversed is newest first.
-    return [_out(r) for r in reversed(request.app.state.store.all()) if include_sos or r["category"] != "sos"]
+    return [
+        _out(r)
+        for r in reversed(request.app.state.store.all())
+        if (include_sos or r["category"] != "sos") and (include_rejected or r["status"] != "rejected")
+    ]
 
 
 @router.get("/reports/{report_id}", response_model=Report)
