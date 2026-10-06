@@ -34,6 +34,7 @@ Future<void> showHubSheet(BuildContext context, Hub hub, {Where? from, required 
     showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
+      isScrollControlled: true, // large text may need more than the default 9/16 of the screen
       useSafeArea: true,
       builder: (sheet) => _HubCard(
         hub,
@@ -114,7 +115,7 @@ class _HubCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(20, 0, 20, 20 + MediaQuery.paddingOf(context).bottom),
       child: Column(
         mainAxisSize: MainAxisSize.min,
