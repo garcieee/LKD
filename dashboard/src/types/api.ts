@@ -5,6 +5,11 @@ export type Category =
   | "flooded_drain"
   | "broken_streetlight"
   | "blocked_sidewalk"
+  // Accessibility barriers for persons with disability: only the Accessible route steers around them.
+  | "missing_ramp"
+  | "blocked_tactile_paving"
+  | "broken_elevator"
+  | "unsafe_sidewalk"
   | "other"
   | "sos"; // not picked: the phone's hold-to-record button files it (POST /sos), with a video
 
