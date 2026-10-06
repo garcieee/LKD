@@ -63,6 +63,7 @@ Update at every progress check. Undisclosed tools are penalized.
 | Congestion | TomTom Traffic API | Third-party API, free-tier key |
 | Place search and routing | OpenRouteService API, called by our server | Third-party API, free-tier key. The app's search text and an optional nearby point go to it through the server |
 | Map data | OpenStreetMap through osmnx | Open data (ODbL). Credit OSM |
+| Transit routes and terminals | "PUV Routes in Makati" study (Ayala Land; SYSTRA Philippines, Makati BRT Study, 2025) from the hackathon's Makati Data Hub | Organizer-provided data, hackathon use only. Route names and terminals only; positions are looked up by name through OpenRouteService and checked by hand |
 | API | FastAPI, networkx, a JSON file store | Open-source libraries |
 | Image AI | CLIP (open_clip ViT-B-32), MediaPipe and OpenCV | AI models, open weights, run locally |
 | AI coding assistants | Claude (Anthropic): repo scaffold and file structure | AI coding tool. Add every assistant anyone on the team uses |
