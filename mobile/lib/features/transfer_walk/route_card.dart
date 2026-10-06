@@ -40,7 +40,6 @@ class RouteCard extends StatelessWidget {
       listenable: trip,
       builder: (context, _) {
         final route = trip.route, error = trip.error;
-        if (trip.started) return _Started(trip: trip);
         return ChipCard(
           padding: const EdgeInsets.all(12),
           child: Column(
@@ -117,34 +116,6 @@ class _BackToWalk extends StatelessWidget {
         onPressed: trip.backToWalk,
         icon: const Icon(Icons.arrow_back, size: 16),
         label: Text('Walking: ${routeModes[trip.mode]}'),
-      ),
-    );
-  }
-}
-
-/// The card while the trip is on.
-// ponytail: a stand-in until the navigation bar (current leg, distance left, arrival) replaces it.
-class _Started extends StatelessWidget {
-  const _Started({required this.trip});
-
-  final TripState trip;
-
-  @override
-  Widget build(BuildContext context) {
-    return ChipCard(
-      padding: const EdgeInsets.all(12),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              'Trip to ${trip.destination?.label ?? ''}',
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            ),
-          ),
-          TextButton(onPressed: trip.end, child: const Text('End trip')),
-        ],
       ),
     );
   }

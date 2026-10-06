@@ -163,7 +163,7 @@ void main() {
     trip.dispose();
   });
 
-  testWidgets('Start trip begins the trip with the chosen option, and the card becomes the trip card', (tester) async {
+  testWidgets('Start trip begins the trip with the chosen option', (tester) async {
     final trip = tripWith([option('a', total: 2100, walk: 360, tags: ['earliest'])]);
     trip.setDestination(greenbelt, from: here);
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
@@ -176,15 +176,7 @@ void main() {
     expect(find.text('Start trip'), findsOneWidget);
     await tester.tap(find.text('Start trip'));
     await tester.pump();
-    expect(trip.started, isTrue);
-    expect(find.text('Trip to Greenbelt, Makati'), findsOneWidget);
-    expect(find.text('Start trip'), findsNothing);
-    expect(find.text('1 suggested route'), findsNothing);
-
-    await tester.tap(find.text('End trip'));
-    await tester.pump();
-    expect(trip.started, isFalse);
-    expect(find.text('Start trip'), findsOneWidget, reason: 'back on the commute step');
+    expect(trip.started, isTrue, reason: 'the map view swaps this card for the nav bar');
     trip.dispose();
   });
 

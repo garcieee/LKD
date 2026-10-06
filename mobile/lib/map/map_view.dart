@@ -6,11 +6,13 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart' show Geolocator;
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Size; // Flutter's Size here
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../api/api_client.dart';
 import '../config/env.dart';
 import '../config/makati.dart';
 import '../config/map_styles.dart';
+import '../features/navigate/nav_bar.dart';
 import '../features/report/ar_math.dart' show inMakati;
 import '../features/report/report_screen.dart';
 import '../features/search/place_search.dart';
@@ -93,8 +95,10 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _location.addListener(_syncPuck);
     _location.addListener(_planWhenLocated);
     _location.addListener(_startNearUser);
+    _location.addListener(_trackTrip);
     _location.start();
     _trip.addListener(_onTrip);
+    _trip.addListener(_syncAwake);
     _timer = Timer.periodic(congestionRefresh, (_) {
       if (_layers.congestionOn) _layers.refresh();
     });
@@ -109,6 +113,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     _timer?.cancel();
     _reportsTimer?.cancel();
+    if (_awake) WakelockPlus.disable();
     _layers.dispose();
     _location.dispose();
     _trip.dispose();
@@ -199,6 +204,26 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     if (fix != null && _trip.destination != null && !_trip.planned) {
       _trip.plan((lat: fix.latitude, lng: fix.longitude));
     }
+  }
+
+  // While the trip is on, every fix moves the user along it.
+  void _trackTrip() {
+    final fix = _location.fix;
+    if (fix != null && _trip.started) _trip.update(fix.latitude, fix.longitude);
+  }
+
+  // The screen stays on from Start until the user arrives or ends the trip, so the app keeps getting fixes and
+  // the nav bar stays in view. Foreground only: no background location service.
+  bool _awake = false;
+
+  void _syncAwake() {
+    final want = _trip.started && _trip.progress?.arrived != true;
+    final starting = _trip.started && _trip.progress == null && !_awake;
+    if (want != _awake) {
+      _awake = want;
+      WakelockPlus.toggle(enable: want).catchError((Object e) => debugPrint('wakelock: $e'));
+    }
+    if (starting) _trackTrip(); // Start was pressed with a fix already in hand: show where they are now
   }
 
   // A walking app opens at street level on the user, not on the whole city: once, on the first fix
@@ -508,6 +533,8 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                             builder: (context, _) =>
                                 _trip.destination == null
                                 ? LayerSheet(layers: _layers, legend: hubLegend(_hubs))
+                                : _trip.started
+                                ? NavBar(trip: _trip)
                                 : RouteCard(trip: _trip),
                           ),
                         ],
