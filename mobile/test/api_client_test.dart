@@ -58,6 +58,11 @@ void main() {
       expect(r.lat, 14.0);
     });
 
+    test('keeps a heading of 0 (north) apart from no heading, and reads a missing note as empty', () {
+      expect(Report.fromJson(serverReport(heading: 0)).heading, 0.0);
+      expect(Report.fromJson({...serverReport(), 'note': null}).note, '');
+    });
+
     test('reads a status it does not know as open, and keeps the known ones', () {
       expect(Report.fromJson(serverReport(status: 'triaged')).status, 'open');
       for (final s in statusLabels.keys) {
@@ -177,6 +182,14 @@ void main() {
     test('falls back to the status when the error is not JSON', () {
       final api = apiWith(MockClient((_) async => http.Response('<h1>Bad gateway</h1>', 502)));
       expect(send(api), apiError('Server error 502.'));
+      final odd = apiWith(MockClient((_) async => jsonResponse({'error': 'no detail'}, 500)));
+      expect(send(odd), apiError('Server error 500.'));
+    });
+
+    test('treats a 200 that is not JSON (a Wi-Fi sign-in page) as a failed call', () {
+      final api = apiWith(MockClient((_) async => http.Response('<html>Sign in to free Wi-Fi</html>', 200)));
+      expect(send(api), apiError(contains("Can't read the answer from http://server")));
+      expect(api.reports(), apiError(contains("Can't read the answer from http://server")));
     });
 
     test('says when the server cannot be reached', () {

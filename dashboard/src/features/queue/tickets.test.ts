@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { Report } from "../../types/api.ts";
-import { newReports, rank, steps, timeAgo, toGeoJSON } from "./tickets.ts";
+import { STATUSES, newReports, rank, steps, timeAgo, toGeoJSON } from "./tickets.ts";
 
 const T0 = Date.parse("2026-10-06T07:00:00Z");
 const at = (min: number) => new Date(T0 + min * 60_000).toISOString();
@@ -47,6 +47,15 @@ test("timeAgo: minutes, hours, days", () => {
   assert.equal(timeAgo(at(-3 * 24 * 60), T0), "3 d ago");
 });
 
+test("timeAgo: just under and exactly on each boundary, and the server's +00:00 timestamps", () => {
+  const ago = (ms: number) => timeAgo(new Date(T0 - ms).toISOString(), T0);
+  assert.equal(ago(59_999), "just now");
+  assert.equal(ago(60_000), "1 min ago");
+  assert.equal(ago(24 * 3_600_000 - 1), "23 h ago");
+  assert.equal(ago(24 * 3_600_000), "1 d ago");
+  assert.equal(timeAgo("2026-10-06T05:00:00+00:00", T0), "2 h ago");
+});
+
 test("timeAgo: a server clock ahead of ours, or a bad date, never shows nonsense", () => {
   assert.equal(timeAgo(at(5), T0), "just now");
   assert.equal(timeAgo("not a date", T0), "");
@@ -66,6 +75,19 @@ test("newReports: nothing on the first poll, then only ids the last poll lacked"
   assert.deepEqual(newReports(null, [a, b]), []);
   assert.deepEqual(newReports(new Set(["a"]), [b, a]), [b]);
   assert.deepEqual(newReports(new Set(["a", "b"]), [a]), [], "a ticket that went away is not new");
+});
+
+test("newReports: after an empty first poll, the first ticket is new (the demo starts empty)", () => {
+  assert.deepEqual(newReports(new Set(), [report("a")]).map((r) => r.id), ["a"]);
+});
+
+test("toGeoJSON: a pin for every status, fixed included, and none flagged without a live selection", () => {
+  const all = STATUSES.map((status) => report(status, { status }));
+  for (const selected of [null, "gone"]) {
+    const fc = toGeoJSON(all, selected);
+    assert.deepEqual(fc.features.map((f) => f.properties.status), STATUSES);
+    assert.ok(fc.features.every((f) => !f.properties.selected));
+  }
 });
 
 test("toGeoJSON: [lng, lat] points with status, only the selected one flagged", () => {

@@ -55,6 +55,13 @@ void main() {
       expect(headingFromSensors(10, down: 75), facing(10));
       expect(cameraHeading(0, 9.81, 0, 0, 0, 0), isNull);
     });
+
+    test('has none when the camera points straight up, or before the first gravity reading', () {
+      expect(headingFromSensors(10, down: -90), isNull); // at the sky
+      expect(headingFromSensors(10, down: -85), isNull);
+      expect(headingFromSensors(10, down: -75), facing(10));
+      expect(cameraHeading(0, 0, 0, 0, 40, -20), isNull); // the magnetometer can fire first
+    });
   });
 
   group('distanceM', () {
@@ -121,6 +128,7 @@ void main() {
 
     test('is null outside the field of view', () {
       expect(screenX(fovDeg / 2 + 0.1, width), isNull);
+      expect(screenX(-fovDeg / 2 - 0.1, width), isNull);
       expect(screenX(-90, width), isNull);
       expect(screenX(180, width), isNull);
       expect(screenX(40, width, fov: 90), isNotNull);
@@ -129,6 +137,13 @@ void main() {
     test('chains with the geometry: a report due east, camera facing east', () {
       final rel = relativeDeg(bearingDeg(lat, lng, lat, lng + 0.001), 90);
       expect(screenX(rel, width), closeTo(width / 2, 1));
+    });
+
+    test('chains across north: a report just east of it, camera just west of it, sits right of centre', () {
+      final bearing = bearingDeg(lat, lng, lat + 0.001, lng + 0.0001); // ~5.5°
+      final x = screenX(relativeDeg(bearing, 355), width)!;
+      expect(x, greaterThan(width / 2));
+      expect(x, lessThan(width * 0.75));
     });
   });
 
@@ -145,6 +160,19 @@ void main() {
       expect(inMakati(lat, Makati.west - 0.0041), isFalse);
       expect(inMakati(double.nan, lng), isFalse);
       expect(inMakati(lat, double.nan), isFalse);
+    });
+
+    test('takes a point exactly on the margin line, on every side, and not a hair past it', () {
+      const m = cityMarginDeg, hair = 1e-9;
+      for (final (la, ln, outLa, outLn) in [
+        (Makati.south - m, lng, -hair, 0.0),
+        (Makati.north + m, lng, hair, 0.0),
+        (lat, Makati.west - m, 0.0, -hair),
+        (lat, Makati.east + m, 0.0, hair),
+      ]) {
+        expect(inMakati(la, ln), isTrue, reason: '$la, $ln');
+        expect(inMakati(la + outLa, ln + outLn), isFalse, reason: 'past $la, $ln');
+      }
     });
   });
 
