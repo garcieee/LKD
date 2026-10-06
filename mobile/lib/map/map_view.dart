@@ -234,12 +234,10 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   bool _pendingFollow = false;
   bool _wasStarted = false;
 
-  // [ask]: the user pressed something, so say why when there is nowhere to follow.
-  bool _follow({bool ask = false}) {
+  bool _follow() {
     final fix = _location.fix;
     if (fix == null || !inMakati(fix.latitude, fix.longitude)) {
       _pendingFollow = fix == null && _trip.started; // no fix yet: join the user when the first one lands
-      if (ask) _locate();
       return false;
     }
     _pendingFollow = false;
@@ -248,25 +246,18 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     return true;
   }
 
-  void _stopFollowing({bool northUp = false}) {
+  void _stopFollowing() {
     _pendingFollow = false;
     if (!_following.value) return;
     _following.value = false;
     _viewport.moveTo(const IdleViewportState(), transition: null);
-    if (northUp) _map?.easeTo(CameraOptions(bearing: 0), MapAnimationOptions(duration: 600));
   }
-
-  void _onCompass() => _following.value ? _stopFollowing(northUp: true) : _follow(ask: true);
 
   // Start puts the camera on the user, turning with them; End returns it to north-up.
   void _syncFollow() {
     if (_trip.started == _wasStarted) return;
     _wasStarted = _trip.started;
-    if (_wasStarted) {
-      _follow();
-    } else {
-      _stopFollowing(northUp: true);
-    }
+    if (_wasStarted) _follow();
   }
 
   // The camera moves every frame while following: read the bearing for the compass one at a time.
@@ -298,7 +289,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     if (starting) _trackTrip(); // Start was pressed with a fix already in hand: show where they are now
   }
 
-  // A walking app opens at street level on the user, not on the whole city: once, on the first fix
+  // A walking app opens at street level on the user, heading up, not on the whole city: once, on the first fix
   // inside Makati (whether it comes before or after the map is framed). Reset still returns to the city.
   bool _startedNearUser = false;
 
@@ -307,15 +298,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     if (_startedNearUser || map == null || !_framed || fix == null || !inMakati(fix.latitude, fix.longitude)) return;
     _startedNearUser = true;
     if (_trip.destination != null) return; // they already picked somewhere: that framing wins
-    map.flyTo(
-      CameraOptions(
-        center: Point(coordinates: Position(fix.longitude, fix.latitude)),
-        zoom: Makati.walkZoom,
-        bearing: 0,
-        pitch: _pitch,
-      ),
-      MapAnimationOptions(duration: 1200),
-    );
+    _follow(); // the camera joins the user, turning with the phone's heading
   }
 
   // Both pins on screen; just the destination when we do not know where the user is (or they are
@@ -346,7 +329,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
 
   // The locate button: fly to the pin. Outside Makati the camera is locked to the city, so say so.
   void _locate() {
-    final map = _map, fix = _location.fix;
+    final fix = _location.fix;
     if (fix == null) {
       _location.start(); // permission or GPS missing: ask again, the chip says why
       return;
@@ -357,19 +340,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
       );
       return;
     }
-    if (_trip.started) {
-      _follow(); // on a trip the locate button puts the camera back on the user, turning with them
-      return;
-    }
-    map?.flyTo(
-      CameraOptions(
-        center: Point(coordinates: Position(fix.longitude, fix.latitude)),
-        zoom: Makati.walkZoom,
-        bearing: 0,
-        pitch: _pitch,
-      ),
-      MapAnimationOptions(duration: 1000),
-    );
+    _follow(); // the locate button puts the camera back on the user, turning with them
   }
 
   // Fetches the reports, then redraws the pins. A failed fetch keeps the pins already drawn.
@@ -613,7 +584,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            CompassChip(bearing: _bearing, following: _following, onTap: _onCompass),
+                            CompassChip(bearing: _bearing, following: _following),
                             const SizedBox(height: 10),
                             _LocateRow(location: _location, onLocate: _locate, onTransit: _nearbyHubs),
                             const SizedBox(height: 10),

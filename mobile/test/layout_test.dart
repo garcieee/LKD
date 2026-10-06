@@ -135,7 +135,7 @@ void main() {
           alignment: Alignment.bottomRight,
           child: Padding(
             padding: const EdgeInsets.all(14),
-            child: CompassChip(bearing: bearing, following: following, onTap: () {}),
+            child: CompassChip(bearing: bearing, following: following),
           ),
         ),
       ),
