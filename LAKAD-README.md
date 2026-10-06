@@ -9,15 +9,32 @@ Project documentation: [Google Doc](https://docs.google.com/document/d/1-KtQXQGz
 
 | Folder | What it does | Stack |
 |---|---|---|
-| `mobile/` | Map of Makati with TomTom traffic, your location, destination search, Fastest / Walkable / Accessible walking routes with hazard counts, transit hubs (PUV terminals, MRT-3, LRT-1), report pins, and an AR camera for geotagged photo reports | Flutter, mapbox_maps_flutter, camera, geolocator, sensors_plus |
-| `dashboard/` | Ticket queue with status workflow (open → verified → assigned → fixed), photo detail, insights panel, traffic layer, predicted foot-traffic layer with a past and forecast view | React, Vite, TypeScript, mapbox-gl |
-| `server/` | `/reports` CRUD and photos, `/geocode`, `/route/walk`, `/transit/hubs`, `/footfall` and `/footfall/series` (predicted foot traffic), `/health`. JSON file store in `db/` | FastAPI, OpenRouteService |
+| `mobile/` | Map of Makati with TomTom traffic, your location, destination search, Fastest / Walkable / Accessible walking routes with hazard counts, transit hubs (PUV terminals, MRT-3, LRT-1), report pins, an AR camera for geotagged photo reports, and a hold-to-record SOS on the camera button | Flutter, mapbox_maps_flutter, camera, geolocator, sensors_plus |
+| `dashboard/` | Ticket queue with status workflow (open → verified → assigned → fixed), photo detail, SOS tickets that top the queue and blink on the map, insights panel, traffic layer, predicted foot-traffic layer with a past and forecast view | React, Vite, TypeScript, mapbox-gl |
+| `server/` | `/reports` CRUD and photos, `POST /sos` (video), `/geocode`, `/route/walk`, `/transit/hubs`, `/footfall` and `/footfall/series` (predicted foot traffic), `/health`. JSON file store in `db/` | FastAPI, OpenRouteService |
 
-Both clients use the same API, so a phone report and a dashboard status change hit the same data. Unresolved reports become no-go zones for Walkable and Accessible routes. Full API reference: `/docs` on the running server.
+Both clients use the same API, so a phone report and a dashboard status change hit the same data. Unresolved hazard reports become no-go zones for Walkable and Accessible routes. An SOS never does. Full API reference: `/docs` on the running server.
 
 ## Not built yet
 
 "Still there?" verification, exports, barangay leaderboard, heatmap, satellite toggle, face blur, CLIP tagging. Their files are empty stubs. Layer state is not persisted. No auth on the API.
+
+## SOS: hold the camera button to send a crime signal
+
+**On the phone.** Tap the camera button for a photo report, as before. *Hold* it and the app switches to SOS mode: it records a silent video (up to 30 s) while the screen slowly turns red from the edges. Three arrows and an X above the button say *slide up to cancel*, and a banner says *SOS mode* with the clock. Slide up to the X and let go: the video is deleted and nothing is sent. Let go anywhere else: the video goes to the city at once, with no form in between. A clip under one second (a press of about a second and a half) is dropped with a hint. If the upload fails, the clip stays on screen with *Try again* until it is sent or discarded.
+
+**At the city.** The SOS tops the Tickets queue as a red row, its pin blinks red on the map with a ripple, a red banner and a red Tickets button call for attention, and the ticket plays the video. It moves through open, verified, assigned and fixed like any ticket; the blinking stops when it is fixed. People who asked their system for reduced motion get a steady red instead of blinking.
+
+**Server.** `POST /sos` takes the video (MP4, MOV or WebM, read from the bytes, up to 40 MB) and a location in Makati, and files an urgent `sos` ticket with a `video_url`. Clips are served from `/videos/`. `GET /reports` leaves SOS out unless asked (`include_sos=true`, which the dashboard does), so the public app's map and AR view never show where someone called for help. An SOS is never a no-go zone for routes. Tests: `server/tests/test_sos.py`, `mobile/test/sos_hold_test.dart`, and the SOS case in `mobile/test/api_contract_test.dart`, which uploads from the real phone client to a real server.
+
+**Limits, stated plainly**
+- **Video only, no sound, by design.** The microphone permission is stripped from the app. Recording other people's conversations is legally sensitive in the Philippines; get advice before enabling audio.
+- **Nothing alerts a person.** The city sees an SOS only while the dashboard is open and polling every 10 seconds. There is no push, SMS or call to a responder, and no dispatch integration. Do not present this as an emergency service.
+- **No accounts.** Anyone who can reach the API can file an SOS or list them. Hiding SOS from the public list is a convenience, not security. Put the dashboard and `include_sos` behind a login before anyone real depends on it. False alarms are limited only by the hold and the one-second minimum.
+- **Needs a GPS fix inside Makati**, the same as a photo report, so it cannot start without one.
+- **Hold-and-slide is hard for some people.** There is no alternative for screen-reader or switch users yet.
+- **Clips sit unencrypted in `server/storage/videos/` with no retention limit.** Treat the folder as sensitive: it is not git-ignored yet, so do not `git add` it.
+- **Not run on a physical phone.** Verified with analyzer, widget and unit tests, and a real upload to a real server. The recording itself (camera plugin, Android recorder, haptics) needs a device test.
 
 ## Foot traffic is predicted, not measured
 
