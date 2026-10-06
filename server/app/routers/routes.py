@@ -24,11 +24,20 @@ PROFILE = {"fastest": "foot-walking", "walkable": "foot-walking", "accessible": 
 PREFERENCE = {"fastest": "fastest", "walkable": "recommended", "accessible": "recommended"}
 
 
+class Step(BaseModel):
+    type: int  # ORS turn code: 0 left, 1 right, 2 sharp left, 3 sharp right, 4 slight left, 5 slight right, 6 straight, 7 roundabout in, 8 out, 9 u-turn, 10 arrive, 11 depart, 12 keep left, 13 keep right
+    text: str  # "Turn left onto Ayala Avenue"
+    name: str  # the street the step goes along, "" when unnamed
+    distance_m: float  # along this step, until the next manoeuvre
+    at: int  # index into geometry where the manoeuvre happens
+
+
 class Route(BaseModel):
     mode: Mode
     distance_m: float
     duration_s: float
     geometry: list[list[float]]  # [[lng, lat], ...], the order Mapbox takes
+    steps: list[Step] = []  # turn by turn; empty when the router sent none
     hazard_ids: list[str]  # unresolved reports within 20 m of the line that are in the way in this mode
     avoids_hazards: bool  # false for Fastest, and for a mode that could not route around them
 

@@ -107,3 +107,18 @@ def test_mode_defaults_to_walkable_and_rejects_unknown_modes(tmp_path):
     assert c.get("/route/commute", params=PARAMS).status_code == 200
     assert all(json.loads(req.content)["preference"] == "recommended" for req in seen)
     assert c.get("/route/commute", params={**PARAMS, "mode": "teleport"}).status_code == 422
+
+
+def test_a_walking_leg_carries_its_turn_steps_and_a_ride_has_none(tmp_path):
+    step = {"distance": 100.0, "duration": 80.0, "type": 1, "instruction": "Turn right onto Ayala Avenue", "name": "Ayala Avenue", "way_points": [0, 1]}
+
+    def handler(_req):
+        body = {"features": [{"geometry": {"type": "LineString", "coordinates": STREET}, "properties": {"summary": {"distance": 100.0, "duration": 80.0}, "segments": [{"steps": [step]}]}}]}
+        return httpx.Response(200, json=body)
+
+    option = make_client(tmp_path, handler).get("/route/commute", params=PARAMS).json()[0]
+    for leg in option["legs"]:
+        if leg["kind"] == "walk":
+            assert [(s["type"], s["name"], s["at"]) for s in leg["steps"]] == [(1, "Ayala Avenue", 0)]
+        else:
+            assert leg["steps"] == []

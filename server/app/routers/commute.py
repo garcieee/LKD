@@ -11,7 +11,7 @@ from fastapi import APIRouter, HTTPException, Query, Request
 from pydantic import BaseModel
 
 from app.config import in_city
-from app.routers.routes import Mode, walk_leg
+from app.routers.routes import Mode, Step, walk_leg
 from app.services import commute, hazards, ors
 
 router = APIRouter()
@@ -26,6 +26,7 @@ class Leg(BaseModel):
     distance_m: float
     label: str
     geometry: list[list[float]]  # [[lng, lat], ...], the order Mapbox takes
+    steps: list[Step] = []  # a street-routed walking leg only; rides and straight-line estimates have none
 
 
 class Option(BaseModel):
