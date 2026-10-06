@@ -105,6 +105,12 @@ pip install -r requirements.txt
 uvicorn app.main:app --host 0.0.0.0 --reload
 ```
 
+To see a ticket without the phone, send a test report with any JPEG or PNG. It shows up on the dashboard's Tickets within 10 seconds:
+
+```bash
+curl -F photo=@photo.jpg -F category=pothole -F lat=14.5547 -F lng=121.0244 http://localhost:8000/reports
+```
+
 Your plan used `main:app`. The file is `app/main.py` here, so the command is `app.main:app`.
 
 Test it from a phone on the team hotspot: `http://<laptop-ip>:8000/health` should return `{"ok": true}`. Do this first. A phone that cannot reach the laptop is the risk most likely to cost a progress check.
