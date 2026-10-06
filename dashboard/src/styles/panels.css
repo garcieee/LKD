@@ -753,9 +753,9 @@ details[open] > summary.panel-title::after {
 
 @media (max-width: 700px) {
   .shell {
-    /* The legend's height (134px with its ticket key) plus the gap: the Tickets sheet and the toast
+    /* The legend's height (150px with its ticket key) plus the gap: the Tickets sheet and the toast
        stay above it. Retune if the legend grows. */
-    --legend-clear: 142px;
+    --legend-clear: 158px;
   }
   .brand small,
   .status .refreshed,
