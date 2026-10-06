@@ -9,7 +9,8 @@ from models.tickets.eval.ranking import pairs
 from models.tickets.matching.geo import EARTH_RADIUS_M
 from models.tickets.ranking import exposure, priority
 from models.tickets.resources.load import load_places
-from models.tickets.types import CATEGORIES, TicketFacts
+from models.tickets.types import HAZARDS as CATEGORIES
+from models.tickets.types import TicketFacts
 
 
 @pytest.fixture(scope="module")

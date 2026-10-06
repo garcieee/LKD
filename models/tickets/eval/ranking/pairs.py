@@ -19,7 +19,8 @@ from models.tickets.eval.common import results, splits
 from models.tickets.matching.geo import distance_m
 from models.tickets.ranking import exposure, priority
 from models.tickets.resources.load import load_places
-from models.tickets.types import CATEGORIES, TicketFacts
+from models.tickets.types import HAZARDS as CATEGORIES  # built on these six: no data yet for the PWD barriers
+from models.tickets.types import TicketFacts
 
 DATA = Path(__file__).resolve().parent / "data"
 SEED = 2026

@@ -4,7 +4,9 @@ where it does). Plain dataclasses, no I/O.
 """
 from dataclasses import dataclass
 
-CATEGORIES = ("pothole", "open_manhole", "flooded_drain", "broken_streetlight", "blocked_sidewalk", "other")
+# The six the evaluations in eval/ were built and scored on.
+HAZARDS = ("pothole", "open_manhole", "flooded_drain", "broken_streetlight", "blocked_sidewalk", "other")
+CATEGORIES = HAZARDS
 STATUSES = ("open", "verified", "assigned", "fixed")
 
 
