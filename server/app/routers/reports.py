@@ -143,15 +143,21 @@ def get_report(report_id: str, request: Request):
 
 @router.patch("/reports/{report_id}", response_model=Report)
 def update_report(report_id: str, body: TicketChange, request: Request):
-    """A new status, an SOS's kind (who must respond), or both: only the fields sent change. Once the loop has given
-    the report its ticket, the change goes to the ticket (lakad.db and its history) and to every report of it, so the
-    rows of one hazard never disagree. Before that it goes onto the report, and the loop carries it into the ticket."""
+    """A new status, an SOS's kind (who must respond), a handler, or any of them: only the fields sent change.
+
+    A handler (who was assigned to fix it) is picked after the ticket is verified, so only a ticket that is, or becomes,
+    assigned or fixed takes one. It goes on the report and on every report of its ticket. A status or kind goes, once
+    the loop has given the report its ticket, to the ticket (lakad.db and its history) and to every report of it, so
+    the rows of one hazard never disagree. Before that it goes onto the report, and the loop carries it into the ticket.
+    """
     state = request.app.state
     report = next((r for r in state.store.all() if r["id"] == report_id), None)
     if report is None:
         raise HTTPException(404, "No such report.")
     if body.sos_kind and report["category"] != "sos":
         raise HTTPException(422, "Only an SOS has a kind.")
+    if body.handler and (body.status or report["status"]) not in ("assigned", "fixed"):
+        raise HTTPException(422, "A handler is assigned once the ticket is verified.")
     ticket_id, db = report.get("ticket_id"), state.sync.db
     # No sign-in: the whole city's tickets ("all"), and no one to name in the history.
     done = bool(ticket_id)
@@ -160,5 +166,9 @@ def update_report(report_id: str, body: TicketChange, request: Request):
     if done and body.status:
         done = engine.set_status(db, state.store, ticket_id, body.status, "all", None) is not None
     if not done:  # not on a ticket yet, or its ticket is missing from lakad.db
-        state.store.update(report_id, **body.model_dump(exclude_none=True), updated_at=_now())
+        state.store.update(report_id, **body.model_dump(exclude_none=True, exclude={"handler"}), updated_at=_now())
+    if body.handler:  # the rows of one ticket agree on who has it, as they do on its status
+        mates = [r["id"] for r in state.store.all() if ticket_id and r.get("ticket_id") == ticket_id]
+        for rid in mates or [report_id]:
+            state.store.update(rid, handler=body.handler, updated_at=_now())
     return _out(next(r for r in state.store.all() if r["id"] == report_id))

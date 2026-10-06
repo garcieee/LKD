@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { Report } from "../../types/api.ts";
-import { CATEGORY_LABEL, SOS_KINDS, SOS_KIND_HINT, SOS_KIND_LABEL, STATUSES, STATUS_LABEL, isRejected, isSos, isSosActive, isUnresolved, needsReview, needsSorting, newReports, rank, steps, ticketLabel, timeAgo, toGeoJSON } from "./tickets.ts";
+import { CATEGORY_LABEL, SOS_KINDS, SOS_KIND_HINT, SOS_KIND_LABEL, STATUSES, STATUS_LABEL, bandOf, isRejected, isSos, isSosActive, isUnresolved, needsReview, needsSorting, newReports, rank, sightings, sightingsLabel, steps, ticketCode, ticketLabel, timeAgo, toGeoJSON } from "./tickets.ts";
 
 const T0 = Date.parse("2026-10-06T07:00:00Z");
 const at = (min: number) => new Date(T0 + min * 60_000).toISOString();
@@ -198,4 +198,88 @@ test("rank: an unsorted SOS above an older sorted one, both above an urgent haza
     "fixed-unsorted",
     "rejected-unsorted",
   ]);
+});
+
+test("ticketCode: LKD- and six capitals of the ticket's id, so every sighting of one hazard reads the same", () => {
+  assert.equal(ticketCode({ id: "3f2a9c01deadbeef", ticket_id: null }), "LKD-3F2A9C");
+  assert.equal(ticketCode({ id: "3f2a9c01deadbeef" }), "LKD-3F2A9C", "no ticket yet: the report's own id");
+  assert.equal(ticketCode({ id: "b7e1ffaa00", ticket_id: "3f2a9c01deadbeef" }), "LKD-3F2A9C", "a second sighting joins the ticket");
+  assert.match(ticketCode({ id: "abcdef123456" }), /^LKD-[0-9A-F]{6}$/);
+});
+
+const scored = (id: string, priority: number | null | undefined, over: Partial<Report> = {}) =>
+  report(id, { priority, band: "Medium", ticket_id: id, ...over });
+
+test("rank: the engine's priority orders the queue, highest first, over category severity", () => {
+  const input = [
+    scored("low-score-urgent", 41, { severity: 3 }),
+    scored("top", 83.4, { severity: 1 }),
+    scored("mid", 58, { severity: 2 }),
+  ];
+  assert.deepEqual(rank(input).map((r) => r.id), ["top", "mid", "low-score-urgent"]);
+});
+
+test("rank: equal priorities fall back to severity, then oldest first", () => {
+  const input = [
+    scored("same-new", 60, { created_at: at(-5) }),
+    scored("same-old", 60, { created_at: at(-50) }),
+    scored("same-urgent", 60, { severity: 3, created_at: at(-1) }),
+  ];
+  assert.deepEqual(rank(input).map((r) => r.id), ["same-urgent", "same-old", "same-new"]);
+});
+
+test("rank: reports without a priority sort after scored ones, by severity then age, with no NaN comparisons", () => {
+  const input = [
+    report("absent-old", { created_at: at(-40) }),
+    scored("null-urgent", null, { severity: 3 }),
+    scored("scored-low", 3),
+    scored("nan", Number.NaN),
+    report("absent-new", { created_at: at(-2) }),
+    scored("scored-zero", 0, { severity: 1 }),
+  ];
+  assert.deepEqual(rank(input).map((r) => r.id), ["scored-low", "scored-zero", "null-urgent", "absent-old", "absent-new", "nan"]);
+});
+
+test("rank: scored and unscored reports mixed give the same order whichever way the list arrives", () => {
+  const input = [scored("a", 50, { severity: 3 }), report("b", { severity: 2 }), scored("c", 80, { severity: 1 })];
+  const order = rank(input).map((r) => r.id);
+  assert.deepEqual(order, ["c", "a", "b"]);
+  assert.deepEqual(rank(input.toReversed()).map((r) => r.id), order);
+});
+
+test("rank: an active SOS and resolved tickets keep their places whatever the priority", () => {
+  const input = [
+    scored("fixed-top", 99, { status: "fixed" }),
+    scored("rejected-top", 100, { status: "rejected" }),
+    scored("hazard-top", 90),
+    sos("sos-sorted-low", { priority: 1, sos_kind: "fire_rescue" }),
+    sos("sos-unsorted-low", { priority: 1 }),
+    sos("sos-sorted-high", { priority: 100, sos_kind: "police" }),
+    scored("hazard-low", 10),
+  ];
+  assert.deepEqual(rank(input).map((r) => r.id), [
+    "sos-unsorted-low",
+    "sos-sorted-high",
+    "sos-sorted-low",
+    "hazard-top",
+    "hazard-low",
+    "fixed-top",
+    "rejected-top",
+  ]);
+});
+
+test("bandOf: one of the engine's four bands, or null before the report is scored", () => {
+  assert.equal(bandOf(report("a", { band: "Critical" })), "Critical");
+  assert.equal(bandOf(report("a", { band: "Low" })), "Low");
+  for (const band of [null, undefined, "Urgent" as never]) assert.equal(bandOf(report("a", { band })), null, String(band));
+});
+
+test("sightings: reports that share a ticket_id are counted, and only a ticket with two or more says so", () => {
+  const input = [report("a", { ticket_id: "t1" }), report("b", { ticket_id: "t1" }), report("c", { ticket_id: "t2" }), report("d"), report("e", { ticket_id: null })];
+  const count = sightings(input);
+  assert.deepEqual([...count], [["t1", 2], ["t2", 1]]);
+  assert.equal(sightingsLabel(input[0], count), "2 reports");
+  assert.equal(sightingsLabel(input[2], count), "", "one report is not worth a label");
+  assert.equal(sightingsLabel(input[3], count), "", "no ticket yet");
+  assert.equal(sightingsLabel(input[4], count), "");
 });

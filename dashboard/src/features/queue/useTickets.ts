@@ -1,6 +1,6 @@
 // Tickets from the Lakad API: polled every 10 s, status changes applied optimistically.
 import { useEffect, useMemo, useRef, useState } from "react";
-import { listReports, patchSosKind, patchStatus } from "../../api/client";
+import { listReports, patchHandler, patchSosKind, patchStatus } from "../../api/client";
 import type { Report, SosKind, Status } from "../../types/api";
 import { CATEGORY_LABEL, isSosActive, newReports } from "./tickets";
 
@@ -104,6 +104,19 @@ export function useTickets() {
     }
   };
 
+  // Assigns, or renames, a handler. Not optimistic: the server's answer replaces the ticket, so the card only
+  // flips to "assigned" once the name is saved. Resolves to null when saved, else the error message.
+  const changeHandler = async (id: string, handler: string, status?: Status): Promise<string | null> => {
+    try {
+      const saved = await patchHandler(id, handler, status);
+      saves.current++;
+      setReports((rs) => rs && rs.map((r) => (r.id === id ? saved : r)));
+      return null;
+    } catch (e) {
+      return e instanceof Error ? e.message : String(e);
+    }
+  };
+
   const shown = useMemo(
     () =>
       reports &&
@@ -114,5 +127,5 @@ export function useTickets() {
     [reports, pending],
   );
 
-  return { reports: shown, online, fresh, toast, changeStatus, changeKind };
+  return { reports: shown, online, fresh, toast, changeStatus, changeKind, changeHandler };
 }

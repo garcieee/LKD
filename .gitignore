@@ -46,3 +46,5 @@ dashboard/DESIGN.md
 # Evaluation data: raw downloads and caches stay local
 models/tickets/eval/data/raw/
 models/tickets/eval/data/cache/
+server/cache
+server/storage

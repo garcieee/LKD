@@ -1,5 +1,5 @@
 // Ticket logic with no React or mapbox-gl, so `node --test` runs it (tickets.test.ts).
-import type { Category, Report, SosKind, Status } from "../../types/api.ts";
+import type { Band, Category, Report, SosKind, Status } from "../../types/api.ts";
 
 export const CATEGORY_LABEL: Record<Category, string> = {
   pothole: "Pothole",
@@ -29,6 +29,10 @@ export const STATUS_LABEL: Record<Status, string> = {
 
 // Rejected is not a step of the workflow (STATUSES): it is the answer to "is this real?", given to a new ticket.
 export const isRejected = (r: Report) => r.status === "rejected";
+// The ticket's ID as people read it out: "LKD-" and the first six characters of its id, in capitals. A ticket's id
+// is its first report's, so every sighting of one hazard shows the same code.
+export const ticketCode = (r: Pick<Report, "id" | "ticket_id">) => `LKD-${(r.ticket_id ?? r.id).slice(0, 6).toUpperCase()}`;
+
 export const isUnresolved = (r: Report) => r.status !== "fixed" && r.status !== "rejected";
 
 // A ticket nobody has looked at yet: the dashboard asks the receiver to Confirm (-> Verified) or Reject it.
@@ -61,8 +65,30 @@ export const ticketLabel = (r: Report) =>
     ? `${CATEGORY_LABEL.sos} · ${r.sos_kind ? SOS_KIND_LABEL[r.sos_kind] : "Unsorted"}`
     : CATEGORY_LABEL[r.category];
 
+// The ticket engine's score (0..100, higher is more urgent), once the server's ticket loop has set it. Anything else,
+// including NaN, counts as not scored yet.
+export const hasPriority = (r: Report): r is Report & { priority: number } => Number.isFinite(r.priority);
+
+// The engine's band, when it is one of the four the dashboard knows (null before the loop has scored the report).
+export const BANDS: Band[] = ["Critical", "High", "Medium", "Low"];
+export const bandOf = (r: Report): Band | null => BANDS.find((b) => b === r.band) ?? null;
+
+// How many reports each ticket has, by ticket_id (reports of one hazard share it). Not-yet-ticketed reports are left out.
+export function sightings(reports: Report[]): Map<string, number> {
+  const count = new Map<string, number>();
+  for (const r of reports) if (r.ticket_id) count.set(r.ticket_id, (count.get(r.ticket_id) ?? 0) + 1);
+  return count;
+}
+
+// "3 reports" for a ticket reported more than once, "" otherwise.
+export function sightingsLabel(r: Report, count: ReadonlyMap<string, number>): string {
+  const n = (r.ticket_id && count.get(r.ticket_id)) || 0;
+  return n > 1 ? `${n} reports` : "";
+}
+
 // The fix-it order: unresolved first (rejected tickets last of all), SOS before everything else (unsorted ones on
-// top), then most severe, then oldest. Times only have whole seconds, so ties are common; the API lists newest
+// top), then the engine's priority (scored tickets above ones not scored yet, so the order stays consistent when the
+// two mix), then most severe, then oldest. Times only have whole seconds, so ties are common; the API lists newest
 // first, and sorting it reversed keeps ties in arrival order.
 export function rank(reports: Report[]): Report[] {
   return reports.toReversed().sort(
@@ -71,6 +97,8 @@ export function rank(reports: Report[]): Report[] {
       Number(isRejected(a)) - Number(isRejected(b)) ||
       Number(isSosActive(b)) - Number(isSosActive(a)) ||
       Number(needsSorting(b)) - Number(needsSorting(a)) ||
+      Number(hasPriority(b)) - Number(hasPriority(a)) ||
+      (hasPriority(a) && hasPriority(b) ? b.priority - a.priority : 0) ||
       b.severity - a.severity ||
       Date.parse(a.created_at) - Date.parse(b.created_at),
   );
