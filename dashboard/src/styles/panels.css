@@ -807,6 +807,13 @@ details[open] > summary.panel-title::after {
 .shell.split .stage {
   right: min(var(--insights-w), 70vw);
 }
+/* Docked, the map is too narrow for the Lakad cluster and the HUD side by side (the cluster would sit on top of the
+   Tickets button): the HUD drops below the cluster. Phones have their own layout below. */
+@media (min-width: 701px) and (max-width: 960px) {
+  .shell.split .hud {
+    top: calc(var(--inset) * 2 + 44px);
+  }
+}
 .grip {
   position: absolute;
   z-index: 1;
