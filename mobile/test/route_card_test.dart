@@ -76,6 +76,16 @@ void main() {
       expect(find.text('Passes 2 reported hazards'), findsOneWidget);
     });
 
+    testWidgets('a screen reader can pick a mode', (tester) async {
+      final handle = tester.ensureSemantics();
+      final trip = await mount(tester, (from, to, mode) async => route(mode));
+      await tester.pump();
+      expect(trip.mode, 'walkable');
+      tester.semantics.tap(find.semantics.byLabel(RegExp('^Accessible')));
+      expect(trip.mode, 'accessible');
+      handle.dispose();
+    });
+
     testWidgets('waiting, loading and failing each say so', (tester) async {
       final wait = Completer<WalkRoute>();
       final trip = await mount(tester, (from, to, mode) => mode == 'walkable' ? wait.future : Future.value(route(mode)), withStart: false);

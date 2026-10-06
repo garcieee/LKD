@@ -51,6 +51,7 @@ class _Segment extends StatelessWidget {
       button: true,
       selected: selected,
       label: '$label, $detail',
+      onTap: onTap, // excludeSemantics drops the InkWell's own tap action
       excludeSemantics: true,
       child: Material(
         color: selected ? navy : Colors.transparent,
