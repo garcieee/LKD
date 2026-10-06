@@ -2,18 +2,19 @@
 import 'package:flutter/material.dart';
 
 import '../../api/api_client.dart';
+import '../../layers/hubs_layer.dart' show hubColor;
 import '../../theme.dart';
 import '../report/ar_math.dart' show distanceM;
 import 'route_card.dart' show distanceLabel;
 
 typedef Where = ({double lat, double lng});
 
-/// The hubs closest to [from], nearest first, with their distance in metres. Terminals only unless
-/// [withStops]. Without a position: alphabetical, distance null.
+/// The hubs closest to [from], nearest first, with their distance in metres. Terminals and train stations only
+/// unless [withStops]. Without a position: alphabetical, distance null.
 List<({Hub hub, double? metres})> nearestHubs(List<Hub> hubs, Where? from, {int limit = 8, bool withStops = false}) {
   final pool = [
     for (final h in hubs)
-      if (withStops || h.isTerminal) h,
+      if (withStops || h.kind != 'stop') h,
   ];
   if (from == null) {
     pool.sort((a, b) => a.name.compareTo(b.name));
@@ -64,7 +65,7 @@ Future<void> showNearbyHubs(
           const Text('Transit near you', style: TextStyle(fontFamily: serif, fontSize: 22, fontWeight: FontWeight.w500)),
           const SizedBox(height: 2),
           Text(
-            from == null ? 'Location is off, so these are listed by name.' : 'Terminals, nearest first.',
+            from == null ? 'Location is off, so these are listed by name.' : 'Terminals and stations, nearest first.',
             style: const TextStyle(fontSize: 12, color: muted),
           ),
           const SizedBox(height: 6),
@@ -81,7 +82,10 @@ Future<void> showNearbyHubs(
                   for (final r in rows)
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: const Icon(Icons.directions_bus_outlined, color: muted),
+                      leading: Icon(
+                        r.hub.isStation ? Icons.train_outlined : Icons.directions_bus_outlined,
+                        color: hubColor(r.hub),
+                      ),
                       title: Text(r.hub.name),
                       subtitle: Text(r.hub.modesLabel, style: const TextStyle(fontSize: 12)),
                       trailing: r.metres == null ? null : Text(distanceLabel(r.metres!)),
@@ -117,7 +121,7 @@ class _HubCard extends StatelessWidget {
           Text(hub.name, style: const TextStyle(fontFamily: serif, fontSize: 22, fontWeight: FontWeight.w500)),
           const SizedBox(height: 4),
           Text(
-            '${hub.isTerminal ? 'Terminal' : 'Bus stop'} · ${hub.modesLabel}',
+            '${hub.kindLabel} · ${hub.modesLabel}',
             style: const TextStyle(fontSize: 13),
           ),
           if (metres != null) ...[
