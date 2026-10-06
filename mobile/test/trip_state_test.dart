@@ -261,7 +261,7 @@ void main() {
     trip.dispose();
   });
 
-  test('Start needs the commute step and a route; the legs are the chosen option, or the walk alone', () async {
+  test('Start needs a route, and on the commute step the options too; the legs are the chosen option, or the walk alone', () async {
     final trip = TripState((from, to, mode) async => route(mode, m: mode == 'accessible' ? 700 : 480), (
       from,
       to,
@@ -271,9 +271,11 @@ void main() {
     });
     trip.setDestination(place('Greenbelt'), from: here);
     await Future<void>.delayed(Duration.zero);
-    expect(trip.canStart, isFalse, reason: 'still on the walking step');
+    expect(trip.canStart, isTrue, reason: 'a walk all the way needs no commute step');
     trip.start();
-    expect(trip.started, isFalse);
+    expect(trip.started, isTrue);
+    expect(trip.activeLegs.single.isWalk, isTrue);
+    trip.end();
 
     await trip.toCommute();
     expect(trip.canStart, isTrue);

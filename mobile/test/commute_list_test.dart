@@ -129,14 +129,14 @@ void main() {
 
     await tester.tap(find.text('Accessible'));
     await tester.pump();
-    await tester.tap(find.text('Next: ride options'));
+    await tester.tap(find.text('Next: trip options'));
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
     await tester.pump();
     expect(trip.step, TripStep.commute);
     expect(find.text('1 suggested route'), findsOneWidget);
     expect(find.text('Walking: Accessible'), findsOneWidget);
     expect(find.text('Fastest'), findsNothing);
-    expect(find.text('Next: ride options'), findsNothing);
+    expect(find.text('Next: trip options'), findsNothing);
 
     await tester.tap(find.text('Walking: Accessible'));
     await tester.pump();
@@ -158,7 +158,7 @@ void main() {
     trip.setDestination(greenbelt, from: here);
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
     await show(tester, RouteCard(trip: trip));
-    expect(find.text('Next: ride options'), findsNothing);
+    expect(find.text('Next: trip options'), findsNothing);
     expect(find.text('Fastest'), findsOneWidget);
     trip.dispose();
   });
@@ -169,7 +169,7 @@ void main() {
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
     await show(tester, RouteCard(trip: trip));
     expect(find.text('Start trip'), findsNothing, reason: 'not on the commute step yet');
-    await tester.tap(find.text('Next: ride options'));
+    await tester.tap(find.text('Next: trip options'));
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
     await tester.pump();
 
@@ -180,13 +180,26 @@ void main() {
     trip.dispose();
   });
 
+  testWidgets('not commuting: Start walking on the walking step starts a walk all the way', (tester) async {
+    final trip = tripWith([option('a', total: 2100, walk: 360)]);
+    trip.setDestination(greenbelt, from: here);
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    await show(tester, RouteCard(trip: trip));
+    await tester.tap(find.text('Start walking'));
+    await tester.pump();
+    expect(trip.started, isTrue);
+    expect(trip.step, TripStep.walk);
+    expect(trip.activeLegs.single.isWalk, isTrue);
+    trip.dispose();
+  });
+
   testWidgets('with no ride the button says Start walking, and it waits while the options load', (tester) async {
     final pending = Completer<List<CommuteOption>>();
     final trip = TripState((from, to, mode) async => walk(mode), (from, to, mode) => pending.future);
     trip.setDestination(greenbelt, from: here);
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
     await show(tester, RouteCard(trip: trip));
-    await tester.tap(find.text('Next: ride options'));
+    await tester.tap(find.text('Next: trip options'));
     await tester.pump();
     expect(tester.widget<FilledButton>(find.byType(FilledButton)).onPressed, isNull, reason: 'still loading');
 

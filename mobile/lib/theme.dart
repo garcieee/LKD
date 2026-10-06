@@ -5,6 +5,7 @@ const paper = Color(0xFFF9F8F6);
 const ink = Color(0xFF59534E);
 const muted = Color(0xFF64605B);
 const navy = Color(0xFF212E4A); // primary action and focus
+const routeBlue = Color(0xFF1D6FD8); // the route line and the arrow on the map; the transit badges' blue
 const warn = Color(0xFF8A6736);
 const hairline = Color(0x2459534E); // rgba(89, 83, 78, 0.14)
 const edgeStrong = Color(0xFFCDCBCA); // ink at 30% over white: switch track when off
