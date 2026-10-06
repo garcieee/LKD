@@ -1,0 +1,54 @@
+{
+  "note": "Curated demand generators and time profiles for the modeled foot-traffic index. Relative values only, not people counts: calibrate against camera counts before quoting numbers. `basis` says where each district's anchor comes from.",
+  "units": "anchor: 0-1 draw that transit data cannot see (offices, nightlife, markets, hospital). Route ends come from data/transit/routes.json via route_end_aliases.",
+  "districts": [
+    {"id": "ayala-cbd", "name": "Ayala CBD (Ayala Ave, Greenbelt, Glorietta)", "lat": 14.5548, "lng": 121.0245, "radius_m": 800, "profile": "cbd", "anchor": 0.8, "route_end_aliases": ["Ayala"], "basis": "Offices, malls and the 1,100 m elevated walkway; Inquirer and Wikipedia on the CBD"},
+    {"id": "salcedo-village", "name": "Salcedo Village", "lat": 14.5588, "lng": 121.0228, "radius_m": 350, "profile": "weekend_market", "anchor": 0.3, "route_end_aliases": [], "basis": "Weekend market and offices; background knowledge, not verified in this project"},
+    {"id": "legazpi-village", "name": "Legazpi Village", "lat": 14.5545, "lng": 121.0168, "radius_m": 350, "profile": "weekend_market", "anchor": 0.3, "route_end_aliases": [], "basis": "Weekend market and offices; background knowledge, not verified in this project"},
+    {"id": "buendia", "name": "Buendia / Gil Puyat-EDSA", "lat": 14.5548, "lng": 121.0342, "radius_m": 450, "profile": "commuter", "anchor": 0.2, "route_end_aliases": ["MRT Buendia"], "basis": "MRT-3 interchange with a pedestrian overpass (ABS-CBN)"},
+    {"id": "gil-puyat-lrt", "name": "LRT-1 Gil Puyat", "lat": 14.5541, "lng": 120.9976, "radius_m": 400, "profile": "commuter", "anchor": 0.2, "route_end_aliases": ["LRT Gil Puyat"], "basis": "Four-mode terminal on the Pasay border"},
+    {"id": "guadalupe-rockwell", "name": "Guadalupe / Rockwell", "lat": 14.5668, "lng": 121.0455, "radius_m": 500, "profile": "cbd", "anchor": 0.45, "route_end_aliases": ["Guadalupe", "Guadalupe Ibabaw"], "basis": "MRT-3 station and two jeepney terminals; Rockwell malls are background knowledge"},
+    {"id": "washington-chino-roces", "name": "Washington / Chino Roces", "lat": 14.5588, "lng": 121.0105, "radius_m": 450, "profile": "commuter", "anchor": 0.15, "route_end_aliases": ["Washington"], "basis": "Strongest jeepney cluster outside Ayala"},
+    {"id": "libertad", "name": "Libertad", "lat": 14.5483, "lng": 121.0003, "radius_m": 400, "profile": "commuter", "anchor": 0.15, "route_end_aliases": ["Libertad"], "basis": "LRT-1 station and jeepney terminal"},
+    {"id": "poblacion", "name": "Poblacion", "lat": 14.5635, "lng": 121.0305, "radius_m": 500, "profile": "nightlife", "anchor": 0.6, "route_end_aliases": ["Makati Ave"], "basis": "Nightlife district; background knowledge, searches returned nothing on it"},
+    {"id": "makati-med", "name": "Makati Medical Center", "lat": 14.5602, "lng": 121.0148, "radius_m": 300, "profile": "medical", "anchor": 0.4, "route_end_aliases": [], "basis": "Hospital; city bus stop RCBC/Makati Med"}
+  ],
+  "mode_weight": {"mrt3": 5.0, "lrt1": 5.0, "p2p_bus": 1.5, "city_bus": 1.2, "jeepney": 1.0, "uv_express": 1.0},
+  "route_end_weight": 1.5,
+  "route_end_cap": 4.0,
+  "anchor_scale": 6.0,
+  "profiles": {
+    "commuter": {
+      "floor": 0.06,
+      "weekday": [{"at": 7.5, "w": 1.0, "sd": 1.4}, {"at": 12.5, "w": 0.45, "sd": 2.5}, {"at": 18, "w": 1.0, "sd": 1.6}],
+      "weekend": [{"at": 12, "w": 0.45, "sd": 3.5}]
+    },
+    "cbd": {
+      "floor": 0.05,
+      "weekday": [{"at": 8, "w": 0.9, "sd": 1.3}, {"at": 12.5, "w": 0.8, "sd": 1.0}, {"at": 18, "w": 1.0, "sd": 1.6}],
+      "weekend": [{"at": 14, "w": 0.5, "sd": 3.5}]
+    },
+    "nightlife": {
+      "floor": 0.03,
+      "weekday": [{"at": 21, "w": 0.3, "sd": 2.0}],
+      "thu": [{"at": 22, "w": 0.55, "sd": 2.2}],
+      "fri": [{"at": 22.5, "w": 1.0, "sd": 2.4}],
+      "weekend": [{"at": 22.5, "w": 1.0, "sd": 2.4}]
+    },
+    "weekend_market": {
+      "floor": 0.04,
+      "weekday": [{"at": 12.5, "w": 0.35, "sd": 1.2}],
+      "weekend": [{"at": 10, "w": 1.0, "sd": 2.2}]
+    },
+    "medical": {
+      "floor": 0.04,
+      "weekday": [{"at": 10, "w": 0.7, "sd": 2.5}, {"at": 15, "w": 0.6, "sd": 2.5}],
+      "weekend": [{"at": 11, "w": 0.4, "sd": 3.0}]
+    },
+    "transit": {
+      "floor": 0.05,
+      "weekday": [{"at": 7.5, "w": 0.9, "sd": 1.5}, {"at": 18, "w": 0.9, "sd": 1.7}],
+      "weekend": [{"at": 12, "w": 0.4, "sd": 3.5}]
+    }
+  }
+}
