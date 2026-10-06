@@ -154,28 +154,38 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     return fix == null ? null : (lat: fix.latitude, lng: fix.longitude);
   }
 
-  // The destination was picked, cleared, or a route arrived or changed mode: redraw the pin and the line.
-  // The camera moves twice per destination: to the user and the pin at once, then to the whole route when
-  // the first one lands. Changing mode leaves the camera alone.
+  // The destination was picked, cleared, or a route arrived, changed mode or was picked from the commute list:
+  // redraw the pin and the line. The camera moves twice per destination: to the user and the pin at once, then
+  // to the whole route when the first one lands. Picking another commute option, or Commute/Walk, refits to
+  // what is drawn; changing walking mode leaves the camera alone.
   Place? _framedTrip;
-  bool _routeFramed = false;
+  String? _framedRoute; // what the camera last fitted: 'walk' or 'commute:<option id>'
 
   void _onTrip() {
     _queue = _queue.then((_) async {
-      final map = _map, place = _trip.destination, route = _trip.route;
+      final map = _map, place = _trip.destination;
       if (map == null) return;
+      final commute = _trip.hasCommute && _trip.kind == 'commute';
+      final option = commute ? _trip.option : null;
+      final route = commute ? null : _trip.route;
       try {
         if (!await map.isStyleLoaded()) return; // _ready() draws it once the style is up
         await showDestination(map, place);
-        await showRoute(map, route);
+        if (commute) {
+          await showCommute(map, option);
+        } else {
+          await showRoute(map, route);
+        }
         if (place != _framedTrip) {
           _framedTrip = place;
-          _routeFramed = false;
+          _framedRoute = null;
           if (place != null) await _frameTrip(map, place);
         }
-        if (place != null && route != null && !_routeFramed) {
-          _routeFramed = true;
-          await _fit(map, [for (final p in route.line) Point(coordinates: Position(p[0], p[1]))]);
+        final key = option != null ? 'commute:${option.id}' : (route != null ? 'walk' : null);
+        if (place != null && key != null && key != _framedRoute) {
+          _framedRoute = key;
+          final line = option != null ? [for (final l in option.legs) ...l.line] : route!.line;
+          await _fit(map, [for (final p in line) Point(coordinates: Position(p[0], p[1]))]);
         }
       } catch (e) {
         debugPrint('trip: $e');
