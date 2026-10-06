@@ -22,3 +22,17 @@ export type Report = {
   created_at: string; // ISO 8601, UTC
   updated_at: string;
 };
+
+// PROVISIONAL: the routing API (server/app/routers/routes.py, GET /route/walk) is not built yet, so this is the
+// shape the dashboard's route analytics will expect. Agree it with the server, then mirror it in the Python model.
+export type RouteMode = "fastest" | "walkable" | "accessible";
+
+export type RouteEvent = {
+  id: string;
+  created_at: string; // ISO 8601, UTC
+  mode: RouteMode;
+  length_m: number; // the route served
+  fastest_length_m: number; // the Fastest route for the same trip, to measure the detour
+  no_sidewalk_m_avoided: number; // meters of road without a sidewalk this route avoids
+  hazard_ids_avoided: string[]; // Report ids near the Fastest route that this route steers around
+};

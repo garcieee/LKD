@@ -779,3 +779,226 @@ details[open] > summary.panel-title::after {
     bottom: calc(var(--foot) + var(--legend-clear));
   }
 }
+
+/* Insights: docked on the right. With it open the map keeps 70% of the screen and this takes 30%
+   (never under 340px). Phones: a full sheet over the map instead of a split. */
+.shell {
+  --insights-w: max(30vw, 340px);
+}
+.insights {
+  position: absolute;
+  z-index: 6;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: var(--insights-w);
+  border-left: 1px solid var(--line);
+  background: var(--bg);
+  font-size: 14px;
+  animation: rise 180ms ease-out;
+}
+.shell.split .stage {
+  right: var(--insights-w);
+}
+.insights .queue-list {
+  padding: 12px 14px 16px;
+}
+.insights .src {
+  font-size: 12px;
+}
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0 0 10px;
+}
+.tiles div {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--paper-deep);
+}
+.tiles div[data-alert] {
+  border-color: color-mix(in srgb, var(--danger) 40%, #fff);
+  background: color-mix(in srgb, var(--danger) 7%, #fff);
+}
+.tiles dt {
+  font: 600 11px var(--grot);
+  color: var(--muted);
+}
+.tiles dd {
+  margin: 2px 0 0;
+  font: 500 30px/1.1 var(--serif);
+  color: var(--accent);
+}
+.tiles div[data-alert] dd,
+.tiles div[data-alert] small {
+  color: var(--danger);
+}
+.tiles small {
+  font: 600 11px var(--grot);
+  color: var(--muted);
+}
+.cards {
+  display: grid;
+  gap: 10px;
+}
+.card {
+  padding: 12px 14px 14px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-card);
+  background: var(--panel);
+}
+.sec {
+  margin: 0;
+  font: 600 15px var(--grot);
+  color: var(--accent);
+}
+.bars {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.bars li {
+  display: grid;
+  grid-template-columns: 112px 1fr 28px;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  --c: var(--accent);
+  font: 13px var(--grot);
+}
+.bars i {
+  height: 14px;
+  min-width: 3px;
+  border-radius: 3px;
+  background: var(--c);
+}
+.bars b {
+  text-align: right;
+  font: 600 15px var(--grot);
+}
+.key,
+.days i {
+  --c: var(--accent);
+}
+.key[data-key="fixed"],
+.days i[data-key="fixed"] {
+  --c: var(--ok);
+}
+.key {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 0 4px 0 0;
+  border-radius: 2px;
+  background: var(--c);
+}
+.key[data-key="fixed"] {
+  margin-left: 10px;
+}
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.days li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.days .pair {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  width: 100%;
+  height: 110px;
+  padding-top: 16px; /* room for the count above the tallest bar */
+  border-bottom: 1px solid var(--line);
+}
+.days i {
+  position: relative;
+  flex: 1;
+  min-height: 2px;
+  border-radius: 3px 3px 0 0;
+  background: var(--c);
+}
+.days em {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  font: 600 11px/1.3 var(--grot);
+  font-style: normal;
+  color: var(--text);
+}
+.days small {
+  font: 600 11px var(--grot);
+  color: var(--muted);
+}
+.spots {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.spots li {
+  border-top: 1px solid var(--line-soft);
+}
+.spot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 4px;
+  border: 0;
+  background: none;
+  font: 13px var(--grot);
+  text-align: left;
+  cursor: pointer;
+}
+.spot small {
+  margin-left: auto;
+  font: 600 11px var(--grot);
+  color: var(--accent);
+  white-space: nowrap;
+}
+@media (hover: hover) {
+  .spot:hover {
+    background: var(--selected);
+  }
+}
+.card.pending {
+  border-style: dashed;
+  background: none;
+}
+.pending ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font: 13px/1.6 var(--grot);
+}
+.spots b {
+  min-width: 32px;
+  font: 500 24px/1 var(--serif);
+  color: var(--accent);
+}
+@media (max-width: 700px) {
+  .insights {
+    width: auto;
+    left: 0;
+  }
+  .shell.split .stage {
+    right: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .insights {
+    animation: none;
+  }
+}

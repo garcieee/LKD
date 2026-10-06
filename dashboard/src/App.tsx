@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import MapCanvas, { type MapHandle } from "./map/MapCanvas";
 import Legend from "./panels/Legend";
 import QueuePanel from "./features/queue/QueuePanel";
+import AnalyticsPanel from "./features/analytics/AnalyticsPanel";
 import { useTickets } from "./features/queue/useTickets";
 import { isUnresolved } from "./features/queue/tickets";
 import { ENV } from "./config/env";
@@ -22,6 +23,8 @@ export default function App() {
   // The fix-it queue is this dashboard's main job: open on desktop. On phones it is one tap away
   // on the HUD's Tickets button, so the sheet doesn't cover the map on load.
   const [queueOpen, setQueueOpen] = useState(() => !matchMedia(PHONE).matches);
+  // Docked beside the map (the map keeps 70%), so it can be open together with Tickets.
+  const [insightsOpen, setInsightsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const tickets = useTickets();
   const toggle = useRef<HTMLButtonElement>(null);
@@ -43,16 +46,16 @@ export default function App() {
 
   // Esc closes the sidebar first (focus back to its toggle), then the Tickets panel.
   useEffect(() => {
-    if (!navOpen && !queueOpen) return;
+    if (!navOpen && !queueOpen && !insightsOpen) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
-      if (!navOpen) return closeQueue();
+      if (!navOpen) return queueOpen ? closeQueue() : closeInsights();
       setNavOpen(false);
       toggle.current?.focus();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [navOpen, queueOpen]);
+  }, [navOpen, queueOpen, insightsOpen]);
 
   // A pin click opens its ticket.
   const selectPin = useCallback((id: string) => {
@@ -67,11 +70,22 @@ export default function App() {
     if (!keepSelection) setSelectedId(null);
   }
 
-  function openView(view: "map" | "tickets") {
+  function closeInsights() {
+    if (document.getElementById("insights")?.contains(document.activeElement)) toggle.current?.focus();
+    setInsightsOpen(false);
+  }
+
+  function openView(view: "map" | "tickets" | "insights") {
     setNavOpen(false);
     if (view === "map") {
       closeQueue();
+      closeInsights();
       toggle.current?.focus();
+      return;
+    }
+    if (view === "insights") {
+      setInsightsOpen(true);
+      document.getElementById("insights-title")?.focus();
       return;
     }
     setSelectedId(null); // the list, even if a ticket was open
@@ -80,15 +94,20 @@ export default function App() {
   }
 
   // Phones: the sheet covers the map, so close it first. Desktop: centre the pin left of the panel.
-  function showOnMap(r: Report) {
+  // The map ends at the Insights column when that is docked, so measure from the stage, not the window.
+  function showOnMap(r: Pick<Report, "lat" | "lng">) {
     const phone = matchMedia(PHONE).matches;
-    const left = document.getElementById("queue")?.getBoundingClientRect().left ?? innerWidth;
-    if (phone) closeQueue(true);
-    mapView.current?.show(r.lng, r.lat, phone ? 0 : innerWidth - left);
+    const stageRight = document.querySelector(".stage")?.getBoundingClientRect().right ?? innerWidth;
+    const left = document.getElementById("queue")?.getBoundingClientRect().left ?? stageRight;
+    if (phone) {
+      closeQueue(true);
+      closeInsights();
+    }
+    mapView.current?.show(r.lng, r.lat, phone ? 0 : stageRight - left);
   }
 
   return (
-    <div className="shell">
+    <div className={insightsOpen ? "shell split" : "shell"}>
       <div className="chrome">
         <header className="cluster">
           <button
@@ -112,8 +131,8 @@ export default function App() {
         <nav id="sidebar" className={`nav${navOpen ? " open" : ""}`} aria-label="Main" inert={!navOpen}>
           <div className="nav-label">OPERATIONS</div>
           <button
-            className={queueOpen ? "nav-link" : "nav-link active"}
-            aria-current={queueOpen ? undefined : "page"}
+            className={queueOpen || insightsOpen ? "nav-link" : "nav-link active"}
+            aria-current={queueOpen || insightsOpen ? undefined : "page"}
             onClick={() => openView("map")}
           >
             Map
@@ -130,6 +149,13 @@ export default function App() {
                 <span className="sr-only"> unresolved</span>
               </span>
             )}
+          </button>
+          <button
+            className={insightsOpen ? "nav-link active" : "nav-link"}
+            aria-current={insightsOpen ? "page" : undefined}
+            onClick={() => openView("insights")}
+          >
+            Insights
           </button>
         </nav>
       </div>
@@ -233,6 +259,10 @@ export default function App() {
           )}
         </div>
       </main>
+
+      {insightsOpen && (
+        <AnalyticsPanel reports={tickets.reports} online={tickets.online} now={now.getTime()} onClose={closeInsights} onShow={showOnMap} />
+      )}
     </div>
   );
 }

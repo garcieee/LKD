@@ -54,6 +54,8 @@ export default function MapCanvas({ congestionOn, stamp, reports, selectedId, on
       map.current?.setMaxBounds(b).fitBounds(b, { duration: 0 });
     });
     map.current.once("load", () => setLoaded(true));
+    // The Insights split resizes this container without a window resize; the map lives as long as el.
+    new ResizeObserver(() => map.current?.resize()).observe(el);
   }, []);
 
   // Both layers are gated on "load" having fired rather than on isStyleLoaded(): that is false
