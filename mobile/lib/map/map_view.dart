@@ -15,6 +15,7 @@ import '../features/report/ar_math.dart' show inMakati;
 import '../features/report/report_screen.dart';
 import '../features/search/place_search.dart';
 import '../features/search/search_bar.dart';
+import '../features/transfer_walk/route_card.dart';
 import '../layers/congestion_layer.dart';
 import '../layers/destination_layer.dart';
 import '../layers/reports_layer.dart';
@@ -402,7 +403,13 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                           const SizedBox(height: 10),
                           _ReportButton(onPressed: _report),
                           const SizedBox(height: 10),
-                          LayerSheet(layers: _layers),
+                          // With a trip on, the card takes the traffic panel's place: the report button
+                          // and the locate row stay.
+                          ListenableBuilder(
+                            listenable: _trip,
+                            builder: (context, _) =>
+                                _trip.destination == null ? LayerSheet(layers: _layers) : RouteCard(trip: _trip),
+                          ),
                         ],
                       ),
                     ),
