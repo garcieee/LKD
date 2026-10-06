@@ -1,12 +1,10 @@
-// The "Traffic flow" panel over the map: layer switch, refresh time, refresh button, legend.
-// Copy and colours from dashboard/src/App.tsx and dashboard/src/panels/Legend.tsx.
+// The "Traffic flow" panel over the map: layer switch, refresh time, refresh button. No legend on mobile.
+// Copy from dashboard/src/App.tsx.
 import 'package:flutter/material.dart';
 
 import '../config/env.dart';
 import '../state/layers_state.dart';
 import '../theme.dart';
-
-const _small = TextStyle(fontSize: 10, color: muted);
 
 class LayerSheet extends StatelessWidget {
   const LayerSheet({super.key, required this.layers});
@@ -51,25 +49,6 @@ class LayerSheet extends StatelessWidget {
                   style: TextStyle(fontSize: 12, color: warn),
                 ),
               ),
-            const SizedBox(height: 12),
-            // The map's line colours (_ramp in layers/congestion_layer.dart), free flow on the left.
-            const DecoratedBox(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(999)),
-                gradient: LinearGradient(
-                  colors: [Color(0xFF2ECC71), Color(0xFFF7D154), Color(0xFFF28C28), Color(0xFFE54B4B)],
-                  stops: [0, 0.33, 0.67, 1],
-                ),
-              ),
-              child: SizedBox(height: 8),
-            ),
-            const SizedBox(height: 6),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text('Free flow', style: _small), Text('Standstill', style: _small)],
-            ),
-            const SizedBox(height: 8),
-            const Text('Speed vs free flow · Traffic © TomTom', style: _small),
           ],
         ),
       ),

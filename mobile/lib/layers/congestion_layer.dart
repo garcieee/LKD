@@ -20,8 +20,7 @@ const _levelStep = 0.1;
 // speed: 1 free flow, 0 standstill), traffic_road_coverage ("full" | "one_side") and road_type.
 const _sourceLayer = 'Traffic flow';
 
-// traffic_level -> colour, ascending as Mapbox needs. The legend in widgets/layer_sheet.dart shows
-// the same stops, free flow on the left.
+// traffic_level -> colour, ascending as Mapbox needs.
 const _ramp = [(0.0, '#e54b4b'), (0.33, '#f28c28'), (0.67, '#f7d154'), (1.0, '#2ecc71')];
 
 // Line width in px by zoom for a main road. Thin on purpose: close carriageways touch when wider.
