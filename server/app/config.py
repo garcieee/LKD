@@ -31,6 +31,9 @@ def in_city(lat: float, lng: float) -> bool:
     return south - CITY_MARGIN <= lat <= north + CITY_MARGIN and west - CITY_MARGIN <= lng <= east + CITY_MARGIN
 
 
+# Makati PUV routes and terminals (data/transit/), from the 2025 study. Hackathon use only.
+TRANSIT_DIR = SERVER_DIR / "data" / "transit"
+
 # OpenRouteService key (openrouteservice.org, free tier): place search now, walking routes next.
 # Empty means /geocode answers 503 and everything else keeps working.
 ORS_API_KEY = os.getenv("ORS_API_KEY", "")
