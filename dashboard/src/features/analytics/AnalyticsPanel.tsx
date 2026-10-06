@@ -160,7 +160,7 @@ export default function AnalyticsPanel({ reports, online, now, onClose, onShow }
 
               <section className="card pending">
                 <h3 className="sec">Walking routes</h3>
-                <div className="src">Awaiting the routing API (GET /route/walk)</div>
+                <div className="src">Not recorded yet: the server answers GET /route/walk but does not log the routes people take</div>
                 <ul>
                   <li>Mode share: Fastest, Walkable, Accessible</li>
                   <li>Detour accepted to take the Walkable route</li>

@@ -36,8 +36,8 @@ export type Report = {
   updated_at: string;
 };
 
-// PROVISIONAL: the routing API (server/app/routers/routes.py, GET /route/walk) is not built yet, so this is the
-// shape the dashboard's route analytics will expect. Agree it with the server, then mirror it in the Python model.
+// PROVISIONAL: GET /route/walk (server/app/routers/routes.py) exists, but the server does not log the routes it
+// serves, so this is the shape the dashboard's route analytics will expect once it does. Mirror it in the Python model.
 export type RouteMode = "fastest" | "walkable" | "accessible";
 
 export type RouteEvent = {
