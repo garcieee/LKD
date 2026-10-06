@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { Report } from "../../types/api.ts";
-import { CATEGORY_LABEL, SOS_KINDS, SOS_KIND_HINT, SOS_KIND_LABEL, STATUSES, STATUS_LABEL, isRejected, isSos, isSosActive, isUnresolved, needsReview, needsSorting, newReports, rank, steps, ticketLabel, timeAgo, toGeoJSON } from "./tickets.ts";
+import { CATEGORY_LABEL, SOS_KINDS, SOS_KIND_HINT, SOS_KIND_LABEL, STATUSES, STATUS_LABEL, isRejected, isSos, isSosActive, isUnresolved, needsReview, needsSorting, newReports, rank, steps, ticketCode, ticketLabel, timeAgo, toGeoJSON } from "./tickets.ts";
 
 const T0 = Date.parse("2026-10-06T07:00:00Z");
 const at = (min: number) => new Date(T0 + min * 60_000).toISOString();
@@ -198,4 +198,11 @@ test("rank: an unsorted SOS above an older sorted one, both above an urgent haza
     "fixed-unsorted",
     "rejected-unsorted",
   ]);
+});
+
+test("ticketCode: LKD- and six capitals of the ticket's id, so every sighting of one hazard reads the same", () => {
+  assert.equal(ticketCode({ id: "3f2a9c01deadbeef", ticket_id: null }), "LKD-3F2A9C");
+  assert.equal(ticketCode({ id: "3f2a9c01deadbeef" }), "LKD-3F2A9C", "no ticket yet: the report's own id");
+  assert.equal(ticketCode({ id: "b7e1ffaa00", ticket_id: "3f2a9c01deadbeef" }), "LKD-3F2A9C", "a second sighting joins the ticket");
+  assert.match(ticketCode({ id: "abcdef123456" }), /^LKD-[0-9A-F]{6}$/);
 });

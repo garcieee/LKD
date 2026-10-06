@@ -330,6 +330,7 @@ export default function App() {
               onClose={() => closeQueue()}
               onStatus={tickets.changeStatus}
               onKind={tickets.changeKind}
+              onAssign={tickets.changeHandler}
               onShowOnMap={showOnMap}
             />
           )}

@@ -31,6 +31,8 @@ export type Report = {
   photo_url: string; // path on the API, e.g. /photos/<id>.jpg. Empty for an SOS
   video_url?: string | null; // SOS only: path on the API, e.g. /videos/<id>.mp4
   sos_kind?: SosKind | null; // SOS only: who must respond, picked here; null until sorted
+  handler?: string | null; // who was assigned to fix it, picked here once the ticket is verified
+  ticket_id?: string | null; // the ticket this report is a sighting of (set by the server's ticket loop)
   status: Status;
   created_at: string; // ISO 8601, UTC
   updated_at: string;

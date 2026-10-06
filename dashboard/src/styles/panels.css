@@ -603,6 +603,8 @@ details[open] > summary.panel-title::after {
 
 .photo {
   display: block;
+  width: 100%;
+  padding: 0;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
@@ -1532,4 +1534,147 @@ details[open] > summary.panel-title::after {
 }
 .ticket.rejected {
   opacity: 0.6;
+}
+
+/* Ticket ID, shown in monospace so it can be read out and told apart. */
+.tid {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--paper-deep);
+  color: var(--text);
+  font: 500 10px var(--mono);
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.row-handler {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.step.static {
+  cursor: default;
+}
+.step.static:hover::before {
+  background: var(--line);
+}
+.step.static.reached:hover::before {
+  background: var(--accent);
+}
+
+/* The picture, large, in a native <dialog>. */
+.lightbox {
+  max-width: 96vw;
+  max-height: 96vh;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  color: #fff;
+}
+.lightbox::backdrop {
+  background: rgba(24, 22, 20, 0.82);
+}
+.lightbox figure {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+.lightbox img {
+  display: block;
+  max-width: 92vw;
+  max-height: 82vh;
+  margin: 0 auto;
+  border-radius: var(--radius-card);
+  background: #000;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  object-fit: contain;
+}
+.lightbox figcaption {
+  font: 500 12px var(--grot);
+  text-align: center;
+}
+.lightbox-close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  display: grid;
+  place-content: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: var(--shadow-float);
+  color: var(--text);
+  cursor: pointer;
+}
+.lightbox-close svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+/* Assigning a handler, and what follows: the locked name, the resolved prompt, the resolved banner. */
+.triage.handler .field {
+  display: block;
+  width: 100%;
+  min-height: 36px;
+  margin-bottom: 8px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--text);
+  font: 500 12px var(--grot);
+}
+.handler-row {
+  display: flex;
+  gap: 8px;
+}
+.handler-row .btn {
+  flex: none;
+  width: auto;
+  min-height: 36px;
+}
+.handler-locked {
+  flex: 1;
+  min-width: 0;
+  min-height: 36px;
+  padding: 6px 8px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  background: var(--paper-deep);
+  color: var(--muted);
+  font: 500 12px var(--grot);
+  -webkit-text-fill-color: var(--muted); /* a disabled input otherwise fades its text further in Safari */
+  opacity: 1;
+  cursor: not-allowed;
+}
+.triage.resolve {
+  border-left-color: var(--accent);
+}
+.triage.resolved {
+  border-left-color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 7%, #fff);
+}
+.triage.resolved .triage-head b {
+  color: var(--ok);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* "Blocked sidewalk · 2 h ago": the time sits beside the category, quieter than it. */
+.ago {
+  color: var(--muted);
+  font-weight: 400;
+}
+.detail-title .ago {
+  font-size: 14px;
+  letter-spacing: 0;
 }

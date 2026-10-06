@@ -5,7 +5,7 @@ import { photoUrl } from "../../api/client";
 import { ENV } from "../../config/env";
 import type { Report, SosKind, Status } from "../../types/api";
 import DetailPanel, { Severity } from "../../panels/DetailPanel";
-import { STATUS_LABEL, isRejected, isSos, isSosActive, isUnresolved, needsReview, rank, ticketLabel, timeAgo } from "./tickets";
+import { STATUS_LABEL, isRejected, isSos, isSosActive, isUnresolved, needsReview, rank, ticketCode, ticketLabel, timeAgo } from "./tickets";
 
 type Props = {
   reports: Report[] | null; // null until the API first answers
@@ -17,6 +17,7 @@ type Props = {
   onClose: () => void;
   onStatus: (id: string, status: Status) => Promise<string | null>;
   onKind: (id: string, kind: SosKind) => Promise<string | null>;
+  onAssign: (id: string, handler: string, status?: Status) => Promise<string | null>;
   onShowOnMap: (report: Report) => void;
 };
 
@@ -36,6 +37,7 @@ export default function QueuePanel({
   onClose,
   onStatus,
   onKind,
+  onAssign,
   onShowOnMap,
 }: Props) {
   const [showFixed, setShowFixed] = useState(false);
@@ -95,6 +97,7 @@ export default function QueuePanel({
           now={now}
           onStatus={onStatus}
           onKind={onKind}
+          onAssign={onAssign}
           onShowOnMap={onShowOnMap}
         />
       ) : (
@@ -127,12 +130,20 @@ export default function QueuePanel({
                     ) : (
                       <img src={photoUrl(r.photo_url)} alt="" loading="lazy" />
                     )}
-                    <b>{ticketLabel(r)}</b>
+                    <b>
+                      {ticketLabel(r)}
+                      <span className="ago"> · {timeAgo(r.created_at, now)}</span>
+                    </b>
                     <span className="badge" data-status={r.status}>
                       {needsReview(r) ? "To review" : STATUS_LABEL[r.status]}
                     </span>
                     <small>
-                      <Severity level={r.severity} />·<span>{timeAgo(r.created_at, now)}</span>
+                      <span className="tid">{ticketCode(r)}</span>·<Severity level={r.severity} />
+                      {r.handler && (r.status === "assigned" || r.status === "fixed") && (
+                        <>
+                          ·<span className="row-handler">{r.handler}</span>
+                        </>
+                      )}
                     </small>
                   </button>
                 </li>

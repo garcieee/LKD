@@ -29,6 +29,10 @@ export const STATUS_LABEL: Record<Status, string> = {
 
 // Rejected is not a step of the workflow (STATUSES): it is the answer to "is this real?", given to a new ticket.
 export const isRejected = (r: Report) => r.status === "rejected";
+// The ticket's ID as people read it out: "LKD-" and the first six characters of its id, in capitals. A ticket's id
+// is its first report's, so every sighting of one hazard shows the same code.
+export const ticketCode = (r: Pick<Report, "id" | "ticket_id">) => `LKD-${(r.ticket_id ?? r.id).slice(0, 6).toUpperCase()}`;
+
 export const isUnresolved = (r: Report) => r.status !== "fixed" && r.status !== "rejected";
 
 // A ticket nobody has looked at yet: the dashboard asks the receiver to Confirm (-> Verified) or Reject it.
