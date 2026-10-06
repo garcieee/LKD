@@ -16,6 +16,7 @@ import '../features/report/report_screen.dart';
 import '../features/search/place_search.dart';
 import '../features/search/search_bar.dart';
 import '../features/transfer_walk/route_card.dart';
+import '../layers/buildings_layer.dart';
 import '../layers/congestion_layer.dart';
 import '../layers/destination_layer.dart';
 import '../layers/reports_layer.dart';
@@ -300,6 +301,13 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   Future<void> _ready() async {
     final map = _map;
     if (map == null || !await map.isStyleLoaded()) return;
+    _queue = _queue.then((_) async {
+      try {
+        await addBuildings(map); // first, so the pins and the route land above the blocks
+      } catch (e) {
+        debugPrint('buildings layer: $e'); // flat map is fine
+      }
+    });
     _apply();
     _loadReports();
     _puckOn = false; // a new style drops the puck
