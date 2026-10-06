@@ -80,6 +80,45 @@ class WalkRoute {
   final bool avoidsHazards; // false for Fastest, and when the server could not route around hazards
 }
 
+/// One stretch of a commute: a walk, or a ride on one kind of PUV or train.
+class CommuteLeg {
+  CommuteLeg.fromJson(Map<String, dynamic> json)
+    : kind = json['kind'] as String,
+      durationS = (json['duration_s'] as num).toDouble(),
+      distanceM = (json['distance_m'] as num).toDouble(),
+      label = json['label'] as String,
+      line = [
+        for (final p in json['geometry'] as List) [for (final n in p as List) (n as num).toDouble()],
+      ];
+
+  final String kind; // 'walk', or a key of hubModeLabels
+  final double durationS;
+  final double distanceM;
+  final String label; // e.g. "Walk to Ayala Terminal"
+  final List<List<double>> line; // [[lng, lat], ...]
+
+  bool get isWalk => kind == 'walk';
+}
+
+/// A way to get there by walking and riding: GET /route/commute answers a list of these, quickest first.
+/// The ride is an estimate: the server has no timetables or route lines.
+class CommuteOption {
+  CommuteOption.fromJson(Map<String, dynamic> json)
+    : id = json['id'] as String,
+      totalS = (json['total_s'] as num).toDouble(),
+      walkS = (json['walk_s'] as num).toDouble(),
+      tags = [for (final t in json['tags'] as List) t as String],
+      legs = [for (final l in json['legs'] as List) CommuteLeg.fromJson(l as Map<String, dynamic>)];
+
+  final String id;
+  final double totalS;
+  final double walkS;
+  final List<String> tags; // 'earliest', 'least_walking'
+  final List<CommuteLeg> legs;
+
+  bool get isEarliest => tags.contains('earliest');
+}
+
 /// A place the search found: GET /geocode answers a list of these.
 class Place {
   const Place({required this.label, required this.lat, required this.lng});
@@ -211,6 +250,23 @@ class ApiClient {
     );
     final body = await _send(http.AbortableRequest('GET', url, abortTrigger: _deadline()));
     return WalkRoute.fromJson(body as Map<String, dynamic>);
+  }
+
+  /// Ways to get from [from] to [to] by walking and riding one PUV or train.
+  Future<List<CommuteOption>> commute({
+    required ({double lat, double lng}) from,
+    required ({double lat, double lng}) to,
+  }) async {
+    final url = Uri.parse('$base/route/commute').replace(
+      queryParameters: {
+        'from_lat': '${from.lat}',
+        'from_lng': '${from.lng}',
+        'to_lat': '${to.lat}',
+        'to_lng': '${to.lng}',
+      },
+    );
+    final body = await _send(http.AbortableRequest('GET', url, abortTrigger: _deadline()));
+    return [for (final o in body as List) CommuteOption.fromJson(o as Map<String, dynamic>)];
   }
 
   /// Files a report. [onProgress] gets the share of the photo uploaded so far, 0..1.

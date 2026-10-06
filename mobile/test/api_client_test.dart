@@ -444,6 +444,67 @@ void main() {
     });
   });
 
+  group('ApiClient.commute', () {
+    // An option as GET /route/commute sends it (server/app/routers/commute.py).
+    Map<String, dynamic> leg(String kind, num seconds) => {
+      'kind': kind,
+      'duration_s': seconds,
+      'distance_m': 300,
+      'label': kind == 'walk' ? 'Walk to Ayala Terminal' : 'Ayala Terminal to Dian',
+      'geometry': [
+        [121.0244, 14.5547],
+        [121.021, 14.553],
+      ],
+    };
+    Map<String, dynamic> serverOption() => {
+      'id': 'city_bus:a:b',
+      'total_s': 1320,
+      'walk_s': 300.5,
+      'tags': ['earliest', 'least_walking'],
+      'legs': [leg('walk', 150), leg('city_bus', 1020), leg('walk', 150.5)],
+    };
+
+    const from = (lat: 14.5547, lng: 121.0244), to = (lat: 14.556, lng: 121.002);
+
+    test('asks for the trip and reads the options with their legs', () async {
+      late http.Request got;
+      final api = apiWith(
+        MockClient((req) async {
+          got = req;
+          return jsonResponse([serverOption()], 200);
+        }),
+      );
+      final options = await api.commute(from: from, to: to);
+      expect(got.method, 'GET');
+      expect(got.url.path, '/route/commute');
+      expect(got.url.queryParameters, {
+        'from_lat': '14.5547',
+        'from_lng': '121.0244',
+        'to_lat': '14.556',
+        'to_lng': '121.002',
+      });
+      final o = options.single;
+      expect(o.totalS, 1320.0, reason: 'a whole number is read as a double');
+      expect(o.walkS, 300.5);
+      expect(o.isEarliest, isTrue);
+      expect([for (final l in o.legs) l.kind], ['walk', 'city_bus', 'walk']);
+      expect([for (final l in o.legs) l.isWalk], [true, false, true]);
+      expect(o.legs[1].line.first, [121.0244, 14.5547]);
+    });
+
+    test('no way to ride is an empty list, not an error', () async {
+      final api = apiWith(MockClient((_) async => jsonResponse([], 200)));
+      expect(await api.commute(from: from, to: to), isEmpty);
+    });
+
+    test("shows the server's message when the trip is outside Makati", () {
+      final api = apiWith(
+        MockClient((_) async => jsonResponse({'detail': 'Both ends of the trip must be in Makati.'}, 422)),
+      );
+      expect(api.commute(from: from, to: to), apiError('Both ends of the trip must be in Makati.'));
+    });
+  });
+
   group('ApiClient.hubs', () {
     // A hub as GET /transit/hubs sends it (server/app/routers/transit.py).
     Map<String, dynamic> serverHub({String name = 'Washington Terminal', String kind = 'terminal'}) => {

@@ -18,6 +18,14 @@ WalkRoute route(String mode, {double m = 480}) => WalkRoute.fromJson({
   'avoids_hazards': mode != 'fastest',
 });
 
+CommuteOption option(String id, {bool earliest = false}) => CommuteOption.fromJson({
+  'id': id,
+  'total_s': 1200,
+  'walk_s': 300,
+  'tags': [if (earliest) 'earliest'],
+  'legs': <Map<String, dynamic>>[],
+});
+
 void main() {
   test('picking a place with a start fetches all three modes, each showing as it lands', () async {
     final pending = {for (final m in routeModes.keys) m: Completer<WalkRoute>()};
@@ -109,6 +117,64 @@ void main() {
     expect(trip.routes, isEmpty);
     expect(trip.loading, isFalse);
     expect(trip.planned, isFalse);
+    trip.dispose();
+  });
+
+  test('commute options are fetched with the walks, and one failing leaves the other', () async {
+    final trip = TripState((from, to, mode) async => route(mode), (from, to) async {
+      expect(from, here);
+      expect(to, (lat: 14.553, lng: 121.021));
+      return [option('a', earliest: true), option('b')];
+    });
+    expect(trip.kind, 'commute', reason: 'commute is what shows first');
+    trip.setDestination(place('Greenbelt'), from: here);
+    await Future<void>.delayed(Duration.zero);
+    expect(trip.commute.map((o) => o.id), ['a', 'b']);
+    expect(trip.option!.id, 'a');
+    expect(trip.routes.length, 3);
+    expect(trip.loading, isFalse);
+    trip.select(1);
+    expect(trip.option!.id, 'b');
+    trip.select(9);
+    expect(trip.selected, 1, reason: 'an index with no option is ignored');
+    trip.setKind('walk');
+    expect(trip.kind, 'walk');
+    trip.setKind('teleport');
+    expect(trip.kind, 'walk');
+
+    final failing = TripState(
+      (from, to, mode) async => route(mode),
+      (from, to) async => throw const ApiException('Both ends of the trip must be in Makati.'),
+    );
+    failing.setDestination(place('Greenbelt'), from: here);
+    await Future<void>.delayed(Duration.zero);
+    expect(failing.commute, isEmpty);
+    expect(failing.commuteError, 'Both ends of the trip must be in Makati.');
+    expect(failing.routes.length, 3, reason: 'the walking routes still arrive');
+    trip.dispose();
+    failing.dispose();
+  });
+
+  test('a new destination clears the old commute options and any answer still coming', () async {
+    final slow = Completer<List<CommuteOption>>();
+    var first = true;
+    final trip = TripState((from, to, mode) async => route(mode), (from, to) {
+      if (first) return slow.future;
+      return Future.value([option('new')]);
+    });
+    trip.setDestination(place('Old'), from: here);
+    first = false;
+    trip.setDestination(place('New'), from: here);
+    await Future<void>.delayed(Duration.zero);
+    expect(trip.commute.single.id, 'new');
+    slow.complete([option('old')]);
+    await Future<void>.delayed(Duration.zero);
+    expect(trip.commute.single.id, 'new', reason: 'the old answer arrived late and is ignored');
+    trip.select(0);
+    trip.clear();
+    expect(trip.commute, isEmpty);
+    expect(trip.option, isNull);
+    expect(trip.selected, 0);
     trip.dispose();
   });
 }
