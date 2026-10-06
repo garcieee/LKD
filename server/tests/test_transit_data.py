@@ -35,3 +35,30 @@ def test_two_ended_names_are_split_and_the_rest_are_not():
 
 def test_the_data_use_notice_travels_with_the_file():
     assert "do not share" in load()["source"].lower()
+
+
+def terminals():
+    return json.loads((DATA / "terminals.geojson").read_text())
+
+
+def test_terminals_are_all_in_makati_with_unique_ids():
+    from app.config import in_city
+
+    feats = terminals()["features"]
+    assert len(feats) == 35 and len({f["properties"]["id"] for f in feats}) == 35
+    for f in feats:
+        lng, lat = f["geometry"]["coordinates"]
+        assert in_city(lat, lng), f["properties"]["name"]
+
+
+def test_terminal_points_say_how_they_were_found_and_flag_the_doubtful_ones():
+    feats = terminals()["features"]
+    kinds = Counter(f["properties"]["kind"] for f in feats)
+    assert kinds == {"terminal": 20, "stop": 15}
+    for f in feats:
+        p = f["properties"]
+        assert p["method"] in {"venue search", "map fit"} and p["modes"] and p["error_m"] > 0
+        assert set(p["modes"]) <= set(STUDY_COUNTS)
+        if p["error_m"] > 120:
+            assert p["review"], f"{p['name']} is imprecise and must say so"
+    assert "do not share" in terminals()["source"].lower()
