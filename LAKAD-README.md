@@ -18,11 +18,11 @@ Both clients use the same API, so a phone report and a dashboard status change h
 
 ## Not built yet
 
-"Still there?" verification, exports, barangay leaderboard, heatmap, satellite toggle, face blur, CLIP tagging. Their files are empty stubs. Layer state is not persisted. No auth on the API.
+"Still there?" verification, exports, barangay leaderboard, heatmap, satellite toggle, face blur, CLIP tagging. Their files are empty stubs. Layer state is not persisted. The public API has no accounts; only the analyst dashboard signs in, through Supabase, when it is configured ([supabase/README.md](supabase/README.md)).
 
 ## Reviewing new tickets: Confirm or Reject
 
-A new ticket shows a review card at the top of its detail view. **Confirm** moves it to *Verified*, from where the stepper takes it on to Assigned and Fixed. **Reject** marks it *Rejected*: it disappears from the queue (unless *Show rejected* is on), the map, the Insights numbers, the phone's list and route avoidance, but stays on the server and can be reopened. Rejecting an SOS asks once more first. The queue header counts tickets still waiting for review. Nothing is deleted and nothing records who decided: there is no login yet, so anyone who can open the dashboard can confirm or reject.
+A new ticket shows a review card at the top of its detail view. **Confirm** moves it to *Verified*, from where the stepper takes it on to Assigned and Fixed. **Reject** marks it *Rejected*: it disappears from the queue (unless *Show rejected* is on), the map, the Insights numbers, the phone's list and route avoidance, but stays on the server and can be reopened. Rejecting an SOS asks once more first. The queue header counts tickets still waiting for review. Nothing is deleted. Without sign-in configured, anyone who can open the dashboard can confirm or reject; with it, only an analyst of the ticket's district, or a citywide one.
 
 ## SOS: hold the camera button to send a crime signal
 
@@ -104,6 +104,7 @@ See [SETUP.md](SETUP.md).
 | Mobile | Flutter, mapbox_maps_flutter, http, camera, geolocator, sensors_plus, wakelock_plus (keeps the screen on during a trip) | Open source. Mapbox free tier |
 | Dashboard | React, Vite, TypeScript, mapbox-gl | Open source. Mapbox free tier |
 | Server | FastAPI, JSON file store | Open source |
+| Analyst sign-in and district roles | Supabase: Auth for analyst accounts, and Postgres with row level security for their district roles (`supabase/`). The dashboard uses `@supabase/supabase-js` | Third-party service, free tier. Holds analyst accounts and their district roles only. Tickets stay on the Lakad server in SQLite, and photos and videos stay on the Lakad server |
 | Traffic | TomTom Traffic flow tiles | Third-party API, free-tier key |
 | Search and routing | OpenRouteService, called by our server | Third-party API, free-tier key. Search text and an optional nearby point go to it through the server |
 | Map data | OpenStreetMap, incl. an Overpass snapshot of MRT-3 and LRT-1 stations (`server/data/transit/stations.geojson`) | Open data (ODbL). Credit OSM |
