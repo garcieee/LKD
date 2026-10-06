@@ -89,7 +89,12 @@ flutter pub add mapbox_maps_flutter http image_picker geolocator shared_preferen
 flutter run --dart-define-from-file=env.json
 ```
 
-In `android/app/src/main/AndroidManifest.xml`, set `android:usesCleartextTraffic="true"` on the `<application>` tag so the app can call the laptop over plain HTTP. If `flutter create` refuses to run in the existing folder, run it in a temporary folder and copy `android/`, `pubspec.yaml` and `lib/main.dart` across.
+In `android/app/src/main/AndroidManifest.xml`, set `android:usesCleartextTraffic="true"` on the `<application>` tag so the app can call the laptop over plain HTTP, and add `android:enableOnBackInvokedCallback="true"` next to it (Android 15 predictive back). If `flutter create` refuses to run in the existing folder, run it in a temporary folder and copy only `android/` and `pubspec.yaml` across.
+
+- `lib/main.dart` already exists (Mapbox token, Origami theme, map page). Copy it aside before `flutter create` and restore it if it was replaced by the counter demo. Delete the generated `test/widget_test.dart`: it tests that demo.
+- Android 15 (API 35) only, no iOS. `mapbox_maps_flutter` 3.0.0 needs Flutter 3.38.1+ (older Flutter resolves to 2.x, which this code does not compile against). The generated `android/app/build.gradle.kts` takes `compileSdk`, `targetSdk` and `minSdk` from Flutter (36, 36 and 24 on Flutter 3.38+): leave them, never below 35 for the first two. AGP, Gradle and JDK from the template are above Android 15's floor (AGP 8.6, Gradle 8.7, JDK 17). Targeting 35 makes Android draw the app edge to edge; the app already does.
+- Android 15 emulator: Android Studio, Device Manager, Create Device (Pixel 8), system image "VanillaIceCream" (API 35, Google APIs; x86_64, or arm64-v8a on Apple silicon). Then `flutter emulators --launch <id>` and the `flutter run` above.
+- 16 KB page size: Android 15 devices may use 16 KB memory pages. Test on SDK Manager, SDK Platforms, Show Package Details, Android VanillaIceCream, "Google APIs Experimental 16 KB Page Size" (Intel x86_64 Atom or ARM 64 v8a): create an AVD from it and check `adb shell getconf PAGE_SIZE` prints `16384`. On a Pixel 8 or 9 with Android 15 QPR1 or later: Developer options, "Boot with 16KB page size". `mapbox_maps_flutter` pulls Mapbox's `android-ndk27` build, which is 16 KB ready.
 
 **Server**
 

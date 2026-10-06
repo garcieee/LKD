@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { ENV } from "../config/env";
-import { MAKATI } from "../config/makati";
+import { MAKATI, lockBounds } from "../config/makati";
 import { MAP_STYLES, DEFAULT_MAP_STYLE } from "../config/mapStyles";
 import { addCongestion, removeCongestion } from "../layers/congestion";
 
@@ -19,16 +19,27 @@ export default function MapCanvas({ congestionOn, stamp }: Props) {
     // leaves a blank canvas behind.
     if (map.current || !container.current || !ENV.mapboxToken) return;
     mapboxgl.accessToken = ENV.mapboxToken;
+    const el = container.current;
+    const bounds = lockBounds(el.clientWidth, el.clientHeight);
     map.current = new mapboxgl.Map({
-      container: container.current,
+      container: el,
       style: MAP_STYLES[DEFAULT_MAP_STYLE],
-      center: MAKATI.center,
-      zoom: MAKATI.zoom,
+      bounds, // opens framed on the whole city
+      maxBounds: bounds, // and can't leave it (see lockBounds)
+      projection: "mercator", // the style's globe projection makes maxBounds clamp only the centre
       minZoom: MAKATI.minZoom,
       maxZoom: MAKATI.maxZoom,
       attributionControl: false,
     });
-    map.current.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
+    // Default (responsive) attribution: full text on desktop, so "Traffic © TomTom"
+    // stays readable; Mapbox collapses it below 640px.
+    map.current.addControl(new mapboxgl.AttributionControl(), "bottom-right");
+    (window as unknown as { __map: mapboxgl.Map }).__map = map.current; // TEMP-DEV-HOOK remove before finishing
+    // The lock follows the viewport's shape: redo it, and re-frame the city, when that changes.
+    map.current.on("resize", () => {
+      const b = lockBounds(el.clientWidth, el.clientHeight);
+      map.current?.setMaxBounds(b).fitBounds(b, { duration: 0 });
+    });
   }, []);
 
   useEffect(() => {
@@ -59,7 +70,7 @@ export default function MapCanvas({ congestionOn, stamp }: Props) {
       <div ref={container} className="map-canvas" />
       <button
         className="map-reset"
-        onClick={() => map.current?.flyTo({ center: MAKATI.center, zoom: MAKATI.zoom })}
+        onClick={() => map.current?.fitBounds(map.current.getMaxBounds()!)} // the lock is the home view
       >
         Reset to Makati
       </button>

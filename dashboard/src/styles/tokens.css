@@ -1,16 +1,39 @@
-/* colors, radius, shadows, panel widths */
+/* Origami console look: colors, radius, shadows, fonts. See ../../DESIGN.md */
+@font-face { font-family: Newsreader; src: url(/fonts/newsreader-latin.woff2); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: Geist; src: url(/fonts/geist-latin.woff2); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: Archivo; src: url(/fonts/archivo-latin.woff2); font-weight: 100 900; font-display: swap; }
+
 :root {
-  --bg: #0a1220;
-  --panel: rgba(16, 28, 46, 0.92);
-  --line: rgba(255, 255, 255, 0.08);
-  --text: #e6edf7;
-  --muted: #7b8ca6;
-  --accent: #00d4c8;
-  --warn: #ff9b4d;
-  --radius: 10px;
-  --shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
-  --side-w: 248px;
-  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color-scheme: light;
+
+  --bg: #f9f8f6;
+  --panel: #ffffff;
+  --paper-deep: #f4f3f0;
+  --selected: color-mix(in srgb, #8dadf1 14%, #fff);
+
+  --text: #59534e;
+  --muted: #64605b;
+  --faint: #736f68;
+  --line: rgba(89, 83, 78, 0.14);
+  --line-soft: rgba(89, 83, 78, 0.07);
+  --edge-strong: color-mix(in srgb, #59534e 30%, #fff);
+
+  --accent: #212e4a; /* navy: actions and focus */
+  --ok: #41755e;
+  --warn: #8a6736;
+  --danger: #a63722;
+
+  --radius: 6px;
+  --radius-card: 10px;
+  --radius-sheet: 18px;
+  --shadow: 0 1px 3px rgba(89, 83, 78, 0.08);
+  --shadow-float: 0 4px 18px rgba(89, 83, 78, 0.16);
+
+  --serif: Newsreader, "Iowan Old Style", Georgia, serif;
+  --sans: Geist, system-ui, -apple-system, sans-serif;
+  --grot: Archivo, system-ui, -apple-system, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --side-w: 214px;
 }
 
 * {
@@ -27,7 +50,18 @@ body,
 body {
   background: var(--bg);
   color: var(--text);
-  font: 14px/1.45 system-ui, -apple-system, Segoe UI, sans-serif;
+  font: 13px/1.45 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: var(--grot);
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 code {

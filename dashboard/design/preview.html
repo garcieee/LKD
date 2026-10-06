@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lakad · Origami look</title>
+<style>
+/* Static mockup of DESIGN.md. Not shipped. Open with #map (default), #queue or #barangay. */
+@font-face{font-family:Newsreader;src:url(fonts/newsreader-latin.woff2);font-weight:400 500}
+@font-face{font-family:Geist;src:url(fonts/geist-latin.woff2);font-weight:100 900}
+@font-face{font-family:Archivo;src:url(fonts/archivo-latin.woff2);font-weight:100 900}
+:root{
+  --paper:#f9f8f6;--paper-deep:#f4f3f0;--sheet:#fff;--ink:#59534e;--muted:#64605b;--faint:#736f68;
+  --line:rgba(89,83,78,.14);--line-soft:rgba(89,83,78,.07);--edge-strong:color-mix(in srgb,#59534e 30%,#fff);
+  --navy:#212e4a;--cornflower:#8dadf1;--plum:#6b4e8f;--vermilion:#e5401f;
+  --success:#41755e;--warning:#8a6736;--danger:#a63722;
+  --selected:color-mix(in srgb,#8dadf1 14%,#fff);
+  --success-soft:color-mix(in srgb,#41755e 9%,#fff);--warning-soft:color-mix(in srgb,#8a6736 8%,#fff);
+  --danger-soft:color-mix(in srgb,#e5401f 7%,#fff);
+  --shadow-ink:rgba(89,83,78,.08);--shadow-overlay:rgba(89,83,78,.16);
+  --serif:Newsreader,Georgia,serif;--sans:Geist,system-ui,sans-serif;--grot:Archivo,system-ui,sans-serif;
+  --radius:6px;--sheet-r:18px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden}
+body{font:13px/1.45 var(--sans);color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased}
+button{font-family:var(--grot);color:inherit;border:0;background:none;cursor:pointer}
+h1,h2,h3,p{margin:0}
+.wb{height:100vh;display:grid;grid-template-columns:214px minmax(0,1fr);grid-template-rows:56px minmax(0,1fr) 26px}
+.hd{grid-column:1/-1;display:flex;align-items:center;gap:20px;padding:0 18px 0 15px}
+.brand{font:500 25px/1 var(--serif);letter-spacing:-.25px;display:flex;align-items:center;gap:9px}
+.crumb{font:11px var(--grot);letter-spacing:1.3px;color:var(--ink);margin-left:-5px}
+.search{display:flex;align-items:center;gap:10px;width:min(440px,38vw);height:33px;margin:auto;padding:0 12px;border:1px solid var(--line);border-radius:5px;background:var(--sheet);color:var(--muted);box-shadow:0 1px 2px var(--shadow-ink);font-size:12px}
+.search span{flex:1}
+kbd{font:11px var(--sans);background:var(--paper-deep);padding:2px 5px;border-radius:3px}
+.hr{display:flex;align-items:center;gap:16px;font-size:11px;color:var(--muted)}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--success);margin-right:7px}
+.av{display:grid;place-items:center;width:29px;height:29px;border-radius:50%;background:var(--selected);color:var(--navy);font-size:12px;font-weight:600}
+.sb{padding:15px 12px 0;display:flex;flex-direction:column}
+.new{display:flex;align-items:center;height:36px;padding:0 12px;border:1px solid var(--line);border-radius:5px;background:var(--sheet);box-shadow:0 1px 2px var(--shadow-ink);font:500 12px var(--grot);margin-bottom:15px}
+.gl{font:500 10px var(--grot);color:var(--muted);padding:0 12px;margin:9px 0 7px;letter-spacing:.2px}
+.nl{display:flex;align-items:center;gap:10px;min-height:35px;border-radius:10px;padding:7px 12px;margin-bottom:2px;font:12px var(--grot)}
+.nl i{width:14px;height:14px;border:1.5px solid var(--muted);border-radius:4px;display:block}
+.nl.on{background:var(--sheet);font-weight:600;box-shadow:0 1px 2px var(--shadow-ink)}
+.nl.on i{border-color:var(--ink)}
+.nl small{margin-left:auto;background:var(--selected);border-radius:4px;font-size:10px;padding:2px 5px;font-weight:500}
+.sheet{position:relative;display:flex;flex-direction:column;min-height:0;background:var(--sheet);border:1px solid var(--line);border-radius:var(--sheet-r);margin:7px 8px 4px 0;overflow:hidden;box-shadow:0 1px 3px var(--shadow-ink)}
+.ph{padding:20px 27px 18px;border-bottom:1px solid var(--line)}
+.bc{font-size:11px;color:var(--muted);margin-bottom:12px}.bc b{font-weight:400;color:var(--ink)}
+.tr{display:flex;align-items:center;justify-content:space-between;gap:18px}
+h1{font:500 28px/1.1 var(--serif);letter-spacing:-.56px}
+.ph p{font-size:12px;color:var(--muted);margin-top:7px}
+.acts{display:flex;gap:10px}
+.btn{display:inline-flex;align-items:center;min-height:32px;padding:7px 12px;border:1px solid var(--line);border-radius:var(--radius);background:var(--sheet);font:500 11px var(--grot);white-space:nowrap}
+.btn.pri{background:var(--navy);border-color:var(--navy);color:var(--paper);box-shadow:0 1px 2px var(--shadow-ink)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 7px;border-radius:4px;background:var(--paper-deep);color:var(--muted);font:500 10px/1.5 var(--grot);white-space:nowrap}
+.badge.blue{background:color-mix(in srgb,var(--cornflower) 14%,#fff);color:var(--navy)}
+.badge.green{background:var(--success-soft);color:var(--success)}
+.badge.orange{background:var(--warning-soft);color:var(--warning)}
+.badge.red{background:var(--danger-soft);color:var(--danger)}
+.st{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-top:1px solid var(--line);font-size:10px;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex}
+/* map */
+.map{position:relative;flex:1;background:var(--paper-deep);overflow:hidden}
+.map svg{position:absolute;inset:0;width:100%;height:100%}
+.fl{position:absolute;background:var(--sheet);border:1px solid var(--line);border-radius:10px;box-shadow:0 4px 18px var(--shadow-overlay);padding:14px}
+.fl h3{font:600 12px var(--grot)}
+.lbl{font:500 10px var(--grot);color:var(--muted);letter-spacing:.2px;margin:12px 0 6px}
+.row{display:flex;align-items:center;gap:9px;padding:7px 0;font:12px var(--grot);border-top:1px solid var(--line-soft)}
+.sw{width:26px;height:15px;border-radius:99px;background:var(--navy);position:relative;margin-left:auto}
+.sw:after{content:"";position:absolute;right:2px;top:2px;width:11px;height:11px;border-radius:50%;background:#fff}
+.sw.off{background:var(--edge-strong)}.sw.off:after{right:auto;left:2px}
+.bar{height:8px;border-radius:99px;background:linear-gradient(90deg,#41755e,#d6b04c,#e08a3c,#e5401f)}
+.ends{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:6px}
+.pin{position:absolute;display:flex;align-items:center;gap:7px;padding:5px 9px 5px 6px;background:var(--ink);color:var(--paper);border-radius:99px;font:500 11px var(--grot);box-shadow:0 2px 8px var(--shadow-overlay)}
+.pin b{width:8px;height:8px;border-radius:50%}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.card{border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:var(--sheet)}
+.card small{display:block;font:500 10px var(--grot);color:var(--muted)}
+.card strong{display:block;font:500 24px/1.15 var(--serif);letter-spacing:-.4px;margin-top:4px}
+/* queue */
+.list{flex:1;overflow:auto}
+.tb{display:flex;gap:10px;padding:14px 27px;border-bottom:1px solid var(--line-soft)}
+.tb .in{height:34px;width:260px;border:1px solid var(--edge-strong);border-radius:5px;padding:0 10px;display:flex;align-items:center;color:var(--faint);font-size:12px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font:500 10px var(--grot);color:var(--muted);padding:9px 27px;border-bottom:1px solid var(--line);background:var(--paper)}
+td{padding:12px 27px;border-bottom:1px solid var(--line-soft);font-size:12px}
+tr.sel td{background:var(--selected)}
+td b{font:600 12px var(--grot)}
+.rank{font:500 15px var(--serif);color:var(--muted)}
+.det{width:340px;border-left:1px solid var(--line);padding:22px 24px;overflow:auto}
+.det h2{font:500 20px/1.2 var(--serif);letter-spacing:-.3px}
+.step{display:flex;gap:6px;margin:18px 0}
+.step span{flex:1;height:5px;border-radius:99px;background:var(--line)}
+.step span.on{background:var(--navy)}
+.stl{display:flex;justify-content:space-between;font:500 10px var(--grot);color:var(--muted)}
+.ph2{height:130px;border-radius:10px;background:repeating-linear-gradient(135deg,var(--paper-deep) 0 10px,#efede9 10px 20px);border:1px solid var(--line);margin-top:16px;display:grid;place-items:center;color:var(--faint);font-size:11px}
+dl{display:grid;grid-template-columns:auto 1fr;gap:9px 14px;margin:18px 0 0;font-size:12px}dt{color:var(--muted)}dd{margin:0;text-align:right}
+/* barangay */
+.bars{padding:22px 27px;flex:1;overflow:auto}
+.lb{display:grid;grid-template-columns:28px 190px 1fr 70px;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line-soft);font-size:12px}
+.lb .t{height:8px;border-radius:99px;background:var(--paper-deep)}.lb .t i{display:block;height:100%;border-radius:99px;background:var(--navy)}
+.lb .t i.c{background:var(--cornflower)}
+@media(max-width:700px){
+  .wb{grid-template-columns:62px minmax(0,1fr)}.hd{gap:10px;padding:0 12px}.brand{font-size:22px}.crumb,.search,.hr .dot-wrap{display:none}
+  .sb{padding:12px 8px 0}.nl{justify-content:center;padding:7px}.nl span,.nl small,.gl,.new span{display:none}.new{justify-content:center;padding:0}
+  .sheet{margin:4px 6px 4px 0}.ph{padding:16px 16px 14px}h1{font-size:22px}.acts .btn:not(.pri){display:none}
+  .fl.layers,.fl.hour{display:none}.fl.legend{left:10px!important;right:10px;bottom:10px!important;width:auto!important}.stats{grid-template-columns:repeat(3,1fr)}
+  .det{display:none}td:nth-child(n+4),th:nth-child(n+4){display:none}td,th{padding-left:16px;padding-right:16px}.tb{padding:12px 16px}.tb .in{width:100%}.tb .btn{display:none}
+  .bars{padding:14px 16px}.lb{grid-template-columns:22px 1fr 56px}.lb .t{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wb">
+  <header class="hd">
+    <div class="brand">Lakad</div>
+    <div class="crumb">MAKATI · LGU OPS</div>
+    <div class="search"><span>Search reports, barangays, streets</span><kbd>⌘K</kbd></div>
+    <div class="hr"><span class="dot-wrap"><i class="dot"></i>Live · TomTom flow</span><div class="av">J</div></div>
+  </header>
+  <aside class="sb">
+    <div class="new"><span>New report</span>＋</div>
+    <div class="gl">OPERATIONS</div>
+    <div class="nl" data-v="map"><i></i><span>Map</span></div>
+    <div class="nl" data-v="queue"><i></i><span>Fix-it queue</span><small>24</small></div>
+    <div class="nl" data-v="barangay"><i></i><span>Barangays</span></div>
+    <div class="gl">DATA</div>
+    <div class="nl"><i></i><span>Exports</span></div>
+    <div class="nl"><i></i><span>Layers</span></div>
+  </aside>
+  <main class="sheet" id="sheet"></main>
+  <footer class="st"><span><i class="dot"></i>Live · refreshed 14:32:08</span><span>Makati · 33 barangays · Internal testing</span></footer>
+</div>
+<script>
+const roads=(()=>{let s=7;const r=()=>(s=(s*9301+49297)%233280)/233280;const c=['#41755e','#41755e','#d6b04c','#e08a3c','#e5401f'];
+  let o='';for(let i=0;i<14;i++){const y=40+i*38+r()*12;o+=`<path d="M-10 ${y} C 200 ${y+(r()*30-15)}, 500 ${y+(r()*40-20)}, 1300 ${y+(r()*30-15)}" stroke="${c[Math.floor(r()*c.length)]}" stroke-width="${i%5==0?5:3}" fill="none" opacity=".85" stroke-linecap="round"/>`}
+  for(let i=0;i<16;i++){const x=30+i*78+r()*14;o+=`<path d="M${x} -10 C ${x+r()*40-20} 200, ${x+r()*50-25} 400, ${x+r()*30-15} 700" stroke="${c[Math.floor(r()*c.length)]}" stroke-width="${i%5==0?5:3}" fill="none" opacity=".85" stroke-linecap="round"/>`}
+  return o})();
+const bg=`<svg viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice"><rect width="1200" height="700" fill="#f1efeb"/><path d="M-10 90 C 300 40 600 150 1300 70 L1300 -10 L-10 -10Z" fill="#dfe6ee"/><g stroke="#e4e1db" stroke-width="10" fill="none"><path d="M0 330 H1200 M0 520 H1200 M410 0 V700 M820 0 V700"/></g>${roads}</svg>`;
+const hdr=(t,p,a)=>`<div class="ph"><div class="bc">Makati <b>/ ${t}</b></div><div class="tr"><div><h1>${t}</h1><p>${p}</p></div><div class="acts">${a}</div></div></div>`;
+const V={
+map:()=>hdr('Congestion map','Live traffic flow and open pedestrian reports across Makati.','<button class="btn">Reset to Makati</button><button class="btn pri">Export GeoJSON</button>')+
+`<div class="body"><div class="map">${bg}
+ <div class="fl layers" style="left:14px;top:14px;width:230px"><h3>Layers</h3><div class="lbl">TRAFFIC</div><div class="row">Congestion<span class="sw"></span></div><div class="row">Incidents<span class="sw off"></span></div><div class="lbl">REPORTS</div><div class="row">Report pins<span class="sw"></span></div><div class="row">Density heatmap<span class="sw off"></span></div><div class="row">Priority colour<span class="sw off"></span></div></div>
+ <div class="pin" style="left:46%;top:36%"><b style="background:#e5401f"></b>Blocked sidewalk · Ayala</div>
+ <div class="pin" style="left:62%;top:58%"><b style="background:#e08a3c"></b>Broken ramp · Buendia</div>
+ <div class="fl hour" style="right:14px;top:14px;width:250px"><h3>This hour</h3><div class="stats" style="grid-template-columns:1fr 1fr"><div class="card"><small>OPEN REPORTS</small><strong>24</strong></div><div class="card"><small>AVG SPEED</small><strong>18<span style="font:500 11px var(--grot);color:var(--muted)"> km/h</span></strong></div></div></div>
+ <div class="fl legend" style="left:14px;bottom:14px;width:230px"><h3>Congestion</h3><div class="bar" style="margin-top:10px"></div><div class="ends"><span>Free</span><span>Heavy</span><span>Standstill</span></div></div>
+</div></div>`,
+queue:()=>hdr('Fix-it queue','Ranked by foot traffic, severity and age. Open → Verified → Assigned → Fixed.','<button class="btn">Filters</button><button class="btn pri">Assign selected</button>')+
+`<div class="body"><div class="list"><div class="tb"><div class="in">Search the queue</div><button class="btn">Status ▾</button><button class="btn">Barangay ▾</button></div>
+<table><tr><th>#</th><th>Report</th><th>Barangay</th><th>Priority</th><th>Status</th><th>Age</th></tr>
+${[['1','Blocked sidewalk','Bel-Air','red','High','blue','Verified','2d'],['2','Broken curb ramp','Poblacion','red','High','','Open','5h'],['3','Missing crossing','San Lorenzo','orange','Medium','green','Assigned','4d'],['4','Flooded underpass','Guadalupe','orange','Medium','blue','Verified','1d'],['5','Uneven pavement','Magallanes','','Low','','Open','3h']].map((r,i)=>`<tr class="${i==0?'sel':''}"><td class="rank">${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td><td><span class="badge ${r[3]}">${r[4]}</span></td><td><span class="badge ${r[5]}">${r[6]}</span></td><td>${r[7]}</td></tr>`).join('')}</table></div>
+<aside class="det"><span class="badge red">High priority</span><h2 style="margin-top:10px">Blocked sidewalk</h2><p style="color:var(--muted);font-size:12px;margin-top:6px">Ayala Ave near Paseo de Roxas, Bel-Air</p>
+<div class="step"><span class="on"></span><span class="on"></span><span></span><span></span></div><div class="stl"><span>Open</span><span>Verified</span><span>Assigned</span><span>Fixed</span></div>
+<div class="ph2">Photo from reporter</div>
+<dl><dt>Reported</dt><dd>2 days ago</dd><dt>Still there</dt><dd>7 of 9 confirm</dd><dt>Foot traffic</dt><dd>High</dd></dl>
+<div class="acts" style="margin-top:20px"><button class="btn pri" style="flex:1;justify-content:center">Assign crew</button><button class="btn">Mark fixed</button></div></aside></div>`,
+barangay:()=>hdr('Barangays','Points earned by residents who report and verify.','<button class="btn pri">Export CSV</button>')+
+`<div class="bars"><div class="stats" style="margin:0 0 10px"><div class="card"><small>REPORTS</small><strong>312</strong></div><div class="card"><small>FIXED</small><strong>187</strong></div><div class="card"><small>MEDIAN FIX TIME</small><strong>6.2 d</strong></div></div>
+${[['Poblacion',92],['Bel-Air',78],['San Lorenzo',64],['Guadalupe Nuevo',51],['Magallanes',44],['Dasmariñas',31]].map((b,i)=>`<div class="lb"><span class="rank">${i+1}</span><b style="font:600 12px var(--grot)">${b[0]}</b><div class="t"><i class="${i>2?'c':''}" style="width:${b[1]}%"></i></div><span style="text-align:right">${b[1]*14} pts</span></div>`).join('')}</div>`};
+const go=()=>{const v=(location.hash||'#map').slice(1);sheet.innerHTML=(V[v]||V.map)();document.querySelectorAll('[data-v]').forEach(n=>n.classList.toggle('on',n.dataset.v==v))};
+document.querySelectorAll('[data-v]').forEach(n=>n.onclick=()=>location.hash=n.dataset.v);addEventListener('hashchange',go);go();
+</script>
+</body>
+</html>

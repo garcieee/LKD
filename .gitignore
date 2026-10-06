@@ -38,3 +38,5 @@ mobile/ios/Flutter/Flutter.podspec
 # editors
 .vscode/
 .idea/
+
+dashboard/DESIGN.md
