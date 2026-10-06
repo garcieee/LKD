@@ -25,6 +25,7 @@ venv/
 *.db
 *.sqlite3
 /db/
+models/tickets/sim/pois_raw.json
 
 # Flutter / Dart (mobile)
 mobile/.dart_tool/

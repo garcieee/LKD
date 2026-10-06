@@ -175,6 +175,31 @@ lakad/
 │
 ├─ db/                                  # storage outside every app: reports.json + photos/, created at runtime (git-ignored)
 │
+├─ models/                              # ④ decision models, one folder per job. See models/README.md
+│  └─ tickets/                          # the ticketing brain: match, rank, classify, store. Stubs, see tickets/README.md
+│     ├─ README.md                      # what each folder answers, and the rules that keep it in one place
+│     ├─ settings.py                    # every tunable number: radii, weights, floors, bands
+│     ├─ types.py                       # Report, Ticket, Breakdown
+│     ├─ engine.py                      # the only door: submit, vote, set status, ranked and nearby tickets
+│     ├─ matching/                      # is this the same place?
+│     │  ├─ geo.py                      # distance, search box, accuracy-aware radius
+│     │  └─ match.py                    # which open ticket a report joins
+│     ├─ ranking/                       # what do we fix first, and why?
+│     │  ├─ priority.py                 # 0-100 score, band, breakdown
+│     │  ├─ exposure.py                 # foot traffic from nearby places
+│     │  └─ lifecycle.py                # reopened, likely gone, stale
+│     ├─ classification/                # what is it, how urgent, who fixes it?
+│     │  ├─ classify.py                 # danger flags, category hint, report quality
+│     │  └─ routing.py                  # category → office
+│     ├─ storage/                       # the memory: the only folder that touches disk (reads and writes db/)
+│     │  ├─ inbox.py                    # db/inbox.json: reports wait here, then get cleaned up
+│     │  ├─ schema.sql                  # tickets, reports, votes, events
+│     │  ├─ db.py                       # SQLite and migrations
+│     │  └─ repo.py                     # every SQL query
+│     ├─ resources/                     # word lists, nearby places, offices (static)
+│     ├─ sim/                           # experiments behind the numbers in settings.py
+│     └─ tests/                         # server/.venv/bin/pytest models
+│
 └─ server/                              # shared API · FastAPI
    ├─ .env.example                      # host, port, CORS, TomTom key, OSM place, storage. Copy to .env
    ├─ requirements.txt                  # Python packages, unpinned
