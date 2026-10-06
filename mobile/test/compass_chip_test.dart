@@ -60,7 +60,7 @@ void main() {
         .widget<Material>(find.descendant(of: find.byType(CompassChip), matching: find.byType(Material)).first)
         .color;
     expect(fill(), Colors.white);
-    expect(find.bySemanticsLabel(RegExp('Press locate to follow')), findsOneWidget);
+    expect(find.bySemanticsLabel(RegExp('Following your heading')), findsNothing);
 
     following.value = true;
     await tester.pump();

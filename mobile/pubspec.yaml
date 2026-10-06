@@ -61,6 +61,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  assets:
+    - assets/arrow.png # the pin on the map: an arrow that turns with the phone
+    - assets/route_chevron.png # the white arrowheads along the route line
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

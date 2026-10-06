@@ -43,16 +43,18 @@ class TripState extends ChangeNotifier {
   WalkRoute? get route => routes[mode];
   String? get error => errors[mode];
   bool get hasCommute => _fetchCommute != null;
-  /// The legs of the trip being taken: the chosen commute option, or, with no ride, the chosen walking route.
+  /// The legs of the trip being taken: the chosen commute option, or, with no ride (or started from the walking
+  /// step), the chosen walking route all the way.
   List<CommuteLeg> get activeLegs {
-    final o = option, r = route;
+    final o = step == TripStep.commute ? option : null, r = route;
     if (o != null) return o.legs;
     if (r == null) return const [];
     return [CommuteLeg.walk(r, 'Walk to ${destination?.label ?? 'your destination'}')];
   }
 
-  /// Whether Start can be pressed: on the commute step, once the options have landed (or failed) and there is a route.
-  bool get canStart => step == TripStep.commute && !commuteLoading && activeLegs.isNotEmpty;
+  /// Whether Start can be pressed: on the walking step once there is a route (a walk all the way), on the commute
+  /// step once the options have landed (or failed) and there is a trip.
+  bool get canStart => step == TripStep.commute ? !commuteLoading && activeLegs.isNotEmpty : route != null;
 
   CommuteOption? get option => selected < commute.length ? commute[selected] : null;
 

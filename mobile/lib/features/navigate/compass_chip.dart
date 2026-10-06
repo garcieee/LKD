@@ -1,6 +1,7 @@
 // A compass chip over the map: an arrow that keeps pointing at true north as the map turns, and the cardinal
 // direction at the top of the screen. While the camera follows the phone's heading that is the way the phone faces.
-// A display only: the map follows the heading by default, and the locate button picks it up again after a pan.
+// A display only: it follows the map. On a trip the map turns with the phone, and the locate button picks that up again after a pan.
+// Off a trip the map stays north-up, so only the arrow turns.
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart' show ValueListenable;
@@ -24,7 +25,7 @@ class CompassChip extends StatelessWidget {
         final color = on ? paper : ink;
         return Semantics(
           label:
-              'Compass, facing ${compassPoint(deg)}. ${on ? 'Following your heading' : 'Map north up. Press locate to follow your heading'}',
+              'Compass, facing ${compassPoint(deg)}. ${on ? 'Following your heading' : ''}',
           excludeSemantics: true,
           child: Material(
             color: on ? navy : Colors.white,

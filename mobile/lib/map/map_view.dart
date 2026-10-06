@@ -2,8 +2,10 @@
 // Mirrors dashboard/src/map/MapCanvas.tsx and App.tsx.
 import 'dart:async';
 import 'dart:math' as math;
+import 'dart:typed_data' show Uint8List;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:geolocator/geolocator.dart' show Geolocator;
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Size; // Flutter's Size here
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -147,14 +149,21 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     if (map == null || want == _puckOn) return;
     _puckOn = want;
     try {
+      // An arrow in place of the dot: the bearing image is the part that turns with the phone's heading, its tip the front.
+      final arrow = (await rootBundle.load('assets/arrow.png')).buffer.asUint8List();
       await map.location.updateSettings(
         LocationComponentSettings(
           enabled: want,
-          pulsingEnabled: want,
-          pulsingColor: navy.toARGB32(),
           showAccuracyRing: true,
           puckBearingEnabled: true,
           puckBearing: PuckBearing.HEADING,
+          locationPuck: LocationPuck(
+            locationPuck2D: LocationPuck2D(
+              topImage: Uint8List(0),
+              bearingImage: arrow,
+              shadowImage: Uint8List(0),
+            ),
+          ),
         ),
       );
     } catch (e) {
@@ -185,7 +194,10 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
       final route = option == null ? _trip.route : null;
       try {
         if (!await map.isStyleLoaded()) return; // _ready() draws it once the style is up
-        await showDestination(map, place);
+        // "From" is where the line begins: the user's position when the routes were asked for.
+        final first = option != null ? option.legs.first.line : route?.line;
+        final start = first == null || first.isEmpty ? null : first.first;
+        await showDestination(map, place, start: start);
         if (option != null) {
           await showCommute(map, option);
         } else {
@@ -246,18 +258,24 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     return true;
   }
 
-  void _stopFollowing() {
+  void _stopFollowing({bool northUp = false}) {
     _pendingFollow = false;
     if (!_following.value) return;
     _following.value = false;
     _viewport.moveTo(const IdleViewportState(), transition: null);
+    if (northUp) _map?.easeTo(CameraOptions(bearing: 0), MapAnimationOptions(duration: 600));
   }
 
-  // Start puts the camera on the user, turning with them; End returns it to north-up.
+  // Start puts the camera on the user, turning with them; End returns it to north-up. Off a trip the map stays
+  // north-up and only the arrow turns.
   void _syncFollow() {
     if (_trip.started == _wasStarted) return;
     _wasStarted = _trip.started;
-    if (_wasStarted) _follow();
+    if (_wasStarted) {
+      _follow();
+    } else {
+      _stopFollowing(northUp: true);
+    }
   }
 
   // The camera moves every frame while following: read the bearing for the compass one at a time.
@@ -289,7 +307,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     if (starting) _trackTrip(); // Start was pressed with a fix already in hand: show where they are now
   }
 
-  // A walking app opens at street level on the user, heading up, not on the whole city: once, on the first fix
+  // A walking app opens at street level on the user, north-up, not on the whole city: once, on the first fix
   // inside Makati (whether it comes before or after the map is framed).
   bool _startedNearUser = false;
 
@@ -298,7 +316,15 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     if (_startedNearUser || map == null || !_framed || fix == null || !inMakati(fix.latitude, fix.longitude)) return;
     _startedNearUser = true;
     if (_trip.destination != null) return; // they already picked somewhere: that framing wins
-    _follow(); // the camera joins the user, turning with the phone's heading
+    map.flyTo(
+      CameraOptions(
+        center: Point(coordinates: Position(fix.longitude, fix.latitude)),
+        zoom: Makati.walkZoom,
+        bearing: 0,
+        pitch: _pitch,
+      ),
+      MapAnimationOptions(duration: 1200),
+    );
   }
 
   // Both pins on screen; just the destination when we do not know where the user is (or they are
@@ -340,7 +366,19 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
       );
       return;
     }
-    _follow(); // the locate button puts the camera back on the user, turning with them
+    if (_trip.started) {
+      _follow(); // on a trip the locate button puts the camera back on the user, turning with them
+      return;
+    }
+    _map?.flyTo(
+      CameraOptions(
+        center: Point(coordinates: Position(fix.longitude, fix.latitude)),
+        zoom: Makati.walkZoom,
+        bearing: 0,
+        pitch: _pitch,
+      ),
+      MapAnimationOptions(duration: 1000),
+    );
   }
 
   // Fetches the reports, then redraws the pins. A failed fetch keeps the pins already drawn.

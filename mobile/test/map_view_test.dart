@@ -95,7 +95,7 @@ void main() {
     await leave(tester);
   });
 
-  testWidgets('on a short phone the ride options scroll, so Start trip can still be pressed', (tester) async {
+  testWidgets('on a short phone the trip options scroll, so Start trip can still be pressed', (tester) async {
     tester.view.physicalSize = phones.first;
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
