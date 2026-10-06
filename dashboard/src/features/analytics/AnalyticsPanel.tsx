@@ -88,14 +88,19 @@ export default function AnalyticsPanel({ reports, online, now, onClose, onShow }
       if (ev.clientX > innerWidth * (1 - FULL_AT)) left.current = false;
       setWidth(innerWidth - ev.clientX, !left.current);
       if (!wasFull && panel.current?.hasAttribute("data-full")) snapX = ev.clientX;
+      // Mapbox listens for window resize and redraws in the same frame, with no flicker.
+      dispatchEvent(new Event("resize"));
     };
     const stop = () => {
       removeEventListener("pointermove", move);
       removeEventListener("pointerup", stop);
       removeEventListener("pointercancel", stop);
       document.body.style.userSelect = "";
+      shell()?.removeAttribute("data-dragging");
+      dispatchEvent(new Event("resize")); // once more, now the map re-frames the city
     };
     document.body.style.userSelect = "none";
+    shell()?.setAttribute("data-dragging", ""); // the map follows the size only, see MapCanvas
     addEventListener("pointermove", move);
     addEventListener("pointerup", stop);
     addEventListener("pointercancel", stop);
