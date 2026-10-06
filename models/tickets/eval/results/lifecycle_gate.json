@@ -1,0 +1,397 @@
+{
+  "bootstrap_resamples": 1000,
+  "gate": {
+    "by_votes": {
+      "1": {
+        "flag: belief under the likely-gone line": {
+          "demotion_rate_of_gone": {
+            "events": 0,
+            "hi": 0.0,
+            "lo": 0.0,
+            "of": 14599,
+            "point": 0.0
+          },
+          "false_demotion_rate_of_there": {
+            "events": 0,
+            "hi": 0.0,
+            "lo": 0.0,
+            "of": 17762,
+            "point": 0.0
+          }
+        },
+        "gate at most 0.5: score halved or worse": {
+          "demotion_rate_of_gone": {
+            "events": 0,
+            "hi": 0.0,
+            "lo": 0.0,
+            "of": 14599,
+            "point": 0.0
+          },
+          "false_demotion_rate_of_there": {
+            "events": 0,
+            "hi": 0.0,
+            "lo": 0.0,
+            "of": 17762,
+            "point": 0.0
+          }
+        },
+        "gate below 1: any cut": {
+          "demotion_rate_of_gone": {
+            "events": 12567,
+            "hi": 0.86646,
+            "lo": 0.85515,
+            "of": 14599,
+            "point": 0.86081
+          },
+          "false_demotion_rate_of_there": {
+            "events": 3323,
+            "hi": 0.19296,
+            "lo": 0.18146,
+            "of": 17762,
+            "point": 0.18708
+          }
+        }
+      },
+      "2": {
+        "flag: belief under the likely-gone line": {
+          "demotion_rate_of_gone": {
+            "events": 0,
+            "hi": 0.0,
+            "lo": 0.0,
+            "of": 11831,
+            "point": 0.0
+          },
+          "false_demotion_rate_of_there": {
+            "events": 0,
+            "hi": 0.0,
+            "lo": 0.0,
+            "of": 10901,
+            "point": 0.0
+          }
+        },
+        "gate at most 0.5: score halved or worse": {
+          "demotion_rate_of_gone": {
+            "events": 0,
+            "hi": 0.0,
+            "lo": 0.0,
+            "of": 11831,
+            "point": 0.0
+          },
+          "false_demotion_rate_of_there": {
+            "events": 0,
+            "hi": 0.0,
+            "lo": 0.0,
+            "of": 10901,
+            "point": 0.0
+          }
+        },
+        "gate below 1: any cut": {
+          "demotion_rate_of_gone": {
+            "events": 11354,
+            "hi": 0.96338,
+            "lo": 0.95632,
+            "of": 11831,
+            "point": 0.95968
+          },
+          "false_demotion_rate_of_there": {
+            "events": 3688,
+            "hi": 0.34686,
+            "lo": 0.3289,
+            "of": 10901,
+            "point": 0.33832
+          }
+        }
+      },
+      "3": {
+        "flag: belief under the likely-gone line": {
+          "demotion_rate_of_gone": {
+            "events": 0,
+            "hi": 0.0,
+            "lo": 0.0,
+            "of": 9030,
+            "point": 0.0
+          },
+          "false_demotion_rate_of_there": {
+            "events": 0,
+            "hi": 0.0,
+            "lo": 0.0,
+            "of": 7004,
+            "point": 0.0
+          }
+        },
+        "gate at most 0.5: score halved or worse": {
+          "demotion_rate_of_gone": {
+            "events": 4236,
+            "hi": 0.47972,
+            "lo": 0.45849,
+            "of": 9030,
+            "point": 0.4691
+          },
+          "false_demotion_rate_of_there": {
+            "events": 34,
+            "hi": 0.00652,
+            "lo": 0.0033,
+            "of": 7004,
+            "point": 0.00485
+          }
+        },
+        "gate below 1: any cut": {
+          "demotion_rate_of_gone": {
+            "events": 8845,
+            "hi": 0.98233,
+            "lo": 0.97642,
+            "of": 9030,
+            "point": 0.97951
+          },
+          "false_demotion_rate_of_there": {
+            "events": 3169,
+            "hi": 0.46426,
+            "lo": 0.44051,
+            "of": 7004,
+            "point": 0.45246
+          }
+        }
+      },
+      "5": {
+        "flag: belief under the likely-gone line": {
+          "demotion_rate_of_gone": {
+            "events": 1437,
+            "hi": 0.30974,
+            "lo": 0.28497,
+            "of": 4841,
+            "point": 0.29684
+          },
+          "false_demotion_rate_of_there": {
+            "events": 1,
+            "hi": 0.00103,
+            "lo": 0.0,
+            "of": 2957,
+            "point": 0.00034
+          }
+        },
+        "gate at most 0.5: score halved or worse": {
+          "demotion_rate_of_gone": {
+            "events": 2889,
+            "hi": 0.61005,
+            "lo": 0.58319,
+            "of": 4841,
+            "point": 0.59678
+          },
+          "false_demotion_rate_of_there": {
+            "events": 12,
+            "hi": 0.00658,
+            "lo": 0.00201,
+            "of": 2957,
+            "point": 0.00406
+          }
+        },
+        "gate below 1: any cut": {
+          "demotion_rate_of_gone": {
+            "events": 4449,
+            "hi": 0.92594,
+            "lo": 0.91136,
+            "of": 4841,
+            "point": 0.91902
+          },
+          "false_demotion_rate_of_there": {
+            "events": 666,
+            "hi": 0.2417,
+            "lo": 0.21022,
+            "of": 2957,
+            "point": 0.22523
+          }
+        }
+      },
+      "8": {
+        "flag: belief under the likely-gone line": {
+          "demotion_rate_of_gone": {
+            "events": 746,
+            "hi": 0.43537,
+            "lo": 0.39106,
+            "of": 1807,
+            "point": 0.41284
+          },
+          "false_demotion_rate_of_there": {
+            "events": 0,
+            "hi": 0.0,
+            "lo": 0.0,
+            "of": 890,
+            "point": 0.0
+          }
+        },
+        "gate at most 0.5: score halved or worse": {
+          "demotion_rate_of_gone": {
+            "events": 1294,
+            "hi": 0.7367,
+            "lo": 0.69552,
+            "of": 1807,
+            "point": 0.7161
+          },
+          "false_demotion_rate_of_there": {
+            "events": 6,
+            "hi": 0.01237,
+            "lo": 0.00221,
+            "of": 890,
+            "point": 0.00674
+          }
+        },
+        "gate below 1: any cut": {
+          "demotion_rate_of_gone": {
+            "events": 1762,
+            "hi": 0.98219,
+            "lo": 0.96787,
+            "of": 1807,
+            "point": 0.9751
+          },
+          "false_demotion_rate_of_there": {
+            "events": 384,
+            "hi": 0.46137,
+            "lo": 0.39793,
+            "of": 890,
+            "point": 0.43146
+          }
+        }
+      }
+    },
+    "gate_at_the_shipped_flag_line": 0.3,
+    "gate_parameters": {
+      "GATE_LOW": 0.3,
+      "GATE_MIN": 0.25,
+      "GATE_SPAN": 0.5,
+      "LIKELY_GONE_BELOW": 0.45
+    },
+    "pooled": {
+      "flag: belief under the likely-gone line": {
+        "demotion_rate_of_gone": {
+          "events": 8916,
+          "hi": 0.15675,
+          "lo": 0.14572,
+          "of": 58861,
+          "point": 0.15148
+        },
+        "false_demotion_rate_of_there": {
+          "events": 3,
+          "hi": 0.00016,
+          "lo": 0.0,
+          "of": 49079,
+          "point": 6e-05
+        }
+      },
+      "gate at most 0.5: score halved or worse": {
+        "demotion_rate_of_gone": {
+          "events": 17769,
+          "hi": 0.30828,
+          "lo": 0.29532,
+          "of": 58861,
+          "point": 0.30188
+        },
+        "false_demotion_rate_of_there": {
+          "events": 72,
+          "hi": 0.00186,
+          "lo": 0.00108,
+          "of": 49079,
+          "point": 0.00147
+        }
+      },
+      "gate below 1: any cut": {
+        "demotion_rate_of_gone": {
+          "events": 55143,
+          "hi": 0.93902,
+          "lo": 0.93467,
+          "of": 58861,
+          "point": 0.93683
+        },
+        "false_demotion_rate_of_there": {
+          "events": 15427,
+          "hi": 0.32162,
+          "lo": 0.30702,
+          "of": 49079,
+          "point": 0.31433
+        }
+      },
+      "mean score cut (1 - gate)": {
+        "demotion_rate_of_gone": {
+          "events": 23345,
+          "hi": 0.39996,
+          "lo": 0.39319,
+          "of": 58861,
+          "point": 0.39662
+        },
+        "false_demotion_rate_of_there": {
+          "events": 2868,
+          "hi": 0.06005,
+          "lo": 0.05669,
+          "of": 49079,
+          "point": 0.05844
+        }
+      }
+    }
+  },
+  "meta": {
+    "git_commit": "feb001e",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T12:47:17+00:00"
+  },
+  "notes": [
+    "k votes = k taps after the first report, which counts as one yes",
+    "truth = the hazard is there at the moment of the vote",
+    "intervals: 95% percentile bootstrap over whole tickets",
+    "a target is met only when the whole interval passes"
+  ],
+  "seeds": [
+    3000,
+    3001,
+    3002,
+    3003,
+    3004
+  ],
+  "settings": {
+    "BELIEF_PRIOR": [
+      3,
+      1
+    ],
+    "GATE_LOW": 0.3,
+    "GATE_MIN": 0.25,
+    "GATE_SPAN": 0.5,
+    "LIKELY_GONE_BELOW": 0.45
+  },
+  "sim_config": {
+    "gone_before_votes": 0.3,
+    "gone_tap_rate": 1.0,
+    "lifetime_means": [
+      5.0,
+      15.0,
+      60.0
+    ],
+    "max_votes": 16,
+    "no_votes": 0.35,
+    "noise": 0.1,
+    "sensitivity": 0.85,
+    "specificity": 0.9,
+    "staff_days": [
+      2.0,
+      45.0
+    ],
+    "staff_share": 0.25,
+    "tickets": 10000,
+    "vote_delay_days": 10.0,
+    "votes_geometric_p": 0.3
+  },
+  "split": "test",
+  "train_seeds": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1004
+  ],
+  "validation_seeds": [
+    2000,
+    2001,
+    2002,
+    2003,
+    2004
+  ]
+}

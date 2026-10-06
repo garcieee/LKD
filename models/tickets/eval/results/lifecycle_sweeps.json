@@ -1,0 +1,3192 @@
+{
+  "bootstrap_resamples": 1000,
+  "meta": {
+    "git_commit": "feb001e",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T12:47:17+00:00"
+  },
+  "notes": [
+    "k votes = k taps after the first report, which counts as one yes",
+    "truth = the hazard is there at the moment of the vote",
+    "intervals: 95% percentile bootstrap over whole tickets",
+    "a target is met only when the whole interval passes"
+  ],
+  "seeds": [
+    3000,
+    3001,
+    3002,
+    3003,
+    3004
+  ],
+  "settings": {
+    "BELIEF_PRIOR": [
+      3,
+      1
+    ],
+    "GATE_LOW": 0.3,
+    "GATE_MIN": 0.25,
+    "GATE_SPAN": 0.5,
+    "LIKELY_GONE_BELOW": 0.45
+  },
+  "sim_config": {
+    "gone_before_votes": 0.3,
+    "gone_tap_rate": 1.0,
+    "lifetime_means": [
+      5.0,
+      15.0,
+      60.0
+    ],
+    "max_votes": 16,
+    "no_votes": 0.35,
+    "noise": 0.1,
+    "sensitivity": 0.85,
+    "specificity": 0.9,
+    "staff_days": [
+      2.0,
+      45.0
+    ],
+    "staff_share": 0.25,
+    "tickets": 10000,
+    "vote_delay_days": 10.0,
+    "votes_geometric_p": 0.3
+  },
+  "split": "test",
+  "sweeps": {
+    "hazard lifetime (mean days)": [
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.1028,
+              "lo": -0.10527,
+              "point": -0.10408
+            },
+            "ece": {
+              "hi": 0.38858,
+              "lo": 0.3784,
+              "point": 0.38343
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.34514,
+            "roc_auc": {
+              "hi": 0.84051,
+              "lo": 0.83233,
+              "point": 0.83636
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.23058,
+              "lo": -0.23568,
+              "point": -0.23313
+            },
+            "ece": {
+              "hi": 0.4432,
+              "lo": 0.43368,
+              "point": 0.43845
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.19359,
+            "roc_auc": {
+              "hi": 0.94126,
+              "lo": 0.9334,
+              "point": 0.93722
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.29728,
+              "lo": -0.30517,
+              "point": -0.30138
+            },
+            "ece": {
+              "hi": 0.42794,
+              "lo": 0.41639,
+              "point": 0.4223
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.14824,
+            "roc_auc": {
+              "hi": 0.96379,
+              "lo": 0.95528,
+              "point": 0.95956
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.35775,
+              "lo": -0.37099,
+              "point": -0.36454
+            },
+            "ece": {
+              "hi": 0.39642,
+              "lo": 0.38034,
+              "point": 0.38755
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.11791,
+            "roc_auc": {
+              "hi": 0.98392,
+              "lo": 0.9746,
+              "point": 0.9794
+            }
+          }
+        },
+        "changes": {
+          "lifetime_means": [
+            2.0
+          ]
+        },
+        "value": "2"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.08579,
+              "lo": -0.08821,
+              "point": -0.08703
+            },
+            "ece": {
+              "hi": 0.2963,
+              "lo": 0.28637,
+              "point": 0.29127
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.44918,
+            "roc_auc": {
+              "hi": 0.84125,
+              "lo": 0.83351,
+              "point": 0.83738
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.19457,
+              "lo": -0.19989,
+              "point": -0.19726
+            },
+            "ece": {
+              "hi": 0.39154,
+              "lo": 0.38082,
+              "point": 0.38605
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.28321,
+            "roc_auc": {
+              "hi": 0.92786,
+              "lo": 0.92011,
+              "point": 0.9238
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.25447,
+              "lo": -0.26287,
+              "point": -0.25871
+            },
+            "ece": {
+              "hi": 0.39679,
+              "lo": 0.38307,
+              "point": 0.39014
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.21865,
+            "roc_auc": {
+              "hi": 0.94961,
+              "lo": 0.93969,
+              "point": 0.94474
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.30919,
+              "lo": -0.32416,
+              "point": -0.31661
+            },
+            "ece": {
+              "hi": 0.39152,
+              "lo": 0.37092,
+              "point": 0.38085
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.16537,
+            "roc_auc": {
+              "hi": 0.96788,
+              "lo": 0.95503,
+              "point": 0.96148
+            }
+          }
+        },
+        "changes": {
+          "lifetime_means": [
+            5.0
+          ]
+        },
+        "value": "5"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.06756,
+              "lo": -0.06971,
+              "point": -0.06865
+            },
+            "ece": {
+              "hi": 0.24619,
+              "lo": 0.23712,
+              "point": 0.24165
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.56064,
+            "roc_auc": {
+              "hi": 0.84086,
+              "lo": 0.833,
+              "point": 0.83684
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.14941,
+              "lo": -0.15485,
+              "point": -0.1521
+            },
+            "ece": {
+              "hi": 0.29423,
+              "lo": 0.28231,
+              "point": 0.2883
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.43888,
+            "roc_auc": {
+              "hi": 0.92308,
+              "lo": 0.9153,
+              "point": 0.91909
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.19599,
+              "lo": -0.20459,
+              "point": -0.20023
+            },
+            "ece": {
+              "hi": 0.30066,
+              "lo": 0.28496,
+              "point": 0.29315
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.36958,
+            "roc_auc": {
+              "hi": 0.93485,
+              "lo": 0.92488,
+              "point": 0.93006
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.24103,
+              "lo": -0.25743,
+              "point": -0.24938
+            },
+            "ece": {
+              "hi": 0.31283,
+              "lo": 0.28693,
+              "point": 0.29922
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.30886,
+            "roc_auc": {
+              "hi": 0.95363,
+              "lo": 0.93862,
+              "point": 0.94641
+            }
+          }
+        },
+        "changes": {
+          "lifetime_means": [
+            15.0
+          ]
+        },
+        "value": "15"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.05415,
+              "lo": -0.05626,
+              "point": -0.05522
+            },
+            "ece": {
+              "hi": 0.21492,
+              "lo": 0.20684,
+              "point": 0.21092
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.64377,
+            "roc_auc": {
+              "hi": 0.84157,
+              "lo": 0.83367,
+              "point": 0.83772
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.11535,
+              "lo": -0.12053,
+              "point": -0.11793
+            },
+            "ece": {
+              "hi": 0.22204,
+              "lo": 0.21145,
+              "point": 0.21652
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.58788,
+            "roc_auc": {
+              "hi": 0.93741,
+              "lo": 0.9299,
+              "point": 0.93345
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.15107,
+              "lo": -0.15964,
+              "point": -0.15515
+            },
+            "ece": {
+              "hi": 0.21789,
+              "lo": 0.20322,
+              "point": 0.2104
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.54565,
+            "roc_auc": {
+              "hi": 0.95037,
+              "lo": 0.94122,
+              "point": 0.94584
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.17992,
+              "lo": -0.19614,
+              "point": -0.18807
+            },
+            "ece": {
+              "hi": 0.2142,
+              "lo": 0.19107,
+              "point": 0.20228
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.50463,
+            "roc_auc": {
+              "hi": 0.957,
+              "lo": 0.94232,
+              "point": 0.9498
+            }
+          }
+        },
+        "changes": {
+          "lifetime_means": [
+            60.0
+          ]
+        },
+        "value": "60"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.0499,
+              "lo": -0.05193,
+              "point": -0.05093
+            },
+            "ece": {
+              "hi": 0.20502,
+              "lo": 0.19687,
+              "point": 0.20098
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.67016,
+            "roc_auc": {
+              "hi": 0.84233,
+              "lo": 0.83433,
+              "point": 0.8382
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.10498,
+              "lo": -0.11016,
+              "point": -0.10751
+            },
+            "ece": {
+              "hi": 0.22519,
+              "lo": 0.21537,
+              "point": 0.22008
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.63827,
+            "roc_auc": {
+              "hi": 0.9483,
+              "lo": 0.94161,
+              "point": 0.94478
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.13617,
+              "lo": -0.14482,
+              "point": -0.14032
+            },
+            "ece": {
+              "hi": 0.21495,
+              "lo": 0.2021,
+              "point": 0.20864
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.60939,
+            "roc_auc": {
+              "hi": 0.96211,
+              "lo": 0.95389,
+              "point": 0.95795
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.1596,
+              "lo": -0.17569,
+              "point": -0.16758
+            },
+            "ece": {
+              "hi": 0.20139,
+              "lo": 0.18003,
+              "point": 0.19015
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.58547,
+            "roc_auc": {
+              "hi": 0.96772,
+              "lo": 0.95229,
+              "point": 0.9604
+            }
+          }
+        },
+        "changes": {
+          "lifetime_means": [
+            180.0
+          ]
+        },
+        "value": "180"
+      }
+    ],
+    "share of 'gone' taps actually cast": [
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.06956,
+              "lo": -0.07173,
+              "point": -0.07067
+            },
+            "ece": {
+              "hi": 0.25114,
+              "lo": 0.24209,
+              "point": 0.2467
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.54887,
+            "roc_auc": {
+              "hi": 0.84085,
+              "lo": 0.83283,
+              "point": 0.83686
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.15337,
+              "lo": -0.15889,
+              "point": -0.15606
+            },
+            "ece": {
+              "hi": 0.29441,
+              "lo": 0.28246,
+              "point": 0.28843
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.43682,
+            "roc_auc": {
+              "hi": 0.92888,
+              "lo": 0.92176,
+              "point": 0.92519
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.19957,
+              "lo": -0.20883,
+              "point": -0.20418
+            },
+            "ece": {
+              "hi": 0.29168,
+              "lo": 0.27607,
+              "point": 0.2843
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.3792,
+            "roc_auc": {
+              "hi": 0.94394,
+              "lo": 0.93475,
+              "point": 0.93937
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.24318,
+              "lo": -0.25985,
+              "point": -0.25139
+            },
+            "ece": {
+              "hi": 0.29891,
+              "lo": 0.27384,
+              "point": 0.28616
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.33,
+            "roc_auc": {
+              "hi": 0.96136,
+              "lo": 0.94783,
+              "point": 0.95481
+            }
+          }
+        },
+        "changes": {
+          "gone_tap_rate": 1.0
+        },
+        "value": "1.00"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.05598,
+              "lo": -0.05822,
+              "point": -0.05708
+            },
+            "ece": {
+              "hi": 0.19638,
+              "lo": 0.18608,
+              "point": 0.19122
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 28797,
+            "prevalence": 0.59232,
+            "roc_auc": {
+              "hi": 0.83201,
+              "lo": 0.82296,
+              "point": 0.82738
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.10145,
+              "lo": -0.10669,
+              "point": -0.10397
+            },
+            "ece": {
+              "hi": 0.2574,
+              "lo": 0.24362,
+              "point": 0.2506
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 11450,
+            "prevalence": 0.54926,
+            "roc_auc": {
+              "hi": 0.91905,
+              "lo": 0.90945,
+              "point": 0.91435
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.10933,
+              "lo": -0.11929,
+              "point": -0.11438
+            },
+            "ece": {
+              "hi": 0.24262,
+              "lo": 0.22116,
+              "point": 0.23158
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 4550,
+            "prevalence": 0.55473,
+            "roc_auc": {
+              "hi": 0.93152,
+              "lo": 0.91738,
+              "point": 0.92447
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.09786,
+              "lo": -0.11738,
+              "point": -0.10742
+            },
+            "ece": {
+              "hi": 0.2259,
+              "lo": 0.18837,
+              "point": 0.20188
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 1201,
+            "prevalence": 0.58951,
+            "roc_auc": {
+              "hi": 0.94386,
+              "lo": 0.91499,
+              "point": 0.93044
+            }
+          }
+        },
+        "changes": {
+          "gone_tap_rate": 0.5
+        },
+        "value": "0.50"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.03834,
+              "lo": -0.04037,
+              "point": -0.03938
+            },
+            "ece": {
+              "hi": 0.15078,
+              "lo": 0.1403,
+              "point": 0.14567
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 25807,
+            "prevalence": 0.64622,
+            "roc_auc": {
+              "hi": 0.78137,
+              "lo": 0.77148,
+              "point": 0.77651
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.05334,
+              "lo": -0.05788,
+              "point": -0.05555
+            },
+            "ece": {
+              "hi": 0.18148,
+              "lo": 0.1657,
+              "point": 0.17363
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 8765,
+            "prevalence": 0.67792,
+            "roc_auc": {
+              "hi": 0.87638,
+              "lo": 0.86035,
+              "point": 0.8685
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.04676,
+              "lo": -0.05419,
+              "point": -0.05059
+            },
+            "ece": {
+              "hi": 0.17019,
+              "lo": 0.14536,
+              "point": 0.15824
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 3190,
+            "prevalence": 0.72226,
+            "roc_auc": {
+              "hi": 0.89791,
+              "lo": 0.87173,
+              "point": 0.88477
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.02639,
+              "lo": -0.03772,
+              "point": -0.03195
+            },
+            "ece": {
+              "hi": 0.1363,
+              "lo": 0.08781,
+              "point": 0.1116
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 763,
+            "prevalence": 0.79817,
+            "roc_auc": {
+              "hi": 0.90052,
+              "lo": 0.83526,
+              "point": 0.86886
+            }
+          }
+        },
+        "changes": {
+          "gone_tap_rate": 0.25
+        },
+        "value": "0.25"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.01863,
+              "lo": -0.02046,
+              "point": -0.01954
+            },
+            "ece": {
+              "hi": 0.11227,
+              "lo": 0.10145,
+              "point": 0.10681
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 23316,
+            "prevalence": 0.70514,
+            "roc_auc": {
+              "hi": 0.68705,
+              "lo": 0.67467,
+              "point": 0.68078
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.02081,
+              "lo": -0.02391,
+              "point": -0.02236
+            },
+            "ece": {
+              "hi": 0.09871,
+              "lo": 0.08193,
+              "point": 0.09049
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7255,
+            "prevalence": 0.78856,
+            "roc_auc": {
+              "hi": 0.77852,
+              "lo": 0.75294,
+              "point": 0.76593
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.01638,
+              "lo": -0.02094,
+              "point": -0.01856
+            },
+            "ece": {
+              "hi": 0.08834,
+              "lo": 0.06303,
+              "point": 0.07617
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": false
+            },
+            "n": 2556,
+            "prevalence": 0.84585,
+            "roc_auc": {
+              "hi": 0.78923,
+              "lo": 0.73891,
+              "point": 0.76419
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.01446,
+              "lo": -0.02418,
+              "point": -0.01946
+            },
+            "ece": {
+              "hi": 0.07969,
+              "lo": 0.03531,
+              "point": 0.05694
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": false
+            },
+            "n": 612,
+            "prevalence": 0.89869,
+            "roc_auc": {
+              "hi": 0.82239,
+              "lo": 0.69483,
+              "point": 0.75815
+            }
+          }
+        },
+        "changes": {
+          "gone_tap_rate": 0.1
+        },
+        "value": "0.10"
+      }
+    ],
+    "share of hazards gone before anyone votes": [
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.03019,
+              "lo": -0.03187,
+              "point": -0.03106
+            },
+            "ece": {
+              "hi": 0.15721,
+              "lo": 0.15024,
+              "point": 0.15367
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.78996,
+            "roc_auc": {
+              "hi": 0.84124,
+              "lo": 0.83176,
+              "point": 0.83645
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.07858,
+              "lo": -0.08318,
+              "point": -0.08073
+            },
+            "ece": {
+              "hi": 0.18646,
+              "lo": 0.17463,
+              "point": 0.1805
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.62205,
+            "roc_auc": {
+              "hi": 0.87733,
+              "lo": 0.86714,
+              "point": 0.87213
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.10955,
+              "lo": -0.117,
+              "point": -0.1131
+            },
+            "ece": {
+              "hi": 0.21376,
+              "lo": 0.19649,
+              "point": 0.20486
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.54334,
+            "roc_auc": {
+              "hi": 0.89728,
+              "lo": 0.88404,
+              "point": 0.89058
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.14493,
+              "lo": -0.16005,
+              "point": -0.1526
+            },
+            "ece": {
+              "hi": 0.26075,
+              "lo": 0.23301,
+              "point": 0.24683
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.46385,
+            "roc_auc": {
+              "hi": 0.92801,
+              "lo": 0.90765,
+              "point": 0.91738
+            }
+          }
+        },
+        "changes": {
+          "gone_before_votes": 0.0
+        },
+        "value": "0.00"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.04348,
+              "lo": -0.0454,
+              "point": -0.04453
+            },
+            "ece": {
+              "hi": 0.18964,
+              "lo": 0.18156,
+              "point": 0.18584
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.70891,
+            "roc_auc": {
+              "hi": 0.84184,
+              "lo": 0.83342,
+              "point": 0.83765
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.10411,
+              "lo": -0.10898,
+              "point": -0.10647
+            },
+            "ece": {
+              "hi": 0.22455,
+              "lo": 0.21224,
+              "point": 0.21829
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.55819,
+            "roc_auc": {
+              "hi": 0.89952,
+              "lo": 0.8907,
+              "point": 0.89506
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.14021,
+              "lo": -0.1484,
+              "point": -0.14421
+            },
+            "ece": {
+              "hi": 0.23932,
+              "lo": 0.22224,
+              "point": 0.23091
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.48769,
+            "roc_auc": {
+              "hi": 0.91649,
+              "lo": 0.90456,
+              "point": 0.91068
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.17608,
+              "lo": -0.19153,
+              "point": -0.18388
+            },
+            "ece": {
+              "hi": 0.27071,
+              "lo": 0.24372,
+              "point": 0.25738
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.42269,
+            "roc_auc": {
+              "hi": 0.93964,
+              "lo": 0.92182,
+              "point": 0.93036
+            }
+          }
+        },
+        "changes": {
+          "gone_before_votes": 0.1
+        },
+        "value": "0.10"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.06956,
+              "lo": -0.07173,
+              "point": -0.07067
+            },
+            "ece": {
+              "hi": 0.25114,
+              "lo": 0.24209,
+              "point": 0.2467
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.54887,
+            "roc_auc": {
+              "hi": 0.84085,
+              "lo": 0.83283,
+              "point": 0.83686
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.15337,
+              "lo": -0.15889,
+              "point": -0.15606
+            },
+            "ece": {
+              "hi": 0.29441,
+              "lo": 0.28246,
+              "point": 0.28843
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.43682,
+            "roc_auc": {
+              "hi": 0.92888,
+              "lo": 0.92176,
+              "point": 0.92519
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.19957,
+              "lo": -0.20883,
+              "point": -0.20418
+            },
+            "ece": {
+              "hi": 0.29168,
+              "lo": 0.27607,
+              "point": 0.2843
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.3792,
+            "roc_auc": {
+              "hi": 0.94394,
+              "lo": 0.93475,
+              "point": 0.93937
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.24318,
+              "lo": -0.25985,
+              "point": -0.25139
+            },
+            "ece": {
+              "hi": 0.29891,
+              "lo": 0.27384,
+              "point": 0.28616
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.33,
+            "roc_auc": {
+              "hi": 0.96136,
+              "lo": 0.94783,
+              "point": 0.95481
+            }
+          }
+        },
+        "changes": {
+          "gone_before_votes": 0.3
+        },
+        "value": "0.30"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.09479,
+              "lo": -0.09719,
+              "point": -0.096
+            },
+            "ece": {
+              "hi": 0.34446,
+              "lo": 0.33488,
+              "point": 0.33957
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.39458,
+            "roc_auc": {
+              "hi": 0.841,
+              "lo": 0.83263,
+              "point": 0.83677
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.20091,
+              "lo": -0.20599,
+              "point": -0.20332
+            },
+            "ece": {
+              "hi": 0.3638,
+              "lo": 0.35325,
+              "point": 0.35851
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.31901,
+            "roc_auc": {
+              "hi": 0.94587,
+              "lo": 0.93937,
+              "point": 0.94253
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.25555,
+              "lo": -0.26447,
+              "point": -0.26011
+            },
+            "ece": {
+              "hi": 0.33756,
+              "lo": 0.32458,
+              "point": 0.33103
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.28071,
+            "roc_auc": {
+              "hi": 0.96313,
+              "lo": 0.95613,
+              "point": 0.95979
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.30373,
+              "lo": -0.31978,
+              "point": -0.31193
+            },
+            "ece": {
+              "hi": 0.32478,
+              "lo": 0.30341,
+              "point": 0.31331
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.24027,
+            "roc_auc": {
+              "hi": 0.97394,
+              "lo": 0.96327,
+              "point": 0.96905
+            }
+          }
+        },
+        "changes": {
+          "gone_before_votes": 0.5
+        },
+        "value": "0.50"
+      }
+    ],
+    "share of voters who tap at random": [
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.07569,
+              "lo": -0.07792,
+              "point": -0.07682
+            },
+            "ece": {
+              "hi": 0.28768,
+              "lo": 0.27912,
+              "point": 0.28357
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.54887,
+            "roc_auc": {
+              "hi": 0.87817,
+              "lo": 0.87101,
+              "point": 0.87471
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.16258,
+              "lo": -0.16822,
+              "point": -0.16536
+            },
+            "ece": {
+              "hi": 0.3079,
+              "lo": 0.29691,
+              "point": 0.30245
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.43682,
+            "roc_auc": {
+              "hi": 0.95027,
+              "lo": 0.94462,
+              "point": 0.94736
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.20988,
+              "lo": -0.21905,
+              "point": -0.21447
+            },
+            "ece": {
+              "hi": 0.29787,
+              "lo": 0.28311,
+              "point": 0.29066
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.3792,
+            "roc_auc": {
+              "hi": 0.95813,
+              "lo": 0.95055,
+              "point": 0.95435
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.2517,
+              "lo": -0.26883,
+              "point": -0.26028
+            },
+            "ece": {
+              "hi": 0.30267,
+              "lo": 0.27914,
+              "point": 0.29112
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.33,
+            "roc_auc": {
+              "hi": 0.97072,
+              "lo": 0.95931,
+              "point": 0.96534
+            }
+          }
+        },
+        "changes": {
+          "noise": 0.0
+        },
+        "value": "0.00"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.07269,
+              "lo": -0.07488,
+              "point": -0.07379
+            },
+            "ece": {
+              "hi": 0.26951,
+              "lo": 0.26085,
+              "point": 0.26537
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.54887,
+            "roc_auc": {
+              "hi": 0.85966,
+              "lo": 0.85212,
+              "point": 0.85596
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.15802,
+              "lo": -0.16366,
+              "point": -0.16081
+            },
+            "ece": {
+              "hi": 0.30273,
+              "lo": 0.29143,
+              "point": 0.29695
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.43682,
+            "roc_auc": {
+              "hi": 0.9413,
+              "lo": 0.93469,
+              "point": 0.93782
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.20462,
+              "lo": -0.2139,
+              "point": -0.20933
+            },
+            "ece": {
+              "hi": 0.29413,
+              "lo": 0.27868,
+              "point": 0.28668
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.3792,
+            "roc_auc": {
+              "hi": 0.95119,
+              "lo": 0.94239,
+              "point": 0.94674
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.24739,
+              "lo": -0.2641,
+              "point": -0.25578
+            },
+            "ece": {
+              "hi": 0.3025,
+              "lo": 0.27817,
+              "point": 0.29021
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.33,
+            "roc_auc": {
+              "hi": 0.96632,
+              "lo": 0.95405,
+              "point": 0.96035
+            }
+          }
+        },
+        "changes": {
+          "noise": 0.05
+        },
+        "value": "0.05"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.06956,
+              "lo": -0.07173,
+              "point": -0.07067
+            },
+            "ece": {
+              "hi": 0.25114,
+              "lo": 0.24209,
+              "point": 0.2467
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.54887,
+            "roc_auc": {
+              "hi": 0.84085,
+              "lo": 0.83283,
+              "point": 0.83686
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.15337,
+              "lo": -0.15889,
+              "point": -0.15606
+            },
+            "ece": {
+              "hi": 0.29441,
+              "lo": 0.28246,
+              "point": 0.28843
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.43682,
+            "roc_auc": {
+              "hi": 0.92888,
+              "lo": 0.92176,
+              "point": 0.92519
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.19957,
+              "lo": -0.20883,
+              "point": -0.20418
+            },
+            "ece": {
+              "hi": 0.29168,
+              "lo": 0.27607,
+              "point": 0.2843
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.3792,
+            "roc_auc": {
+              "hi": 0.94394,
+              "lo": 0.93475,
+              "point": 0.93937
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.24318,
+              "lo": -0.25985,
+              "point": -0.25139
+            },
+            "ece": {
+              "hi": 0.29891,
+              "lo": 0.27384,
+              "point": 0.28616
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.33,
+            "roc_auc": {
+              "hi": 0.96136,
+              "lo": 0.94783,
+              "point": 0.95481
+            }
+          }
+        },
+        "changes": {
+          "noise": 0.1
+        },
+        "value": "0.10"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.06666,
+              "lo": -0.06885,
+              "point": -0.06775
+            },
+            "ece": {
+              "hi": 0.23388,
+              "lo": 0.22439,
+              "point": 0.22918
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.54887,
+            "roc_auc": {
+              "hi": 0.82281,
+              "lo": 0.81446,
+              "point": 0.8187
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.14847,
+              "lo": -0.15391,
+              "point": -0.15112
+            },
+            "ece": {
+              "hi": 0.28793,
+              "lo": 0.27569,
+              "point": 0.28151
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.43682,
+            "roc_auc": {
+              "hi": 0.91531,
+              "lo": 0.90764,
+              "point": 0.91132
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.19477,
+              "lo": -0.20383,
+              "point": -0.19936
+            },
+            "ece": {
+              "hi": 0.28886,
+              "lo": 0.27323,
+              "point": 0.28105
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.3792,
+            "roc_auc": {
+              "hi": 0.93636,
+              "lo": 0.92616,
+              "point": 0.93126
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.23843,
+              "lo": -0.25518,
+              "point": -0.24665
+            },
+            "ece": {
+              "hi": 0.29463,
+              "lo": 0.26865,
+              "point": 0.28077
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.33,
+            "roc_auc": {
+              "hi": 0.95502,
+              "lo": 0.94012,
+              "point": 0.94755
+            }
+          }
+        },
+        "changes": {
+          "noise": 0.15
+        },
+        "value": "0.15"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.06381,
+              "lo": -0.06602,
+              "point": -0.06495
+            },
+            "ece": {
+              "hi": 0.21684,
+              "lo": 0.20733,
+              "point": 0.21235
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.54887,
+            "roc_auc": {
+              "hi": 0.80577,
+              "lo": 0.79737,
+              "point": 0.80165
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.14392,
+              "lo": -0.14932,
+              "point": -0.14657
+            },
+            "ece": {
+              "hi": 0.28153,
+              "lo": 0.26917,
+              "point": 0.27531
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.43682,
+            "roc_auc": {
+              "hi": 0.90215,
+              "lo": 0.89346,
+              "point": 0.89779
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.19029,
+              "lo": -0.19926,
+              "point": -0.19474
+            },
+            "ece": {
+              "hi": 0.28584,
+              "lo": 0.26952,
+              "point": 0.27785
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.3792,
+            "roc_auc": {
+              "hi": 0.92813,
+              "lo": 0.91699,
+              "point": 0.92246
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.23284,
+              "lo": -0.24967,
+              "point": -0.24127
+            },
+            "ece": {
+              "hi": 0.29058,
+              "lo": 0.26511,
+              "point": 0.27618
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.33,
+            "roc_auc": {
+              "hi": 0.9469,
+              "lo": 0.93084,
+              "point": 0.93892
+            }
+          }
+        },
+        "changes": {
+          "noise": 0.2
+        },
+        "value": "0.20"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.05747,
+              "lo": -0.05975,
+              "point": -0.05863
+            },
+            "ece": {
+              "hi": 0.20771,
+              "lo": 0.19759,
+              "point": 0.20251
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.54887,
+            "roc_auc": {
+              "hi": 0.76802,
+              "lo": 0.75908,
+              "point": 0.76358
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.13329,
+              "lo": -0.13869,
+              "point": -0.13594
+            },
+            "ece": {
+              "hi": 0.26883,
+              "lo": 0.25628,
+              "point": 0.26254
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.43682,
+            "roc_auc": {
+              "hi": 0.86769,
+              "lo": 0.85708,
+              "point": 0.86251
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.17861,
+              "lo": -0.18747,
+              "point": -0.18313
+            },
+            "ece": {
+              "hi": 0.27992,
+              "lo": 0.26272,
+              "point": 0.27161
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.3792,
+            "roc_auc": {
+              "hi": 0.90073,
+              "lo": 0.88726,
+              "point": 0.89404
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.22293,
+              "lo": -0.23941,
+              "point": -0.23092
+            },
+            "ece": {
+              "hi": 0.28659,
+              "lo": 0.26031,
+              "point": 0.27124
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.33,
+            "roc_auc": {
+              "hi": 0.93026,
+              "lo": 0.9106,
+              "point": 0.92056
+            }
+          }
+        },
+        "changes": {
+          "noise": 0.3
+        },
+        "value": "0.30"
+      }
+    ],
+    "vote delay (mean days after the first report)": [
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.05505,
+              "lo": -0.05717,
+              "point": -0.05607
+            },
+            "ece": {
+              "hi": 0.21682,
+              "lo": 0.20851,
+              "point": 0.21262
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.63814,
+            "roc_auc": {
+              "hi": 0.84138,
+              "lo": 0.83355,
+              "point": 0.83737
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.11714,
+              "lo": -0.12254,
+              "point": -0.11989
+            },
+            "ece": {
+              "hi": 0.22656,
+              "lo": 0.21526,
+              "point": 0.22109
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.58339,
+            "roc_auc": {
+              "hi": 0.93886,
+              "lo": 0.93143,
+              "point": 0.93519
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.15344,
+              "lo": -0.16203,
+              "point": -0.15752
+            },
+            "ece": {
+              "hi": 0.21928,
+              "lo": 0.20418,
+              "point": 0.21145
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.54617,
+            "roc_auc": {
+              "hi": 0.95385,
+              "lo": 0.94487,
+              "point": 0.94951
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.18274,
+              "lo": -0.19999,
+              "point": -0.19139
+            },
+            "ece": {
+              "hi": 0.2213,
+              "lo": 0.19694,
+              "point": 0.20943
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.51279,
+            "roc_auc": {
+              "hi": 0.96267,
+              "lo": 0.9475,
+              "point": 0.95581
+            }
+          }
+        },
+        "changes": {
+          "vote_delay_days": 3.0
+        },
+        "value": "3"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.06956,
+              "lo": -0.07173,
+              "point": -0.07067
+            },
+            "ece": {
+              "hi": 0.25114,
+              "lo": 0.24209,
+              "point": 0.2467
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.54887,
+            "roc_auc": {
+              "hi": 0.84085,
+              "lo": 0.83283,
+              "point": 0.83686
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.15337,
+              "lo": -0.15889,
+              "point": -0.15606
+            },
+            "ece": {
+              "hi": 0.29441,
+              "lo": 0.28246,
+              "point": 0.28843
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.43682,
+            "roc_auc": {
+              "hi": 0.92888,
+              "lo": 0.92176,
+              "point": 0.92519
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.19957,
+              "lo": -0.20883,
+              "point": -0.20418
+            },
+            "ece": {
+              "hi": 0.29168,
+              "lo": 0.27607,
+              "point": 0.2843
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.3792,
+            "roc_auc": {
+              "hi": 0.94394,
+              "lo": 0.93475,
+              "point": 0.93937
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.24318,
+              "lo": -0.25985,
+              "point": -0.25139
+            },
+            "ece": {
+              "hi": 0.29891,
+              "lo": 0.27384,
+              "point": 0.28616
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.33,
+            "roc_auc": {
+              "hi": 0.96136,
+              "lo": 0.94783,
+              "point": 0.95481
+            }
+          }
+        },
+        "changes": {
+          "vote_delay_days": 10.0
+        },
+        "value": "10"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.09052,
+              "lo": -0.0929,
+              "point": -0.09176
+            },
+            "ece": {
+              "hi": 0.32101,
+              "lo": 0.31099,
+              "point": 0.31617
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.42085,
+            "roc_auc": {
+              "hi": 0.84111,
+              "lo": 0.833,
+              "point": 0.8369
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.20281,
+              "lo": -0.20827,
+              "point": -0.20548
+            },
+            "ece": {
+              "hi": 0.40652,
+              "lo": 0.39595,
+              "point": 0.40112
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.25739,
+            "roc_auc": {
+              "hi": 0.92892,
+              "lo": 0.92115,
+              "point": 0.92494
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.26558,
+              "lo": -0.27381,
+              "point": -0.26981
+            },
+            "ece": {
+              "hi": 0.41129,
+              "lo": 0.39809,
+              "point": 0.40492
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.19043,
+            "roc_auc": {
+              "hi": 0.9526,
+              "lo": 0.94276,
+              "point": 0.94778
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.32072,
+              "lo": -0.33565,
+              "point": -0.32861
+            },
+            "ece": {
+              "hi": 0.41017,
+              "lo": 0.38972,
+              "point": 0.39982
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.13348,
+            "roc_auc": {
+              "hi": 0.96634,
+              "lo": 0.95206,
+              "point": 0.95947
+            }
+          }
+        },
+        "changes": {
+          "vote_delay_days": 30.0
+        },
+        "value": "30"
+      }
+    ],
+    "voter accuracy (sensitivity = specificity)": [
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.02923,
+              "lo": -0.0315,
+              "point": -0.03032
+            },
+            "ece": {
+              "hi": 0.20727,
+              "lo": 0.19678,
+              "point": 0.20196
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.54887,
+            "roc_auc": {
+              "hi": 0.59645,
+              "lo": 0.58576,
+              "point": 0.59081
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.08139,
+              "lo": -0.08667,
+              "point": -0.08405
+            },
+            "ece": {
+              "hi": 0.2606,
+              "lo": 0.2456,
+              "point": 0.25271
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": false
+            },
+            "n": 16034,
+            "prevalence": 0.43682,
+            "roc_auc": {
+              "hi": 0.65041,
+              "lo": 0.6342,
+              "point": 0.64181
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.11817,
+              "lo": -0.12637,
+              "point": -0.12223
+            },
+            "ece": {
+              "hi": 0.2828,
+              "lo": 0.26241,
+              "point": 0.2731
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": false
+            },
+            "n": 7798,
+            "prevalence": 0.3792,
+            "roc_auc": {
+              "hi": 0.68014,
+              "lo": 0.6573,
+              "point": 0.66854
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.15605,
+              "lo": -0.17173,
+              "point": -0.1637
+            },
+            "ece": {
+              "hi": 0.30171,
+              "lo": 0.2667,
+              "point": 0.28413
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": false
+            },
+            "n": 2697,
+            "prevalence": 0.33,
+            "roc_auc": {
+              "hi": 0.72098,
+              "lo": 0.67994,
+              "point": 0.70053
+            }
+          }
+        },
+        "changes": {
+          "sensitivity": 0.6,
+          "specificity": 0.6
+        },
+        "value": "0.60"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.03663,
+              "lo": -0.03889,
+              "point": -0.03774
+            },
+            "ece": {
+              "hi": 0.20767,
+              "lo": 0.19728,
+              "point": 0.20246
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.54887,
+            "roc_auc": {
+              "hi": 0.64227,
+              "lo": 0.63177,
+              "point": 0.63697
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.09419,
+              "lo": -0.09953,
+              "point": -0.09696
+            },
+            "ece": {
+              "hi": 0.26121,
+              "lo": 0.24659,
+              "point": 0.25354
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": false
+            },
+            "n": 16034,
+            "prevalence": 0.43682,
+            "roc_auc": {
+              "hi": 0.71491,
+              "lo": 0.70048,
+              "point": 0.70757
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.13338,
+              "lo": -0.14133,
+              "point": -0.13723
+            },
+            "ece": {
+              "hi": 0.28315,
+              "lo": 0.26296,
+              "point": 0.27351
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": false
+            },
+            "n": 7798,
+            "prevalence": 0.3792,
+            "roc_auc": {
+              "hi": 0.75363,
+              "lo": 0.73235,
+              "point": 0.74271
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.17278,
+              "lo": -0.18816,
+              "point": -0.18035
+            },
+            "ece": {
+              "hi": 0.30022,
+              "lo": 0.26779,
+              "point": 0.28391
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.33,
+            "roc_auc": {
+              "hi": 0.80257,
+              "lo": 0.76759,
+              "point": 0.78496
+            }
+          }
+        },
+        "changes": {
+          "sensitivity": 0.65,
+          "specificity": 0.65
+        },
+        "value": "0.65"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.04335,
+              "lo": -0.04565,
+              "point": -0.04454
+            },
+            "ece": {
+              "hi": 0.20843,
+              "lo": 0.19821,
+              "point": 0.20328
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.54887,
+            "roc_auc": {
+              "hi": 0.68533,
+              "lo": 0.67542,
+              "point": 0.68016
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.10645,
+              "lo": -0.1118,
+              "point": -0.10911
+            },
+            "ece": {
+              "hi": 0.26223,
+              "lo": 0.24768,
+              "point": 0.25456
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.43682,
+            "roc_auc": {
+              "hi": 0.77375,
+              "lo": 0.75999,
+              "point": 0.76672
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.14786,
+              "lo": -0.15593,
+              "point": -0.1517
+            },
+            "ece": {
+              "hi": 0.28306,
+              "lo": 0.26367,
+              "point": 0.27381
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.3792,
+            "roc_auc": {
+              "hi": 0.81662,
+              "lo": 0.79781,
+              "point": 0.80701
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.18921,
+              "lo": -0.20475,
+              "point": -0.19684
+            },
+            "ece": {
+              "hi": 0.29922,
+              "lo": 0.26821,
+              "point": 0.28279
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.33,
+            "roc_auc": {
+              "hi": 0.86434,
+              "lo": 0.8361,
+              "point": 0.85058
+            }
+          }
+        },
+        "changes": {
+          "sensitivity": 0.7,
+          "specificity": 0.7
+        },
+        "value": "0.70"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.05027,
+              "lo": -0.05251,
+              "point": -0.05139
+            },
+            "ece": {
+              "hi": 0.20919,
+              "lo": 0.1991,
+              "point": 0.20411
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.54887,
+            "roc_auc": {
+              "hi": 0.72876,
+              "lo": 0.71895,
+              "point": 0.72367
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.11939,
+              "lo": -0.12457,
+              "point": -0.12198
+            },
+            "ece": {
+              "hi": 0.2625,
+              "lo": 0.24881,
+              "point": 0.25537
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.43682,
+            "roc_auc": {
+              "hi": 0.82944,
+              "lo": 0.81798,
+              "point": 0.82368
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.16183,
+              "lo": -0.17008,
+              "point": -0.16591
+            },
+            "ece": {
+              "hi": 0.28333,
+              "lo": 0.26505,
+              "point": 0.2741
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.3792,
+            "roc_auc": {
+              "hi": 0.8671,
+              "lo": 0.85155,
+              "point": 0.85961
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.20385,
+              "lo": -0.21937,
+              "point": -0.21157
+            },
+            "ece": {
+              "hi": 0.30179,
+              "lo": 0.27349,
+              "point": 0.2855
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.33,
+            "roc_auc": {
+              "hi": 0.90778,
+              "lo": 0.8853,
+              "point": 0.89669
+            }
+          }
+        },
+        "changes": {
+          "sensitivity": 0.75,
+          "specificity": 0.75
+        },
+        "value": "0.75"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.05748,
+              "lo": -0.05976,
+              "point": -0.05863
+            },
+            "ece": {
+              "hi": 0.21014,
+              "lo": 0.20005,
+              "point": 0.2049
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.54887,
+            "roc_auc": {
+              "hi": 0.7742,
+              "lo": 0.76486,
+              "point": 0.76944
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.13139,
+              "lo": -0.13671,
+              "point": -0.13401
+            },
+            "ece": {
+              "hi": 0.27459,
+              "lo": 0.26144,
+              "point": 0.26777
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.43682,
+            "roc_auc": {
+              "hi": 0.87508,
+              "lo": 0.8651,
+              "point": 0.87012
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.17554,
+              "lo": -0.18411,
+              "point": -0.17972
+            },
+            "ece": {
+              "hi": 0.28958,
+              "lo": 0.27258,
+              "point": 0.28141
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.3792,
+            "roc_auc": {
+              "hi": 0.90716,
+              "lo": 0.89482,
+              "point": 0.90097
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.21708,
+              "lo": -0.23246,
+              "point": -0.22464
+            },
+            "ece": {
+              "hi": 0.30276,
+              "lo": 0.27671,
+              "point": 0.28804
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.33,
+            "roc_auc": {
+              "hi": 0.93393,
+              "lo": 0.9148,
+              "point": 0.92442
+            }
+          }
+        },
+        "changes": {
+          "sensitivity": 0.8,
+          "specificity": 0.8
+        },
+        "value": "0.80"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.06465,
+              "lo": -0.06684,
+              "point": -0.06577
+            },
+            "ece": {
+              "hi": 0.22218,
+              "lo": 0.21229,
+              "point": 0.21727
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.54887,
+            "roc_auc": {
+              "hi": 0.81939,
+              "lo": 0.81092,
+              "point": 0.81512
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.14325,
+              "lo": -0.14866,
+              "point": -0.1459
+            },
+            "ece": {
+              "hi": 0.29233,
+              "lo": 0.28027,
+              "point": 0.28621
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.43682,
+            "roc_auc": {
+              "hi": 0.91382,
+              "lo": 0.90547,
+              "point": 0.90954
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.18767,
+              "lo": -0.1964,
+              "point": -0.19202
+            },
+            "ece": {
+              "hi": 0.29791,
+              "lo": 0.28185,
+              "point": 0.29036
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.3792,
+            "roc_auc": {
+              "hi": 0.93471,
+              "lo": 0.9243,
+              "point": 0.92947
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.23052,
+              "lo": -0.24679,
+              "point": -0.23844
+            },
+            "ece": {
+              "hi": 0.30924,
+              "lo": 0.28342,
+              "point": 0.29586
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.33,
+            "roc_auc": {
+              "hi": 0.95641,
+              "lo": 0.94168,
+              "point": 0.9494
+            }
+          }
+        },
+        "changes": {
+          "sensitivity": 0.85,
+          "specificity": 0.85
+        },
+        "value": "0.85"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.07164,
+              "lo": -0.0738,
+              "point": -0.07273
+            },
+            "ece": {
+              "hi": 0.2634,
+              "lo": 0.25433,
+              "point": 0.25906
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.54887,
+            "roc_auc": {
+              "hi": 0.86305,
+              "lo": 0.85563,
+              "point": 0.85938
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.15461,
+              "lo": -0.16002,
+              "point": -0.15721
+            },
+            "ece": {
+              "hi": 0.31203,
+              "lo": 0.30087,
+              "point": 0.30619
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.43682,
+            "roc_auc": {
+              "hi": 0.94362,
+              "lo": 0.93736,
+              "point": 0.94045
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.20019,
+              "lo": -0.20909,
+              "point": -0.20457
+            },
+            "ece": {
+              "hi": 0.3089,
+              "lo": 0.2939,
+              "point": 0.30192
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.3792,
+            "roc_auc": {
+              "hi": 0.95736,
+              "lo": 0.94983,
+              "point": 0.95347
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.24046,
+              "lo": -0.25713,
+              "point": -0.24858
+            },
+            "ece": {
+              "hi": 0.30752,
+              "lo": 0.28359,
+              "point": 0.29357
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.33,
+            "roc_auc": {
+              "hi": 0.9679,
+              "lo": 0.95539,
+              "point": 0.9619
+            }
+          }
+        },
+        "changes": {
+          "sensitivity": 0.9,
+          "specificity": 0.9
+        },
+        "value": "0.90"
+      },
+      {
+        "by_votes": {
+          "1": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.07897,
+              "lo": -0.08107,
+              "point": -0.08002
+            },
+            "ece": {
+              "hi": 0.30659,
+              "lo": 0.2988,
+              "point": 0.30276
+            },
+            "met": {
+              "brier": true,
+              "ece": false
+            },
+            "n": 32361,
+            "prevalence": 0.54887,
+            "roc_auc": {
+              "hi": 0.9085,
+              "lo": 0.9022,
+              "point": 0.90556
+            }
+          },
+          "3": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.16562,
+              "lo": -0.17106,
+              "point": -0.16827
+            },
+            "ece": {
+              "hi": 0.33081,
+              "lo": 0.32087,
+              "point": 0.32569
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 16034,
+            "prevalence": 0.43682,
+            "roc_auc": {
+              "hi": 0.96749,
+              "lo": 0.96291,
+              "point": 0.96524
+            }
+          },
+          "5": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.21153,
+              "lo": -0.22064,
+              "point": -0.21596
+            },
+            "ece": {
+              "hi": 0.31898,
+              "lo": 0.30542,
+              "point": 0.31264
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 7798,
+            "prevalence": 0.3792,
+            "roc_auc": {
+              "hi": 0.97185,
+              "lo": 0.96614,
+              "point": 0.96905
+            }
+          },
+          "8": {
+            "brier_belief_minus_always_0.8": {
+              "hi": -0.25069,
+              "lo": -0.26774,
+              "point": -0.259
+            },
+            "ece": {
+              "hi": 0.31244,
+              "lo": 0.28938,
+              "point": 0.30048
+            },
+            "met": {
+              "brier": true,
+              "ece": false,
+              "roc_auc": true
+            },
+            "n": 2697,
+            "prevalence": 0.33,
+            "roc_auc": {
+              "hi": 0.97799,
+              "lo": 0.96826,
+              "point": 0.97328
+            }
+          }
+        },
+        "changes": {
+          "sensitivity": 0.95,
+          "specificity": 0.95
+        },
+        "value": "0.95"
+      }
+    ]
+  },
+  "train_seeds": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1004
+  ],
+  "validation_seeds": [
+    2000,
+    2001,
+    2002,
+    2003,
+    2004
+  ]
+}
