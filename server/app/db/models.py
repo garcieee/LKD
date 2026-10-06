@@ -3,8 +3,9 @@ from typing import Literal
 
 from pydantic import BaseModel
 
+# "sos" is not a hazard a person picks: only POST /sos files one, from the app's hold-to-record button.
 Category = Literal[
-    "pothole", "open_manhole", "flooded_drain", "broken_streetlight", "blocked_sidewalk", "other"
+    "pothole", "open_manhole", "flooded_drain", "broken_streetlight", "blocked_sidewalk", "other", "sos"
 ]
 Status = Literal["open", "verified", "assigned", "fixed"]
 
@@ -17,7 +18,8 @@ class Report(BaseModel):
     lng: float
     heading: float | None  # compass heading when the photo was taken
     note: str
-    photo_url: str  # path on this server, e.g. /photos/<id>.jpg
+    photo_url: str  # path on this server, e.g. /photos/<id>.jpg. Empty for an SOS, which has a video instead
+    video_url: str | None = None  # SOS only: path on this server, e.g. /videos/<id>.mp4
     status: Status
     created_at: str  # ISO 8601, UTC
     updated_at: str

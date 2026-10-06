@@ -3,6 +3,7 @@
 Planned: severity × confirmations × foot-traffic weight. Only severity, from the category, exists so far.
 """
 SEVERITY = {
+    "sos": 3,  # a person asking for help, ahead of every hazard
     "open_manhole": 3,
     "flooded_drain": 3,
     "pothole": 2,

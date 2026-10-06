@@ -1,4 +1,6 @@
-"""POST, GET and PATCH /reports: photo reports from the app become tickets on the dashboard."""
+"""POST, GET and PATCH /reports: photo reports from the app become tickets on the dashboard.
+
+POST /sos files an SOS the same way, from a video: an urgent ticket that tops the dashboard queue."""
 import uuid
 from datetime import datetime, timezone
 
@@ -11,8 +13,19 @@ from app.services.priority import severity
 router = APIRouter()
 
 MAX_PHOTO_BYTES = 10 * 1024 * 1024
+# The app records at most 30 s at about 2.5 Mbit/s (under 10 MB); the cap leaves room for another phone's encoder.
+MAX_VIDEO_BYTES = 40 * 1024 * 1024
 # Detect the type from the bytes, never from the client's filename or content type.
 IMAGE_TYPES = {b"\xff\xd8\xff": "jpg", b"\x89PNG\r\n\x1a\n": "png"}
+
+
+def _video_ext(data: bytes) -> str | None:
+    """The container of a video, from its bytes: MP4/3GP/MOV start with an `ftyp` box, WebM with an EBML header."""
+    if data[4:8] == b"ftyp":
+        return "mov" if data[8:12] == b"qt  " else "mp4"
+    if data.startswith(b"\x1a\x45\xdf\xa3"):
+        return "webm"
+    return None
 
 
 def _now() -> str:
@@ -33,6 +46,8 @@ def create_report(
     heading: float | None = Form(None, ge=0, le=360),
     note: str = Form("", max_length=280),
 ):
+    if category == "sos":
+        raise HTTPException(422, "An SOS is sent as a video to /sos.")
     if not in_city(lat, lng):
         raise HTTPException(422, "That location is outside the city.")
 
@@ -61,10 +76,55 @@ def create_report(
     return _out(request.app.state.store.add(report))
 
 
+@router.post("/sos", status_code=201, response_model=Report)
+def create_sos(
+    request: Request,
+    video: UploadFile = File(...),
+    lat: float = Form(...),
+    lng: float = Form(...),
+    heading: float | None = Form(None, ge=0, le=360),
+    note: str = Form("", max_length=280),
+):
+    """An SOS from the app's hold-to-record button: the clip, filed straight away as an open, urgent ticket."""
+    if not in_city(lat, lng):
+        raise HTTPException(422, "That location is outside the city.")
+
+    data = video.file.read(MAX_VIDEO_BYTES + 1)
+    if len(data) > MAX_VIDEO_BYTES:
+        raise HTTPException(413, "Video is larger than 40 MB.")
+    ext = _video_ext(data)
+    if ext is None:
+        raise HTTPException(422, "The SOS must be an MP4, MOV or WebM video.")
+
+    report_id = uuid.uuid4().hex
+    (request.app.state.video_dir / f"{report_id}.{ext}").write_bytes(data)
+    now = _now()
+    report = {
+        "id": report_id,
+        "category": "sos",
+        "lat": lat,
+        "lng": lng,
+        "heading": heading,
+        "note": note.strip(),
+        "photo_url": "",
+        "video_url": f"/videos/{report_id}.{ext}",
+        "status": "open",
+        "created_at": now,
+        "updated_at": now,
+    }
+    return _out(request.app.state.store.add(report))
+
+
 @router.get("/reports", response_model=list[Report])
-def list_reports(request: Request):
+def list_reports(request: Request, include_sos: bool = False):
+    """Newest first. SOS tickets are left out unless asked for (`include_sos=true`, which the dashboard does),
+    so the public app's map and AR view never show where someone called for help.
+
+    ponytail: the API has no accounts yet, so this only keeps SOS out of the app's own lists; anyone who knows
+    the query can still ask. Put the dashboard behind a login before anyone real depends on SOS.
+    """
     # Stored in arrival order, so reversed is newest first.
-    return [_out(r) for r in reversed(request.app.state.store.all())]
+    return [_out(r) for r in reversed(request.app.state.store.all()) if include_sos or r["category"] != "sos"]
 
 
 @router.get("/reports/{report_id}", response_model=Report)

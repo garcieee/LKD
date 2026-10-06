@@ -10,8 +10,12 @@ ZONE_HALF_M = 20.0  # a no-go zone is a square this far to each side of the repo
 
 
 def unresolved(reports: list[dict]) -> list[dict]:
-    """Fixed is the only status that is no longer in the way: assigned and verified still are."""
-    return [r for r in reports if r["status"] != "fixed"]
+    """Fixed is the only status that is no longer in the way: assigned and verified still are.
+
+    An SOS is a call for help, not an obstacle: it is never a no-go zone, so one unvetted video cannot
+    close a street to everyone's routes (and it is not listed to the public app either, see /reports).
+    """
+    return [r for r in reports if r["status"] != "fixed" and r.get("category") != "sos"]
 
 
 def _metres(lat0: float, lat: float, lng0: float, lng: float) -> tuple[float, float]:

@@ -1,4 +1,4 @@
-"""Lakad API: photo reports, place search, walking routes, transit hubs and modeled foot traffic for now. Traffic and exports come later.
+"""Lakad API: photo reports, SOS videos, place search, walking routes, transit hubs and modeled foot traffic for now. Traffic and exports come later.
 
 Run from server/: uvicorn app.main:app --host 0.0.0.0 --reload
 """
@@ -18,8 +18,11 @@ def create_app(storage: Path = STORAGE_DIR) -> FastAPI:
     app = FastAPI(title="Lakad API")
     photo_dir = storage / "photos"
     photo_dir.mkdir(parents=True, exist_ok=True)
+    video_dir = storage / "videos"
+    video_dir.mkdir(parents=True, exist_ok=True)
     app.state.store = ReportStore(storage / "reports.json")
     app.state.photo_dir = photo_dir
+    app.state.video_dir = video_dir
     app.state.hubs = transit.load_hubs(TRANSIT_DIR)
     app.state.footfall = footfall.load_model(FOOTFALL_DIR, TRANSIT_DIR, app.state.hubs)
 
@@ -32,6 +35,7 @@ def create_app(storage: Path = STORAGE_DIR) -> FastAPI:
     app.include_router(transit_routes.router)
     app.include_router(footfall_routes.router)
     app.mount("/photos", StaticFiles(directory=photo_dir), name="photos")
+    app.mount("/videos", StaticFiles(directory=video_dir), name="videos")  # SOS clips; serves Range, so they seek
 
     @app.get("/health")
     def health():

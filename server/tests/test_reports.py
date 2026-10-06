@@ -127,8 +127,9 @@ def test_severity_for_every_category(client):
         "blocked_sidewalk": 2,
         "other": 1,
     }
-    # A new category needs a severity, or it silently ranks as low.
-    assert set(expected) == set(get_args(Category)) == set(SEVERITY)
+    # A new category needs a severity, or it silently ranks as low. "sos" is the one nobody picks: POST /sos files it.
+    assert set(expected) | {"sos"} == set(get_args(Category)) == set(SEVERITY)
+    assert SEVERITY["sos"] == 3
     for category, level in expected.items():
         assert post(client, category=category).json()["severity"] == level
 
