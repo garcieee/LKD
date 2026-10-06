@@ -1,30 +1,27 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="Smart Urban Living: 24-Hour Hackathon at iACADEMY MPH" width="100%">
-</p>
-
-<p align="center">
   <img alt="Event" src="https://img.shields.io/badge/EVENT-Oct%206--7%2C%202026-00D4C8?style=flat-square&labelColor=0B1426">
-  <img alt="Prize" src="https://img.shields.io/badge/PRIZE-%E2%82%B1100%2C000-FFB020?style=flat-square&labelColor=0B1426">
   <img alt="Theme" src="https://img.shields.io/badge/THEME-Smart%20Urban%20Living-FF4D8D?style=flat-square&labelColor=0B1426">
   <img alt="Status" src="https://img.shields.io/badge/STATUS-In%20Progress-7C8CFF?style=flat-square&labelColor=0B1426">
 </p>
+
+<h1 align="center">Smart Urban Living: 24-Hour Hackathon</h1>
+
+<p align="center">iACADEMY MPH · October 6-7, 2026</p>
 
 <p align="center"><sub>Supported by the Government of Poland in the Philippines</sub></p>
 
 <table align="center">
   <tr>
     <th align="center">TEAM</th>
-    <th align="center">PROJECT</th>
+    <th align="center">PROJECT DOCUMENTATION</th>
   </tr>
   <tr>
-    <td align="center"><code>&lt;TEAM NAME&gt;</code></td>
-    <td align="center"><code>&lt;PROJECT NAME&gt;</code></td>
+    <td align="center"><b>Six Seven Lakad</b></td>
+    <td align="center"><a href="https://docs.google.com/document/d/1-KtQXQGzGgUjQvdE_HK4or0s5GL7DViF/">Open your team's documentation</a></td>
   </tr>
 </table>
 
 <p align="center"><b>BUILD WHAT YOU CAN PROVE.</b></p>
-
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 > [!IMPORTANT]
 > This is your team's official competition repository. Everything you build for the hackathon lives here. **Read this file fully before the event starts.** It summarizes the official *Mechanics and Primer*. If anything is unclear, the organizers' announcements take priority.
@@ -48,8 +45,6 @@ Your 14 stops, in order. Follow the line.
 - **13** · [Fairness and Disqualification](#13-fairness-and-disqualification)
 - **14** · [Technical Support](#14-technical-support)
 
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
-
 ## 01 Key Dates and Program Flow
 
 ### Tuesday, October 6, 2026
@@ -61,11 +56,13 @@ Your 14 stops, in order. Follow the line.
 | Pre-hackathon program | Event introduction and related activities |
 | **1:00 PM** | **Official Hackathon Start.** The 24-hour development period begins |
 | Every **1 hour** after the start | Progress checks (see [Progress Checks](#08-progress-checks)) |
+| **9:00 PM** | Checkpoint 1 cutoff (see [Recognition](#12-presentation-judging-and-recognition)) |
 
 ### Wednesday, October 7, 2026
 
 | Time | Activity |
 |:---|:---|
+| **5:00 AM** | Checkpoint 2 cutoff |
 | **1:00 PM** | **Official Hackathon End and Submission Deadline** |
 | After 1:00 PM | Judging and project presentations |
 | **3:00 PM** | Awards and Recognition |
@@ -74,8 +71,6 @@ Your 14 stops, in order. Follow the line.
 > Development must stop at the submission deadline. **Commits pushed after 1:00 PM on October 7 will not count** toward your submission.
 
 The winner will have the opportunity to present the winning solution at the succeeding summit activities, subject to the final event program.
-
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 ## 02 Theme and Challenge
 
@@ -104,8 +99,6 @@ Build a technology-based solution for a **real, identifiable problem** in an urb
 - Other technology-based solutions related to smart urban living
 
 </details>
-
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 ## 03 What to Build
 
@@ -141,8 +134,6 @@ Aim for a "wow factor," but keep innovation realistic and demonstrable within 24
 | Demo a live, running prototype | Rely only on slides or future promises |
 | Show how it adapts to other cities | Hard-code it to one location |
 
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
-
 ## 04 Repository Rules
 
 ### Access and Ownership
@@ -151,6 +142,19 @@ Aim for a "wow factor," but keep innovation realistic and demonstrable within 24
 - **Your team may only edit your own repository.** Do not access, modify, or interfere with any other team's repository, accounts, or systems. Tampering with another team's work is grounds for **disqualification**.
 - If you cannot push, or you can see something you believe you should not be able to access, **report it to the organizers immediately.** Do not try to work around it.
 - Do not change repository settings, collaborator access, or visibility unless an organizer tells you to.
+- Coaches and mentors have **read-only** access to this repository.
+
+### Git Setup (before your first commit)
+
+Set your name and email on every computer you will commit from:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your-github-email@example.com"
+```
+
+> [!IMPORTANT]
+> Your commit email must be one of the emails on your GitHub account (**GitHub → Settings → Emails**). Otherwise your commits are not linked to you and **do not count as your contribution**.
 
 ### Starting from Scratch
 
@@ -167,7 +171,7 @@ The competition project **must begin at 1:00 PM on October 6, 2026.** The final 
 | Personal hardware components that are explicitly permitted | |
 
 > [!CAUTION]
-> Any substantial commit made before the official start may be flagged during review.
+> **Do not commit or push anything before 1:00 PM on October 6.** You may accept the invite and clone this repository beforehand, but every commit dated before the official start is flagged automatically.
 
 ### Commit Regularly
 
@@ -184,7 +188,16 @@ Your commit history verifies that work happened during the hackathon, documents 
 - Every team member should have meaningful, identifiable commits.
 - Do not rewrite, squash, or delete history to hide or alter your development trail.
 
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
+### Branches
+
+- Branches are **welcome** and count toward your development trail.
+- **Merge your work into `main` before the deadline.** What is on `main` at 1:00 PM on October 7 is your submission.
+- Do not force push to `main`.
+
+### What Goes in `.gitignore`
+
+- ✔ Secrets and keys (`.env`, API keys), dependencies (`node_modules/`, `venv/`), build output, local data files
+- ✘ **Never your source code.** Organizers check ignored files during verification.
 
 ## 05 Tools, APIs, AI and Hardware
 
@@ -254,21 +267,17 @@ You may use other languages, frameworks, and tools if they follow the hackathon 
 
 </details>
 
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
-
 ## 06 Team and Roles
 
-There are a **maximum of five competing teams**, each with **7 members**.
+There are a **maximum of five competing teams**, each with **7 members**: 3 college students, 2 senior high school students, 1 technology coach, and 1 LGU/MMDA mentor.
 
-| Name | Role | Category | GitHub |
-|:---|:---|:---|:---|
-| `<name>` | `<role>` | College student | `@<username>` |
-| `<name>` | `<role>` | College student | `@<username>` |
-| `<name>` | `<role>` | College student | `@<username>` |
-| `<name>` | `<role>` | Senior high school student | `@<username>` |
-| `<name>` | `<role>` | Senior high school student | `@<username>` |
-| `<name>` | Coach (Technology company leader/expert) | Supporting member | n/a |
-| `<name>` | LGU/MMDA Mentor | Supporting member | n/a |
+| Name | Role | GitHub |
+|:---|:---|:---|
+| Bill Ian C. Alcantara | Participant (College) | [@scienseize](https://github.com/scienseize) |
+| Jude Joseph D. Garcia Jr. | Participant (College) | [@garcieee](https://github.com/garcieee) |
+| Alexis Ramon M. Manzano | Participant (College) | [@Ohmfghad](https://github.com/Ohmfghad) |
+| Zil Hyde P. Buenaventura | Participant (Senior High School) | [@Hyde12](https://github.com/Hyde12) |
+| Yohan Archael B. Hubilla | Participant (Senior High School) | [@yohndev](https://github.com/yohndev) |
 
 > [!NOTE]
 > Coaches and LGU mentors **advise, review, and oversee.** They must **not** write code, build features, configure project logic, or develop the competition output. All implementation is done by the student members.
@@ -280,8 +289,6 @@ There are a **maximum of five competing teams**, each with **7 members**.
 | Help teams follow sound development practices | Flag policy, legal, or procedural risks |
 | | Help make sure law- or policy-related features don't give misleading results, especially **false negatives** that wrongly indicate compliance, eligibility, safety, legality, or no violation |
 
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
-
 ## 07 Venue, Network and Security
 
 - Each team gets a **designated workspace** (tables, chairs, computers, interactive display, peripherals, dedicated network, resting area).
@@ -290,8 +297,6 @@ There are a **maximum of five competing teams**, each with **7 members**.
 
 > [!CAUTION]
 > The network must **not** be used for attacking other systems, unauthorized access, disruption, malicious activity, downloading prohibited material, or circumventing event restrictions. Security testing is only allowed within the explicitly authorized scope. Respect the security of the network, computers, accounts, devices, servers, other teams' systems, and organizer infrastructure.
-
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 ## 08 Progress Checks
 
@@ -308,11 +313,19 @@ Be ready to show:
 
 Failure to provide reasonable evidence of ongoing development may be reviewed by the organizing or technical committee.
 
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
+### How Verification Works
+
+Used for progress checks and milestone recognition:
+
+1. **Only pushed code can be verified.** Commit and push before asking for a check.
+2. Show `git status` (clean and up to date) and `git log -1`. Organizers match your commit to GitHub.
+3. Organizers may run `git status --ignored` to confirm no source code is hidden in ignored files.
+4. Organizers will **use your features themselves** on your machine, including inputs you did not prepare.
+5. If your check happens after your claim, you may be asked to run the claimed commit (`git checkout <commit>`) for the demo.
 
 ## 09 Project Documentation
 
-Use the **official Google Docs template** provided by the organizers. Do not create your own format. Keep documentation up to date throughout the hackathon, and put the final version in the [`/docs`](./docs) folder.
+Your team's copy of the **official documentation template** is linked at the top of this README. Do not create your own format. Keep it up to date throughout the hackathon. The exact submission method and file format will be announced by the organizers.
 
 | # | Section | Guiding Question |
 |:-:|:---|:---|
@@ -344,8 +357,6 @@ Use the **official Google Docs template** provided by the organizers. Do not cre
 
 </details>
 
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
-
 ## 10 Technology Declaration
 
 Fill this in as you build. It feeds directly into your submission.
@@ -358,23 +369,19 @@ Fill this in as you build. It feeds directly into your submission.
 | AI tools | `<name and how it was used>` | `<Free/Paid>` | |
 | Hardware | `<component>` | n/a | Must be declared and approved |
 
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
-
 ## 11 Submission Checklist
 
 Submit all of the following by **October 7, 2026 · 1:00 PM**. The exact submission method and file format will be announced by the organizers.
 
 - [ ] Functional prototype
-- [ ] Source code and project repository (this repo)
-- [ ] Required project documentation (in `/docs`)
+- [ ] Source code and project repository (this repo, with all work merged into `main`)
+- [ ] Required project documentation (your team's documentation, linked at the top)
 - [ ] List of technologies used
 - [ ] List of external APIs/services used
 - [ ] AI tools used (if applicable)
 - [ ] Hardware components used (if applicable)
 - [ ] Contribution record (each member's role and work)
 - [ ] Presentation/demo materials
-
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 ## 12 Presentation, Judging and Recognition
 
@@ -397,6 +404,10 @@ A panel may include government representatives, technology experts, industry lea
 
 Teams may earn recognition for verified targets within each checkpoint window. These are **separate from the final judging results.**
 
+- **Checkpoint 1** claims close at **9:00 PM on October 6**. **Checkpoint 2** claims close at **5:00 AM on October 7**. **Checkpoint 3** runs until the deadline.
+- "First" recognitions are ordered by the **push time** of the claimed commit. The first claim that passes verification wins.
+- At each cutoff, organizers record every team's progress, whether or not the team asked for a check.
+
 | Checkpoint | Recognition | Awarded for |
 |:---|:---|:---|
 | **1 · First Working Build** | First Functional Feature | A working feature that can be tested or demonstrated |
@@ -409,8 +420,6 @@ Teams may earn recognition for verified targets within each checkpoint window. T
 | | Best Live Demonstration | A stable, understandable, working prototype demo |
 | | Best Community Impact | Strong potential benefit for users, communities, or urban stakeholders |
 | | Best Real-World Implementation Potential | Practical feasibility, scalability, and alignment with real public-sector or urban needs |
-
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 ## 13 Fairness and Disqualification
 
@@ -428,13 +437,9 @@ A team may be disqualified or penalized for:
 
 The organizers reserve the right to investigate suspected violations. All members must contribute and be accountable.
 
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
-
 ## 14 Technical Support
 
 If you have issues with your workstation, network, or organizer-provided tools, **report them immediately to the technical team.** Support covers troubleshooting equipment, clarifying software versions, workstation and network problems, clarifying mechanics, and coordinating with IT. Technical personnel will **not** develop features for your team.
-
-<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 <p align="center">
   <b>Think big. Scope smart. Build fast. Make it work.</b><br>
