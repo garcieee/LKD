@@ -36,3 +36,63 @@ export type RouteEvent = {
   no_sidewalk_m_avoided: number; // meters of road without a sidewalk this route avoids
   hazard_ids_avoided: string[]; // Report ids near the Fastest route that this route steers around
 };
+
+// GET /footfall (server/app/routers/footfall.py): modeled foot traffic, a relative 0-100 index, not a count.
+export type Day = "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun";
+
+export type FootfallScore = { index: number; lower: number; upper: number };
+
+export type FootfallPoint = FootfallScore & {
+  id: string;
+  name: string;
+  kind: "hub" | "anchor"; // anchor: a district's draw the transit data cannot see
+  lat: number;
+  lng: number;
+  error_m: number;
+  profile: string;
+  district: string | null;
+};
+
+export type FootfallDistrict = FootfallScore & {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+  radius_m: number;
+  profile: string;
+  tier: 1 | 2 | 3;
+  share: number; // demand against the strongest district, any hour
+  hubs: number;
+  route_ends: number;
+  anchor: number;
+  basis: string;
+};
+
+export type Footfall = {
+  kind: "estimate" | "measured";
+  method: string;
+  day: Day;
+  hour: number;
+  points: FootfallPoint[];
+  districts: FootfallDistrict[];
+};
+
+// GET /footfall/series (server/app/services/forecast.py): hourly index for a zone, history then forecast.
+// The history is SIMULATED until cameras exist (history_source says which); the forecast is a seasonal model.
+export type SeriesPoint = {
+  t: string; // ISO 8601, Manila time (+08:00), on the hour
+  index: number;
+  kind: "history" | "forecast";
+  lower?: number | null; // 80% band, forecast only
+  upper?: number | null;
+};
+
+export type Series = {
+  zone: string; // "all" or a district id
+  name: string;
+  method: string;
+  history_source: "simulated" | "measured";
+  now: string;
+  backtest_smape_pct: number; // error of forecasting the last simulated week from the three before it
+  points: SeriesPoint[];
+};
