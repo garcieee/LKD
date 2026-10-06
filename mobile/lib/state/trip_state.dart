@@ -7,6 +7,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../api/api_client.dart';
+import 'trip_progress.dart';
 
 typedef LatLng = ({double lat, double lng});
 typedef RouteFn = Future<WalkRoute> Function(LatLng from, LatLng to, String mode);
@@ -33,6 +34,8 @@ class TripState extends ChangeNotifier {
   int selected = 0; // index into commute: the one drawn on the map
   LatLng? _from; // where the trip starts, kept from plan() so the commute options can be asked for later
   bool started = false; // the user pressed Start: the trip is on
+  TripProgress? progress; // where the user is on the trip, once a fix has come in since Start
+  int _leg = 0; // the leg the user is on; only ever goes up
   bool loading = false;
   bool planned = false; // routes for this destination have been asked for
   int _round = 0; // bumped per destination; answers from an older one are dropped
@@ -68,6 +71,8 @@ class TripState extends ChangeNotifier {
     selected = 0;
     _from = null;
     started = false;
+    progress = null;
+    _leg = 0;
     loading = false;
     planned = false;
     notifyListeners();
@@ -79,13 +84,34 @@ class TripState extends ChangeNotifier {
   void start() {
     if (!canStart || started) return;
     started = true;
+    progress = null;
+    _leg = 0;
     notifyListeners();
   }
 
   void end() {
     if (!started) return;
     started = false;
+    progress = null;
+    _leg = 0;
     notifyListeners();
+  }
+
+  /// A new GPS fix while the trip is on. Listeners hear about it only when something worth showing changed: the
+  /// leg, arriving, going off the line, or the distance left by 10 m.
+  void update(double lat, double lng) {
+    if (!started) return;
+    final p = tripProgress(activeLegs, _leg, lat, lng), old = progress;
+    if (p == null) return;
+    _leg = p.leg;
+    progress = p;
+    if (old == null ||
+        old.leg != p.leg ||
+        old.arrived != p.arrived ||
+        old.offRoute != p.offRoute ||
+        (old.leftM / 10).round() != (p.leftM / 10).round()) {
+      notifyListeners();
+    }
   }
 
   void select(int i) {

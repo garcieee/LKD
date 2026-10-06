@@ -325,4 +325,108 @@ void main() {
     expect(trip.started, isFalse);
     trip.dispose();
   });
+
+  group('live position', () {
+    // Two legs straight up the 121.0 meridian: walk 14.5000 to 14.5020, then ride to 14.5100.
+    CommuteOption twoLegs() => CommuteOption.fromJson({
+      'id': 'a',
+      'total_s': 1000,
+      'walk_s': 200,
+      'tags': <String>[],
+      'legs': [
+        for (final (kind, from, to, secs) in [('walk', 14.5000, 14.5020, 200), ('city_bus', 14.5020, 14.5100, 800)])
+          {
+            'kind': kind,
+            'duration_s': secs,
+            'distance_m': (to - from) * 111320,
+            'label': kind,
+            'geometry': [
+              [121.0, from],
+              [121.0, to],
+            ],
+          },
+      ],
+    });
+
+    Future<TripState> started() async {
+      final trip = TripState((from, to, mode) async => route(mode), (from, to, mode) async => [twoLegs()]);
+      trip.setDestination(place('Greenbelt'), from: here);
+      await Future<void>.delayed(Duration.zero);
+      await trip.toCommute();
+      trip.start();
+      return trip;
+    }
+
+    test('a fix before Start is ignored, and Start begins with no progress', () async {
+      final trip = TripState((from, to, mode) async => route(mode), (from, to, mode) async => [twoLegs()]);
+      trip.setDestination(place('Greenbelt'), from: here);
+      await Future<void>.delayed(Duration.zero);
+      await trip.toCommute();
+      trip.update(14.5000, 121.0);
+      expect(trip.progress, isNull);
+      trip.start();
+      expect(trip.progress, isNull, reason: 'nothing is known until a fix comes in');
+      trip.dispose();
+    });
+
+    test('fixes update the progress, and listeners hear only of changes worth showing', () async {
+      final trip = await started();
+      var heard = 0;
+      trip.addListener(() => heard++);
+      trip.update(14.5000, 121.0);
+      expect(heard, 1, reason: 'the first fix');
+      expect(trip.progress!.leg, 0);
+      trip.update(14.5000 + 2 / 111320, 121.0);
+      expect(heard, 1, reason: '2 m is not worth a rebuild');
+      trip.update(14.5000 + 40 / 111320, 121.0);
+      expect(heard, 2, reason: '40 m is');
+      expect(trip.progress!.legLeftM, closeTo(222.64 - 40, 1));
+      trip.update(14.5020, 121.0);
+      expect(heard, 3);
+      expect(trip.progress!.leg, 1, reason: 'reaching the hub starts the ride');
+      trip.update(14.5020, 121.0 + 0.002);
+      expect(trip.progress!.offRoute, isTrue);
+      expect(heard, 4, reason: 'going off the line is news');
+      trip.dispose();
+    });
+
+    test('the leg only advances, even if a later fix lands back on the walk', () async {
+      final trip = await started();
+      trip.update(14.5020, 121.0);
+      expect(trip.progress!.leg, 1);
+      trip.update(14.5005, 121.0);
+      expect(trip.progress!.leg, 1);
+      trip.dispose();
+    });
+
+    test('arriving is reported, and End or a new destination forgets the trip', () async {
+      final trip = await started();
+      trip.update(14.5100, 121.0);
+      expect(trip.progress!.arrived, isTrue);
+      expect(trip.started, isTrue, reason: 'it ends when the user says so');
+      trip.end();
+      expect(trip.progress, isNull);
+      trip.start();
+      trip.update(14.5020, 121.0);
+      expect(trip.progress!.leg, 1);
+      trip.setDestination(place('Elsewhere'));
+      expect(trip.progress, isNull);
+      expect(trip.started, isFalse);
+      trip.dispose();
+    });
+
+    test('a walk-only trip is tracked along the walking route', () async {
+      final trip = TripState((from, to, mode) async => route(mode), (from, to, mode) async => <CommuteOption>[]);
+      trip.setDestination(place('Greenbelt'), from: here);
+      await Future<void>.delayed(Duration.zero);
+      await trip.toCommute();
+      trip.start();
+      trip.update(14.5547, 121.0244);
+      expect(trip.progress!.leg, 0);
+      expect(trip.progress!.legLeftM, greaterThan(300));
+      trip.update(14.553, 121.021);
+      expect(trip.progress!.arrived, isTrue);
+      trip.dispose();
+    });
+  });
 }
