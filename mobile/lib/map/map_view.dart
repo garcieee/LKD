@@ -37,7 +37,9 @@ import 'pin_chip.dart';
 const _ornamentBand = 40.0;
 
 class MapView extends StatefulWidget {
-  const MapView({super.key});
+  const MapView({super.key, @visibleForTesting this.mapboxToken = Env.mapboxToken});
+
+  final String mapboxToken; // a test builds the page without a real token
 
   @override
   State<MapView> createState() => _MapViewState();
@@ -561,8 +563,11 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    if (Env.mapboxToken.isEmpty) return const _NoToken();
+    if (widget.mapboxToken.isEmpty) return const _NoToken();
+    // The keyboard is up: the search suggestions need the room the chips would take.
+    final typing = MediaQuery.viewInsetsOf(context).bottom > 0;
     return Scaffold(
+      resizeToAvoidBottomInset: false, // the keyboard covers the page; the map is not squeezed under it
       body: Stack(
         children: [
           Positioned.fill(
@@ -589,41 +594,49 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [const _Brand(), _ResetChip(onPressed: _reset)],
+                        children: [const _Brand(), Flexible(child: _ResetChip(onPressed: _reset))],
                       ),
                       const SizedBox(height: 10),
                       PlaceSearchBar(search: _search, trip: _trip, near: _near),
                     ],
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: _ornamentBand),
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 420),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          CompassChip(bearing: _bearing, following: _following, onTap: _onCompass),
-                          const SizedBox(height: 10),
-                          _LocateRow(location: _location, onLocate: _locate, onTransit: _nearbyHubs),
-                          const SizedBox(height: 10),
-                          _ReportButton(onPressed: _report),
-                          const SizedBox(height: 10),
-                          // With a trip on, the card takes the traffic panel's place: the report button
-                          // and the locate row stay.
-                          ListenableBuilder(
-                            listenable: _trip,
-                            builder: (context, _) =>
-                                _trip.destination == null
-                                ? LayerSheet(layers: _layers, legend: hubLegend(_hubs))
-                                : _trip.started
-                                ? NavBar(trip: _trip)
-                                : RouteCard(trip: _trip),
-                          ),
-                        ],
+                Offstage(
+                  offstage: typing,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: _ornamentBand),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 420),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            CompassChip(bearing: _bearing, following: _following, onTap: _onCompass),
+                            const SizedBox(height: 10),
+                            _LocateRow(location: _location, onLocate: _locate, onTransit: _nearbyHubs),
+                            const SizedBox(height: 10),
+                            _ReportButton(onPressed: _report),
+                            const SizedBox(height: 10),
+                            // With a trip on, the card takes the traffic panel's place: the report button
+                            // and the locate row stay. On a short screen or at large text it scrolls.
+                            Flexible(
+                              child: SingleChildScrollView(
+                                clipBehavior: Clip.none, // keeps the chip's soft shadow
+                                child: ListenableBuilder(
+                                  listenable: _trip,
+                                  builder: (context, _) =>
+                                      _trip.destination == null
+                                      ? LayerSheet(layers: _layers, legend: hubLegend(_hubs))
+                                      : _trip.started
+                                      ? NavBar(trip: _trip)
+                                      : RouteCard(trip: _trip),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
