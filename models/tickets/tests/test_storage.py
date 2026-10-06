@@ -1,10 +1,12 @@
 """storage/db.py: the SQLite file the tickets live in. Its tables must match the rows the engine writes."""
 import sqlite3
+import threading
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 
 from models.tickets import engine
+from models.tickets.storage import db as storage
 from models.tickets.storage.db import MIGRATIONS, Db
 
 AT = "2026-10-07T12:00:00+00:00"
@@ -49,7 +51,21 @@ def test_opening_again_keeps_the_rows_and_runs_no_migration_twice(tmp_path):
     assert [t["id"] for t in again.tickets()] == ["t"] and again.tickets()[0]["breakdown"] == {"why": "test"}
 
 
-def test_the_category_migration_keeps_every_row_and_takes_the_pwd_barriers(tmp_path):
+@pytest.fixture(params=[False, True], ids=["foreign keys off by default", "on by default"])
+def sqlite_build(request, monkeypatch):
+    """Some SQLite builds turn foreign keys on for every new connection: the migrations must not depend on either."""
+    if request.param:
+        connect = sqlite3.connect
+
+        def connect_with_foreign_keys(*args, **kwargs):
+            conn = connect(*args, **kwargs)
+            conn.execute("pragma foreign_keys = on")
+            return conn
+
+        monkeypatch.setattr(sqlite3, "connect", connect_with_foreign_keys)
+
+
+def test_the_category_migration_keeps_every_row_and_takes_the_pwd_barriers(tmp_path, sqlite_build):
     old = Db(tmp_path / "lakad.db")
     old._conn.executescript("pragma foreign_keys = off; drop table ticket_events; drop table sightings; drop table tickets;"
                             f"{MIGRATIONS[0]} pragma user_version = 1; pragma foreign_keys = on;")  # a file from before
@@ -69,6 +85,41 @@ def test_the_category_migration_keeps_every_row_and_takes_the_pwd_barriers(tmp_p
     assert new._conn.execute("pragma foreign_keys").fetchone()[0] == 1
     with pytest.raises(sqlite3.IntegrityError):  # the foreign key still holds after the rebuild
         new.save(ticket("x"), sighting("x", tid="nowhere"), LATER)
+
+
+def test_processes_opening_the_file_at_once_run_each_migration_once(tmp_path, monkeypatch):
+    # All four read user_version 0 and queue for the write lock; each later one must see the work done and skip it.
+    # The added last migration is slow (so the others really do wait) and cannot run twice (so a repeat fails).
+    slow = "create table slow as with recursive c(x) as (select 1 union all select x + 1 from c where x < 400000) select sum(x) as s from c;"
+    monkeypatch.setattr(storage, "MIGRATIONS", (*MIGRATIONS, slow))
+    errors = []
+
+    def open_file():
+        try:
+            Db(tmp_path / "lakad.db")
+        except Exception as error:
+            errors.append(error)
+
+    threads = [threading.Thread(target=open_file) for _ in range(4)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    assert errors == []
+    assert Db(tmp_path / "lakad.db")._conn.execute("pragma user_version").fetchone()[0] == len(MIGRATIONS) + 1
+
+
+def test_a_failed_migration_changes_nothing_and_lets_go_of_the_file(tmp_path, monkeypatch):
+    Db(tmp_path / "lakad.db").save(ticket(), sighting(), AT)
+    monkeypatch.setattr(storage, "MIGRATIONS", (*MIGRATIONS, "alter table tickets add column x text; select * from nowhere;"))
+    with pytest.raises(sqlite3.OperationalError):
+        Db(tmp_path / "lakad.db")
+    monkeypatch.setattr(storage, "MIGRATIONS", MIGRATIONS)
+    after = Db(tmp_path / "lakad.db")  # opens at once: the failed attempt holds no write lock
+    assert after._conn.execute("pragma user_version").fetchone()[0] == len(MIGRATIONS)
+    assert columns(after, "tickets") == list(engine.TICKET_COLUMNS), "the half-done change was rolled back"
+    after.save(ticket("u"), sighting("u", "u"), LATER)
+    assert [t["id"] for t in after.tickets()] == ["u", "t"]
 
 
 def test_a_save_without_a_status_keeps_the_one_an_analyst_set(db):

@@ -10,6 +10,7 @@ import threading
 from contextlib import contextmanager
 
 # One script per schema version; PRAGMA user_version counts how many have run. Add a script, never edit one.
+# Each runs in its own transaction with foreign keys off (see Db.__init__).
 MIGRATIONS = (
     """
     create table if not exists tickets (
@@ -86,6 +87,20 @@ MIGRATIONS = (
 )
 
 
+def _statements(script: str):
+    """A migration script one statement at a time, for execute() inside a transaction (executescript would commit it).
+    SQLite decides where each ends, so a ";" inside a string or a comment does not split it."""
+    *pieces, rest = script.split(";")
+    statement = ""
+    for piece in pieces:
+        statement += piece + ";"
+        if sqlite3.complete_statement(statement):
+            yield statement
+            statement = ""
+    if (statement + rest).strip():
+        yield statement + rest  # unfinished: execute() says so instead of it being dropped
+
+
 def _upsert(table: str, row: dict) -> str:
     """Insert the row, or for a known id update only the columns it has."""
     sets = ", ".join(f"{c} = excluded.{c}" for c in row if c != "id")
@@ -102,10 +117,16 @@ class Db:
         self._conn.row_factory = sqlite3.Row
         self._lock = threading.Lock()
         self._conn.execute("pragma journal_mode = wal")
-        # Migrations run before foreign keys go on: a rebuilt table's drop must not cascade (see migration 2).
+        # Off while migrating, whatever this SQLite's default: a rebuilt table's drop must not cascade (migration 2).
+        self._conn.execute("pragma foreign_keys = off")
         version = self._conn.execute("pragma user_version").fetchone()[0]
         for number, script in enumerate(MIGRATIONS[version:], start=version + 1):
-            self._conn.executescript(f"begin; {script} pragma user_version = {number}; commit;")
+            with self._tx() as db:
+                # Read again under the write lock: a process opening the file at the same moment may have run it.
+                if db.execute("pragma user_version").fetchone()[0] < number:
+                    for statement in _statements(script):
+                        db.execute(statement)
+                    db.execute(f"pragma user_version = {number}")
         self._conn.execute("pragma foreign_keys = on")
 
     @contextmanager
