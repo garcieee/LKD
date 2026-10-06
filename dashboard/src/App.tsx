@@ -88,14 +88,16 @@ export default function App() {
     if (!keepSelection) setSelectedId(null);
   }
 
-  // The banner's way in: the oldest SOS still waiting, opened as a ticket and shown on the map.
+  // The banner's way in: the oldest SOS still waiting, opened as a ticket and shown on the map. On a phone the sheet
+  // would cover the map (showOnMap closes it), so the ticket wins: its video and Who must respond are what is needed,
+  // and Show on map is one tap away in it.
   function openSos(r: Report) {
     setNavOpen(false);
     closeInsights();
     closeForecast();
     setSelectedId(r.id);
     setQueueOpen(true);
-    showOnMap(r);
+    if (!matchMedia(PHONE).matches) showOnMap(r);
   }
 
   function closeInsights() {
