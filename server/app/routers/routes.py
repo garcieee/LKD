@@ -32,6 +32,23 @@ class Route(BaseModel):
     avoids_hazards: bool  # false for Fastest, and for a mode that could not route around them
 
 
+def walk_leg(mode: str, start: tuple, end: tuple, reports: list, client=None) -> tuple[dict, bool]:
+    """One walking route in `mode`: ({distance_m, duration_s, geometry}, whether it steers around hazard zones).
+
+    Raises ors.OrsError. Shared with /route/commute, whose walking legs follow the mode the user picked.
+    """
+    avoid = hazards.avoid_polygons(reports, [start, end]) if mode != "fastest" else None
+    try:
+        found = ors.directions(PROFILE[mode], start, end, PREFERENCE[mode], avoid, client)
+    except ors.OrsError as e:
+        if e.status != 404 or not avoid:
+            raise
+        # The zones may box the trip in: a route past a hazard beats no route.
+        avoid = None
+        found = ors.directions(PROFILE[mode], start, end, PREFERENCE[mode], None, client)
+    return found, avoid is not None
+
+
 @router.get("/route/walk", response_model=Route)
 def route_walk(
     request: Request,
@@ -46,22 +63,13 @@ def route_walk(
     start, end = (from_lat, from_lng), (to_lat, to_lng)
     reports = request.app.state.store.all()
     client = getattr(request.app.state, "ors_client", None)
-
-    avoid = hazards.avoid_polygons(reports, [start, end]) if mode != "fastest" else None
     try:
-        try:
-            found = ors.directions(PROFILE[mode], start, end, PREFERENCE[mode], avoid, client)
-        except ors.OrsError as e:
-            if e.status != 404 or not avoid:
-                raise
-            # The zones may box the trip in: a route past a hazard beats no route.
-            avoid = None
-            found = ors.directions(PROFILE[mode], start, end, PREFERENCE[mode], None, client)
+        found, avoids = walk_leg(mode, start, end, reports, client)
     except ors.OrsError as e:
         raise HTTPException(e.status, e.message) from e
     return Route(
         mode=mode,
         **found,
         hazard_ids=hazards.near_route(found["geometry"], reports),
-        avoids_hazards=avoid is not None,
+        avoids_hazards=avoids,
     )

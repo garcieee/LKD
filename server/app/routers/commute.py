@@ -1,7 +1,8 @@
 """GET /route/commute: up to three ways to get there by walking and riding one PUV or train, quickest first.
 
 The ride and the options come from services/commute.py and are estimates. The walking legs are then re-routed along
-real streets by OpenRouteService; a leg ORS cannot answer keeps its straight-line estimate, so the list still comes back.
+real streets by OpenRouteService in the walking mode the user picked (fastest, walkable, accessible); a leg ORS cannot
+answer keeps its straight-line estimate, so the list still comes back.
 """
 from concurrent.futures import ThreadPoolExecutor
 from typing import Literal
@@ -10,6 +11,7 @@ from fastapi import APIRouter, HTTPException, Query, Request
 from pydantic import BaseModel
 
 from app.config import in_city
+from app.routers.routes import Mode, walk_leg
 from app.services import commute, ors
 
 router = APIRouter()
@@ -39,13 +41,13 @@ def _ends(leg: dict) -> tuple:
     return (b, a), (d, c)  # (lat, lng) pairs
 
 
-def _refine(options: list[dict], client) -> None:
+def _refine(options: list[dict], mode: str, reports: list, client) -> None:
     """Swaps each walk leg's estimate for an ORS street route, in place. One call per distinct leg, in parallel."""
     legs = {_ends(leg): leg for o in options for leg in o["legs"] if leg["kind"] == "walk"}
 
     def fetch(ends):
         try:
-            return ors.directions("foot-walking", *ends, "fastest", None, client)
+            return walk_leg(mode, *ends, reports, client)[0]
         except ors.OrsError:
             return None  # keep the estimate
 
@@ -66,10 +68,11 @@ def route_commute(
     from_lng: float = Query(...),
     to_lat: float = Query(...),
     to_lng: float = Query(...),
+    mode: Mode = Query("walkable"),
 ):
     if not (in_city(from_lat, from_lng) and in_city(to_lat, to_lng)):
         raise HTTPException(422, "Both ends of the trip must be in Makati.")
     state = request.app.state
     options = commute.plan(state.hubs, state.rides, (from_lat, from_lng), (to_lat, to_lng))
-    _refine(options, getattr(state, "ors_client", None))
+    _refine(options, mode, state.store.all(), getattr(state, "ors_client", None))
     return commute.rank(options)  # street distances can reorder them
