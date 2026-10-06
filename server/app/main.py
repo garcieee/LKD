@@ -1,4 +1,4 @@
-"""Lakad API: photo reports and place search for now. Routing, traffic and exports come later.
+"""Lakad API: photo reports, place search and walking routes for now. Traffic and exports come later.
 
 Run from server/: uvicorn app.main:app --host 0.0.0.0 --reload
 """
@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import CORS_ORIGINS, STORAGE_DIR
 from app.db.store import ReportStore
-from app.routers import geocode, reports
+from app.routers import geocode, reports, routes
 
 
 def create_app(storage: Path = STORAGE_DIR) -> FastAPI:
@@ -25,6 +25,7 @@ def create_app(storage: Path = STORAGE_DIR) -> FastAPI:
     )
     app.include_router(reports.router)
     app.include_router(geocode.router)
+    app.include_router(routes.router)
     app.mount("/photos", StaticFiles(directory=photo_dir), name="photos")
 
     @app.get("/health")
