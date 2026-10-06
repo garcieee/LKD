@@ -1,6 +1,6 @@
 // Dashboard analytics from the polled report list. No React or mapbox-gl, so `node --test` runs it (metrics.test.ts).
-import type { Category, Report, Status } from "../../types/api.ts";
-import { CATEGORY_LABEL, STATUSES, isRejected, isUnresolved } from "../queue/tickets.ts";
+import type { Category, Report, SosKind, Status } from "../../types/api.ts";
+import { CATEGORY_LABEL, SOS_KINDS, SOS_KIND_LABEL, STATUSES, isRejected, isSosActive, isUnresolved } from "../queue/tickets.ts";
 
 const DAY = 24 * 60 * 60_000;
 const ms = (iso: string) => Date.parse(iso);
@@ -85,6 +85,38 @@ export function hotspots(reports: Report[], limit = 5, cell = 0.002) {
     .slice(0, limit);
 }
 
+// Who is carrying the work: tickets assigned and not yet fixed, and tickets fixed, per handler. Handler is free text,
+// so "Santos" and "santos " count as one person (the first spelling seen is shown). Workload, not a ranking: the
+// most-loaded handler is listed first so an overload is easy to spot. `waiting` is verified tickets nobody has been
+// assigned to yet, the ones that need a decision.
+export function workload(reports: Report[]) {
+  const rows = new Map<string, { handler: string; open: number; fixed: number }>();
+  let waiting = 0;
+  for (const r of reports) {
+    if (r.status === "verified") waiting++;
+    const name = r.handler?.trim();
+    if (!name || (r.status !== "assigned" && r.status !== "fixed")) continue;
+    const row = rows.get(name.toLowerCase()) ?? { handler: name, open: 0, fixed: 0 };
+    if (r.status === "assigned") row.open++;
+    else row.fixed++;
+    rows.set(name.toLowerCase(), row);
+  }
+  const handlers = [...rows.values()].sort((a, b) => b.open - a.open || b.fixed - a.fixed || a.handler.localeCompare(b.handler));
+  return { handlers, waiting };
+}
+
+// Active SOS by who must respond, in the order the dashboard lists them. `unsorted` is the urgent one: nobody has
+// said who should respond yet.
+export function sosByKind(reports: Report[]) {
+  const active = reports.filter(isSosActive);
+  const kinds = SOS_KINDS.map((kind: SosKind) => ({
+    kind,
+    label: SOS_KIND_LABEL[kind],
+    count: active.filter((r) => r.sos_kind === kind).length,
+  }));
+  return { active: active.length, unsorted: active.filter((r) => !r.sos_kind).length, kinds };
+}
+
 // "40 min", "5.5 h", "3 d". For the median fix time tile.
 export function duration(msec: number): string {
   const min = msec / 60_000;
@@ -107,5 +139,7 @@ export function summarize(all: Report[], now: number) {
     throughput: throughput(reports, now),
     medianResponseMs: medianResponseMs(reports),
     hotspots: hotspots(reports),
+    workload: workload(reports),
+    sos: sosByKind(reports),
   };
 }

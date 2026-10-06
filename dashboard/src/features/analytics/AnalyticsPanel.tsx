@@ -1,4 +1,4 @@
-// Insights: backlog funnel, what is breaking, aging, throughput, hotspots, from the polled reports.
+// Insights: backlog funnel, what is breaking, aging, throughput, handler workload, SOS by responder, hotspots, from the polled reports.
 // Docked on the right: the map keeps the other 70% of the screen (phones: a full sheet over the map).
 import { useEffect, useMemo } from "react";
 import ResizeGrip from "../../panels/ResizeGrip";
@@ -138,6 +138,37 @@ export default function AnalyticsPanel({ reports, online, now, onClose, onShow }
                   ))}
                 </ol>
               </section>
+
+              <section className="card">
+                <h3 className="sec">Who is handling it</h3>
+                <div className="src">Assigned and not yet fixed, by handler</div>
+                {s.workload.waiting > 0 && (
+                  <p className="empty">
+                    {s.workload.waiting} verified {s.workload.waiting === 1 ? "ticket is" : "tickets are"} waiting for a handler.
+                  </p>
+                )}
+                {s.workload.handlers.length ? (
+                  <Bars
+                    rows={s.workload.handlers.map((h) => ({ label: h.fixed ? `${h.handler} · ${h.fixed} fixed` : h.handler, value: h.open }))}
+                    unit="assigned"
+                  />
+                ) : (
+                  <p className="empty">Nobody has been assigned a ticket yet.</p>
+                )}
+              </section>
+
+              {s.sos.active > 0 && (
+                <section className="card">
+                  <h3 className="sec">SOS by responder</h3>
+                  <div className="src">Active SOS, by who must respond</div>
+                  {s.sos.unsorted > 0 && (
+                    <p className="empty">
+                      {s.sos.unsorted} {s.sos.unsorted === 1 ? "SOS has" : "SOS have"} not been sorted yet.
+                    </p>
+                  )}
+                  <Bars rows={s.sos.kinds.map((k) => ({ label: k.label, value: k.count, color: "var(--danger)" }))} unit="active SOS" />
+                </section>
+              )}
 
               <section className="card">
                 <h3 className="sec">Hotspots</h3>

@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { Report } from "../../types/api.ts";
-import { aging, byCategory, duration, funnel, hotspots, medianResponseMs, summarize, throughput } from "./metrics.ts";
+import { aging, byCategory, duration, funnel, hotspots, medianResponseMs, sosByKind, summarize, throughput, workload } from "./metrics.ts";
 
 const NOW = Date.parse("2026-10-07T00:00:00Z");
 const HOUR = 3_600_000;
@@ -142,4 +142,50 @@ test("summarize ignores rejected tickets: they were judged not real", () => {
   assert.equal(s.urgent, 0, "the rejected urgent ticket is not counted");
   assert.deepEqual(s.byCategory.map((c) => c.category), ["pothole"]);
   assert.equal(s.funnel.reduce((n, f) => n + f.count, 0), 2);
+});
+
+test("workload: assigned and fixed per handler, spellings merged, most open first, waiting counted", () => {
+  const rows = [
+    report("a", { status: "assigned", handler: "Ana Reyes" }),
+    report("b", { status: "assigned", handler: " ana reyes " }),
+    report("c", { status: "fixed", handler: "Ana Reyes" }),
+    report("d", { status: "assigned", handler: "Jose Cruz" }),
+    report("e", { status: "fixed", handler: "Zed" }),
+    report("f", { status: "verified" }),
+    report("g", { status: "verified" }),
+    report("h", { status: "open", handler: "Ghost" }),
+    report("i", { status: "assigned", handler: null }),
+  ];
+  const w = workload(rows);
+  assert.deepEqual(w.handlers, [
+    { handler: "Ana Reyes", open: 2, fixed: 1 },
+    { handler: "Jose Cruz", open: 1, fixed: 0 },
+    { handler: "Zed", open: 0, fixed: 1 },
+  ]);
+  assert.equal(w.waiting, 2);
+});
+
+test("workload: empty list gives nothing, not a throw", () => {
+  assert.deepEqual(workload([]), { handlers: [], waiting: 0 });
+});
+
+test("sosByKind: active SOS per responder in dashboard order, unsorted counted, fixed ones ignored", () => {
+  const sos = (id: string, over: Partial<Report> = {}) => report(id, { category: "sos", ...over });
+  const s = sosByKind([
+    sos("a", { sos_kind: "police" }),
+    sos("b", { sos_kind: "police" }),
+    sos("c", { sos_kind: "medical" }),
+    sos("d"),
+    sos("e", { sos_kind: "fire_rescue", status: "fixed" }),
+    report("f"),
+  ]);
+  assert.equal(s.active, 4);
+  assert.equal(s.unsorted, 1);
+  assert.deepEqual(s.kinds.map((k) => [k.kind, k.count]), [["police", 2], ["medical", 1], ["fire_rescue", 0]]);
+});
+
+test("summarize: carries the workload and SOS sections, and skips rejected tickets in them", () => {
+  const s = summarize([report("a", { status: "assigned", handler: "Ana" }), report("b", { status: "rejected", handler: "Ana" })], NOW);
+  assert.equal(s.workload.handlers[0].open, 1);
+  assert.equal(s.sos.active, 0);
 });
