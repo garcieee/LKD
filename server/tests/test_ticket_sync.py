@@ -1,11 +1,13 @@
 """The ticket loop inside the server: a temp store and a temp lakad.db, driven one turn at a time with tick()."""
 import sqlite3
 import time
+from typing import get_args
 
 import pytest
 from fastapi.testclient import TestClient
 
 from app import config
+from app.db.models import Category
 from app.main import create_app
 from app.services.ticket_sync import engine, settings
 
@@ -61,6 +63,14 @@ def test_a_tick_puts_reports_metres_apart_on_one_ticket(app, client):
     rows = {t["id"]: t for t in app.state.sync.db.tickets()}
     assert set(rows) == {a["id"], far["id"]} and rows[a["id"]]["reporters"] == 2
     assert app.state.sync.tick().attached == 0  # a second turn finds nothing to do
+
+
+def test_every_category_the_server_takes_gets_its_ticket(app, client):
+    # The server's categories and lakad.db's category check are written separately: a drift would 201 the report
+    # and then fail the loop quietly, three times.
+    ids = [post(client, category=c)["id"] for c in get_args(Category) if c != "sos"] + [sos(client)["id"]]
+    stats = app.state.sync.tick()
+    assert stats.failed == [] and stats.attached == len(ids)
 
 
 def test_a_failing_save_counts_a_try_and_after_three_the_report_is_skipped(app, client, monkeypatch):
