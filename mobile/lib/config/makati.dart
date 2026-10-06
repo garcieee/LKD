@@ -5,6 +5,7 @@ class Makati {
   static const double lat = 14.5546; // middle of the city extent (Ayala / CBD)
   static const double lng = 121.0244;
   static const double zoom = 12.1; // fallback only: the city across a ~390px phone
+  static const double pitch = 40; // the slight tilt every camera move ends on
   static const double minZoom = 11;
   static const double maxZoom = 19;
 

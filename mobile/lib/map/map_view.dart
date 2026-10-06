@@ -65,7 +65,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     center: Point(coordinates: Position(Makati.lng, Makati.lat)),
     zoom: Makati.zoom,
     bearing: 0,
-    pitch: 0,
+    pitch: Makati.pitch,
   );
 
   // The first frames, until the style loads and the whole city is framed.
@@ -182,7 +182,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     final fix = _location.fix;
     final dest = Point(coordinates: Position(place.lng, place.lat));
     if (fix == null || !inMakati(fix.latitude, fix.longitude)) {
-      await map.flyTo(CameraOptions(center: dest, zoom: 16, bearing: 0, pitch: 0), MapAnimationOptions(duration: 1000));
+      await map.flyTo(CameraOptions(center: dest, zoom: 16, bearing: 0, pitch: Makati.pitch), MapAnimationOptions(duration: 1000));
       return;
     }
     await _fit(map, [Point(coordinates: Position(fix.longitude, fix.latitude)), dest]);
@@ -198,7 +198,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     );
     // Points close together would zoom to street-corner level: stop at 17.
     final zoom = fit.zoom;
-    final camera = zoom != null && zoom.isFinite ? CameraOptions(center: fit.center, zoom: math.min(zoom, 17), bearing: 0, pitch: 0) : fit;
+    final camera = zoom != null && zoom.isFinite ? CameraOptions(center: fit.center, zoom: math.min(zoom, 17), bearing: 0, pitch: Makati.pitch) : fit;
     await map.flyTo(camera, MapAnimationOptions(duration: 1000));
   }
 
@@ -220,7 +220,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
         center: Point(coordinates: Position(fix.longitude, fix.latitude)),
         zoom: 17,
         bearing: 0,
-        pitch: 0,
+        pitch: Makati.pitch,
       ),
       MapAnimationOptions(duration: 1000),
     );
@@ -290,7 +290,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     await Future.wait([
       map.logo.updateSettings(LogoSettings(marginBottom: lift)),
       map.attribution.updateSettings(AttributionSettings(marginBottom: lift)),
-      map.compass.updateSettings(CompassSettings(enabled: false)), // under the status bar; Reset squares the map up
+      map.compass.updateSettings(CompassSettings(enabled: false)), // under the status bar; Reset squares the map up and restores the tilt
       map.scaleBar.updateSettings(ScaleBarSettings(enabled: false)),
     ]);
     await _ready();
@@ -341,7 +341,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
         maxZoom: Makati.maxZoom,
       ),
     );
-    final camera = fits ? fit : _fallback;
+    final camera = fits ? CameraOptions(center: fit.center, zoom: fit.zoom, bearing: 0, pitch: Makati.pitch) : _fallback;
     if (animate) {
       await map.flyTo(camera, MapAnimationOptions(duration: 1200));
     } else {
