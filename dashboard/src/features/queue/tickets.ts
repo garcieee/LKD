@@ -61,8 +61,13 @@ export const ticketLabel = (r: Report) =>
     ? `${CATEGORY_LABEL.sos} · ${r.sos_kind ? SOS_KIND_LABEL[r.sos_kind] : "Unsorted"}`
     : CATEGORY_LABEL[r.category];
 
+// The ticket engine's score (0..100, higher is more urgent), once the server's ticket loop has set it. Anything else,
+// including NaN, counts as not scored yet.
+export const hasPriority = (r: Report): r is Report & { priority: number } => Number.isFinite(r.priority);
+
 // The fix-it order: unresolved first (rejected tickets last of all), SOS before everything else (unsorted ones on
-// top), then most severe, then oldest. Times only have whole seconds, so ties are common; the API lists newest
+// top), then the engine's priority (scored tickets above ones not scored yet, so the order stays consistent when the
+// two mix), then most severe, then oldest. Times only have whole seconds, so ties are common; the API lists newest
 // first, and sorting it reversed keeps ties in arrival order.
 export function rank(reports: Report[]): Report[] {
   return reports.toReversed().sort(
@@ -71,6 +76,8 @@ export function rank(reports: Report[]): Report[] {
       Number(isRejected(a)) - Number(isRejected(b)) ||
       Number(isSosActive(b)) - Number(isSosActive(a)) ||
       Number(needsSorting(b)) - Number(needsSorting(a)) ||
+      Number(hasPriority(b)) - Number(hasPriority(a)) ||
+      (hasPriority(a) && hasPriority(b) ? b.priority - a.priority : 0) ||
       b.severity - a.severity ||
       Date.parse(a.created_at) - Date.parse(b.created_at),
   );
