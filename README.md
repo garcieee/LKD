@@ -16,7 +16,7 @@
     <th align="center">PROJECT DOCUMENTATION</th>
   </tr>
   <tr>
-    <td align="center"><b>Six Seven Lakad</b></td>
+    <td align="center"><b>Lakad Kinetic Development</b></td>
     <td align="center"><a href="https://docs.google.com/document/d/1-KtQXQGzGgUjQvdE_HK4or0s5GL7DViF/">Open your team's documentation</a></td>
   </tr>
 </table>
