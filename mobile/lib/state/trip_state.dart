@@ -32,6 +32,7 @@ class TripState extends ChangeNotifier {
   bool commuteLoading = false;
   int selected = 0; // index into commute: the one drawn on the map
   LatLng? _from; // where the trip starts, kept from plan() so the commute options can be asked for later
+  bool started = false; // the user pressed Start: the trip is on
   bool loading = false;
   bool planned = false; // routes for this destination have been asked for
   int _round = 0; // bumped per destination; answers from an older one are dropped
@@ -39,6 +40,17 @@ class TripState extends ChangeNotifier {
   WalkRoute? get route => routes[mode];
   String? get error => errors[mode];
   bool get hasCommute => _fetchCommute != null;
+  /// The legs of the trip being taken: the chosen commute option, or, with no ride, the chosen walking route.
+  List<CommuteLeg> get activeLegs {
+    final o = option, r = route;
+    if (o != null) return o.legs;
+    if (r == null) return const [];
+    return [CommuteLeg.walk(r, 'Walk to ${destination?.label ?? 'your destination'}')];
+  }
+
+  /// Whether Start can be pressed: on the commute step, once the options have landed (or failed) and there is a route.
+  bool get canStart => step == TripStep.commute && !commuteLoading && activeLegs.isNotEmpty;
+
   CommuteOption? get option => selected < commute.length ? commute[selected] : null;
 
   /// Picks (or, with null, clears) the destination. With [from] the three routes are fetched at once;
@@ -55,6 +67,7 @@ class TripState extends ChangeNotifier {
     commuteLoading = false;
     selected = 0;
     _from = null;
+    started = false;
     loading = false;
     planned = false;
     notifyListeners();
@@ -62,6 +75,18 @@ class TripState extends ChangeNotifier {
   }
 
   void clear() => setDestination(null);
+
+  void start() {
+    if (!canStart || started) return;
+    started = true;
+    notifyListeners();
+  }
+
+  void end() {
+    if (!started) return;
+    started = false;
+    notifyListeners();
+  }
 
   void select(int i) {
     if (i < 0 || i >= commute.length || i == selected) return;

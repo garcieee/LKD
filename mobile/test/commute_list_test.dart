@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lakad/api/api_client.dart';
@@ -158,6 +160,52 @@ void main() {
     await show(tester, RouteCard(trip: trip));
     expect(find.text('Next: ride options'), findsNothing);
     expect(find.text('Fastest'), findsOneWidget);
+    trip.dispose();
+  });
+
+  testWidgets('Start trip begins the trip with the chosen option, and the card becomes the trip card', (tester) async {
+    final trip = tripWith([option('a', total: 2100, walk: 360, tags: ['earliest'])]);
+    trip.setDestination(greenbelt, from: here);
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    await show(tester, RouteCard(trip: trip));
+    expect(find.text('Start trip'), findsNothing, reason: 'not on the commute step yet');
+    await tester.tap(find.text('Next: ride options'));
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    await tester.pump();
+
+    expect(find.text('Start trip'), findsOneWidget);
+    await tester.tap(find.text('Start trip'));
+    await tester.pump();
+    expect(trip.started, isTrue);
+    expect(find.text('Trip to Greenbelt, Makati'), findsOneWidget);
+    expect(find.text('Start trip'), findsNothing);
+    expect(find.text('1 suggested route'), findsNothing);
+
+    await tester.tap(find.text('End trip'));
+    await tester.pump();
+    expect(trip.started, isFalse);
+    expect(find.text('Start trip'), findsOneWidget, reason: 'back on the commute step');
+    trip.dispose();
+  });
+
+  testWidgets('with no ride the button says Start walking, and it waits while the options load', (tester) async {
+    final pending = Completer<List<CommuteOption>>();
+    final trip = TripState((from, to, mode) async => walk(mode), (from, to, mode) => pending.future);
+    trip.setDestination(greenbelt, from: here);
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    await show(tester, RouteCard(trip: trip));
+    await tester.tap(find.text('Next: ride options'));
+    await tester.pump();
+    expect(tester.widget<FilledButton>(find.byType(FilledButton)).onPressed, isNull, reason: 'still loading');
+
+    pending.complete([]);
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    await tester.pump();
+    expect(find.text('No ride found near both ends of this trip.'), findsOneWidget);
+    expect(find.text('Start walking'), findsOneWidget);
+    await tester.tap(find.text('Start walking'));
+    await tester.pump();
+    expect(trip.started, isTrue);
     trip.dispose();
   });
 }

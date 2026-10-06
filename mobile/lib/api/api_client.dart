@@ -91,6 +91,13 @@ class CommuteLeg {
         for (final p in json['geometry'] as List) [for (final n in p as List) (n as num).toDouble()],
       ];
 
+  /// A walking route as a single leg, for a trip with no ride.
+  CommuteLeg.walk(WalkRoute r, this.label)
+    : kind = 'walk',
+      durationS = r.durationS,
+      distanceM = r.distanceM,
+      line = r.line;
+
   final String kind; // 'walk', or a key of hubModeLabels
   final double durationS;
   final double distanceM;

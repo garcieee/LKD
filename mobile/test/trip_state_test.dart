@@ -23,7 +23,18 @@ CommuteOption option(String id, {bool earliest = false}) => CommuteOption.fromJs
   'total_s': 1200,
   'walk_s': 300,
   'tags': [if (earliest) 'earliest'],
-  'legs': <Map<String, dynamic>>[],
+  'legs': [
+    {
+      'kind': 'walk',
+      'duration_s': 300,
+      'distance_m': 400,
+      'label': 'Walk',
+      'geometry': [
+        [121.0244, 14.5547],
+        [121.021, 14.553],
+      ],
+    },
+  ],
 });
 
 void main() {
@@ -247,6 +258,71 @@ void main() {
     expect(trip.option, isNull);
     expect(trip.selected, 0);
     expect(trip.step, TripStep.walk);
+    trip.dispose();
+  });
+
+  test('Start needs the commute step and a route; the legs are the chosen option, or the walk alone', () async {
+    final trip = TripState((from, to, mode) async => route(mode, m: mode == 'accessible' ? 700 : 480), (
+      from,
+      to,
+      mode,
+    ) async {
+      return [option('a'), option('b')];
+    });
+    trip.setDestination(place('Greenbelt'), from: here);
+    await Future<void>.delayed(Duration.zero);
+    expect(trip.canStart, isFalse, reason: 'still on the walking step');
+    trip.start();
+    expect(trip.started, isFalse);
+
+    await trip.toCommute();
+    expect(trip.canStart, isTrue);
+    trip.select(1);
+    expect(trip.activeLegs, same(trip.commute[1].legs), reason: 'the chosen option is the trip');
+    trip.start();
+    expect(trip.started, isTrue);
+    trip.end();
+    expect(trip.started, isFalse);
+    trip.dispose();
+  });
+
+  test('with no ride found the trip is the chosen walking route, as one walk leg', () async {
+    final trip = TripState((from, to, mode) async => route(mode, m: mode == 'accessible' ? 700 : 480), (
+      from,
+      to,
+      mode,
+    ) async {
+      return <CommuteOption>[];
+    });
+    trip.setDestination(place('Greenbelt'), from: here);
+    await Future<void>.delayed(Duration.zero);
+    trip.setMode('accessible');
+    await trip.toCommute();
+    expect(trip.commute, isEmpty);
+    expect(trip.canStart, isTrue);
+    final leg = trip.activeLegs.single;
+    expect(leg.isWalk, isTrue);
+    expect(leg.distanceM, 700, reason: 'the walk in the picked mode');
+    expect(leg.label, 'Walk to Greenbelt');
+    expect(leg.line.first, [121.0244, 14.5547]);
+    trip.start();
+    expect(trip.started, isTrue);
+    trip.dispose();
+  });
+
+  test('Start waits for the commute options, and a new destination ends the trip', () async {
+    final pending = Completer<List<CommuteOption>>();
+    final trip = TripState((from, to, mode) async => route(mode), (from, to, mode) => pending.future);
+    trip.setDestination(place('Old'), from: here);
+    await Future<void>.delayed(Duration.zero);
+    final asking = trip.toCommute();
+    expect(trip.canStart, isFalse, reason: 'the options are still on their way');
+    pending.complete([option('a')]);
+    await asking;
+    trip.start();
+    expect(trip.started, isTrue);
+    trip.setDestination(place('New'));
+    expect(trip.started, isFalse);
     trip.dispose();
   });
 }

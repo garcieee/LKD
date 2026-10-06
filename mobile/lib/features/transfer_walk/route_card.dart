@@ -40,6 +40,7 @@ class RouteCard extends StatelessWidget {
       listenable: trip,
       builder: (context, _) {
         final route = trip.route, error = trip.error;
+        if (trip.started) return _Started(trip: trip);
         return ChipCard(
           padding: const EdgeInsets.all(12),
           child: Column(
@@ -57,6 +58,14 @@ class RouteCard extends StatelessWidget {
                 _BackToWalk(trip: trip),
                 const SizedBox(height: 6),
                 CommuteList(trip: trip),
+                const SizedBox(height: 10),
+                FilledButton.icon(
+                  onPressed: trip.canStart ? trip.start : null,
+                  style: FilledButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: radiusButton)),
+                  icon: const Icon(Icons.navigation, size: 18),
+                  // With no ride to take, the trip is the walk alone.
+                  label: Text(trip.option == null ? 'Start walking' : 'Start trip'),
+                ),
               ] else ...[
                 ModeToggle(trip: trip),
                 const SizedBox(height: 10),
@@ -108,6 +117,34 @@ class _BackToWalk extends StatelessWidget {
         onPressed: trip.backToWalk,
         icon: const Icon(Icons.arrow_back, size: 16),
         label: Text('Walking: ${routeModes[trip.mode]}'),
+      ),
+    );
+  }
+}
+
+/// The card while the trip is on.
+// ponytail: a stand-in until the navigation bar (current leg, distance left, arrival) replaces it.
+class _Started extends StatelessWidget {
+  const _Started({required this.trip});
+
+  final TripState trip;
+
+  @override
+  Widget build(BuildContext context) {
+    return ChipCard(
+      padding: const EdgeInsets.all(12),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              'Trip to ${trip.destination?.label ?? ''}',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            ),
+          ),
+          TextButton(onPressed: trip.end, child: const Text('End trip')),
+        ],
       ),
     );
   }
