@@ -1,0 +1,7 @@
+# Evaluation code only (models/tickets/eval). The ticketing rules in models/tickets use the standard library.
+# python3 -m venv models/.venv && models/.venv/bin/pip install -r models/requirements-eval.txt
+numpy>=2.5.3
+scipy>=1.18.1
+scikit-learn>=1.9.1
+matplotlib>=3.11.2
+pytest>=9.1.1
