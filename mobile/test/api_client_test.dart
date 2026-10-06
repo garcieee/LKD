@@ -229,4 +229,54 @@ void main() {
     expect(reports.map((r) => r.id), ['3f2a', 'older']);
     expect(reports.last.status, 'fixed');
   });
+
+  group('ApiClient.geocode', () {
+    // A place as GET /geocode sends it (server/app/routers/geocode.py).
+    Map<String, dynamic> place({String label = 'Ayala Triangle Gardens, Makati, Philippines'}) => {
+      'label': label,
+      'lat': 14.5547,
+      'lng': 121,
+    };
+
+    test('asks for the text, reads places in order, takes whole-number coordinates', () async {
+      late http.Request got;
+      final api = apiWith(
+        MockClient((req) async {
+          got = req;
+          return jsonResponse([place(), place(label: 'Greenbelt, Makati')], 200);
+        }),
+      );
+      final places = await api.geocode('Ayala');
+      expect(got.method, 'GET');
+      expect(got.url.path, '/geocode');
+      expect(got.url.queryParameters, {'q': 'Ayala'}, reason: 'no position sent unless given');
+      expect(places.map((p) => p.label), ['Ayala Triangle Gardens, Makati, Philippines', 'Greenbelt, Makati']);
+      expect(places.first.lat, 14.5547);
+      expect(places.first.lng, 121.0);
+    });
+
+    test('sends the position so nearby places rank first, and escapes the text', () async {
+      late http.Request got;
+      final api = apiWith(
+        MockClient((req) async {
+          got = req;
+          return jsonResponse([], 200);
+        }),
+      );
+      expect(await api.geocode('Jupiter & Makati Ave', near: (lat: 14.55, lng: 121.02)), isEmpty);
+      expect(got.url.queryParameters, {'q': 'Jupiter & Makati Ave', 'lat': '14.55', 'lng': '121.02'});
+    });
+
+    test("shows the server's message when search is down", () {
+      final api = apiWith(
+        MockClient((_) async => jsonResponse({'detail': 'Place search is unavailable. Try again.'}, 502)),
+      );
+      expect(api.geocode('Ayala'), apiError('Place search is unavailable. Try again.'));
+    });
+
+    test('the server not being reachable reads as an error, not a crash', () {
+      final api = apiWith(MockClient((_) async => throw http.ClientException('no route to host')));
+      expect(api.geocode('Ayala'), apiError(contains("Can't reach the server")));
+    });
+  });
 }
