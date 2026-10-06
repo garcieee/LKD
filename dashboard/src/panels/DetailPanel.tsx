@@ -1,6 +1,6 @@
 // One ticket, shown in the Tickets panel: photo (an SOS: its video and who must respond), what and where, and the
 // status stepper.
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { photoUrl, videoUrl } from "../api/client";
 import type { Report, SosKind, Status } from "../types/api";
 import SosKindCard from "../features/queue/SosKindCard";
@@ -38,6 +38,12 @@ export default function DetailPanel({ report: r, now, onStatus, onKind, onShowOn
   const label = ticketLabel(r);
   const photo = photoUrl(r.photo_url);
   const sos = isSos(r);
+  const title = useRef<HTMLHeadingElement>(null);
+  // Confirm, Reject and Reopen remove themselves when the status changes, and the focus they held falls to the page:
+  // bring it back to the ticket.
+  useEffect(() => {
+    if (document.activeElement === document.body) title.current?.focus();
+  }, [r.status]);
   const change = async (status: Status) => {
     setError(null);
     setError(await onStatus(r.id, status));
@@ -73,7 +79,7 @@ export default function DetailPanel({ report: r, now, onStatus, onKind, onShowOn
         </span>
         <Severity level={r.severity} />
       </div>
-      <h3 className="detail-title" tabIndex={-1}>
+      <h3 ref={title} className="detail-title" tabIndex={-1}>
         {label}
       </h3>
       <p className={r.note ? "note" : "note muted"}>

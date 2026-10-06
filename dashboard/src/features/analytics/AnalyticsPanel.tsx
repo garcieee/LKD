@@ -1,6 +1,6 @@
 // Insights: backlog funnel, what is breaking, aging, throughput, hotspots, from the polled reports.
 // Docked on the right: the map keeps the other 70% of the screen (phones: a full sheet over the map).
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import ResizeGrip from "../../panels/ResizeGrip";
 import type { Report } from "../../types/api";
 import { CATEGORY_LABEL, STATUS_LABEL, timeAgo } from "../queue/tickets";
@@ -51,6 +51,9 @@ export default function AnalyticsPanel({ reports, online, now, onClose, onShow }
   const minute = Math.floor(now / 60_000);
   const s = useMemo(() => reports && summarize(reports, minute * 60_000), [reports, minute]);
   const peak = s ? Math.max(1, ...s.throughput.map((d) => Math.max(d.created, d.fixed))) : 1;
+  // Opened from the menu, which closes behind it: focus goes to the panel's title (the menu's own attempt ran before
+  // this panel existed).
+  useEffect(() => document.getElementById("insights-title")?.focus(), []);
 
   return (
     <section id="insights" className="insights" aria-labelledby="insights-title">
