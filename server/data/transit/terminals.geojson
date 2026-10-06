@@ -1,0 +1,751 @@
+{
+  "type": "FeatureCollection",
+  "source": "PUV Routes in Makati (Ayala Land; SYSTRA Philippines, Makati BRT Study, 2025), provided by the City Government of Makati for the Poland–Philippines Smart Cities Hackathon, 6–7 Oct 2026. Hackathon use only: do not share outside the registered participants.",
+  "note": "The study gives terminal and stop names on schematic maps, not coordinates. Points are estimates: method 'venue search' is the named place found through OpenRouteService; 'map fit' is the dot's position on the study's map, fitted to places found by name (error_m is a rough radius, not a guarantee). Points with a 'review' text should be checked by hand.",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.017542,
+          14.574932
+        ]
+      },
+      "properties": {
+        "id": "circuit-makati",
+        "name": "Circuit Makati",
+        "kind": "terminal",
+        "modes": [
+          "city_bus",
+          "jeepney",
+          "p2p_bus",
+          "uv_express"
+        ],
+        "method": "map fit",
+        "error_m": 140,
+        "review": "position uncertain (about ±140 m between fits)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.02239,
+          14.55463
+        ]
+      },
+      "properties": {
+        "id": "dela-rosa-carpark-1",
+        "name": "Dela Rosa Carpark 1",
+        "kind": "terminal",
+        "modes": [
+          "uv_express"
+        ],
+        "method": "venue search",
+        "error_m": 40,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.045013,
+          14.566916
+        ]
+      },
+      "properties": {
+        "id": "guadalupe-ibabaw",
+        "name": "Guadalupe Ibabaw",
+        "kind": "terminal",
+        "modes": [
+          "jeepney"
+        ],
+        "method": "map fit",
+        "error_m": 130,
+        "review": "position uncertain (about ±130 m between fits)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.046021,
+          14.566066
+        ]
+      },
+      "properties": {
+        "id": "guadalupe-terminal",
+        "name": "Guadalupe Terminal",
+        "kind": "terminal",
+        "modes": [
+          "jeepney"
+        ],
+        "method": "map fit",
+        "error_m": 130,
+        "review": "position uncertain (about ±130 m between fits)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.997575,
+          14.554074
+        ]
+      },
+      "properties": {
+        "id": "lrt1-gil-puyat",
+        "name": "LRT1-Gil Puyat",
+        "kind": "terminal",
+        "modes": [
+          "city_bus",
+          "jeepney",
+          "p2p_bus",
+          "uv_express"
+        ],
+        "method": "map fit",
+        "error_m": 140,
+        "review": "position uncertain (about ±140 m between fits)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.02334,
+          14.55253
+        ]
+      },
+      "properties": {
+        "id": "landmark-terminal",
+        "name": "Landmark Terminal",
+        "kind": "terminal",
+        "modes": [
+          "jeepney"
+        ],
+        "method": "venue search",
+        "error_m": 40,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.001301,
+          14.548075
+        ]
+      },
+      "properties": {
+        "id": "libertad-terminal",
+        "name": "Libertad Terminal",
+        "kind": "terminal",
+        "modes": [
+          "jeepney"
+        ],
+        "method": "map fit",
+        "error_m": 100,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.028831,
+          14.549516
+        ]
+      },
+      "properties": {
+        "id": "mrt3-ayala-bgc-bus-terminal",
+        "name": "MRT3-Ayala/BGC Bus Terminal",
+        "kind": "terminal",
+        "modes": [
+          "city_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.032946,
+          14.57655
+        ]
+      },
+      "properties": {
+        "id": "mandaluyong-city-hall-terminal",
+        "name": "Mandaluyong City Hall Terminal",
+        "kind": "terminal",
+        "modes": [
+          "jeepney"
+        ],
+        "method": "map fit",
+        "error_m": 140,
+        "review": "position uncertain (about ±140 m between fits)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.02817,
+          14.55048
+        ]
+      },
+      "properties": {
+        "id": "one-ayala",
+        "name": "One Ayala",
+        "kind": "terminal",
+        "modes": [
+          "city_bus",
+          "jeepney",
+          "p2p_bus",
+          "uv_express"
+        ],
+        "method": "venue search",
+        "error_m": 40,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.022891,
+          14.553866
+        ]
+      },
+      "properties": {
+        "id": "p2p-greenbelt",
+        "name": "P2P - Greenbelt",
+        "kind": "terminal",
+        "modes": [
+          "p2p_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.02396,
+          14.552713
+        ]
+      },
+      "properties": {
+        "id": "p2p-landmark",
+        "name": "P2P - Landmark",
+        "kind": "terminal",
+        "modes": [
+          "p2p_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.01594,
+          14.572095
+        ]
+      },
+      "properties": {
+        "id": "prc-terminal",
+        "name": "PRC Terminal",
+        "kind": "terminal",
+        "modes": [
+          "jeepney"
+        ],
+        "method": "map fit",
+        "error_m": 120,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.02294,
+          14.55778
+        ]
+      },
+      "properties": {
+        "id": "paseo-center",
+        "name": "Paseo Center",
+        "kind": "terminal",
+        "modes": [
+          "uv_express"
+        ],
+        "method": "venue search",
+        "error_m": 40,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.012821,
+          14.574074
+        ]
+      },
+      "properties": {
+        "id": "puregold-makati-terminal",
+        "name": "Puregold Makati Terminal",
+        "kind": "terminal",
+        "modes": [
+          "jeepney"
+        ],
+        "method": "map fit",
+        "error_m": 130,
+        "review": "position uncertain (about ±130 m between fits)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.01793,
+          14.54247
+        ]
+      },
+      "properties": {
+        "id": "san-lorenzo-place-terminal",
+        "name": "San Lorenzo Place Terminal",
+        "kind": "terminal",
+        "modes": [
+          "jeepney"
+        ],
+        "method": "venue search",
+        "error_m": 40,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.034691,
+          14.555737
+        ]
+      },
+      "properties": {
+        "id": "shell-buendia-terminal",
+        "name": "Shell Buendia Terminal",
+        "kind": "terminal",
+        "modes": [
+          "jeepney"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.023887,
+          14.558395
+        ]
+      },
+      "properties": {
+        "id": "valero-2-carpark",
+        "name": "Valero 2 Carpark",
+        "kind": "terminal",
+        "modes": [
+          "uv_express"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.010331,
+          14.558564
+        ]
+      },
+      "properties": {
+        "id": "washington-terminal",
+        "name": "Washington Terminal",
+        "kind": "terminal",
+        "modes": [
+          "jeepney"
+        ],
+        "method": "map fit",
+        "error_m": 80,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.016876,
+          14.570153
+        ]
+      },
+      "properties": {
+        "id": "zapote-terminal",
+        "name": "Zapote Terminal",
+        "kind": "terminal",
+        "modes": [
+          "jeepney"
+        ],
+        "method": "map fit",
+        "error_m": 110,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.020304,
+          14.557488
+        ]
+      },
+      "properties": {
+        "id": "ayala-avenue-paseo-de-roxas",
+        "name": "Ayala Avenue-Paseo de Roxas",
+        "kind": "stop",
+        "modes": [
+          "city_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.023067,
+          14.55576
+        ]
+      },
+      "properties": {
+        "id": "ayala-triangle",
+        "name": "Ayala Triangle",
+        "kind": "stop",
+        "modes": [
+          "city_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.00428,
+          14.556133
+        ]
+      },
+      "properties": {
+        "id": "bautista",
+        "name": "Bautista",
+        "kind": "stop",
+        "modes": [
+          "city_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.012194,
+          14.559884
+        ]
+      },
+      "properties": {
+        "id": "chino-roces",
+        "name": "Chino Roces",
+        "kind": "stop",
+        "modes": [
+          "city_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.002638,
+          14.555545
+        ]
+      },
+      "properties": {
+        "id": "dian",
+        "name": "Dian",
+        "kind": "stop",
+        "modes": [
+          "city_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.006078,
+          14.556967
+        ]
+      },
+      "properties": {
+        "id": "filmore",
+        "name": "Filmore",
+        "kind": "stop",
+        "modes": [
+          "city_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.030898,
+          14.559643
+        ]
+      },
+      "properties": {
+        "id": "gil-puyat-paseo-de-roxas",
+        "name": "Gil Puyat-Paseo de Roxas",
+        "kind": "stop",
+        "modes": [
+          "city_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.026947,
+          14.552938
+        ]
+      },
+      "properties": {
+        "id": "glorietta",
+        "name": "Glorietta",
+        "kind": "stop",
+        "modes": [
+          "city_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.034741,
+          14.555338
+        ]
+      },
+      "properties": {
+        "id": "mrt3-buendia",
+        "name": "MRT3-Buendia",
+        "kind": "stop",
+        "modes": [
+          "city_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.028031,
+          14.561513
+        ]
+      },
+      "properties": {
+        "id": "makati-avenue",
+        "name": "Makati Avenue",
+        "kind": "stop",
+        "modes": [
+          "city_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.008261,
+          14.558037
+        ]
+      },
+      "properties": {
+        "id": "mayapis",
+        "name": "Mayapis",
+        "kind": "stop",
+        "modes": [
+          "city_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.022574,
+          14.562243
+        ]
+      },
+      "properties": {
+        "id": "nicanor-garcia",
+        "name": "Nicanor Garcia",
+        "kind": "stop",
+        "modes": [
+          "city_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.014652,
+          14.560932
+        ]
+      },
+      "properties": {
+        "id": "rcbc-makati-med",
+        "name": "RCBC/Makati Med",
+        "kind": "stop",
+        "modes": [
+          "city_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.017778,
+          14.559126
+        ]
+      },
+      "properties": {
+        "id": "rufino",
+        "name": "Rufino",
+        "kind": "stop",
+        "modes": [
+          "city_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.010263,
+          14.558937
+        ]
+      },
+      "properties": {
+        "id": "washington",
+        "name": "Washington",
+        "kind": "stop",
+        "modes": [
+          "city_bus"
+        ],
+        "method": "map fit",
+        "error_m": 60,
+        "review": null
+      }
+    }
+  ]
+}

@@ -6,11 +6,17 @@ import 'package:flutter/foundation.dart';
 // because there is one layer. Add shared_preferences and layers/layer_registry.dart with the second.
 class LayersState extends ChangeNotifier {
   bool congestionOn = true; // on by default, as on the dashboard
+  bool hubsOn = true; // transit terminals and stops
   DateTime stamp = DateTime.now(); // last refresh; also the tile cache-buster
 
   void setCongestion(bool on) {
     congestionOn = on;
     if (on) stamp = DateTime.now(); // switching on fetches fresh tiles
+    notifyListeners();
+  }
+
+  void setHubs(bool on) {
+    hubsOn = on;
     notifyListeners();
   }
 

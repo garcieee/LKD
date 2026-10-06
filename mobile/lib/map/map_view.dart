@@ -15,9 +15,11 @@ import '../features/report/ar_math.dart' show inMakati;
 import '../features/report/report_screen.dart';
 import '../features/search/place_search.dart';
 import '../features/search/search_bar.dart';
+import '../features/transfer_walk/hub_picker.dart';
 import '../features/transfer_walk/route_card.dart';
 import '../layers/congestion_layer.dart';
 import '../layers/destination_layer.dart';
+import '../layers/hubs_layer.dart';
 import '../layers/reports_layer.dart';
 import '../layers/route_layer.dart';
 import '../state/layers_state.dart';
@@ -46,6 +48,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   Timer? _timer;
   Timer? _reportsTimer;
   List<Report> _reports = const []; // the pins on the map, for the card a tap opens
+  List<Hub> _hubs = const []; // transit terminals and stops: static, loaded once
   Future<void> _queue = Future.value(); // style edits one at a time: a toggle can land mid-refresh
   bool _framed = false;
 
@@ -86,7 +89,10 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _timer = Timer.periodic(congestionRefresh, (_) {
       if (_layers.congestionOn) _layers.refresh();
     });
-    _reportsTimer = Timer.periodic(reportsRefresh, (_) => _loadReports());
+    _reportsTimer = Timer.periodic(reportsRefresh, (_) {
+      _loadReports();
+      _loadHubs(); // a no-op once they are in
+    });
   }
 
   @override
@@ -245,6 +251,35 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     });
   }
 
+  // The hubs never change while the app runs, so one good answer is enough; a failed one is retried
+  // with the next report refresh.
+  Future<void> _loadHubs() async {
+    if (_hubs.isNotEmpty) return;
+    try {
+      _hubs = await api.hubs();
+    } catch (e) {
+      debugPrint('hubs: $e');
+      return;
+    }
+    if (mounted) {
+      setState(() {}); // the layer sheet's colour key
+      _apply(); // draws them
+    }
+  }
+
+  void _openHub(String id) {
+    final hub = _hubs.where((h) => h.id == id).firstOrNull;
+    if (hub != null && mounted) showHubSheet(context, hub, from: _near(), onWalk: _walkTo);
+  }
+
+  // "Walk here" on a hub: it becomes the destination, so the route card and line work as for a searched place.
+  void _walkTo(Hub hub) => _trip.setDestination(hub.place, from: _near());
+
+  void _nearbyHubs() {
+    _loadHubs(); // if the first try failed
+    showNearbyHubs(context, _hubs, from: _near(), onWalk: _walkTo);
+  }
+
   void _openReport(String id) {
     final report = _reports.where((r) => r.id == id).firstOrNull;
     if (report != null && mounted) showReportSheet(context, report);
@@ -276,14 +311,20 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
       } else {
         await removeCongestion(map);
       }
+      if (_layers.hubsOn && _hubs.isNotEmpty) {
+        await showHubs(map, _hubs);
+      } else {
+        await hideHubs(map);
+      }
     } catch (e) {
-      debugPrint('congestion layer: $e'); // a failed refresh must not take the app down
+      debugPrint('map layers: $e'); // a failed refresh must not take the app down
     }
   }
 
   Future<void> _onMapCreated(MapboxMap map) async {
     _map = map;
     onReportTap(map, _openReport);
+    onHubTap(map, _openHub);
     // Edge to edge: the map runs under the gesture bar. Lift the Mapbox logo and the attribution
     // button above it, into the strip the chips leave free. Margins are logical pixels.
     final lift = MediaQuery.paddingOf(context).bottom + 8;
@@ -302,6 +343,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     if (map == null || !await map.isStyleLoaded()) return;
     _apply();
     _loadReports();
+    _loadHubs();
     _puckOn = false; // a new style drops the puck
     _syncPuck();
     if (_trip.destination != null) _onTrip(); // and the destination pin and route line
@@ -399,7 +441,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          _LocateRow(location: _location, onLocate: _locate),
+                          _LocateRow(location: _location, onLocate: _locate, onTransit: _nearbyHubs),
                           const SizedBox(height: 10),
                           _ReportButton(onPressed: _report),
                           const SizedBox(height: 10),
@@ -408,7 +450,9 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                           ListenableBuilder(
                             listenable: _trip,
                             builder: (context, _) =>
-                                _trip.destination == null ? LayerSheet(layers: _layers) : RouteCard(trip: _trip),
+                                _trip.destination == null
+                                ? LayerSheet(layers: _layers, legend: hubLegend(_hubs))
+                                : RouteCard(trip: _trip),
                           ),
                         ],
                       ),
@@ -426,10 +470,11 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
 
 // The GPS accuracy (or why there is no pin) next to the locate button.
 class _LocateRow extends StatelessWidget {
-  const _LocateRow({required this.location, required this.onLocate});
+  const _LocateRow({required this.location, required this.onLocate, required this.onTransit});
 
   final LocationState location;
   final VoidCallback onLocate;
+  final VoidCallback onTransit;
 
   @override
   Widget build(BuildContext context) {
@@ -464,6 +509,15 @@ class _LocateRow extends StatelessWidget {
                     if (action != null) TextButton(onPressed: onAction, child: Text(action)),
                   ],
                 ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            ChipCard(
+              padding: EdgeInsets.zero,
+              child: IconButton(
+                tooltip: 'Transit near me',
+                onPressed: onTransit,
+                icon: const Icon(Icons.directions_bus_outlined, size: 22, color: navy),
               ),
             ),
             const SizedBox(width: 10),
