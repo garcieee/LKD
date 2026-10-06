@@ -1,6 +1,6 @@
 # Attaching the models to the ticketing, the database and district logins
 
-**Status: plan, 2026-10-07.** The database contract was written and tested first (`supabase/`), so the two branches at the end can be built at the same time against it.
+**Status: plan, 2026-10-07.** Revised the same night: tickets live in SQLite on the Lakad server, and Supabase holds only sign-in and district roles. The Supabase part was written and tested first (`supabase/`), so the two branches at the end can be built at the same time.
 
 ## Short answers
 
@@ -15,56 +15,62 @@ phone ─ POST /reports ─▶ Lakad server ─▶ db/reports.json      the cach
                                               │
                                   the loop, every 5 s, inside the server (engine.sync_once)
                                               │  1. attach  models decide: same ticket or new, district, priority
-                                              │  2. push    upsert the ticket and the sighting to Supabase (secret key)
-                                              │  3. mark    write ticket_id, district, priority back onto the report
-                                              │  4. pull    status changes analysts made, back into the cache
+                                              │  2. save    ticket and sighting into SQLite
+                                              │  3. mark    ticket_id, district, priority back onto the report
                                               ▼
-analyst ─ signs in ─▶ Supabase Auth ─▶ Postgres: tickets, sightings, ticket_events      RLS: own district only
-public map ◀─ GET /reports ◀─ the cache                                                 no SOS, no rejected tickets
+                                         db/lakad.db (SQLite): tickets, sightings, ticket_events
+
+analyst ─ signs in ─▶ Supabase Auth ─▶ an access token
+dashboard ─ GET /tickets, PATCH /tickets/{id}, with the token ─▶ Lakad server
+                                              ├─ who is this? the caller's row in Supabase's analysts table (RLS: own row)
+                                              └─ only the tickets of that district, or all for citywide, from SQLite
+public map ◀─ GET /reports ◀─ the cache                                       no SOS, no rejected tickets
 ```
 
 ### The loop
 
 | Property | How |
 |---|---|
-| A report is never lost | It is on disk in `db/reports.json` before anything else happens, as today. If Supabase is down or not set up, reports keep arriving and the loop catches up later |
-| Running twice changes nothing | Every row is keyed by a report id (a ticket by its first report's id), so a retried turn upserts the same rows again |
-| One writer | Only the server writes tickets and sightings. Analysts change one column, `status`, through RLS |
-| Status flows back | Each turn pulls tickets changed since the last pull, minus a 60 s overlap, and applies them idempotently. Overlapping the window covers transactions that committed late |
-| An analyst's status survives | Upserts send only the columns the engine owns, never `status` (except a reopen) |
-| The cache stays small | A report whose ticket has been fixed or rejected for more than 30 days leaves `reports.json`. Postgres keeps it |
+| A report is never lost | It is on disk in `db/reports.json` before anything else happens, as today. If the loop stops, reports keep arriving and it catches up later |
+| Running twice changes nothing | Every row is keyed by a report id (a ticket by its first report's id), so a retried turn writes the same rows again |
+| An analyst's status survives | The loop writes `status` only for a new ticket or a reopen. Status changes come from `PATCH /tickets/{id}` and go to SQLite and the cache at once |
+| The cache stays small | A report whose ticket has been fixed or rejected for more than 30 days leaves `reports.json`. SQLite keeps it |
 | A bad report cannot block the queue | After 3 failed tries a report gets `sync_error` and is skipped; `/health` counts them |
-| Works without Supabase | With `SUPABASE_URL` empty the loop still attaches and ranks in the cache, and the dashboard reads the server as it does today. Safe for the demo |
 
-New settings in `settings.py`: `SYNC_EVERY_S = 5`, `SYNC_MAX_TRIES = 3`, `PULL_OVERLAP_S = 60`, `CACHE_KEEP_DAYS = 30`.
+New settings in `settings.py`: `SYNC_EVERY_S = 5`, `SYNC_MAX_TRIES = 3`, `CACHE_KEEP_DAYS = 30`.
 
-## Supabase: logins and district rules, nothing else
+## Sign-in and district roles (Supabase)
 
-Supabase does two jobs here: **Auth** (analyst accounts) and **Postgres rows guarded by row level security**. It does not store photos (they stay on the Lakad server), and Realtime and Edge Functions are not used. RLS can only guard rows that live in Postgres, so the tickets analysts read live there.
+Supabase holds two small tables and nothing else: `districts` (1 and 2) and `analysts`, the roles. There are three roles: a District 1 analyst, a District 2 analyst, and a citywide analyst who sees both districts and any ticket that falls in neither. Migration: `supabase/migrations/20261007010000_district_roles.sql`.
 
-| Caller | Key | Postgres role | May |
-|---|---|---|---|
-| Lakad server | secret (`sb_secret_…`), only in `server/.env` | `service_role`, bypasses RLS | write tickets and sightings, read status changes |
-| Analyst | publishable key plus their login | `authenticated` | read their district's tickets, sightings and status history; change `status` |
-| Anyone else | publishable key alone | `anon` | nothing |
+**How a dashboard request is checked**
+1. The dashboard signs in with Supabase (publishable key) and sends its access token to the Lakad server with every call.
+2. The server asks Supabase for the caller's `analysts` row, using the caller's own token. Supabase checks the token, and RLS returns that one row.
+3. A bad or expired token gets 401. A signed-in person with no row gets 403. If Supabase can't be reached, the answer is 503: the server fails closed. A good answer is cached for 60 s.
+4. The server filters SQLite in one place, `engine.tickets_for(scope)` and `engine.set_status(scope)`. A ticket outside your districts behaves exactly like a missing one (404).
 
-**The rule:** a ticket is visible when `tickets.district_id` equals the district in the signed-in person's row in `analysts`. The migration is `supabase/migrations/20261007010000_tickets_by_district.sql`. Choices behind it:
+**What protects what**
+- **Roles (in Supabase) are guarded by RLS.** You can read only your own row, nobody can give themselves a role or widen it to citywide, a role is one district or the whole city (never both, never neither), and the bare publishable key reads nothing. The tests are in `bash supabase/tests/run_local.sh`: 8 checks on a throwaway local Postgres. Breaking the migration on purpose in five ways made them fail every time.
+- **Tickets (in SQLite) are guarded by the server.** SQLite has no RLS, so the district filter is the server's single choke point, and its tests prove each role. The trade-off: a bug there could show one district's tickets to another, with no database rule behind it. If the database itself must enforce districts later, move the tickets to Postgres; the first version of this plan, in git history, has that design.
+- **The server never holds the Supabase secret key.** It only needs the URL and the publishable key, which is safe to expose because RLS bounds it.
+- **Deleting an analyst's row** removes access within 60 s (the cache).
 
-- **The district lives in a table, not in the token.** Deleting an analyst's row takes access away on the next query, with no token left to expire. Only an admin can write that table. `user_metadata` is never used, because users can edit their own.
-- **It fails closed.** Someone signed in without an analyst row matches no ticket. A ticket with no district (outside both) is seen by no analyst.
-- **Least privilege.** Supabase grants `anon` and `authenticated` everything on new tables, and policies do not take that back. The migration revokes it all and grants back `select`, plus `update` on the single column `status`.
-- **Every status change is recorded** in `ticket_events` (who, from, to, when) by a trigger. Analysts cannot write that table. The trigger runs with its owner's rights, so it lives in a `private` schema the API cannot reach, with a pinned `search_path`.
-- **Fast enough:** `(select auth.uid())` runs once per query, and `district_id` is indexed.
+**Settings that live in the Supabase dashboard, not in SQL:** turn off "Allow new users to sign up" (an admin creates analyst accounts), keep anonymous sign-ins off, and run the Security Advisor after the migration (expect no warnings).
 
-**Tested:** `bash supabase/tests/run_local.sh` applies the migration to a throwaway local Postgres and checks 13 promises. Among them: each district sees only its own tickets; a non-analyst and the bare publishable key see nothing; an analyst cannot change another district's ticket, any column but `status`, or their own district; changes are logged with who made it. The migration was broken on purpose in six ways and the tests caught every one. Local Postgres is 14 and Supabase runs 15 or later; the migration uses nothing newer than 14.
-
-**Settings that live in the Supabase dashboard, not in SQL:** turn off "Allow new users to sign up" (an admin creates analyst accounts), keep anonymous sign-ins off, expose only `public` in the Data API, and run the Security Advisor after the migration (expect no warnings). Optional: require MFA by adding `(select auth.jwt() ->> 'aal') = 'aal2'` to the policies.
-
-**Gaps to close before real use:**
-- `PATCH /reports/{id}` and `GET /reports?include_sos=true` are open to anyone today. Branch A closes both when Supabase is on.
+**Gaps to close before real use**
+- `PATCH /reports/{id}` and `GET /reports?include_sos=true` are open to anyone today. Branch A closes both once sign-in is configured.
 - Photo and SOS video URLs are long random ids, not signed: anyone who has a URL can open it. Upgrade: short-lived signed URLs from the server.
-- The ten EMBO barangays are Taguig now, but the server's city box still accepts reports there. They get no district, so no analyst sees them. Tighten `in_city` to the new boundary, or tell the reporter.
+- The ten EMBO barangays are Taguig now, but the server's city box still accepts reports there. They get no district, so only citywide analysts see them.
+- The dashboard keeps its session in the browser (supabase-js default), the usual trade-off for a web app.
 - On the free tier, a project pauses after a week without use.
+
+**If you already ran the first version of the migration** (tickets in Supabase), clear it before running the new one:
+
+```sql
+drop table if exists public.ticket_events, public.sightings, public.tickets, public.analysts, public.districts cascade;
+drop function if exists private.ticket_updated();
+drop schema if exists private;
+```
 
 ## Districts
 
@@ -75,60 +81,68 @@ Supabase does two jobs here: **Auth** (analyst accounts) and **Postgres rows gua
 
 Since the Supreme Court's EMBO ruling, Makati has 23 barangays. The ten EMBO barangays (Cembo, Comembo, East Rembo, Pembo, Pitogo, Post Proper Northside, Post Proper Southside, Rizal, South Cembo, West Rembo) belong to Taguig. Confirm the list with the city before relying on it.
 
-The engine gives each ticket the district of its anchor point (its most accurate sighting), by point-in-polygon on barangay boundaries, in plain Python. That needs the boundaries of Makati's barangays: from OpenStreetMap (ODbL) through Overpass, the same way `resources/places.json` was built, or from the Makati Data Hub if the organizers shared them.
+The engine gives each ticket the district of its anchor point (its most accurate sighting), by point-in-polygon on barangay boundaries from OpenStreetMap (ODbL), in plain Python.
 
 ## Execution: two branches at once
 
-`ticket-attach`, this branch, is the base. It holds this plan, the migration, the RLS tests, the engine scaffold and `tests/test_contract.py`, which fails if the engine's columns and the tables drift apart. Both branches start from it.
+`ticket-attach` is the base: this plan, the roles migration and its RLS tests, and the engine scaffold.
 
 ### Branch A, `tickets-engine`: the models attached to the ticketing
 
 | File | Change |
 |---|---|
-| `models/tickets/engine.py` | `attach`, `sync_once`, `database` |
-| `models/tickets/storage/supabase.py` | upserts and the status pull, standard library HTTP |
+| `models/tickets/engine.py` | `attach`, `sync_once`, `tickets_for(scope)`, `set_status(scope)` |
+| `models/tickets/storage/db.py` (replaces `supabase.py`) | SQLite: tickets, sightings, ticket_events, migrations by `PRAGMA user_version` |
 | `models/tickets/classification/routing.py` | `district_of(lat, lng, districts)`, point-in-polygon |
 | `models/tickets/resources/build_districts.py`, `districts.json`, `load.py` | barangay boundaries grouped by district |
-| `models/tickets/settings.py`, `README.md` | the four loop settings; status |
-| `models/tickets/tests/test_engine.py`, `test_district.py`, `test_settings.py` | tests |
-| `server/app/services/ticket_sync.py` | the loop: a daemon thread calling `engine.sync_once` every `SYNC_EVERY_S` |
-| `server/app/main.py`, `config.py` | start the loop; read `SUPABASE_URL`, `SUPABASE_SECRET_KEY` |
-| `server/app/db/models.py` | `Report` gains optional `ticket_id`, `district_id`, `priority`, `band` |
-| `server/app/routers/reports.py` | with Supabase on: `PATCH` answers 403, the public list ignores `include_sos` and `include_rejected` |
-| `server/.env.example`, `server/tests/test_ticket_sync.py` | the two variables, empty; the loop on a temp store with a fake database |
+| `models/tickets/settings.py`, `README.md` (Status) and tests | the loop settings; status; tests |
+| `server/app/services/ticket_sync.py` | the loop: a daemon thread started from the app's lifespan |
+| `server/app/services/auth.py` | the token to role check against Supabase, cached 60 s |
+| `server/app/routers/tickets.py`, `server/app/main.py` | `GET /tickets`, `PATCH /tickets/{id}`; one include line |
+| `server/app/config.py`, `server/.env.example` | `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `TICKETS_SYNC` |
+| `server/app/db/models.py`, `store.py`, `routers/reports.py` | `Ticket`; a remove method for pruning; with sign-in on, the old `PATCH` answers 403 and the public list never shows SOS |
+| `server/tests/test_ticket_sync.py`, `test_tickets_api.py` | the loop; every role against the API |
 
-Done when the rule tests, the contract test and the server tests pass, and a report posted to a local server shows its `ticket_id` and priority in `GET /reports` within one turn. With a Supabase project, it also appears in `tickets`.
-
-### Branch B, `district-auth`: district logins in the dashboard
+### Branch B, `district-auth`: district sign-in in the dashboard
 
 | File | Change |
 |---|---|
-| `dashboard/src/api/supabase.ts`, `supabase.test.ts` | the client, sign in and out, tickets with their sightings, status change, row to `Report` adapter |
-| `dashboard/src/api/client.ts` | `listReports` and `patchStatus` go to Supabase when it is configured, else to the server as today |
-| `dashboard/src/features/auth/LoginGate.tsx`, `dashboard/src/App.tsx` | the sign-in screen, and "District 1 (Western Makati) · Sign out" |
-| `dashboard/src/config/env.ts`, `dashboard/.env.example` | `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` |
-| `dashboard/src/types/api.ts` | optional `priority`, `band`, `district_id` |
-| `dashboard/package.json`, `package-lock.json` | `@supabase/supabase-js` (about 650 KB unpacked plus five sub-packages), if approved |
-| `supabase/README.md` | project setup, creating an analyst, the dashboard settings above |
-| `LAKAD-README.md` | Supabase (free tier) in the disclosure table |
+| `dashboard/src/api/supabase.ts`, `supabase.test.ts` | sign in and out, session, the caller's role row and its label |
+| `dashboard/src/api/client.ts` | with sign-in on: `GET /tickets` and `PATCH /tickets/{id}` with the token; else `/reports` as today |
+| `dashboard/src/features/auth/LoginGate.tsx`, `dashboard/src/App.tsx` | the sign-in screen and "District 1 (Western Makati) · Sign out" |
+| `dashboard/src/config/env.ts`, `.env.example`, `src/types/api.ts` | `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`; optional ticket fields |
+| `dashboard/package.json`, `package-lock.json` | `@supabase/supabase-js` |
+| `supabase/README.md`, `LAKAD-README.md` | project setup and roles; Supabase in the disclosure table |
 
-Done when the dashboard tests, lint and build pass, and, signed in as a District 1 analyst, the queue and the map show District 1 only, the status stepper works, and signed out the queue asks for a sign-in.
+### The contract between them
+
+- `GET /tickets` returns 200 and a list of tickets, newest first. A ticket is every `Report` field plus `priority` (0 to 100), `band`, `district_id` (1, 2 or null) and `reporters`.
+- `PATCH /tickets/{id}` takes `{"status": …}` and returns the ticket.
+- Both need `Authorization: Bearer <Supabase access token>`. The errors are 401 (no, bad or expired token), 403 (signed in, no role), 404 (no such ticket, or not in your districts) and 503 (sign-in not configured, or Supabase unreachable).
 
 ### Why the two merge cleanly
 
 - **No file is in both lists.** Git only conflicts when both sides change the same lines of the same file.
-- **The contract is frozen on the base:** this plan, the migration and the column lists. A schema change after the split is a new migration file with its own timestamp, never an edit to this one.
-- **Neither branch edits this plan.** It gets updated after the merge.
+- **The contract above and the migration are fixed on the base.** A later schema change is a new migration file, never an edit to this one.
+- **Neither branch edits this plan.**
 - **Before merging,** merge `main` into each branch, run every suite, and trial-merge both onto `main` in a scratch worktree. Then merge A and B one after the other, in either order.
 
-The real risk is outside the two branches. Teammates are changing `server/app/routers/reports.py`, `server/app/main.py`, `dashboard/src/api/client.ts` and `dashboard/src/App.tsx` right now. Keep our edits there to a few lines, and merge `main` in just before merging back.
+Teammates are changing `server/app/routers/reports.py`, `server/app/main.py`, `dashboard/src/api/client.ts` and `dashboard/src/App.tsx` today, so our edits there stay at a few lines.
 
-## Needed before executing
+## What you set up in Supabase
 
-1. **Boundaries:** OK to download Makati's barangay boundaries from OpenStreetMap via Overpass (one query, well under 1 MB)? Or the Makati Data Hub file, if you have it.
-2. **Dashboard client:** OK to `npm install @supabase/supabase-js`? Without it the dashboard can call Supabase's REST endpoints with `fetch`, but session refresh is then ours to get right.
-3. **A Supabase project:** you create it (free tier), paste the migration into the SQL editor, create the analyst accounts, and put the URL and keys into `server/.env` and `dashboard/.env.local` yourselves. Keys never go in the repo or in chat.
-4. **Merge timing:** both branches are off by default (no Supabase settings means today's behaviour), but say whether they should go into `main` before 1:00 PM.
+1. Create a free project (Singapore is closest to Manila).
+2. In the SQL editor, run `supabase/migrations/20261007010000_district_roles.sql`.
+3. Under Authentication, turn off new sign-ups and keep anonymous sign-ins off.
+4. Add one user per role (Authentication > Users > Add user), then give each a role:
+
+   ```sql
+   insert into public.analysts (user_id, district_id, name) select id, 1, 'District 1 analyst' from auth.users where email = 'district1@example.com';
+   insert into public.analysts (user_id, district_id, name) select id, 2, 'District 2 analyst' from auth.users where email = 'district2@example.com';
+   insert into public.analysts (user_id, citywide, name) select id, true, 'Citywide analyst' from auth.users where email = 'citywide@example.com';
+   ```
+
+5. Put the project URL and the publishable key into `server/.env` (`SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`) and into `dashboard/.env.local` (`VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`). Lakad does not use the secret key anywhere. Keys never go in the repo or in chat.
 
 ## Sources
 
