@@ -24,6 +24,7 @@ __pycache__/
 venv/
 *.db
 *.sqlite3
+server/storage/
 
 # Flutter / Dart (mobile)
 mobile/.dart_tool/

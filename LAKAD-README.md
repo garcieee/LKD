@@ -11,7 +11,7 @@ Smart Urban Living Hackathon · Makati City · Oct 6–7, 2026
 | `lgu-dashboard/` | Makati LGU and MMDA staff | Ranked fix-it queue, report heatmap, status workflow, exports | React, Vite, TypeScript, mapbox-gl |
 | `open-dashboard/` | Businesses and commuters | Open, read-only view of what is blocked, what is fixed and where traffic is heavy | React, Vite, TypeScript, mapbox-gl |
 | `mobile/` | Commuters | Walkable routes, photo reports, "Still there?" prompts | Flutter, mapbox_maps_flutter |
-| `server/` | All three | One API for routing, reports, traffic and exports | FastAPI, osmnx, SQLite |
+| `server/` | All three | One API for routing, reports, traffic and exports | FastAPI, osmnx, JSON file store |
 
 The three front ends call the same API, so a report from a phone and a Fixed click on the LGU dashboard change the same data.
 
@@ -62,7 +62,7 @@ Update at every progress check. Undisclosed tools are penalized.
 | Dashboards | React, Vite, TypeScript, mapbox-gl | Open-source libraries. Mapbox free tier |
 | Congestion | TomTom Traffic API | Third-party API, free-tier key |
 | Map data | OpenStreetMap through osmnx | Open data (ODbL). Credit OSM |
-| API | FastAPI, networkx, SQLite | Open-source libraries |
+| API | FastAPI, networkx, a JSON file store | Open-source libraries |
 | Image AI | CLIP (open_clip ViT-B-32), MediaPipe and OpenCV | AI models, open weights, run locally |
 | AI coding assistants | Claude (Anthropic): repo scaffold and file structure | AI coding tool. Add every assistant anyone on the team uses |
 

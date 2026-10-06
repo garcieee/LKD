@@ -175,11 +175,11 @@ lakad/
    ├─ .env.example                      # host, port, CORS, TomTom key, OSM place, storage. Copy to .env
    ├─ requirements.txt                  # Python packages, unpinned
    ├─ app/
-   │  ├─ main.py                        # FastAPI app. Health route only for now
+   │  ├─ main.py                        # FastAPI app: /health, /reports, /photos
    │  ├─ config.py                      # reads .env
    │  ├─ routers/                       # one file per endpoint group
    │  │  ├─ routes.py                   # GET /route/walk: the pedestrian-layer contract
-   │  │  ├─ reports.py                  # POST, GET, PATCH /reports and /vote
+   │  │  ├─ reports.py                  # POST, GET, PATCH /reports: app photo reports → dashboard tickets
    │  │  ├─ traffic.py                  # optional TomTom proxy + cache: hides the key, protects the free quota
    │  │  └─ export.py                   # /export.geojson and CSV
    │  ├─ services/                      # the logic behind the endpoints
@@ -189,9 +189,11 @@ lakad/
    │  │  ├─ clip_tagger.py              # CLIP zero-shot category suggestion
    │  │  ├─ face_blur.py                # MediaPipe + OpenCV blur before anything is saved
    │  │  └─ tomtom.py                   # TomTom Traffic client
-   │  └─ db/                            # SQLite
-   │     ├─ models.py                   # reports and votes tables
-   │     └─ session.py                  # SQLite connection
+   │  └─ db/                            # JSON file store
+   │     ├─ models.py                   # the Report shape, categories, statuses
+   │     └─ store.py                    # reads and writes storage/reports.json
+   ├─ tests/                            # pytest: cd server && .venv/bin/pytest
+   ├─ storage/                          # reports.json + photos/, created at runtime (git-ignored)
    └─ data/                             # makati_walk.graphml (git-ignored), hubs.json (built from OSM at kickoff)
       └─ seed/                          # prep-walk seed reports, flagged as seed in the DB
 ```
