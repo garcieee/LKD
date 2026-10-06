@@ -40,10 +40,26 @@ export default function TriageCard({ report, onChange }: Props) {
         <span>Confirm sends it on as Verified. Reject hides it.</span>
       </div>
       {asking ? (
-        <div role="alertdialog" aria-label="Reject this SOS?">
+        <div
+          role="alertdialog"
+          aria-label="Reject this SOS?"
+          onKeyDown={(e) => {
+            // Esc answers the question (keep it), not the panel behind it.
+            if (e.key === "Escape") {
+              e.stopPropagation();
+              setAsking(false);
+            }
+          }}
+        >
           <p className="triage-ask">Reject this SOS? It is hidden but kept on the server, and you can reopen it.</p>
           <div className="triage-actions">
-            <button className="btn danger" onClick={() => onChange("rejected")}>
+            <button
+              className="btn danger"
+              onClick={() => {
+                setAsking(false); // or Reopen would bring the question back
+                onChange("rejected");
+              }}
+            >
               Yes, reject
             </button>
             <button ref={keep} className="btn" onClick={() => setAsking(false)}>
