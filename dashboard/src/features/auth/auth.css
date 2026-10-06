@@ -1,0 +1,84 @@
+/* Sign-in (LoginGate.tsx): a card on the console's background, then a bar over the dashboard. */
+.gate-page {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  padding: 16px;
+  background: var(--paper-deep);
+}
+.gate-card,
+.gate-form {
+  display: grid;
+  gap: 12px;
+}
+.gate-card {
+  width: min(100%, 340px);
+  padding: 20px;
+}
+.gate-card h1,
+.gate-card p {
+  margin: 0;
+}
+.gate-card label {
+  display: grid;
+  gap: 5px;
+  color: var(--muted);
+  font: 500 11px var(--grot);
+}
+.gate-card input {
+  min-height: 34px;
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--text);
+  font: 13px var(--sans);
+}
+.gate-card input:focus-visible {
+  outline-offset: 1px;
+}
+.gate-card .btn {
+  min-height: 36px;
+}
+.gate-card .btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.gate-card .error:empty,
+.gate-bar .error:empty {
+  display: none;
+}
+
+/* Signed in: the bar takes its height, the dashboard the rest. */
+.gate {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100%;
+}
+.gate-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 4px 8px 4px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  font: 500 11px var(--grot);
+}
+.gate-bar .muted {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gate-bar .btn {
+  width: auto;
+  min-height: 28px;
+  padding: 4px 10px;
+}
+/* A problem gets its own line under the bar. */
+.gate-bar .error {
+  flex-basis: 100%;
+  margin: 0 0 2px;
+}
