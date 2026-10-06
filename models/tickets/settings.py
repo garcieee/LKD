@@ -41,7 +41,8 @@ GATE_LOW = 0.30  # at or below this belief the score is cut to GATE_MIN
 GATE_SPAN = 0.50  # the gate reaches 1 at GATE_LOW + GATE_SPAN
 GATE_MIN = 0.25
 LIKELY_GONE_BELOW = 0.45  # belief under this flags "likely gone: verify"
-STALE_DAYS = 21  # a low-severity ticket with no sighting or vote for this long: "verify?"
+STALE_DAYS = 21  # a low-danger ticket with no sighting or vote for this long: "verify?"
+STALE_BELOW_DANGER = 0.6  # "low-danger" means a SEVERITY value under this (blocked sidewalk, other)
 
 # ---- foot traffic: who walks past? -------------------------------------------------------------
 EXPOSURE_WEIGHTS = {  # per kind of nearby place (OpenStreetMap, see resources/)

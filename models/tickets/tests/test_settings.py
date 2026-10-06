@@ -49,6 +49,8 @@ def test_a_fresh_single_report_is_not_penalised_by_the_belief_gate():
 def test_likely_gone_and_stale_thresholds_sit_where_they_should():
     assert 0 < s.LIKELY_GONE_BELOW < fresh_report_belief()
     assert s.STALE_DAYS > s.WAITING_FULL_DAYS  # stale only after the waiting part has maxed out
+    # sidewalks and "other" can go stale, potholes and worse never do
+    assert s.SEVERITY["blocked_sidewalk"] < s.STALE_BELOW_DANGER <= s.SEVERITY["pothole"]
 
 
 def test_foot_traffic_settings():
