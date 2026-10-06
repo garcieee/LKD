@@ -27,7 +27,7 @@ SEVERITY = {  # "danger": how bad this kind of hazard is, 0..1
     "pothole": 0.65,
     "broken_streetlight": 0.55,
     "blocked_sidewalk": 0.5,
-    # PWD accessibility barriers: like a blocked sidewalk, they stop a wheelchair or a cane but rarely injure
+    # PWD accessibility barriers, valued like a blocked sidewalk: a judgement, no rater has scored them yet
     "missing_ramp": 0.5,
     "blocked_tactile_paving": 0.5,
     "broken_elevator": 0.5,

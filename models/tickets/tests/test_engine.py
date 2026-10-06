@@ -155,6 +155,18 @@ def test_outside_both_districts_there_is_no_district():
     assert joined(report("a", where=BGC), [])[1].ticket["district_id"] is None
 
 
+def test_a_pwd_barrier_is_not_danger_for_naming_who_it_stops():
+    worded = [joined(report(n, category="missing_ramp", note=note), [])[1] for n, note in
+              [("a", "the wheelchair ramp at the crossing is missing"), ("b", "no wheelchair ramp at the crossing"),
+               ("c", "walang rampa para sa pwd dito")]]
+    assert {a.ticket["priority"] for a in worded} == {joined(report("d", category="missing_ramp"), [])[1].ticket["priority"]}
+    assert not any(a.ticket["breakdown"]["danger"] for a in worded), "the wording no longer moves the score"
+    _, fell = joined(report("e", category="missing_ramp", note="a man in a wheelchair fell off the curb here"), [])
+    assert fell.ticket["breakdown"]["danger"], "a real danger word still counts"
+    _, hole = joined(report("f", note="a wheelchair user almost went into this hole"), [])
+    assert hole.ticket["breakdown"]["danger"], "on a hazard, who is at risk is still danger"
+
+
 def test_a_dangerous_note_anywhere_on_the_ticket_adds_the_bonus():
     first, a1 = joined(report("a"), [])
     _, a2 = joined(report("b", note="maraming bata dito"), [first])
