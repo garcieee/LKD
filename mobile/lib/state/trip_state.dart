@@ -14,7 +14,7 @@ typedef CommuteFn = Future<List<CommuteOption>> Function(LatLng from, LatLng to)
 const tripKinds = {'commute', 'walk'};
 
 class TripState extends ChangeNotifier {
-  TripState(this._fetch, [this._fetchCommute]);
+  TripState(this._fetch, [this._fetchCommute]) : kind = _fetchCommute == null ? 'walk' : 'commute';
 
   final RouteFn _fetch;
   final CommuteFn? _fetchCommute; // null: no commute options (walking only)
@@ -23,7 +23,7 @@ class TripState extends ChangeNotifier {
   String mode = 'walkable'; // the mode being shown: a key of routeModes
   final routes = <String, WalkRoute>{}; // filled as each mode's answer arrives
   final errors = <String, String>{}; // why a mode has no route, fit to show
-  String kind = 'commute'; // a member of tripKinds
+  String kind; // a member of tripKinds: commute first when there are commute options to show
   List<CommuteOption> commute = const []; // quickest first
   String? commuteError; // why there are no commute options, fit to show
   int selected = 0; // index into commute: the one drawn on the map
@@ -33,6 +33,7 @@ class TripState extends ChangeNotifier {
 
   WalkRoute? get route => routes[mode];
   String? get error => errors[mode];
+  bool get hasCommute => _fetchCommute != null;
   CommuteOption? get option => selected < commute.length ? commute[selected] : null;
 
   /// Picks (or, with null, clears) the destination. With [from] the three routes are fetched at once;
