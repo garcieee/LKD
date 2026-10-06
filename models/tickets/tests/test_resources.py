@@ -35,3 +35,9 @@ def test_the_lexicon_has_every_category_and_only_usable_terms():
 def test_places_file_credits_openstreetmap():
     meta = json.loads((RESOURCES / "places.json").read_text())
     assert "OpenStreetMap" in meta["source"] and "ODbL" in meta["source"]
+
+
+def test_districts_file_credits_openstreetmap_and_names_both_districts():
+    meta = json.loads((RESOURCES / "districts.json").read_text())
+    assert "OpenStreetMap" in meta["source"] and "ODbL" in meta["source"] and meta["fetched"]
+    assert meta["districts"] == {"1": "District 1 (Western Makati)", "2": "District 2 (Eastern Makati)"}

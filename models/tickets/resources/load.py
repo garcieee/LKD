@@ -22,3 +22,12 @@ def load_lexicon() -> dict:
 def load_offices() -> dict[str, str]:
     """Which office handles which category. Keys starting with an underscore are notes, not categories."""
     return {k: v for k, v in _read("offices.json").items() if not k.startswith("_")}
+
+
+def load_districts() -> list[tuple[int, str, tuple[float, float, float, float], list]]:
+    """(district_id, barangay, (west, south, east, north), rings) per barangay, rings as closed [lng, lat] lists."""
+    out = []
+    for b in _read("districts.json")["barangays"]:
+        lngs, lats = zip(*(p for ring in b["rings"] for p in ring))
+        out.append((b["district_id"], b["name"], (min(lngs), min(lats), max(lngs), max(lats)), b["rings"]))
+    return out
