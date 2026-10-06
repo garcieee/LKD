@@ -1,11 +1,12 @@
-// THE PIN. Makati is set here and nowhere else. The map opens framed on the whole
-// city, can't leave it, and "Reset to Makati" returns to that view.
+// THE PIN. Makati is set here and nowhere else. The map opens on the user at street level (the whole
+// city when there is no fix), can't leave it, and "Reset to Makati" returns to that view.
 // Mirrors dashboard/src/config/makati.ts: change both together.
 class Makati {
   static const double lat = 14.5546; // middle of the city extent (Ayala / CBD)
   static const double lng = 121.0244;
   static const double zoom = 12.1; // fallback only: the city across a ~390px phone
   static const double pitch = 40; // the slight tilt every camera move ends on
+  static const double walkZoom = 18.5; // street level: startup on the user, and the locate button
   static const double minZoom = 11;
   static const double maxZoom = 19;
 

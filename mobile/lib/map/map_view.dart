@@ -86,6 +86,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _layers.addListener(_apply);
     _location.addListener(_syncPuck);
     _location.addListener(_planWhenLocated);
+    _location.addListener(_startNearUser);
     _location.start();
     _trip.addListener(_onTrip);
     _timer = Timer.periodic(congestionRefresh, (_) {
@@ -181,6 +182,26 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     }
   }
 
+  // A walking app opens at street level on the user, not on the whole city: once, on the first fix
+  // inside Makati (whether it comes before or after the map is framed). Reset still returns to the city.
+  bool _startedNearUser = false;
+
+  void _startNearUser() {
+    final map = _map, fix = _location.fix;
+    if (_startedNearUser || map == null || !_framed || fix == null || !inMakati(fix.latitude, fix.longitude)) return;
+    _startedNearUser = true;
+    if (_trip.destination != null) return; // they already picked somewhere: that framing wins
+    map.flyTo(
+      CameraOptions(
+        center: Point(coordinates: Position(fix.longitude, fix.latitude)),
+        zoom: Makati.walkZoom,
+        bearing: 0,
+        pitch: _pitch,
+      ),
+      MapAnimationOptions(duration: 1200),
+    );
+  }
+
   // Both pins on screen; just the destination when we do not know where the user is (or they are
   // outside the city).
   Future<void> _frameTrip(MapboxMap map, Place place) async {
@@ -223,7 +244,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     map?.flyTo(
       CameraOptions(
         center: Point(coordinates: Position(fix.longitude, fix.latitude)),
-        zoom: 17,
+        zoom: Makati.walkZoom,
         bearing: 0,
         pitch: _pitch,
       ),
@@ -330,6 +351,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
       if (!_framed) {
         _framed = true;
         await _frame(map, animate: false);
+        _startNearUser(); // the fix may have arrived first
       }
     } catch (e) {
       debugPrint('camera lock: $e');
