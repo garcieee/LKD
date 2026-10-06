@@ -1154,6 +1154,11 @@ details[open] > summary.panel-title::after {
   margin-top: 10px;
 }
 
+/* Text and controls in the Forecast body grow with the dock: --k (set by ForecastPanel) is the zoom, 1 at the
+   narrowest width. The chart is not stretched by it; it is redrawn at the width it is given. */
+.forecast .queue-list {
+  zoom: var(--k, 1);
+}
 /* Forecast: zone and range pickers, three tiles, the chart with a readout above it, then the key and the disclosure. */
 .fc-controls {
   display: flex;
