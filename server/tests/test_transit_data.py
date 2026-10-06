@@ -62,3 +62,20 @@ def test_terminal_points_say_how_they_were_found_and_flag_the_doubtful_ones():
         if p["error_m"] > 120:
             assert p["review"], f"{p['name']} is imprecise and must say so"
     assert "do not share" in terminals()["source"].lower()
+
+
+def test_stations_are_running_lines_inside_the_map_and_say_what_they_replace():
+    from app.config import in_city
+
+    data = json.loads((DATA / "stations.geojson").read_text())
+    feats = data["features"]
+    assert len(feats) == 11 and len({f["properties"]["id"] for f in feats}) == 11
+    assert Counter(f["properties"]["line"] for f in feats) == {"MRT-3": 6, "LRT-1": 5}
+    for f in feats:
+        lng, lat = f["geometry"]["coordinates"]
+        assert in_city(lat, lng), f["properties"]["name"]
+        assert f["properties"]["kind"] == "station" and f["properties"]["modes"] in (["mrt3"], ["lrt1"])
+    assert "PNR" in data["note"] and "suspended" in data["note"], "why PNR is missing travels with the file"
+    terminal_names = {f["properties"]["name"] for f in terminals()["features"]}
+    merged = [n for f in feats for n in f["properties"]["merges"]]
+    assert set(merged) <= terminal_names and len(merged) == len(set(merged)) == 3, "every merge names a real PDF point, once"

@@ -1,6 +1,7 @@
-"""GET /transit/hubs: Makati's PUV terminals and bus stops, nearest first when the caller sends a position.
+"""GET /transit/hubs: Makati's PUV terminals, bus stops and MRT-3 / LRT-1 stations, nearest first when the caller sends a position.
 
-The positions are estimates from the study's maps (see data/transit/terminals.geojson): `error_m` says how rough.
+PUV positions are estimates from the study's maps (data/transit/terminals.geojson): `error_m` says how rough.
+Station positions come from OpenStreetMap (data/transit/stations.geojson).
 """
 from typing import Literal
 
@@ -11,15 +12,15 @@ from app.services import transit
 
 router = APIRouter()
 
-Kind = Literal["terminal", "stop"]
-Mode = Literal["jeepney", "uv_express", "city_bus", "p2p_bus"]
+Kind = Literal["terminal", "stop", "station"]  # station: a train station
+Mode = Literal["jeepney", "uv_express", "city_bus", "p2p_bus", "mrt3", "lrt1"]
 
 
 class Hub(BaseModel):
     id: str
     name: str
     kind: Kind
-    modes: list[Mode]  # the kinds of PUV that serve it
+    modes: list[Mode]  # the kinds of PUV and trains that serve it, trains first
     lat: float
     lng: float
     error_m: int  # rough radius of doubt around the position
