@@ -19,6 +19,13 @@ def ors_route(distance=480.5, duration=345.2, coords=LINE):
     return {"features": [{"geometry": {"type": "LineString", "coordinates": coords}, "properties": {"summary": {"distance": distance, "duration": duration}}}]}
 
 
+STEPS = [
+    {"distance": 150.0, "duration": 110.0, "type": 11, "instruction": "Head west on Ayala Avenue", "name": "Ayala Avenue", "way_points": [0, 1]},
+    {"distance": 330.5, "duration": 235.0, "type": 1, "instruction": "Turn right onto Paseo de Roxas", "name": "-", "way_points": [1, 2]},
+    {"distance": 0.0, "duration": 0.0, "type": 10, "instruction": "Arrive at your destination", "name": "-", "way_points": [2, 2]},
+]
+
+
 def report(rid, lat, lng, status="open", category="pothole"):
     return {"id": rid, "category": category, "lat": lat, "lng": lng, "heading": None, "note": "", "photo_url": f"/photos/{rid}.jpg", "status": status, "created_at": "2026-10-06T00:00:00+00:00", "updated_at": "2026-10-06T00:00:00+00:00"}
 
@@ -160,3 +167,25 @@ def test_unknown_mode_and_missing_points_are_rejected(tmp_path):
     c = make_client(tmp_path, lambda req: pytest.fail("must not call ORS"))
     assert c.get("/route/walk", params={**PARAMS, "mode": "teleport"}).status_code == 422
     assert c.get("/route/walk", params={"from_lat": 14.55}).status_code == 422
+
+
+def test_the_turn_steps_come_through(tmp_path):
+    body = ors_route()
+    body["features"][0]["properties"]["segments"] = [{"steps": STEPS}]
+    sent = []
+    c = make_client(tmp_path, lambda req: sent.append(json.loads(req.content)) or httpx.Response(200, json=body))
+    steps = c.get("/route/walk", params={**PARAMS, "mode": "fastest"}).json()["steps"]
+    assert sent[0]["instructions"] is True
+    assert [(s["type"], s["at"]) for s in steps] == [(11, 0), (1, 1), (10, 2)]
+    assert steps[0] == {"type": 11, "text": "Head west on Ayala Avenue", "name": "Ayala Avenue", "distance_m": 150.0, "at": 0}
+    assert steps[1]["name"] == "", "ORS writes '-' for a street with no name"
+
+
+def test_a_route_without_steps_is_still_a_route(tmp_path):
+    c = make_client(tmp_path, lambda req: httpx.Response(200, json=ors_route()))
+    assert c.get("/route/walk", params={**PARAMS, "mode": "fastest"}).json()["steps"] == []
+    bad = ors_route()
+    bad["features"][0]["properties"]["segments"] = [{"steps": [{"type": "x"}, {**STEPS[0], "way_points": [99, 99]}, STEPS[1]]}]
+    c = make_client(tmp_path, lambda req: httpx.Response(200, json=bad))
+    steps = c.get("/route/walk", params={**PARAMS, "mode": "fastest"}).json()["steps"]
+    assert [s["type"] for s in steps] == [1], "a step that is malformed or points off the line is skipped"

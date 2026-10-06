@@ -418,6 +418,27 @@ void main() {
 
     const from = (lat: 14.5547, lng: 121.0244), to = (lat: 14.553, lng: 121.021);
 
+    test('reads the turn steps, and a route without them has none', () async {
+      final step = {
+        'type': 1,
+        'text': 'Turn right onto Paseo de Roxas',
+        'name': '',
+        'distance_m': 330,
+        'at': 1,
+      };
+      final api = apiWith(MockClient((_) async => jsonResponse({...serverRoute(), 'steps': [step]}, 200)));
+      final r = await api.route(from: from, to: to, mode: 'walkable');
+      expect(r.steps.single.type, 1);
+      expect(r.steps.single.text, 'Turn right onto Paseo de Roxas');
+      expect(r.steps.single.name, '');
+      expect(r.steps.single.distanceM, 330.0, reason: 'a whole number is read as a double');
+      expect(r.steps.single.at, 1);
+      expect(CommuteLeg.walk(r, 'Walk').steps, same(r.steps), reason: 'a walk-only trip keeps its turns');
+
+      final plain = apiWith(MockClient((_) async => jsonResponse(serverRoute(), 200)));
+      expect((await plain.route(from: from, to: to, mode: 'walkable')).steps, isEmpty);
+    });
+
     test('asks for the walk in the chosen mode and reads the route', () async {
       late http.Request got;
       final api = apiWith(
@@ -485,6 +506,16 @@ void main() {
     };
 
     const from = (lat: 14.5547, lng: 121.0244), to = (lat: 14.556, lng: 121.002);
+
+    test('a walking leg reads its steps, and a ride has none', () async {
+      final step = {'type': 11, 'text': 'Head west', 'name': 'Ayala Avenue', 'distance_m': 150.0, 'at': 0};
+      final option = serverOption();
+      ((option['legs'] as List).first as Map<String, dynamic>)['steps'] = [step];
+      final api = apiWith(MockClient((_) async => jsonResponse([option], 200)));
+      final legs = (await api.commute(from: from, to: to, mode: 'walkable')).single.legs;
+      expect(legs[0].steps.single.name, 'Ayala Avenue');
+      expect(legs[1].steps, isEmpty);
+    });
 
     test('asks for the trip and reads the options with their legs', () async {
       late http.Request got;

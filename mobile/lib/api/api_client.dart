@@ -67,6 +67,27 @@ class Report {
 /// The route modes the server takes, with their labels, in the order the toggle shows them.
 const routeModes = {'fastest': 'Fastest', 'walkable': 'Walkable', 'accessible': 'Accessible'};
 
+/// One manoeuvre of a walking route, as the server's router sends it. No steps (a ride, an estimated walk, or a
+/// router that sent none) is an empty list, never an error.
+class RouteStep {
+  RouteStep.fromJson(Map<String, dynamic> json)
+    : type = (json['type'] as num).toInt(),
+      text = json['text'] as String,
+      name = json['name'] as String? ?? '',
+      distanceM = (json['distance_m'] as num).toDouble(),
+      at = (json['at'] as num).toInt();
+
+  final int type; // ORS's turn code: see [turnIcon] in features/navigate/nav_bar.dart
+  final String text; // "Turn right onto Paseo de Roxas"
+  final String name; // the street this step goes along, empty when it has none
+  final double distanceM; // along this step, until the next manoeuvre
+  final int at; // index into the line where the manoeuvre happens
+}
+
+List<RouteStep> _steps(Map<String, dynamic> json) => [
+  for (final s in json['steps'] as List? ?? const []) RouteStep.fromJson(s as Map<String, dynamic>),
+];
+
 /// A walking route: GET /route/walk answers one of these per mode.
 class WalkRoute {
   WalkRoute.fromJson(Map<String, dynamic> json)
@@ -76,6 +97,7 @@ class WalkRoute {
       line = [
         for (final p in json['geometry'] as List) [for (final n in p as List) (n as num).toDouble()],
       ],
+      steps = _steps(json),
       hazardIds = [for (final id in json['hazard_ids'] as List) id as String],
       avoidsHazards = json['avoids_hazards'] as bool;
 
@@ -83,6 +105,7 @@ class WalkRoute {
   final double distanceM;
   final double durationS;
   final List<List<double>> line; // [[lng, lat], ...], the order Mapbox takes
+  final List<RouteStep> steps; // turn by turn along [line]
   final List<String> hazardIds; // unresolved reports within 20 m of the line
   final bool avoidsHazards; // false for Fastest, and when the server could not route around hazards
 }
@@ -96,20 +119,23 @@ class CommuteLeg {
       label = json['label'] as String,
       line = [
         for (final p in json['geometry'] as List) [for (final n in p as List) (n as num).toDouble()],
-      ];
+      ],
+      steps = _steps(json);
 
   /// A walking route as a single leg, for a trip with no ride.
   CommuteLeg.walk(WalkRoute r, this.label)
     : kind = 'walk',
       durationS = r.durationS,
       distanceM = r.distanceM,
-      line = r.line;
+      line = r.line,
+      steps = r.steps;
 
   final String kind; // 'walk', or a key of hubModeLabels
   final double durationS;
   final double distanceM;
   final String label; // e.g. "Walk to Ayala Terminal"
   final List<List<double>> line; // [[lng, lat], ...]
+  final List<RouteStep> steps; // a street-routed walk only; a ride or an estimated walk has none
 
   bool get isWalk => kind == 'walk';
 }

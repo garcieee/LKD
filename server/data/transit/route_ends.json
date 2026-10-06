@@ -1,0 +1,14 @@
+{
+  "note": "Which hub each route end point of the 2025 PUV study stands at, per mode, matched BY NAME by hand. Only ends with a clear match are listed: a route is usable for rides only when both its ends are here (services/commute.py load_links). Many ends (Pateros, Cartimar, L Guinto, Alabang ...) have no hub in terminals.geojson, so their routes cannot be offered yet. Hub ids are those after load_hubs merges terminals into stations.",
+  "ends": {
+    "Ayala": {"jeepney": "one-ayala", "city_bus": "ayala-station-mrt-3"},
+    "Washington": {"jeepney": "washington-terminal"},
+    "Libertad": {"jeepney": "libertad-terminal"},
+    "PRC": {"jeepney": "prc-terminal"},
+    "Guadalupe": {"jeepney": "guadalupe-terminal"},
+    "Guadalupe Ibabaw": {"jeepney": "guadalupe-ibabaw"},
+    "Mandaluyong": {"jeepney": "mandaluyong-city-hall-terminal"},
+    "MRT Buendia": {"jeepney": "buendia-station-mrt-3"},
+    "LRT Gil Puyat": {"city_bus": "gil-puyat-station-lrt-1"}
+  }
+}

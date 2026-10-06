@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lakad/api/api_client.dart';
@@ -82,7 +84,7 @@ void main() {
     expect(find.text('Walk to Ayala Terminal'), findsOneWidget);
     expect(find.text('111 m left on this leg'), findsOneWidget);
     // Half of the 200 s walk is left, plus the 800 s ride: 900 s is 15 min, so 9:15 PM from 9:00 PM.
-    expect(find.text('15 min left · arrive at 9:15 PM'), findsOneWidget);
+    expect(find.text('15 min · 1.0 km left · arrive at 9:15 PM'), findsOneWidget);
     expect(find.text('Then: City bus: Ayala Terminal to Dian'), findsOneWidget);
     expect(find.byIcon(Icons.directions_walk), findsOneWidget);
     trip.dispose();
@@ -105,6 +107,95 @@ void main() {
     expect(find.textContaining('Off route: '), findsOneWidget);
     expect(find.textContaining('Then:'), findsNothing);
     trip.dispose();
+  });
+
+  group('turn by turn', () {
+    // A walk up the meridian with a turn half way, then the ride; the bar speaks the turns the server sent.
+    Map<String, dynamic> stepLeg() => {
+      ...leg('walk', 'Walk to Ayala Terminal', 14.5000, 14.5020, 200),
+      'geometry': [
+        [121.0, 14.5000],
+        [121.0, 14.5010],
+        [121.0, 14.5020],
+      ],
+      'steps': [
+        {'type': 11, 'text': 'Head north on Ayala Avenue', 'name': 'Ayala Avenue', 'distance_m': 111.3, 'at': 0},
+        {'type': 5, 'text': 'Bear right onto Paseo de Roxas', 'name': 'Paseo de Roxas', 'distance_m': 111.3, 'at': 1},
+        {'type': 10, 'text': 'Arrive at your destination', 'name': '', 'distance_m': 0, 'at': 2},
+      ],
+    };
+
+    Future<TripState> withTurns() async {
+      final o = CommuteOption.fromJson({
+        'id': 'a',
+        'total_s': 1000,
+        'walk_s': 200,
+        'tags': <String>[],
+        'legs': [stepLeg(), leg('city_bus', 'Ayala Terminal to Dian', 14.5020, 14.5100, 800)],
+      });
+      final trip = TripState((from, to, mode) async => walk(mode), (from, to, mode) async => [o]);
+      trip.setDestination(place, from: here);
+      await Future<void>.delayed(Duration.zero);
+      await trip.toCommute();
+      trip.start();
+      return trip;
+    }
+
+    testWidgets('the next turn with its distance and the street the user is on', (tester) async {
+      final trip = (await tester.runAsync(withTurns))!;
+      trip.update(14.5004, 121.0);
+      await show(tester, trip);
+      expect(find.text('Bear right onto Paseo de Roxas'), findsOneWidget);
+      expect(find.text('In 67 m · on Ayala Avenue'), findsOneWidget);
+      expect(find.byIcon(Icons.turn_slight_right), findsOneWidget);
+      expect(find.textContaining('left on this leg'), findsNothing);
+      trip.update(14.5013, 121.0);
+      await tester.pump();
+      expect(find.text('In 78 m · on Paseo de Roxas'), findsOneWidget, reason: 'only the leg end is left of the turns');
+      expect(find.text('Walk to Ayala Terminal'), findsOneWidget, reason: 'a leg end is not "your destination"');
+      expect(find.byIcon(Icons.flag), findsOneWidget);
+      trip.dispose();
+    });
+
+    testWidgets('a ride has no turns: it falls back to the leg', (tester) async {
+      final trip = (await tester.runAsync(withTurns))!;
+      trip.update(14.5020, 121.0);
+      await show(tester, trip);
+      expect(find.text('City bus: Ayala Terminal to Dian'), findsOneWidget);
+      expect(find.textContaining('left on this leg'), findsOneWidget);
+      trip.dispose();
+    });
+
+    testWidgets('off the path it says it is finding a new way while the reroute is on its way', (tester) async {
+      final pending = Completer<WalkRoute>();
+      final trip = TripState((from, to, mode) => from.lat == here.lat ? Future.value(walk(mode)) : pending.future, (
+        from,
+        to,
+        mode,
+      ) async {
+        return [option];
+      });
+      trip.setDestination(place, from: here);
+      await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+      await trip.toCommute();
+      trip.start();
+      for (var i = 0; i < 3; i++) {
+        trip.update(14.5010, 121.002);
+      }
+      await show(tester, trip);
+      expect(find.text('Off route · finding a new way…'), findsOneWidget);
+      expect(find.textContaining('Off route: '), findsNothing);
+      trip.dispose();
+    });
+
+    test('every turn code has a glyph, and the unknown ones go straight', () {
+      for (var t = 0; t <= 13; t++) {
+        expect(turnIcon(t), isA<IconData>());
+      }
+      expect(turnIcon(0), Icons.turn_left);
+      expect(turnIcon(1), Icons.turn_right);
+      expect(turnIcon(99), Icons.straight);
+    });
   });
 
   testWidgets('arriving says so, and Done ends the trip', (tester) async {

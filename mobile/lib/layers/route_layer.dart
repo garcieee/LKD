@@ -8,6 +8,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 import '../api/api_client.dart';
+import '../state/trip_progress.dart';
 import '../theme.dart';
 
 const _id = 'route';
@@ -78,18 +79,35 @@ Map<String, Object> walkGeoJson(WalkRoute route) => {
   'properties': {'mode': route.mode},
 };
 
+Map<String, Object> _feature(CommuteLeg leg, List<List<double>> line, {required bool thin}) => {
+  'type': 'Feature',
+  'geometry': {'type': 'LineString', 'coordinates': line},
+  'properties': {'kind': leg.kind, 'thin': thin},
+};
+
 /// The GeoJSON for a commute option: one line per leg, in order.
 Map<String, Object> commuteGeoJson(CommuteOption option) => {
   'type': 'FeatureCollection',
-  'features': [
-    for (final leg in option.legs)
-      {
-        'type': 'Feature',
-        'geometry': {'type': 'LineString', 'coordinates': leg.line},
-        'properties': {'kind': leg.kind, 'thin': leg.isWalk},
-      },
-  ],
+  'features': [for (final leg in option.legs) _feature(leg, leg.line, thin: leg.isWalk)],
 };
+
+/// The GeoJSON for a trip being travelled: what is left of it. The leg the user is on starts at their spot on it
+/// ([TripProgress.ahead]), the legs before it are gone, the legs after it are whole. A walk-only trip is one thick
+/// line, like the planned route; with a ride in it the walking legs are the thin ones. [legs] is not empty.
+Map<String, Object> tripGeoJson(List<CommuteLeg> legs, TripProgress? progress) {
+  final from = progress == null ? 0 : progress.leg.clamp(0, legs.length - 1);
+  return {
+    'type': 'FeatureCollection',
+    'features': [
+      for (var i = from; i < legs.length; i++)
+        _feature(
+          legs[i],
+          i == from && progress != null ? progress.ahead : legs[i].line,
+          thin: legs[i].isWalk && legs.length > 1,
+        ),
+    ],
+  };
+}
 
 /// Draws [route], or removes the line when it is null.
 Future<void> showRoute(MapboxMap map, WalkRoute? route) => _draw(map, route == null ? null : walkGeoJson(route));
@@ -97,6 +115,10 @@ Future<void> showRoute(MapboxMap map, WalkRoute? route) => _draw(map, route == n
 /// Draws a commute [option] leg by leg, or removes the line when it is null.
 Future<void> showCommute(MapboxMap map, CommuteOption? option) =>
     _draw(map, option == null ? null : commuteGeoJson(option));
+
+/// Draws what is left of the trip being travelled, or removes the line when there are no [legs].
+Future<void> showTrip(MapboxMap map, List<CommuteLeg> legs, TripProgress? progress) =>
+    _draw(map, legs.isEmpty ? null : tripGeoJson(legs, progress));
 
 /// Draws [geojson], or removes the line when it is null. Adds the source and layers when a style load has
 /// cleared them. Raw style-spec JSON, like reports_layer.dart.

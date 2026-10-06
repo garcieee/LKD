@@ -26,6 +26,7 @@ def create_app(storage: Path = STORAGE_DIR) -> FastAPI:
     app.state.video_dir = video_dir
     app.state.hubs = transit.load_hubs(TRANSIT_DIR)
     app.state.rides = commute.load_ride_modes(TRANSIT_DIR)
+    app.state.links = commute.load_links(TRANSIT_DIR, app.state.hubs)
     app.state.footfall = footfall.load_model(FOOTFALL_DIR, TRANSIT_DIR, app.state.hubs)
 
     app.add_middleware(

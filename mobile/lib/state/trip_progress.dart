@@ -1,15 +1,15 @@
-// Where the user is along the trip: which leg, how far to the end of it and of the trip, and how far off the line.
-// Pure maths on the legs the server sent and a GPS fix, so it is tested without a phone.
+// Where the user is along the trip: which leg, how far to the end of it and of the trip, how far off the line,
+// what is left of the line, and the next turn. Pure maths on the legs the server sent and a GPS fix, so it is
+// tested without a phone. Re-planning when the user is off the line is TripState's job (state/trip_state.dart).
 //
 // ponytail: only the current leg and the next are considered, and the leg only ever advances, so shared hub points
-// and the straight-line ride cannot flip the trip backwards. Nothing re-plans when the user is off the line (the
-// bar says "Off route"). Upgrade: re-fetch from the fix once offRoute holds for a while.
+// and the straight-line ride cannot flip the trip backwards.
 import 'dart:math' as math;
 
 import '../api/api_client.dart';
 
 const arriveM = 25.0; // this close to the end of a leg, it is done
-const offRouteM = 100.0; // farther than this from the line, the user has left it
+const offRouteM = 30.0; // farther than this from a walking line, the user has left it (GPS is good to ~10 m)
 const _mPerDegLat = 111320.0; // a flat-earth projection is exact enough over one leg in one city
 
 class TripProgress {
@@ -20,6 +20,12 @@ class TripProgress {
     required this.leftS,
     required this.offM,
     required this.arrived,
+    required this.walking,
+    required this.alongM,
+    required this.ahead,
+    required this.street,
+    this.turn,
+    this.turnInM,
   });
 
   final int leg; // index of the leg being travelled
@@ -28,8 +34,15 @@ class TripProgress {
   final double leftS; // time left: the leg's remainder pro rata, plus the legs after it
   final double offM; // from the user to the line
   final bool arrived; // at the end of the last leg
+  final bool walking; // the leg being travelled is a walk
+  final double alongM; // already travelled on this leg
+  final List<List<double>> ahead; // [[lng, lat], ...]: this leg's line from the user's spot on it to its end
+  final String street; // the street the user is on, per the leg's steps; empty when unknown or unnamed
+  final RouteStep? turn; // the next manoeuvre on this leg, null when the leg has no steps or none is left
+  final double? turnInM; // along the line to [turn]
 
-  bool get offRoute => offM > offRouteM;
+  /// Off the path. Only a walk can be: a ride is a straight line between two hubs, not where the vehicle goes.
+  bool get offRoute => walking && offM > offRouteM;
 }
 
 /// Where a fix at ([lat], [lng]) is on [legs], having been on leg [current]. Null when there are no legs.
@@ -56,6 +69,21 @@ TripProgress? tripProgress(List<CommuteLeg> legs, int current, double lat, doubl
     leftM += l.distanceM;
     leftS += l.durationS;
   }
+  final line = legs[leg].line, along = fix.length - fix.leftM;
+  // The next manoeuvre is the first step whose spot is still ahead; the street is the last one already reached.
+  RouteStep? turn, here;
+  double? turnInM;
+  for (final s in legs[leg].steps) {
+    if (s.at >= fix.cum.length) continue;
+    final spot = fix.cum[s.at];
+    if (spot <= along + 1) {
+      here = s;
+    } else {
+      turn = s;
+      turnInM = spot - along;
+      break;
+    }
+  }
   return TripProgress(
     leg: leg,
     legLeftM: fix.leftM,
@@ -63,18 +91,27 @@ TripProgress? tripProgress(List<CommuteLeg> legs, int current, double lat, doubl
     leftS: leftS,
     offM: fix.offM,
     arrived: leg == last && fix.leftM < arriveM,
+    walking: legs[leg].isWalk,
+    alongM: along,
+    ahead: line.length < 2 ? line : [fix.at, ...line.skip(fix.seg + 1)],
+    street: here?.name ?? '',
+    turn: turn,
+    turnInM: turnInM,
   );
 }
 
-typedef _Fix = ({double offM, double leftM, double length});
+typedef _Fix = ({double offM, double leftM, double length, int seg, List<double> at, List<double> cum});
 
-/// The nearest point on [leg]'s line to the fix: how far off it is, how far along it is left, and its length.
+/// The nearest point on [leg]'s line to the fix: how far off it is, how far along it is left, its length, where
+/// that nearest point is ([at], lng/lat, on segment [seg]) and how far along the line each of its points is ([cum]).
 _Fix _along(CommuteLeg leg, double lat, double lng) {
   final mPerDegLng = _mPerDegLat * math.cos(lat * math.pi / 180);
   // Metres east and north of the fix.
   final pts = [for (final p in leg.line) ((p[0] - lng) * mPerDegLng, (p[1] - lat) * _mPerDegLat)];
-  if (pts.length < 2) return (offM: double.infinity, leftM: 0, length: 0); // not a line: never the nearest
-  var length = 0.0, bestOff = double.infinity, bestAlong = 0.0;
+  if (pts.length < 2) return (offM: double.infinity, leftM: 0, length: 0, seg: 0, at: [lng, lat], cum: const []);
+  var length = 0.0, bestOff = double.infinity, bestAlong = 0.0, bestSeg = 0;
+  var bestAt = [lng, lat];
+  final cum = [0.0];
   for (var i = 0; i + 1 < pts.length; i++) {
     final (ax, ay) = pts[i];
     final (bx, by) = pts[i + 1];
@@ -85,8 +122,11 @@ _Fix _along(CommuteLeg leg, double lat, double lng) {
     if (off < bestOff) {
       bestOff = off;
       bestAlong = length + t * segLen;
+      bestSeg = i;
+      bestAt = [lng + (ax + t * dx) / mPerDegLng, lat + (ay + t * dy) / _mPerDegLat];
     }
     length += segLen;
+    cum.add(length);
   }
-  return (offM: bestOff, leftM: length - bestAlong, length: length);
+  return (offM: bestOff, leftM: length - bestAlong, length: length, seg: bestSeg, at: bestAt, cum: cum);
 }
