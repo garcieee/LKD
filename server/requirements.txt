@@ -1,0 +1,13 @@
+# Unpinned on purpose. After the first good install: pip freeze > requirements.lock
+fastapi
+uvicorn
+python-multipart
+python-dotenv
+httpx
+osmnx
+networkx
+open_clip_torch
+torch
+opencv-python
+mediapipe
+pillow

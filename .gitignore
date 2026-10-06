@@ -1,0 +1,40 @@
+CLAUDE.md
+
+# OS
+.DS_Store
+
+# env / keys (never commit real values, only *.example)
+.env
+.env.local
+.env.*.local
+*/.env
+*/.env.local
+mobile/env.json
+
+# Node / Vite (lgu-dashboard, open-dashboard)
+node_modules/
+dist/
+.vite/
+*.local
+
+# Python / FastAPI (server)
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.db
+*.sqlite3
+
+# Flutter / Dart (mobile)
+mobile/.dart_tool/
+mobile/.flutter-plugin-versions
+mobile/.packages
+mobile/build/
+mobile/android/.gradle/
+mobile/android/local.properties
+mobile/ios/Pods/
+mobile/ios/Flutter/Flutter.podspec
+
+# editors
+.vscode/
+.idea/
