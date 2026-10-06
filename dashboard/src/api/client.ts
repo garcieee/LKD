@@ -1,7 +1,7 @@
 // Typed client for server/ (FastAPI). Base URL from VITE_API_BASE_URL (config/env.ts).
 import { ENV } from "../config/env.ts"; // .ts so `node --test` can resolve it
 import { accessToken, serverAnswered } from "./supabase.ts";
-import type { Day, Footfall, Report, Series, Status } from "../types/api";
+import type { Day, Footfall, Report, Series, SosKind, Status } from "../types/api";
 
 const BASE = ENV.apiBaseUrl.replace(/\/+$/, "");
 
@@ -26,13 +26,18 @@ export const getFootfall = (day: Day, hour: number) => call<Footfall>(`/footfall
 export const getSeries = (zone: string) =>
   call<Series>(`/footfall/series?zone=${encodeURIComponent(zone)}&past_days=7&future_days=3`);
 
+export const patchStatus = (id: string, status: Status) => patch(id, { status });
+
+// Who must respond to an SOS. The server refuses a kind on anything else (422).
+export const patchSosKind = (id: string, sos_kind: SosKind) => patch(id, { sos_kind });
+
 // With sign-in on, the change goes to the ticket (PATCH /tickets/{id}); off, to the report as before.
-export const patchStatus = (id: string, status: Status) => {
-  const init = { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status }) };
+function patch(id: string, change: { status?: Status; sos_kind?: SosKind }) {
+  const init = { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(change) };
   return ENV.supabaseOn
     ? signedIn<Report>(`/tickets/${encodeURIComponent(id)}`, init)
     : call<Report>(`/reports/${encodeURIComponent(id)}`, init);
-};
+}
 
 // Throws "API offline" when the server can't be reached, else the server's own message.
 async function call<T>(path: string, init?: RequestInit): Promise<T> {

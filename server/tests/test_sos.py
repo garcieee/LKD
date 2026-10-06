@@ -1,9 +1,13 @@
+from typing import get_args
+
 import pytest
 from fastapi.testclient import TestClient
 
+from app.db.models import SosKind
 from app.main import create_app
 from app.routers import reports as reports_router
 from app.services import hazards
+from app.services.ticket_sync import engine
 
 # The first bytes of a real MP4 (an `ftyp` box), then filler: the server reads the container from the bytes.
 MP4 = b"\x00\x00\x00\x18ftypmp42\x00\x00\x00\x00mp42isom" + b"\x00" * 2048
@@ -136,3 +140,31 @@ def test_a_rejected_report_is_not_a_no_go_zone_until_it_is_reopened():
     assert hazards.avoid_polygons([rejected], []) is None
     assert hazards.near_route(line, [rejected]) == []
     assert hazards.near_route(line, [{**rejected, "status": "open"}]) == ["h"]
+
+
+def test_an_sos_arrives_unsorted_and_the_dashboard_sorts_it_by_who_must_respond(client):
+    body = sos(client).json()
+    assert body["sos_kind"] is None
+    r = client.patch(f"/reports/{body['id']}", json={"sos_kind": "police"})
+    assert r.status_code == 200 and (r.json()["sos_kind"], r.json()["status"]) == ("police", "open")
+    assert client.get(f"/reports/{body['id']}").json()["sos_kind"] == "police"
+    assert client.get("/reports", params={"include_sos": "true"}).json()[0]["sos_kind"] == "police"
+    both = client.patch(f"/reports/{body['id']}", json={"sos_kind": "medical", "status": "verified"}).json()
+    assert (both["sos_kind"], both["status"]) == ("medical", "verified")
+
+
+def test_only_an_sos_takes_a_kind_and_only_one_of_the_three(client):
+    rid = photo_report(client)
+    before = client.get(f"/reports/{rid}").json()
+    r = client.patch(f"/reports/{rid}", json={"sos_kind": "police", "status": "assigned"})
+    assert r.status_code == 422 and r.json()["detail"] == "Only an SOS has a kind."
+    assert client.get(f"/reports/{rid}").json() == before, "the status did not change either"
+    sos_id = sos(client).json()["id"]
+    for body in ({"sos_kind": "firefighters"}, {"sos_kind": "Police"}, {}, {"status": None}):
+        assert client.patch(f"/reports/{sos_id}", json=body).status_code == 422
+    assert client.get(f"/reports/{sos_id}").json()["sos_kind"] is None
+    assert client.patch("/reports/nope", json={"sos_kind": "police"}).status_code == 404
+
+
+def test_the_kinds_are_the_models_kinds_in_the_same_order():
+    assert get_args(SosKind) == tuple(engine.sos.KINDS)  # models/ticket_sos/sos.py, as the engine uses it

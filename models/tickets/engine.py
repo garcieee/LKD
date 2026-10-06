@@ -5,8 +5,8 @@ attach       for one report: the ticket it joins or opens, the ticket's district
 sync_once    one turn of the server's loop: attach every cached report that has no ticket yet, save the rows to
              lakad.db, write the outcome back onto the cached reports, let long-closed reports leave the cache
 database     the SQLite file the tickets live in (storage/db.py)
-tickets_for  the tickets an analyst may see, and set_status, the change they may make: the one place a district
-             scope is checked
+tickets_for  the tickets an analyst may see, and the changes they may make, set_status and set_sos_kind (who must
+             respond to an SOS): the one place a district scope is checked
 backlog      reports still waiting for a ticket, and those that gave up, for /health
 """
 import time
@@ -14,6 +14,7 @@ from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
 from typing import Protocol
 
+from ..ticket_sos import sos
 from . import settings as s
 from .classification import classify, routing
 from .classification.classify import Lexicon
@@ -25,7 +26,7 @@ from .types import ACCESSIBILITY, Sighting, TicketFacts, TicketSpot
 
 # The columns of the tickets and sightings tables (storage/db.py). tests/test_storage.py keeps them equal.
 TICKET_COLUMNS = ("id", "category", "status", "district_id", "lat", "lng", "priority", "band", "breakdown",
-                  "reporters", "note", "photo_url", "video_url", "created_at", "updated_at", "fixed_at")
+                  "reporters", "note", "photo_url", "video_url", "created_at", "updated_at", "fixed_at", "sos_kind")
 SIGHTING_COLUMNS = ("id", "ticket_id", "lat", "lng", "accuracy_m", "note", "photo_url", "video_url", "created_at")
 DAY = 86_400.0
 
@@ -55,7 +56,8 @@ class World:
 class Attachment:
     """What one report comes to: the rows to save, and the fields to add to the report in the cache."""
 
-    ticket: dict  # keys from TICKET_COLUMNS; "status" only for a new ticket (the report's own) or a reopen ("open")
+    ticket: dict  # keys from TICKET_COLUMNS; "status" only for a new ticket (the report's own) or a reopen ("open"),
+    #               "sos_kind" only for an SOS
     sighting: dict  # keys from SIGHTING_COLUMNS
     cache: dict  # ticket_id, district_id, priority, band
 
@@ -117,7 +119,7 @@ def attach(report: dict, cached: list[dict], world: World, now: float) -> Attach
     An SOS never joins another ticket. Nor does a report an analyst already judged before the loop reached it (one
     from before the loop existed, say): it opens its own ticket and keeps its status, so nothing they set is undone."""
     tickets, found = _tickets(cached), None
-    if report["category"] != "sos" and report["status"] == "open":
+    if not sos.is_sos(report) and report["status"] == "open":
         sighting = _sighting(report)
         spots = {tid: _spot(tid, rs) for tid, rs in tickets.items() if rs[0]["category"] == report["category"]}
         # Timed from the report, so only a report made after a fix can reopen it.
@@ -131,9 +133,8 @@ def attach(report: dict, cached: list[dict], world: World, now: float) -> Attach
 
     notes = [r["note"] for r in reports if r.get("note")]
     review = classify.review_reasons(accuracy_m=accuracy)
-    office = routing.office_for(report["category"], world.offices)
-    if report["category"] == "sos":
-        score, band, breakdown = 100.0, "Critical", {"sos": True, "review": review, "office": office}
+    if sos.is_sos(report):
+        score, band, breakdown = sos.PRIORITY, sos.BAND, sos.flags(review)
     else:
         lexicon = world.barrier_lexicon if report["category"] in ACCESSIBILITY else world.lexicon
         facts = TicketFacts(
@@ -150,7 +151,7 @@ def attach(report: dict, cached: list[dict], world: World, now: float) -> Attach
         score, band = b.score, b.band
         breakdown = {"parts": b.parts, "belief": b.belief, "gate": b.gate, "floor_applied": b.floor_applied,
                      "bonus": b.bonus, "danger": facts.danger, "hint": hint.category if hint else None,
-                     "review": review, "office": office}
+                     "review": review, "office": routing.office_for(report["category"], world.offices)}
 
     district = routing.district_of(lat, lng, world.districts)
     head = next((r for r in reports if r["id"] == ticket_id), reports[0])  # the first report: its photo and note
@@ -158,6 +159,8 @@ def attach(report: dict, cached: list[dict], world: World, now: float) -> Attach
               "priority": round(score, 1), "band": band, "breakdown": breakdown, "reporters": len(reports),
               "note": head.get("note", ""), "photo_url": head.get("photo_url", ""), "video_url": head.get("video_url"),
               "created_at": head["created_at"]}
+    if sos.is_sos(report):
+        ticket["sos_kind"] = report.get("sos_kind")  # set on reports.json before the loop got here, or None
     if not found:
         ticket["status"] = report["status"]  # "open", unless an analyst got to the report first
     elif found.reopens:
@@ -238,6 +241,20 @@ def set_status(db: Db, cache: Cache, ticket_id: str, status: str, scope, actor: 
         for r in cache.all():
             if r.get("ticket_id") == ticket_id and r["status"] != ticket["status"]:
                 cache.update(r["id"], status=ticket["status"], updated_at=at)
+    return ticket
+
+
+def set_sos_kind(db: Db, cache: Cache, ticket_id: str, kind: str, scope, now: float | None = None) -> dict | None:
+    """An analyst sorting an SOS by who must respond (sos.KINDS): on the ticket and on its cached reports, so /reports
+    agrees with /tickets. ValueError for an unknown kind or a ticket that is not an SOS; None when the ticket is
+    missing or outside the scope, like set_status. Not logged in the ticket's history, which holds status changes."""
+    sos.check_kind(kind)
+    at = _iso(time.time() if now is None else now)
+    ticket = db.set_sos_kind(ticket_id, kind, at, allowed=lambda t: _visible(t, scope))
+    if ticket is not None:
+        for r in cache.all():
+            if r.get("ticket_id") == ticket_id:
+                cache.update(r["id"], sos_kind=kind, updated_at=at)
     return ticket
 
 

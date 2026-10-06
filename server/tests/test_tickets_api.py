@@ -35,8 +35,8 @@ ROLES = {
     TOK_CITY: [{"user_id": USER_CITY, "district_id": None, "citywide": True}],
     TOK_NOBODY: [],  # signed in, but no row in analysts
 }
-TICKET_KEYS = {"id", "category", "severity", "lat", "lng", "heading", "note", "photo_url", "video_url", "status",
-               "created_at", "updated_at", "priority", "band", "district_id", "reporters"}
+TICKET_KEYS = {"id", "category", "severity", "lat", "lng", "heading", "note", "photo_url", "video_url", "sos_kind",
+               "status", "created_at", "updated_at", "priority", "band", "district_id", "reporters"}
 
 
 @pytest.fixture(autouse=True)
@@ -184,6 +184,77 @@ def test_a_role_is_remembered_for_a_minute(client, supabase):
     listed(client, TOK_D1)
     listed(client, TOK_D1)
     assert supabase == [TOK_D1]
+
+
+# ---- sorting an SOS by who must respond ----------------------------------------------------------------------------
+
+@pytest.fixture
+def sos_app(app):
+    """The tickets above, and an SOS in District 1, the newest."""
+    at = "2026-10-06T05:00:00+00:00"
+    app.state.store.add({"id": "sos", "category": "sos", "lat": D1[0], "lng": D1[1], "heading": None, "note": "",
+                         "photo_url": "", "video_url": "/videos/sos.mp4", "status": "open", "created_at": at,
+                         "updated_at": at})
+    assert app.state.sync.tick().attached == 1
+    return app
+
+
+def kinds(app):
+    """sos_kind by id, in lakad.db and in reports.json."""
+    return ({t["id"]: t["sos_kind"] for t in app.state.sync.db.tickets()},
+            {r["id"]: r.get("sos_kind") for r in app.state.store.all()})
+
+
+def events(app):
+    rows = app.state.sync.db._conn.execute("select ticket_id, actor, from_status, to_status from ticket_events")
+    return [tuple(e) for e in rows]
+
+
+def test_an_analyst_sorts_an_sos_in_their_district_and_its_status_stays(sos_app, client):
+    listed = client.get("/tickets", headers=as_(TOK_D1)).json()
+    assert [(t["id"], t["sos_kind"]) for t in listed] == [("sos", None), ("d1", None)]
+    r = client.patch("/tickets/sos", headers=as_(TOK_D1), json={"sos_kind": "medical"})
+    assert r.status_code == 200 and (r.json()["sos_kind"], r.json()["status"]) == ("medical", "open")
+    assert kinds(sos_app) == ({"sos": "medical", "d1": None, "d2": None, "nowhere": None},
+                              {"sos": "medical", "d1": None, "d1b": None, "d2": None, "nowhere": None})
+    assert events(sos_app) == []  # the history holds status changes only
+
+
+def test_an_sos_outside_your_districts_is_404_like_a_missing_one_and_stays_unsorted(sos_app, client):
+    before = kinds(sos_app)
+    outside = client.patch("/tickets/sos", headers=as_(TOK_D2), json={"sos_kind": "police"})
+    missing = client.patch("/tickets/nope", headers=as_(TOK_D2), json={"sos_kind": "police"})
+    assert outside.status_code == missing.status_code == 404 and outside.json() == missing.json()
+    assert kinds(sos_app) == before
+
+
+def test_a_hazard_has_no_kind_so_it_is_422_and_its_status_does_not_change_either(sos_app, client):
+    before = sos_app.state.sync.db.tickets()
+    for body in ({"sos_kind": "police"}, {"sos_kind": "police", "status": "assigned"}):
+        r = client.patch("/tickets/d1", headers=as_(TOK_D1), json=body)
+        assert r.status_code == 422 and r.json()["detail"] == "Only an SOS has a kind."
+    assert sos_app.state.sync.db.tickets() == before and events(sos_app) == []
+    assert {r["status"] for r in sos_app.state.store.all()} == {"open"} and not any(kinds(sos_app)[1].values())
+
+
+@pytest.mark.parametrize("body", [{"sos_kind": "firefighters"}, {"sos_kind": "Police"}, {"sos_kind": ""}, {},
+                                  {"status": None, "sos_kind": None}, {"kind": "police"}])
+def test_an_unknown_kind_or_an_empty_change_is_422_and_changes_nothing(sos_app, client, body):
+    before = kinds(sos_app)
+    assert client.patch("/tickets/sos", headers=as_(TOK_D1), json=body).status_code == 422
+    assert kinds(sos_app) == before
+
+
+def test_an_empty_change_says_what_to_send(client):
+    r = client.patch("/tickets/d1", headers=as_(TOK_D1), json={})
+    assert r.status_code == 422 and "Send a status, an sos_kind, or both." in r.text
+
+
+def test_a_kind_and_a_status_may_come_together(sos_app, client):
+    r = client.patch("/tickets/sos", headers=as_(TOK_D1), json={"sos_kind": "fire_rescue", "status": "verified"})
+    assert r.status_code == 200 and (r.json()["sos_kind"], r.json()["status"]) == ("fire_rescue", "verified")
+    assert kinds(sos_app)[0]["sos"] == kinds(sos_app)[1]["sos"] == "fire_rescue"
+    assert events(sos_app) == [("sos", USER_D1, "open", "verified")]
 
 
 # ---- the Supabase call itself -------------------------------------------------------------------------------------

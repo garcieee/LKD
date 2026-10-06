@@ -258,7 +258,7 @@ export default function App() {
               <button className="sos-banner" onClick={() => openSos(sosNew[0])}>
                 <i className="dot" data-level="sos" />
                 <span>
-                  <b>SOS</b> · {sosNew.length === 1 ? "1 new crime signal" : `${sosNew.length} new crime signals`}
+                  <b>SOS</b> · {sosNew.length === 1 ? "1 new call" : `${sosNew.length} new calls`}
                 </span>
                 <em>Open</em>
               </button>
@@ -325,6 +325,7 @@ export default function App() {
               onSelect={setSelectedId}
               onClose={() => closeQueue()}
               onStatus={tickets.changeStatus}
+              onKind={tickets.changeKind}
               onShowOnMap={showOnMap}
             />
           )}

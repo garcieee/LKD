@@ -1512,6 +1512,35 @@ details[open] > summary.panel-title::after {
   background: var(--danger);
   color: #fff;
 }
+/* Who must respond to an SOS (SosKindCard): one choice per row, its name over what it covers. The picked one is
+   navy, like a pressed .seg button. */
+.sos-kinds {
+  display: grid;
+  gap: 6px;
+}
+.sos-kinds .btn {
+  display: grid;
+  gap: 1px;
+  text-align: left;
+}
+.sos-kinds b {
+  font: 600 12px var(--grot);
+}
+.sos-kinds span {
+  color: var(--muted);
+}
+.sos-kinds .btn[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+  cursor: default;
+}
+.sos-kinds .btn[aria-pressed="true"] span {
+  color: inherit;
+}
+.triage .error {
+  margin: 10px 0 0;
+}
 .ticket.rejected {
   opacity: 0.6;
 }

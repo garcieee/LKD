@@ -5,6 +5,7 @@ Decision models for Lakad, one folder per job. Each folder is self-contained: it
 | Folder | What it does | Status |
 |---|---|---|
 | `tickets/` | Merges reports of the same place, ranks what to fix first, classifies | Layout, settings and tests. See `tickets/README.md` |
+| `ticket_sos/` | Puts an SOS above every hazard, unscored, for a person to sort by who must respond: police, medical, or fire and rescue | Rules and tests. See `ticket_sos/README.md` |
 
 Run the tests from the repo root:
 

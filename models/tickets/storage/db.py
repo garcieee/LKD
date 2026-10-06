@@ -84,6 +84,12 @@ MIGRATIONS = (
     alter table tickets_new rename to tickets;
     create index tickets_district on tickets (district_id);
     """,
+    # 3: who must respond to an SOS (models/ticket_sos/sos.py KINDS), null until a person sorts it. A plain add
+    # column, no rebuild. "is null or" matters: for a hazard, null and false would be false and refuse the row.
+    """
+    alter table tickets add column sos_kind text check (sos_kind is null or
+      (category = 'sos' and sos_kind in ('police', 'medical', 'fire_rescue')));
+    """,
 )
 
 
@@ -175,6 +181,19 @@ class Db:
             if status != row["status"]:
                 db.execute("update tickets set status = ?, updated_at = ? where id = ?", (status, at, ticket_id))
                 self._status_changed(db, ticket_id, row["status"], status, actor, at)
+            return _ticket(db.execute("select * from tickets where id = ?", (ticket_id,)).fetchone())
+
+    def set_sos_kind(self, ticket_id: str, kind: str, at: str, allowed) -> dict | None:
+        """Sort an SOS by who must respond when allowed(ticket) says yes, checked in the same transaction. None when
+        the ticket is missing or not allowed, ValueError when it is not an SOS; nothing changes then. Not logged:
+        ticket_events holds status changes only."""
+        with self._tx() as db:
+            row = db.execute("select * from tickets where id = ?", (ticket_id,)).fetchone()
+            if row is None or not allowed(_ticket(row)):
+                return None
+            if row["category"] != "sos":
+                raise ValueError("Only an SOS has a kind.")
+            db.execute("update tickets set sos_kind = ?, updated_at = ? where id = ?", (kind, at, ticket_id))
             return _ticket(db.execute("select * from tickets where id = ?", (ticket_id,)).fetchone())
 
     def closed_before(self, at: str) -> set[str]:

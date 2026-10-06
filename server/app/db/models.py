@@ -1,7 +1,7 @@
 """The report and ticket shapes. Mirrored by dashboard/src/types/api.ts and mobile/lib/api/api_client.dart."""
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 
 # "sos" is not a hazard a person picks: only POST /sos files one, from the app's hold-to-record button.
 # The four after "blocked_sidewalk" are accessibility barriers for persons with disability (services/hazards.py).
@@ -12,6 +12,9 @@ Category = Literal[
 # "rejected": a person at the dashboard looked at a new ticket and decided it is not real. It is hidden everywhere
 # (public list, map, routes) but kept, and can be reopened.
 Status = Literal["open", "verified", "assigned", "fixed", "rejected"]
+# Who must respond to an SOS, picked at the dashboard. Mirrors models/ticket_sos/sos.py KINDS (tests/test_sos.py keeps
+# them equal) and dashboard/src/types/api.ts.
+SosKind = Literal["police", "medical", "fire_rescue"]
 
 
 class Hazard(BaseModel):
@@ -26,6 +29,7 @@ class Hazard(BaseModel):
     note: str
     photo_url: str  # path on this server, e.g. /photos/<id>.jpg. Empty for an SOS, which has a video instead
     video_url: str | None = None  # SOS only: path on this server, e.g. /videos/<id>.mp4
+    sos_kind: SosKind | None = None  # SOS only: who must respond, set at the dashboard; None until sorted
     status: Status
     created_at: str  # ISO 8601, UTC
     updated_at: str
@@ -49,5 +53,14 @@ class Ticket(Hazard):
     reporters: int
 
 
-class StatusUpdate(BaseModel):
-    status: Status
+class TicketChange(BaseModel):
+    """PATCH /tickets/{id}, and /reports/{id} with sign-in off: a new status, an SOS's kind, or both."""
+
+    status: Status | None = None
+    sos_kind: SosKind | None = None
+
+    @model_validator(mode="after")
+    def _not_empty(self):
+        if self.status is None and self.sos_kind is None:
+            raise ValueError("Send a status, an sos_kind, or both.")
+        return self

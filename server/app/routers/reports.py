@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
 
 from app.config import in_city
-from app.db.models import Category, Report, StatusUpdate
+from app.db.models import Category, Report, TicketChange
 from app.services import auth
 from app.services.priority import severity
 
@@ -145,10 +145,14 @@ def get_report(report_id: str, request: Request):
 
 
 @router.patch("/reports/{report_id}", response_model=Report)
-def update_status(report_id: str, body: StatusUpdate, request: Request):
+def update_report(report_id: str, body: TicketChange, request: Request):
+    """A new status, an SOS's kind (who must respond), or both: only the fields sent change."""
     if auth.configured():  # analysts sign in and change the ticket: PATCH /tickets/{id}
         raise HTTPException(403, "Status changes go through the analyst dashboard.")
-    report = request.app.state.store.update(report_id, status=body.status, updated_at=_now())
+    store = request.app.state.store
+    if body.sos_kind and any(r["id"] == report_id and r["category"] != "sos" for r in store.all()):
+        raise HTTPException(422, "Only an SOS has a kind.")
+    report = store.update(report_id, **body.model_dump(exclude_none=True), updated_at=_now())
     if report is None:
         raise HTTPException(404, "No such report.")
     return _out(report)

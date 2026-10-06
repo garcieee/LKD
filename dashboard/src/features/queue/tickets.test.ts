@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { Report } from "../../types/api.ts";
-import { CATEGORY_LABEL, STATUSES, STATUS_LABEL, isRejected, isSos, isSosActive, isUnresolved, needsReview, newReports, rank, steps, timeAgo, toGeoJSON } from "./tickets.ts";
+import { CATEGORY_LABEL, SOS_KINDS, SOS_KIND_HINT, SOS_KIND_LABEL, STATUSES, STATUS_LABEL, isRejected, isSos, isSosActive, isUnresolved, needsReview, needsSorting, newReports, rank, steps, ticketLabel, timeAgo, toGeoJSON } from "./tickets.ts";
 
 const T0 = Date.parse("2026-10-06T07:00:00Z");
 const at = (min: number) => new Date(T0 + min * 60_000).toISOString();
@@ -107,7 +107,7 @@ test("toGeoJSON: [lng, lat] points with status, only the selected one flagged", 
 const sos = (id: string, over: Partial<Report> = {}) => report(id, { category: "sos", severity: 3, photo_url: "", video_url: `/videos/${id}.mp4`, ...over });
 
 test("an SOS is labelled, and only one nobody has fixed counts as active", () => {
-  assert.equal(CATEGORY_LABEL.sos, "SOS · Crime signal");
+  assert.equal(CATEGORY_LABEL.sos, "SOS", "not only a crime: who must respond is sorted at the dashboard");
   assert.ok(isSos(sos("a")) && !isSos(report("b")));
   assert.ok(isSosActive(sos("a")));
   for (const status of ["verified", "assigned"] as const) assert.ok(isSosActive(sos("a", { status })), status);
@@ -155,4 +155,47 @@ test("rank: rejected tickets go last, after fixed ones, even an urgent or SOS on
     report("open", { severity: 1 }),
   ];
   assert.deepEqual(rank(input).map((r) => r.id), ["open", "fixed", "rejected-urgent", "rejected-sos"]);
+});
+
+test("SOS kinds: Police, Medical, Fire and rescue, in that order, each with what it covers", () => {
+  assert.deepEqual(
+    SOS_KINDS.map((k) => [k, SOS_KIND_LABEL[k], SOS_KIND_HINT[k]]),
+    [
+      ["police", "Police", "Crime, violence or a threat"],
+      ["medical", "Medical", "Injury, collapse or illness"],
+      ["fire_rescue", "Fire and rescue", "Fire, flood or someone trapped"],
+    ],
+  );
+});
+
+test("ticketLabel: an SOS by who must respond, Unsorted until someone picks; a hazard by its category", () => {
+  const kinds = [...SOS_KINDS, null, undefined].map((sos_kind) => ticketLabel(sos("a", { sos_kind })));
+  assert.deepEqual(kinds, ["SOS · Police", "SOS · Medical", "SOS · Fire and rescue", "SOS · Unsorted", "SOS · Unsorted"]);
+  assert.equal(ticketLabel(report("b", { category: "open_manhole" })), "Open manhole");
+});
+
+test("needsSorting: an active SOS nobody has sorted; not a sorted, fixed or rejected one, nor a hazard", () => {
+  assert.ok(needsSorting(sos("a")) && needsSorting(sos("a", { status: "assigned", sos_kind: null })));
+  assert.ok(!needsSorting(sos("a", { sos_kind: "medical" })));
+  for (const status of ["fixed", "rejected"] as const) assert.ok(!needsSorting(sos("a", { status })), status);
+  assert.ok(!needsSorting(report("b", { severity: 3 })));
+});
+
+test("rank: an unsorted SOS above an older sorted one, both above an urgent hazard; a closed SOS is not lifted", () => {
+  const input = [
+    report("urgent-old", { severity: 3, created_at: at(-120) }),
+    sos("sorted-old", { sos_kind: "police", created_at: at(-30) }),
+    sos("unsorted-new", { status: "verified", created_at: at(-1) }),
+    sos("fixed-unsorted", { status: "fixed", created_at: at(-200) }),
+    report("fixed-older", { status: "fixed", severity: 3, created_at: at(-400) }),
+    sos("rejected-unsorted", { status: "rejected" }),
+  ];
+  assert.deepEqual(rank(input).map((r) => r.id), [
+    "unsorted-new",
+    "sorted-old",
+    "urgent-old",
+    "fixed-older",
+    "fixed-unsorted",
+    "rejected-unsorted",
+  ]);
 });

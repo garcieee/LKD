@@ -133,6 +133,14 @@ def test_the_loop_stays_off_when_tickets_sync_is_off(tmp_path, monkeypatch):
     assert "ticket_id" not in app.state.store.all()[0]
 
 
+def test_an_sos_sorted_before_the_loop_reaches_it_gets_its_ticket_with_that_kind(app, client):
+    sos_id = sos(client)["id"]
+    assert client.patch(f"/reports/{sos_id}", json={"sos_kind": "fire_rescue"}).status_code == 200
+    assert app.state.sync.tick().attached == 1
+    t = app.state.sync.db.tickets()[0]
+    assert (t["id"], t["sos_kind"], t["priority"], t["band"]) == (sos_id, "fire_rescue", 100.0, "Critical")
+
+
 def test_with_sign_in_on_reports_are_read_only_and_never_list_sos_or_rejected(app, client, sign_in_on):
     rid = post(client)["id"]
     sos(client)
