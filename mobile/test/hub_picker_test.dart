@@ -104,5 +104,6 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Station · MRT-3 · City bus'), findsOneWidget);
     expect(find.textContaining('from you'), findsNothing, reason: 'no position, no distance');
+    expect(find.text('Position from OpenStreetMap, about ±60 m.'), findsOneWidget, reason: 'not from the study map');
   });
 }
