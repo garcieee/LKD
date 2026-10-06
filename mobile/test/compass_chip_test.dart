@@ -72,4 +72,14 @@ void main() {
     await tester.tap(find.byType(CompassChip));
     expect(taps, 1);
   });
+
+  testWidgets('a screen reader can press it, and a thumb can find it', (tester) async {
+    final handle = tester.ensureSemantics();
+    var taps = 0;
+    await show(tester, bearing: ValueNotifier(0.0), following: ValueNotifier(false), onTap: () => taps++);
+    tester.semantics.tap(find.semantics.byLabel(RegExp('^Compass')));
+    expect(taps, 1);
+    expect(tester.getSize(find.byType(InkWell)).height, greaterThanOrEqualTo(48));
+    handle.dispose();
+  });
 }

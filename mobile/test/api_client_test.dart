@@ -114,6 +114,22 @@ void main() {
     });
   });
 
+  group('ApiClient.base', () {
+    test('a trailing slash on the address does not double up in every call', () async {
+      final seen = <Uri>[];
+      final api = ApiClient(
+        client: MockClient((req) async {
+          seen.add(req.url);
+          return http.Response('[]', 200, headers: {'content-type': 'application/json'});
+        }),
+        base: 'http://10.0.2.2:8000//',
+      );
+      await api.reports();
+      expect(api.base, 'http://10.0.2.2:8000');
+      expect(seen.single.toString(), 'http://10.0.2.2:8000/reports');
+    });
+  });
+
   group('ApiClient.sendReport', () {
     test('posts the photo and fields as multipart and returns the report', () async {
       late http.BaseRequest sent;

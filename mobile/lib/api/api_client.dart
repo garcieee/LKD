@@ -1,7 +1,8 @@
 // The server's API at Env.apiBaseUrl: reports (server/app/routers/reports.py), place search
 // (server/app/routers/geocode.py), walking routes (server/app/routers/routes.py) and transit hubs
 // (server/app/routers/transit.py). An SOS goes up as a video to POST /sos (server/app/routers/reports.py).
-// Report mirrors server/app/db/models.py, minus severity and updated_at, which the app never shows.
+// Report mirrors server/app/db/models.py, minus what the app never shows: severity, updated_at and the dashboard's
+// ticket fields (sos_kind, ticket_id, district_id, priority, band). A field it does not list is ignored.
 import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:typed_data';
@@ -211,13 +212,14 @@ final api = ApiClient();
 class ApiClient {
   ApiClient({
     http.Client? client,
-    this.base = Env.apiBaseUrl,
+    String base = Env.apiBaseUrl,
     this.timeout = const Duration(seconds: 20),
     this.sosTimeout = const Duration(seconds: 90),
-  }) : _http = client ?? http.Client();
+  }) : base = base.replaceFirst(RegExp(r'/+$'), ''), // "http://host:8000/" would make every call "//reports"
+       _http = client ?? http.Client();
 
   final http.Client _http;
-  final String base;
+  final String base; // no trailing slash
   final Duration timeout; // per call, upload included
   final Duration sosTimeout; // a video over a weak connection: longer than a photo, still one call
 

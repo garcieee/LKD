@@ -163,6 +163,8 @@ class _ReportScreenState extends State<ReportScreen>
         _sosFinish(cancel: false).whenComplete(() {
           if (mounted && _camera == camera) setState(() => _camera = null);
           camera.dispose();
+          // The upload outlasted the call and they are back: nothing else would bring the camera up again.
+          if (mounted && WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) _startCamera();
         });
         return;
       }
@@ -813,76 +815,93 @@ class _ReportScreenState extends State<ReportScreen>
           clipBehavior: Clip.antiAlias,
           child: ConstrainedBox(
             constraints: BoxConstraints(maxHeight: size.height - keyboard - pad.top - 8),
-            child: SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(20, 18, 20, 16 + pad.bottom),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      const Expanded(
-                        child: Text(
-                          'New report',
-                          style: TextStyle(fontFamily: serif, fontSize: 22, fontWeight: FontWeight.w500),
+            // The form scrolls; the Send button stays under it, in view, on a short phone or with the keyboard up.
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(20, 18, 20, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Row(
+                          children: [
+                            const Expanded(
+                              child: Text(
+                                'New report',
+                                style: TextStyle(fontFamily: serif, fontSize: 22, fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            TextButton.icon(
+                              onPressed: _sending || _sent ? null : _retake,
+                              icon: const Icon(Icons.refresh, size: 16),
+                              label: const Text('Retake'),
+                            ),
+                          ],
                         ),
-                      ),
-                      TextButton.icon(
-                        onPressed: _sending || _sent ? null : _retake,
-                        icon: const Icon(Icons.refresh, size: 16),
-                        label: const Text('Retake'),
-                      ),
+                        const SizedBox(height: 12),
+                        ClipRRect(
+                          borderRadius: radiusChip,
+                          child: Image.memory(
+                            shot.photo,
+                            height: 190,
+                            fit: BoxFit.cover,
+                            gaplessPlayback: true,
+                            semanticLabel: 'The photo to send',
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        const Text('What is it?', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+                        const SizedBox(height: 8),
+                        CategoryPicker(value: _category, onChanged: (c) => setState(() => _category = c)),
+                        const SizedBox(height: 16),
+                        TextField(
+                          controller: _note,
+                          maxLength: 280,
+                          minLines: 1,
+                          maxLines: 4,
+                          enabled: !_sending && !_sent,
+                          textCapitalization: TextCapitalization.sentences,
+                          decoration: const InputDecoration(
+                            labelText: 'Note (optional)',
+                            hintText: 'e.g. deep, by the jeepney stop',
+                            border: OutlineInputBorder(borderRadius: radiusButton),
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            const Icon(Icons.place_outlined, size: 16, color: muted),
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(
+                                _where(shot.fix, shot.heading),
+                                style: const TextStyle(fontSize: 12, color: muted),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 14, 20, 16 + pad.bottom),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (_error case final error?)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Text(error, style: const TextStyle(fontSize: 12, color: warn)),
+                        ),
+                      SizedBox(height: 48, child: _sendButton(motion)),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  ClipRRect(
-                    borderRadius: radiusChip,
-                    child: Image.memory(
-                      shot.photo,
-                      height: 190,
-                      fit: BoxFit.cover,
-                      gaplessPlayback: true,
-                      semanticLabel: 'The photo to send',
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text('What is it?', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 8),
-                  CategoryPicker(value: _category, onChanged: (c) => setState(() => _category = c)),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: _note,
-                    maxLength: 280,
-                    minLines: 1,
-                    maxLines: 4,
-                    enabled: !_sending && !_sent,
-                    textCapitalization: TextCapitalization.sentences,
-                    decoration: const InputDecoration(
-                      labelText: 'Note (optional)',
-                      hintText: 'e.g. deep, by the jeepney stop',
-                      border: OutlineInputBorder(borderRadius: radiusButton),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      const Icon(Icons.place_outlined, size: 16, color: muted),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          _where(shot.fix, shot.heading),
-                          style: const TextStyle(fontSize: 12, color: muted),
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (_error case final error?)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Text(error, style: const TextStyle(fontSize: 12, color: warn)),
-                    ),
-                  const SizedBox(height: 14),
-                  SizedBox(height: 48, child: _sendButton(motion)),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

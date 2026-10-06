@@ -25,13 +25,16 @@ List<({Hub hub, double? metres})> nearestHubs(List<Hub> hubs, Where? from, {int 
   return rows.take(limit).toList();
 }
 
-/// "About ±80 m": how far off the dot on the map might be. The positions come from the study's maps, not a survey.
-String positionNote(Hub h) => 'Position estimated from the study map, about ±${h.errorM} m.';
+/// How far off the dot on the map might be. A terminal's or stop's position is read off the study's maps, a station's
+/// comes from OpenStreetMap: neither is a survey.
+String positionNote(Hub h) =>
+    '${h.isStation ? 'Position from OpenStreetMap' : 'Position estimated from the study map'}, about ±${h.errorM} m.';
 
 Future<void> showHubSheet(BuildContext context, Hub hub, {Where? from, required void Function(Hub) onWalk}) =>
     showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
+      isScrollControlled: true, // large text may need more than the default 9/16 of the screen
       useSafeArea: true,
       builder: (sheet) => _HubCard(
         hub,
@@ -112,7 +115,7 @@ class _HubCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(20, 0, 20, 20 + MediaQuery.paddingOf(context).bottom),
       child: Column(
         mainAxisSize: MainAxisSize.min,

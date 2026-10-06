@@ -27,6 +27,7 @@ class CompassChip extends StatelessWidget {
           button: true,
           label:
               'Compass, facing ${compassPoint(deg)}. ${on ? 'Following your heading' : 'Tap to follow your heading'}',
+          onTap: onTap, // excludeSemantics drops the InkWell's own tap action
           excludeSemantics: true,
           child: Material(
             color: on ? navy : Colors.white,
@@ -37,22 +38,26 @@ class CompassChip extends StatelessWidget {
             clipBehavior: Clip.antiAlias,
             child: InkWell(
               onTap: onTap,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // The map turns clockwise by `deg`, so north moves anticlockwise by the same on screen.
-                    Transform.rotate(
-                      angle: -deg * math.pi / 180,
-                      child: Icon(Icons.north, size: 18, color: color),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      compassPoint(deg),
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: color),
-                    ),
-                  ],
+              child: ConstrainedBox(
+                // As tall as the buttons beside it, so a thumb lands on it.
+                constraints: const BoxConstraints(minHeight: 48),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // The map turns clockwise by `deg`, so north moves anticlockwise by the same on screen.
+                      Transform.rotate(
+                        angle: -deg * math.pi / 180,
+                        child: Icon(Icons.north, size: 18, color: color),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        compassPoint(deg),
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: color),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

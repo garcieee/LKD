@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 
 import '../api/api_client.dart';
-import '../config/env.dart';
 import '../layers/reports_layer.dart';
 import '../theme.dart';
 
@@ -68,7 +67,7 @@ class _ReportCard extends StatelessWidget {
                 height: 280,
                 width: double.infinity,
                 child: Image.network(
-                  '${Env.apiBaseUrl}${report.photoUrl}',
+                  '${api.base}${report.photoUrl}',
                   fit: BoxFit.cover,
                   semanticLabel: 'Photo of the report',
                   loadingBuilder: (_, image, progress) => progress == null

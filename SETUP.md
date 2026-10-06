@@ -3,7 +3,7 @@
 ## Install
 
 - Git, Node.js LTS (22 or 24), Python 3.11
-- Mobile only: Flutter stable (3.38.1+), Android Studio with SDK and command-line tools, then `flutter doctor --android-licenses`. Android only, no iOS.
+- Mobile only: Flutter stable with Dart 3.13.5 or newer (`mobile/pubspec.yaml` needs it; Flutter 3.47.6 ships it), Android Studio with SDK and command-line tools, then `flutter doctor --android-licenses`. Android only, no iOS.
 
 ## Keys
 

@@ -28,10 +28,14 @@ class LocationState extends ChangeNotifier {
   Gps status = Gps.starting;
   Position? fix;
   StreamSubscription<Position>? _fixes;
+  Future<void>? _starting;
 
   /// Asks for permission if needed, then follows the GPS. Safe to call again (after the user
-  /// comes back from Settings): it restarts the stream.
-  Future<void> start() async {
+  /// comes back from Settings): it restarts the stream. A call while one is still under way (the app
+  /// resuming beneath the permission prompt) joins it: a second would open a stream nothing cancels.
+  Future<void> start() => _starting ??= _start().whenComplete(() => _starting = null);
+
+  Future<void> _start() async {
     await _fixes?.cancel();
     _fixes = null;
     final serviceOn = await Geolocator.isLocationServiceEnabled();
