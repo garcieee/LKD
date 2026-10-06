@@ -12,6 +12,7 @@ import '../api/api_client.dart';
 import '../config/env.dart';
 import '../config/makati.dart';
 import '../config/map_styles.dart';
+import '../features/navigate/compass_chip.dart';
 import '../features/navigate/nav_bar.dart';
 import '../features/report/ar_math.dart' show inMakati;
 import '../features/report/report_screen.dart';
@@ -99,6 +100,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _location.start();
     _trip.addListener(_onTrip);
     _trip.addListener(_syncAwake);
+    _trip.addListener(_syncFollow);
     _timer = Timer.periodic(congestionRefresh, (_) {
       if (_layers.congestionOn) _layers.refresh();
     });
@@ -114,6 +116,12 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _timer?.cancel();
     _reportsTimer?.cancel();
     if (_awake) WakelockPlus.disable();
+    for (final s in _gestures) {
+      s.cancel();
+    }
+    _bearing.dispose();
+    _following.dispose();
+    _viewport.dispose();
     _layers.dispose();
     _location.dispose();
     _trip.dispose();
@@ -209,7 +217,69 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   // While the trip is on, every fix moves the user along it.
   void _trackTrip() {
     final fix = _location.fix;
-    if (fix != null && _trip.started) _trip.update(fix.latitude, fix.longitude);
+    if (fix == null || !_trip.started) return;
+    if (_pendingFollow) _follow(); // Start came before the first fix: the camera joins the user now
+    _trip.update(fix.latitude, fix.longitude);
+  }
+
+  // The camera follows the pin and turns with the phone's heading, so the way ahead is up the screen. Mapbox's
+  // puck already shows the heading; this moves the camera with it. Not while the user is panning the map.
+  final _viewport = ViewportController();
+  final _bearing = ValueNotifier<double>(0); // where the top of the map points, degrees clockwise from north
+  final _following = ValueNotifier<bool>(false);
+  final _gestures = <StreamSubscription<MapContentGestureContext>>[];
+  bool _readingBearing = false;
+  bool _pendingFollow = false;
+  bool _wasStarted = false;
+
+  // [ask]: the user pressed something, so say why when there is nowhere to follow.
+  bool _follow({bool ask = false}) {
+    final fix = _location.fix;
+    if (fix == null || !inMakati(fix.latitude, fix.longitude)) {
+      _pendingFollow = fix == null && _trip.started; // no fix yet: join the user when the first one lands
+      if (ask) _locate();
+      return false;
+    }
+    _pendingFollow = false;
+    _viewport.moveTo(FollowPuckViewportState(zoom: Makati.walkZoom, pitch: _pitch));
+    _following.value = true;
+    return true;
+  }
+
+  void _stopFollowing({bool northUp = false}) {
+    _pendingFollow = false;
+    if (!_following.value) return;
+    _following.value = false;
+    _viewport.moveTo(const IdleViewportState(), transition: null);
+    if (northUp) _map?.easeTo(CameraOptions(bearing: 0), MapAnimationOptions(duration: 600));
+  }
+
+  void _onCompass() => _following.value ? _stopFollowing(northUp: true) : _follow(ask: true);
+
+  // Start puts the camera on the user, turning with them; End returns it to north-up.
+  void _syncFollow() {
+    if (_trip.started == _wasStarted) return;
+    _wasStarted = _trip.started;
+    if (_wasStarted) {
+      _follow();
+    } else {
+      _stopFollowing(northUp: true);
+    }
+  }
+
+  // The camera moves every frame while following: read the bearing for the compass one at a time.
+  Future<void> _readBearing() async {
+    final map = _map;
+    if (map == null || _readingBearing) return;
+    _readingBearing = true;
+    try {
+      final b = (await map.getCameraState()).bearing;
+      _bearing.value = (b % 360 + 360) % 360;
+    } catch (e) {
+      debugPrint('bearing: $e');
+    } finally {
+      _readingBearing = false;
+    }
   }
 
   // The screen stays on from Start until the user arrives or ends the trip, so the app keeps getting fixes and
@@ -283,6 +353,10 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("You're outside Makati. Lakad covers the city only.")),
       );
+      return;
+    }
+    if (_trip.started) {
+      _follow(); // on a trip the locate button puts the camera back on the user, turning with them
       return;
     }
     map?.flyTo(
@@ -403,6 +477,14 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
 
   Future<void> _onMapCreated(MapboxMap map) async {
     _map = map;
+    // The user took hold of the map (dragging or turning it): let go of it.
+    _gestures
+      ..forEach((s) => s.cancel())
+      ..clear()
+      ..addAll([
+        map.gestures.pan.gestureEvents.listen((_) => _stopFollowing()),
+        map.gestures.rotate.gestureEvents.listen((_) => _stopFollowing()),
+      ]);
     onReportTap(map, _openReport);
     onHubTap(map, _openHub);
     // Edge to edge: the map runs under the gesture bar. Lift the Mapbox logo and the attribution
@@ -488,8 +570,10 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
               key: const ValueKey('map'),
               styleUri: MapStyles.map,
               viewport: _opening,
+              viewportController: _viewport,
               onMapCreated: _onMapCreated,
               onStyleLoadedListener: (_) => _ready(),
+              onCameraChangeListener: (_) => _readBearing(),
             ),
           ),
           // Chips sit inside the system bars and the display cutout, with at least 14px around.
@@ -522,6 +606,8 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
+                          CompassChip(bearing: _bearing, following: _following, onTap: _onCompass),
+                          const SizedBox(height: 10),
                           _LocateRow(location: _location, onLocate: _locate, onTransit: _nearbyHubs),
                           const SizedBox(height: 10),
                           _ReportButton(onPressed: _report),
