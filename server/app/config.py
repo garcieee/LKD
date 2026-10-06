@@ -34,6 +34,9 @@ def in_city(lat: float, lng: float) -> bool:
 # Makati PUV routes and terminals (data/transit/), from the 2025 study. Hackathon use only.
 TRANSIT_DIR = SERVER_DIR / "data" / "transit"
 
+# Curated districts, mode weights and hourly profiles for the modeled foot-traffic index (data/footfall/).
+FOOTFALL_DIR = SERVER_DIR / "data" / "footfall"
+
 # OpenRouteService key (openrouteservice.org, free tier): place search now, walking routes next.
 # Empty means /geocode answers 503 and everything else keeps working.
 ORS_API_KEY = os.getenv("ORS_API_KEY", "")

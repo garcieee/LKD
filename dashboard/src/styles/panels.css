@@ -1047,3 +1047,291 @@ details[open] > summary.panel-title::after {
     animation: none;
   }
 }
+
+/* Foot traffic panel: day and hour pickers, then the busiest districts for that moment. */
+.footfall {
+  min-height: 0; /* the HUD column ends above Reset to Makati: shrink and scroll instead of running into it */
+  overflow-y: auto;
+}
+.ff-hour {
+  width: 100%;
+  accent-color: var(--accent);
+}
+.ff-list {
+  margin: 10px 0 0;
+  padding: 9px 0 0;
+  border-top: 1px solid var(--line-soft);
+  list-style: none;
+}
+.ff-list button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 5px 4px;
+  border: 0;
+  border-radius: var(--radius);
+  background: none;
+  font: 12px var(--grot);
+  text-align: left;
+  cursor: pointer;
+}
+.ff-list button:hover {
+  background: var(--paper-deep);
+}
+.ff-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ff-list b {
+  font: 600 11px var(--grot);
+  font-variant-numeric: tabular-nums;
+}
+.ff-tier {
+  display: grid;
+  place-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font: 600 9px var(--grot);
+}
+.ff-tier[data-tier="2"] {
+  background: #4f5f86;
+}
+.ff-tier[data-tier="3"] {
+  background: #8a93ab;
+}
+
+/* Live state of the foot-traffic layer, and its link to the forecast. */
+.ff-state {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 8px 0;
+  padding: 7px 9px;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--ok) 8%, #fff);
+  color: var(--ok);
+  font: 500 11px var(--grot);
+}
+.ff-state[data-pinned] {
+  background: color-mix(in srgb, #6d5cd6 10%, #fff);
+  color: #4b3fa8;
+}
+.ff-pulse {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: ff-pulse 1.8s ease-out infinite;
+}
+@keyframes ff-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 45%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 7px transparent;
+  }
+}
+.fc-live {
+  padding: 3px 8px;
+  border: 1px solid currentColor;
+  border-radius: var(--radius);
+  background: #fff;
+  color: inherit;
+  font: 600 10px var(--grot);
+  cursor: pointer;
+}
+.ff-open {
+  margin-top: 10px;
+}
+
+/* Forecast: zone and range pickers, three tiles, the chart with a readout above it, then the key and the disclosure. */
+.fc-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.fc-zone {
+  flex: 1;
+  min-width: 150px;
+}
+.fc-zone select {
+  width: 100%;
+  min-height: 32px;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  font: 500 12px var(--grot);
+}
+.seg {
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.seg button {
+  min-height: 32px;
+  padding: 5px 11px;
+  border: 0;
+  border-left: 1px solid var(--line);
+  background: var(--panel);
+  font: 500 11px var(--grot);
+  cursor: pointer;
+}
+.seg button:first-child {
+  border-left: 0;
+}
+.seg button[aria-pressed="true"] {
+  background: var(--accent);
+  color: #fff;
+}
+.fc-read {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-height: 30px;
+  margin: 2px 0 4px;
+  font: 13px var(--grot);
+}
+.fc-val {
+  margin-left: auto;
+  font: 500 22px/1 var(--serif);
+  color: var(--accent);
+}
+.fc-val small {
+  font: 500 11px var(--grot);
+  color: var(--muted);
+}
+.fc-kind {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--paper-deep);
+  color: var(--muted);
+  font: 600 10px var(--grot);
+}
+.fc-kind[data-kind="live"] {
+  background: color-mix(in srgb, var(--ok) 10%, #fff);
+  color: var(--ok);
+}
+.fc-kind[data-kind="forecast"] {
+  background: color-mix(in srgb, #6d5cd6 12%, #fff);
+  color: #4b3fa8;
+}
+.fc-read .fc-live {
+  color: #4b3fa8;
+}
+.fc-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: pan-y;
+  cursor: crosshair;
+  user-select: none;
+}
+.fc-chart:focus-visible {
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+.fc-grid {
+  stroke: var(--line-soft);
+}
+.fc-day {
+  stroke: var(--line);
+  stroke-dasharray: 2 3;
+}
+.fc-axis {
+  fill: var(--muted);
+  font: 10px var(--grot);
+}
+.fc-area {
+  fill: color-mix(in srgb, var(--accent) 9%, transparent);
+}
+.fc-band {
+  fill: color-mix(in srgb, #6d5cd6 16%, transparent);
+}
+.fc-line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.fc-line.history {
+  stroke: var(--accent);
+}
+.fc-line.forecast {
+  stroke: #6d5cd6;
+  stroke-dasharray: 5 4;
+}
+.fc-now {
+  stroke: var(--ok);
+  stroke-width: 1.2;
+}
+.fc-now-label {
+  fill: var(--ok);
+  font: 600 10px var(--grot);
+}
+.fc-cursor {
+  stroke: var(--text);
+  stroke-width: 1;
+  stroke-opacity: 0.55;
+}
+.fc-dot {
+  fill: var(--accent);
+  stroke: #fff;
+  stroke-width: 2;
+}
+.fc-dot[data-kind="forecast"] {
+  fill: #6d5cd6;
+}
+.fc-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font: 500 11px var(--grot);
+}
+.fc-key li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.fc-key i {
+  display: inline-block;
+  width: 18px;
+  height: 0;
+  border-top: 2px solid var(--accent);
+}
+.fc-key i[data-k="forecast"] {
+  border-top: 2px dashed #6d5cd6;
+}
+.fc-key i[data-k="band"] {
+  height: 8px;
+  border: 0;
+  background: color-mix(in srgb, #6d5cd6 22%, transparent);
+}
+.fc-note {
+  margin: 4px 0 0;
+  padding: 9px 10px;
+  border-left: 3px solid var(--warn);
+  background: var(--paper-deep);
+  color: var(--text);
+  font-size: 12px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ff-pulse {
+    animation: none;
+  }
+}

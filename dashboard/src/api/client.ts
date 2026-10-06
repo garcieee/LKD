@@ -1,6 +1,6 @@
 // Typed client for server/ (FastAPI). Base URL from VITE_API_BASE_URL (config/env.ts).
 import { ENV } from "../config/env";
-import type { Report, Status } from "../types/api";
+import type { Day, Footfall, Report, Series, Status } from "../types/api";
 
 const BASE = ENV.apiBaseUrl.replace(/\/+$/, "");
 
@@ -13,6 +13,13 @@ export async function listReports(): Promise<Report[]> {
   if (!Array.isArray(body)) throw new Error("Unexpected /reports response");
   return body as Report[];
 }
+
+// Modeled foot traffic at a day and hour (server defaults both to now in Manila).
+export const getFootfall = (day: Day, hour: number) => call<Footfall>(`/footfall?day=${day}&hour=${hour}`);
+
+// A week of history and three days of forecast for a zone ("all" or a district id).
+export const getSeries = (zone: string) =>
+  call<Series>(`/footfall/series?zone=${encodeURIComponent(zone)}&past_days=7&future_days=3`);
 
 export const patchStatus = (id: string, status: Status) =>
   call<Report>(`/reports/${encodeURIComponent(id)}`, {
