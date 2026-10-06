@@ -182,23 +182,35 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   // redraw the pin and the line. The camera moves twice per destination: to the user and the pin at once, then
   // to the whole route when the first one lands. Picking another commute option, or Commute/Walk, refits to
   // what is drawn; changing walking mode leaves the camera alone.
+  //
+  // On a trip the line is what is left of it, from the user's spot on, redrawn at each step of progress. Between
+  // those only the line is redrawn: the pins are where they were, and the camera is following the user.
   Place? _framedTrip;
   String? _framedRoute; // what the camera last fitted: 'walk' or 'commute:<option id>'
+  Place? _pinsFor; // the destination the pins are drawn for (null after a style load drops them)
+  List<double>? _start; // where the trip began: the "From" pin, which stays put while the line is rerouted
 
   void _onTrip() {
     _queue = _queue.then((_) async {
-      final map = _map, place = _trip.destination;
+      final map = _map, place = _trip.destination, started = _trip.started;
       if (map == null) return;
       // The commute step draws the chosen option; until one lands, or when there is none, the walking route.
       final option = _trip.step == TripStep.commute ? _trip.option : null;
       final route = option == null ? _trip.route : null;
       try {
         if (!await map.isStyleLoaded()) return; // _ready() draws it once the style is up
+        if (started && place != null && place == _pinsFor) {
+          await showTrip(map, _trip.legs, _trip.progress);
+          return;
+        }
         // "From" is where the line begins: the user's position when the routes were asked for.
         final first = option != null ? option.legs.first.line : route?.line;
-        final start = first == null || first.isEmpty ? null : first.first;
-        await showDestination(map, place, start: start);
-        if (option != null) {
+        if (!started) _start = first == null || first.isEmpty ? null : first.first;
+        await showDestination(map, place, start: started ? _start ??= _trip.legs.first.line.first : _start);
+        _pinsFor = place;
+        if (started) {
+          await showTrip(map, _trip.legs, _trip.progress);
+        } else if (option != null) {
           await showCommute(map, option);
         } else {
           await showRoute(map, route);
@@ -208,7 +220,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
           _framedRoute = null;
           if (place != null) await _frameTrip(map, place);
         }
-        final key = option != null ? 'commute:${option.id}' : (route != null ? 'walk' : null);
+        final key = started ? null : (option != null ? 'commute:${option.id}' : (route != null ? 'walk' : null));
         if (place != null && key != null && key != _framedRoute) {
           _framedRoute = key;
           final line = option != null ? [for (final l in option.legs) ...l.line] : route!.line;
@@ -519,6 +531,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _loadHubs();
     _puckOn = false; // a new style drops the puck
     _syncPuck();
+    _pinsFor = null; // a new style dropped the pins
     if (_trip.destination != null) _onTrip(); // and the destination pin and route line
     try {
       // Mercator, whatever the style asks for: the lock below is worked out for it.
