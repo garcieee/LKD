@@ -73,3 +73,11 @@ def test_the_accessible_only_barriers_are_pwd_categories_of_the_ticket_rules():
 
     assert hazards.ACCESSIBLE_ONLY == set(ACCESSIBILITY) - {"unsafe_sidewalk"}
 
+
+def test_a_barrier_at_a_point_bars_it_and_a_hazard_or_a_fixed_barrier_does_not():
+    ramp = {**report("ramp", east_m=10), "category": "missing_ramp"}
+    here = (LAT, LNG)
+    assert hazards.barred(here, [ramp])
+    assert not hazards.barred(here, [{**ramp, "category": "pothole"}])
+    assert not hazards.barred(here, [{**ramp, "status": "fixed"}])
+    assert not hazards.barred(here, [{**report("far", east_m=50), "category": "missing_ramp"}])
