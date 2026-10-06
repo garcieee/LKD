@@ -799,8 +799,50 @@ details[open] > summary.panel-title::after {
   font-size: 14px;
   animation: rise 180ms ease-out;
 }
+/* The map never gives up the last 30%: past that the panel grows over it instead of squeezing it to nothing. */
 .shell.split .stage {
-  right: var(--insights-w);
+  right: min(var(--insights-w), 70vw);
+}
+.grip {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 56px;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg);
+  color: var(--muted);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+  cursor: col-resize;
+  touch-action: none;
+}
+.grip svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+.grip:hover,
+.grip:active,
+.grip:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.insights[data-full] .grip {
+  transform: translate(0, -50%);
+  border-left: 0;
+  border-radius: 0 14px 14px 0;
+}
+.shell[data-anim] .insights {
+  transition: width 240ms ease;
 }
 .insights .queue-list {
   padding: 12px 14px 16px;
@@ -992,6 +1034,9 @@ details[open] > summary.panel-title::after {
   .insights {
     width: auto;
     left: 0;
+  }
+  .grip {
+    display: none;
   }
   .shell.split .stage {
     right: 0;
