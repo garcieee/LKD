@@ -30,17 +30,17 @@ public map ◀─ GET /reports ◀─ the cache                                 
 |---|---|
 | A report is never lost | It is on disk in `db/reports.json` before anything else happens. If the loop stops, reports keep arriving and it catches up later |
 | Running twice changes nothing | Every row is keyed by a report id (a ticket by its first report's id), so a retried turn writes the same rows again |
-| A status set at the dashboard survives | The loop writes `status` only for a new ticket or a reopen, so it never overwrites one |
+| A status set at the dashboard survives | `PATCH /reports/{id}` sends it to the report's ticket in SQLite and to every report of it at once. The loop writes `status` only for a new ticket or a reopen |
 | The cache stays small | A report whose ticket has been fixed or rejected for more than 30 days leaves `reports.json`. SQLite keeps it |
 | A bad report cannot block the queue | After 3 failed tries a report gets `sync_error` and is skipped; `/health` counts them |
 
 Settings in `settings.py`: `SYNC_EVERY_S = 5`, `SYNC_MAX_TRIES = 3`, `CACHE_KEEP_DAYS = 30`.
 
-`engine.tickets_for` and `engine.set_status` (and `set_sos_kind`) take a district scope and change a ticket and all its reports together. The server does not call them today: they are ready for a ticket view behind a sign-in.
+`engine.set_status` and `engine.set_sos_kind` change a ticket and all its reports together; the server calls them with the scope "all" (there is no sign-in). `engine.tickets_for` takes the same scope and is ready for a ticket view behind a sign-in.
 
 **Gaps to close before real use**
 - There are no accounts. `PATCH /reports/{id}` and `GET /reports?include_sos=true` are open to anyone who can reach the server.
-- The dashboard changes a report, not its ticket: `lakad.db` keeps the status the loop gave each ticket, so the 30-day pruning only follows what the loop saw.
+- A report that is already fixed or rejected when the loop first sees it (demo data written straight to the file) leaves `reports.json` after 30 days, like any closed ticket. `lakad.db` keeps it.
 - Photo and SOS video URLs are long random ids, not signed: anyone who has a URL can open it. Upgrade: short-lived signed URLs from the server.
 - The ten EMBO barangays are Taguig now, but the server's city box still accepts reports there. They get no district.
 

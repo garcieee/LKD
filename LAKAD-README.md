@@ -22,7 +22,7 @@ Both clients use the same API, so a phone report and a dashboard status change h
 
 ## Reviewing new tickets: Confirm or Reject
 
-A new ticket shows a review card at the top of its detail view. **Confirm** moves it to *Verified*, from where the stepper takes it on to Assigned and Fixed. **Reject** marks it *Rejected*: it disappears from the queue (unless *Show rejected* is on), the map, the Insights numbers, the phone's list and route avoidance, but stays on the server and can be reopened. Rejecting an SOS asks once more first. The queue header counts tickets still waiting for review. Nothing is deleted. There is no sign-in: anyone who can open the dashboard can confirm or reject.
+A new ticket shows a review card at the top of its detail view. **Confirm** moves it to *Verified*, from where the stepper takes it on to Assigned and Fixed. **Reject** marks it *Rejected*: it disappears from the queue (unless *Show rejected* is on), the map, the Insights numbers, the phone's list and route avoidance, but stays on the server and can be reopened. Rejecting an SOS asks once more first. The queue header counts tickets still waiting for review. A change made on one row goes to its ticket, so every report of the same hazard follows. Nothing is deleted: a ticket fixed or rejected more than 30 days ago leaves the dashboard's list but stays in `db/lakad.db`. There is no sign-in: anyone who can open the dashboard can confirm or reject.
 
 ## Accessibility (PWD) reports
 
@@ -49,7 +49,7 @@ In the ticket rules (`models/tickets/`) the four have a danger value of 0.5, lik
 - **No accounts.** Anyone who can reach the API can file an SOS or list them. Hiding SOS from the public list is a convenience, not security. Put the dashboard and `include_sos` behind a login before anyone real depends on it. False alarms are limited only by the hold and the one-second minimum.
 - **Needs a GPS fix inside Makati**, the same as a photo report, so it cannot start without one.
 - **Hold-and-slide is hard for some people.** There is no alternative for screen-reader or switch users yet.
-- **Clips sit unencrypted in `server/storage/videos/` with no retention limit.** Treat the folder as sensitive: it is not git-ignored yet, so do not `git add` it.
+- **Clips sit unencrypted in `db/videos/` with no retention limit.** Treat the folder as sensitive. It is git-ignored, with the rest of `db/`.
 - **Not run on a physical phone.** Verified with analyzer, widget and unit tests, and a real upload to a real server. The recording itself (camera plugin, Android recorder, haptics) needs a device test.
 
 ## Commute routes are estimated
