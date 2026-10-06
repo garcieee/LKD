@@ -70,8 +70,8 @@ class ApiClient {
 
   /// Every report, newest first.
   Future<List<Report>> reports() async {
-    final res = await _send(http.AbortableRequest('GET', Uri.parse('$base/reports'), abortTrigger: _deadline()));
-    return [for (final r in jsonDecode(res.body) as List) Report.fromJson(r as Map<String, dynamic>)];
+    final body = await _send(http.AbortableRequest('GET', Uri.parse('$base/reports'), abortTrigger: _deadline()));
+    return [for (final r in body as List) Report.fromJson(r as Map<String, dynamic>)];
   }
 
   /// Files a report. [onProgress] gets the share of the photo uploaded so far, 0..1.
@@ -102,14 +102,14 @@ class ApiClient {
           contentType: http.MediaType('image', 'jpeg'),
         ),
       );
-    final res = await _send(req);
-    return Report.fromJson(jsonDecode(res.body) as Map<String, dynamic>);
+    return Report.fromJson(await _send(req) as Map<String, dynamic>);
   }
 
   // Aborts the call, socket and all, so a retry after a timeout cannot race a slow first upload.
   Future<void> _deadline() => Future.delayed(timeout);
 
-  Future<http.Response> _send(http.BaseRequest request) async {
+  // The answer's JSON.
+  Future<Object?> _send(http.BaseRequest request) async {
     final http.Response res;
     try {
       res = await http.Response.fromStream(await _http.send(request));
@@ -119,7 +119,12 @@ class ApiClient {
       throw ApiException("Can't reach the server at $base (${e.message}). Check the connection and try again.");
     }
     if (res.statusCode >= 300) throw ApiException(_detail(res));
-    return res;
+    try {
+      return jsonDecode(res.body);
+    } on FormatException {
+      // e.g. a Wi-Fi sign-in page answering in the server's place
+      throw ApiException("Can't read the answer from $base. Check the connection and try again.");
+    }
   }
 }
 
