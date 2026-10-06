@@ -26,8 +26,8 @@ export default function App() {
   const [now, setNow] = useState(() => new Date());
   // Starts closed on every load, nothing is remembered.
   const [navOpen, setNavOpen] = useState(false);
-  // Open on desktop; folded on phones so it does not sit over the map.
-  const [panelOpen, setPanelOpen] = useState(() => !matchMedia(PHONE).matches);
+  // Folded on load, like Foot traffic: the Tickets queue is this dashboard's main job and gets the height.
+  const [panelOpen, setPanelOpen] = useState(false);
   // The fix-it queue is this dashboard's main job: open on desktop. On phones it is one tap away
   // on the HUD's Tickets button, so the sheet doesn't cover the map on load.
   const [queueOpen, setQueueOpen] = useState(() => !matchMedia(PHONE).matches);

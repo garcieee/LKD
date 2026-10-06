@@ -324,6 +324,7 @@ details[open] > summary.panel-title::after {
 }
 .side {
   width: 230px;
+  flex: none; /* a layer panel keeps its height: the Tickets panel below takes the squeeze, not this one */
 }
 .src {
   margin: 2px 0 8px;
@@ -503,7 +504,7 @@ details[open] > summary.panel-title::after {
   display: flex;
   flex-direction: column;
   width: 340px;
-  min-height: 0;
+  min-height: 200px; /* the main job: never squeezed to a sliver by the panels above it */
   padding: 0;
   overflow: hidden;
   animation: rise 180ms ease-out;
@@ -1053,7 +1054,7 @@ details[open] > summary.panel-title::after {
 
 /* Foot traffic panel: day and hour pickers, then the busiest districts for that moment. */
 .footfall {
-  min-height: 0; /* the HUD column ends above Reset to Makati: shrink and scroll instead of running into it */
+  max-height: 25vh; /* a tall one scrolls inside itself, so the HUD column stays above Reset to Makati */
   overflow-y: auto;
 }
 .ff-hour {
