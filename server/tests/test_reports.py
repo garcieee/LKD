@@ -6,7 +6,7 @@ from typing import get_args
 import pytest
 from fastapi.testclient import TestClient
 
-from app.config import CITY_BOUNDS
+from app.config import CITY_BOUNDS, CITY_MARGIN
 from app.db.models import Category
 from app.db.store import ReportStore
 from app.main import create_app
@@ -92,10 +92,10 @@ def test_photo_of_exactly_10_mb_is_taken_and_one_byte_more_is_not(client):
 @pytest.mark.parametrize(
     "field, edge, beyond",
     [
-        ("lat", SOUTH - reports.MARGIN, -math.inf),
-        ("lat", NORTH + reports.MARGIN, math.inf),
-        ("lng", WEST - reports.MARGIN, -math.inf),
-        ("lng", EAST + reports.MARGIN, math.inf),
+        ("lat", SOUTH - CITY_MARGIN, -math.inf),
+        ("lat", NORTH + CITY_MARGIN, math.inf),
+        ("lng", WEST - CITY_MARGIN, -math.inf),
+        ("lng", EAST + CITY_MARGIN, math.inf),
     ],
 )
 def test_city_edge_plus_margin_is_in_and_the_next_float_out(client, field, edge, beyond):

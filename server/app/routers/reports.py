@@ -4,15 +4,13 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
 
-from app.config import CITY_BOUNDS
+from app.config import in_city
 from app.db.models import Category, Report, StatusUpdate
 from app.services.priority import severity
 
 router = APIRouter()
 
 MAX_PHOTO_BYTES = 10 * 1024 * 1024
-# ~450 m past the city line, so a hazard on a border street still counts. Same as the map's lockMargin.
-MARGIN = 0.004
 # Detect the type from the bytes, never from the client's filename or content type.
 IMAGE_TYPES = {b"\xff\xd8\xff": "jpg", b"\x89PNG\r\n\x1a\n": "png"}
 
@@ -35,9 +33,7 @@ def create_report(
     heading: float | None = Form(None, ge=0, le=360),
     note: str = Form("", max_length=280),
 ):
-    west, south, east, north = CITY_BOUNDS
-    # Written so NaN fails too: every comparison with NaN is False.
-    if not (south - MARGIN <= lat <= north + MARGIN and west - MARGIN <= lng <= east + MARGIN):
+    if not in_city(lat, lng):
         raise HTTPException(422, "That location is outside the city.")
 
     data = photo.file.read(MAX_PHOTO_BYTES + 1)
