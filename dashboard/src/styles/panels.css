@@ -906,6 +906,7 @@ details[open] > summary.panel-title::after {
   margin: 8px 0 0;
   padding: 0;
   list-style: none;
+  --c: var(--accent); /* a row's own data-status or inline colour wins over this default */
 }
 .bars li {
   display: grid;
@@ -913,7 +914,6 @@ details[open] > summary.panel-title::after {
   align-items: center;
   gap: 10px;
   padding: 5px 0;
-  --c: var(--accent);
   font: 13px var(--grot);
 }
 .bars i {
