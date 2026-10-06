@@ -52,14 +52,22 @@ void main() {
     expect(p.leftS, near(1100), reason: 'half of the first 200 s is gone');
   });
 
-  test('how far off the line is the distance to it, and past 100 m it is off route', () {
-    final a = tripProgress(legs, 0, 14.5010, lng + east(30, 14.5010))!;
-    expect(a.offM, near(30));
+  test('how far off the line is the distance to it, and past 30 m it is off route', () {
+    final a = tripProgress(legs, 0, 14.5010, lng + east(20, 14.5010))!;
+    expect(a.offM, near(20));
     expect(a.leg, 0);
     expect(a.offRoute, isFalse);
-    final b = tripProgress(legs, 0, 14.5010, lng + east(150, 14.5010))!;
-    expect(b.offM, near(150));
+    final b = tripProgress(legs, 0, 14.5010, lng + east(60, 14.5010))!;
+    expect(b.offM, near(60));
     expect(b.offRoute, isTrue);
+  });
+
+  test('a ride is never off route: its line is a straight guess, not where the vehicle goes', () {
+    final p = tripProgress(legs, 1, 14.5060, lng + east(150, 14.5060))!;
+    expect(p.leg, 1);
+    expect(p.offM, near(150));
+    expect(p.offRoute, isFalse);
+    expect(p.walking, isFalse);
   });
 
   test('a leg ends 25 m from its end: the next one takes over', () {
@@ -84,7 +92,6 @@ void main() {
     final p = tripProgress(legs, 1, 14.5005, lng)!;
     expect(p.leg, 1, reason: 'leg 0 is not even considered once the user is past it');
     expect(p.offM, greaterThan(100), reason: 'so they read as far off the ride line');
-    expect(p.offRoute, isTrue);
   });
 
   test('the next leg is taken as soon as the fix is nearer to it than to this one', () {
@@ -110,6 +117,81 @@ void main() {
     expect(p.leftM, near(one.single.distanceM));
     expect(tripProgress(one, 0, 14.5020, lng)!.arrived, isTrue);
     expect(tripProgress(const [], 0, 14.5, lng), isNull);
+  });
+
+  test('the line ahead starts at the user and is trimmed as they move', () {
+    final start = tripProgress(legs, 0, 14.5000, lng)!;
+    expect(start.alongM, near(0));
+    expect(start.ahead, [
+      [lng, near(14.5000, 1e-6)],
+      [lng, 14.5020],
+    ]);
+    final p = tripProgress(legs, 0, 14.5010, lng + east(5, 14.5010))!;
+    expect(p.alongM, near(111.32));
+    expect(p.ahead.first[0], closeTo(lng, 1e-9), reason: 'snapped onto the line, not where the GPS says');
+    expect(p.ahead.first[1], closeTo(14.5010, 1e-6));
+    expect(p.ahead.last, [lng, 14.5020]);
+    expect(p.ahead.length, 2);
+  });
+
+  test('a line with a bend keeps the points still ahead and drops those behind', () {
+    final bent = CommuteLeg.fromJson({
+      'kind': 'walk',
+      'duration_s': 100,
+      'distance_m': 200,
+      'label': 'Walk',
+      'geometry': [
+        [lng, 14.5000],
+        [lng, 14.5010],
+        [lng + 0.001, 14.5010],
+      ],
+    });
+    final before = tripProgress([bent], 0, 14.5004, lng)!;
+    expect(before.ahead.length, 3, reason: 'user, the corner, the end');
+    final after = tripProgress([bent], 0, 14.5010, lng + 0.0004)!;
+    expect(after.ahead.length, 2, reason: 'the corner is behind: user and the end');
+    expect(after.ahead.last, [lng + 0.001, 14.5010]);
+  });
+
+  // 14.5000 north to the corner at 14.5010, then east to lng + 0.001.
+  final turns = CommuteLeg.fromJson({
+    'kind': 'walk',
+    'duration_s': 150,
+    'distance_m': 200,
+    'label': 'Walk to Ayala Terminal',
+    'geometry': [
+      [lng, 14.5000],
+      [lng, 14.5010],
+      [lng + 0.001, 14.5010],
+    ],
+    'steps': [
+      {'type': 11, 'text': 'Head north on Ayala Avenue', 'name': 'Ayala Avenue', 'distance_m': 111.3, 'at': 0},
+      {'type': 1, 'text': 'Turn right onto Paseo de Roxas', 'name': 'Paseo de Roxas', 'distance_m': 107.9, 'at': 1},
+      {'type': 10, 'text': 'Arrive at your destination', 'name': '', 'distance_m': 0, 'at': 2},
+    ],
+  });
+
+  test('the next turn, how far away it is, and the street the user is on', () {
+    final a = tripProgress([turns], 0, 14.5000, lng)!;
+    expect(a.street, 'Ayala Avenue', reason: 'the depart step is where they stand');
+    expect(a.turn!.text, 'Turn right onto Paseo de Roxas');
+    expect(a.turnInM, near(111.3));
+
+    final b = tripProgress([turns], 0, 14.5006, lng)!;
+    expect(b.turnInM, near(111.3 - 66.8));
+    expect(b.street, 'Ayala Avenue');
+
+    final c = tripProgress([turns], 0, 14.5010, lng + 0.0004)!;
+    expect(c.street, 'Paseo de Roxas', reason: 'round the corner');
+    expect(c.turn!.type, 10, reason: 'only the arrival is left');
+    expect(c.turnInM, near(0.0006 * mPerDeg * math.cos(14.501 * math.pi / 180)));
+  });
+
+  test('a leg with no steps has no turn and no street', () {
+    final p = tripProgress(legs, 0, 14.5005, lng)!;
+    expect(p.turn, isNull);
+    expect(p.turnInM, isNull);
+    expect(p.street, '');
   });
 
   test('a stale leg index is held inside the trip', () {

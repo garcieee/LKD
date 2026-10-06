@@ -383,12 +383,14 @@ void main() {
       trip.update(14.5000 + 40 / 111320, 121.0);
       expect(heard, 2, reason: '40 m is');
       expect(trip.progress!.legLeftM, closeTo(222.64 - 40, 1));
+      trip.update(14.5000 + 40 / 111320, 121.0 + 0.002);
+      expect(trip.progress!.offRoute, isTrue);
+      expect(heard, 3, reason: 'going off the line is news');
       trip.update(14.5020, 121.0);
-      expect(heard, 3);
+      expect(heard, 4);
       expect(trip.progress!.leg, 1, reason: 'reaching the hub starts the ride');
       trip.update(14.5020, 121.0 + 0.002);
-      expect(trip.progress!.offRoute, isTrue);
-      expect(heard, 4, reason: 'going off the line is news');
+      expect(trip.progress!.offRoute, isFalse, reason: 'the ride is a straight guess: no such thing as off it');
       trip.dispose();
     });
 
