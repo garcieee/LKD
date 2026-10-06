@@ -1,6 +1,6 @@
 // Dashboard analytics from the polled report list. No React or mapbox-gl, so `node --test` runs it (metrics.test.ts).
 import type { Category, Report, Status } from "../../types/api.ts";
-import { CATEGORY_LABEL, STATUSES, isUnresolved } from "../queue/tickets.ts";
+import { CATEGORY_LABEL, STATUSES, isRejected, isUnresolved } from "../queue/tickets.ts";
 
 const DAY = 24 * 60 * 60_000;
 const ms = (iso: string) => Date.parse(iso);
@@ -93,8 +93,10 @@ export function duration(msec: number): string {
   return `${Math.round(min / 144) / 10} d`;
 }
 
-// Everything the Insights page shows, from one report list and one clock reading.
-export function summarize(reports: Report[], now: number) {
+// Everything the Insights page shows, from one report list and one clock reading. Rejected tickets were judged
+// not real: they count for nothing here.
+export function summarize(all: Report[], now: number) {
+  const reports = all.filter((r) => !isRejected(r));
   return {
     total: reports.length,
     unresolved: reports.filter(isUnresolved).length,

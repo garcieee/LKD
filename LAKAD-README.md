@@ -20,6 +20,10 @@ Both clients use the same API, so a phone report and a dashboard status change h
 
 "Still there?" verification, exports, barangay leaderboard, heatmap, satellite toggle, face blur, CLIP tagging. Their files are empty stubs. Layer state is not persisted. No auth on the API.
 
+## Reviewing new tickets: Confirm or Reject
+
+A new ticket shows a review card at the top of its detail view. **Confirm** moves it to *Verified*, from where the stepper takes it on to Assigned and Fixed. **Reject** marks it *Rejected*: it disappears from the queue (unless *Show rejected* is on), the map, the Insights numbers, the phone's list and route avoidance, but stays on the server and can be reopened. Rejecting an SOS asks once more first. The queue header counts tickets still waiting for review. Nothing is deleted and nothing records who decided: there is no login yet, so anyone who can open the dashboard can confirm or reject.
+
 ## SOS: hold the camera button to send a crime signal
 
 **On the phone.** Tap the camera button for a photo report, as before. *Hold* it and the app switches to SOS mode: it records a silent video (up to 30 s) while the screen slowly turns red from the edges. Three arrows and an X above the button say *slide up to cancel*, and a banner says *SOS mode* with the clock. Slide up to the X and let go: the video is deleted and nothing is sent. Let go anywhere else: the video goes to the city at once, with no form in between. A clip under one second (a press of about a second and a half) is dropped with a hint. If the upload fails, the clip stays on screen with *Try again* until it is sent or discarded.

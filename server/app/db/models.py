@@ -7,7 +7,9 @@ from pydantic import BaseModel
 Category = Literal[
     "pothole", "open_manhole", "flooded_drain", "broken_streetlight", "blocked_sidewalk", "other", "sos"
 ]
-Status = Literal["open", "verified", "assigned", "fixed"]
+# "rejected": a person at the dashboard looked at a new ticket and decided it is not real. It is hidden everywhere
+# (public list, map, routes) but kept, and can be reopened.
+Status = Literal["open", "verified", "assigned", "fixed", "rejected"]
 
 
 class Report(BaseModel):

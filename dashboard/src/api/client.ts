@@ -8,9 +8,10 @@ const BASE = ENV.apiBaseUrl.replace(/\/+$/, "");
 export const photoUrl = (path: string) => BASE + path;
 export const videoUrl = photoUrl;
 
-// Newest first. include_sos: the public list leaves SOS tickets out; the dashboard is where they are answered.
+// Newest first. The public list leaves SOS and rejected tickets out; the dashboard is where they are answered
+// and where a rejected one can be reopened.
 export async function listReports(): Promise<Report[]> {
-  const body = await call<unknown>("/reports?include_sos=true");
+  const body = await call<unknown>("/reports?include_sos=true&include_rejected=true");
   if (!Array.isArray(body)) throw new Error("Unexpected /reports response");
   return body as Report[];
 }

@@ -92,3 +92,47 @@ def test_an_sos_is_never_a_no_go_zone_for_routes():
     assert len(hazards.avoid_polygons([report, other], [])["coordinates"]) == 1
     line = [[121.0244, 14.5546], [121.0244, 14.5548]]
     assert hazards.near_route(line, [report, other]) == ["h"]
+
+
+def photo_report(client, **fields):
+    return client.post(
+        "/reports", files={"photo": ("a.jpg", JPEG, "image/jpeg")}, data={**AYALA, "category": "pothole", **fields}
+    ).json()["id"]
+
+
+def test_a_new_ticket_can_be_confirmed_to_verified_or_rejected_and_reopened(client):
+    first, second = photo_report(client), photo_report(client)
+    assert client.patch(f"/reports/{first}", json={"status": "verified"}).json()["status"] == "verified"
+    assert client.patch(f"/reports/{second}", json={"status": "rejected"}).json()["status"] == "rejected"
+    assert client.patch(f"/reports/{second}", json={"status": "open"}).json()["status"] == "open", "reopened"
+    assert client.patch(f"/reports/{second}", json={"status": "nonsense"}).status_code == 422
+
+
+def test_a_rejected_ticket_is_hidden_from_the_public_list_but_kept_and_still_readable(client):
+    keep, drop = photo_report(client), photo_report(client)
+    client.patch(f"/reports/{drop}", json={"status": "rejected"})
+    assert [r["id"] for r in client.get("/reports").json()] == [keep]
+    everything = client.get("/reports", params={"include_rejected": "true"}).json()
+    assert sorted(r["id"] for r in everything) == sorted([keep, drop])
+    got = client.get(f"/reports/{drop}").json()
+    assert got["status"] == "rejected" and got["photo_url"], "its data is still there"
+    assert client.get(got["photo_url"]).status_code == 200, "and so is its file"
+
+
+def test_sos_and_rejected_filters_are_independent(client):
+    sos_id = sos(client).json()["id"]
+    client.patch(f"/reports/{sos_id}", json={"status": "rejected"})
+    assert client.get("/reports", params={"include_sos": "true"}).json() == [], "a rejected SOS stays hidden"
+    both = client.get("/reports", params={"include_sos": "true", "include_rejected": "true"}).json()
+    assert [r["id"] for r in both] == [sos_id]
+    assert client.get("/reports", params={"include_rejected": "true"}).json() == [], "rejected, but still an SOS"
+
+
+def test_a_rejected_report_is_not_a_no_go_zone_until_it_is_reopened():
+    report = {"id": "h", "category": "pothole", "status": "open", "lat": 14.5547, "lng": 121.0244}
+    line = [[121.0244, 14.5546], [121.0244, 14.5548]]
+    assert hazards.avoid_polygons([report], []) is not None
+    rejected = {**report, "status": "rejected"}
+    assert hazards.avoid_polygons([rejected], []) is None
+    assert hazards.near_route(line, [rejected]) == []
+    assert hazards.near_route(line, [{**rejected, "status": "open"}]) == ["h"]

@@ -275,6 +275,9 @@
 [data-status="fixed"] {
   --c: var(--ok);
 }
+[data-status="rejected"] {
+  --c: var(--muted);
+}
 .dot[data-status] {
   background: var(--c);
 }
@@ -1445,4 +1448,70 @@ details[open] > summary.panel-title::after {
   .sos-thumb {
     animation: none;
   }
+}
+
+/* Review card: the first look at a ticket. Confirm (navy) sends it on, Reject (red outline) hides it. */
+.triage {
+  margin: 14px 0 6px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--warn);
+  border-radius: var(--radius-card);
+  background: var(--paper-deep);
+}
+.triage[data-sos] {
+  border-left-color: var(--sos);
+  background: color-mix(in srgb, var(--sos) 6%, #fff);
+}
+.triage.rejected {
+  border-left-color: var(--muted);
+}
+.triage-head {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+.triage-head b {
+  font: 600 13px var(--grot);
+}
+.triage-head span,
+.triage-ask {
+  color: var(--muted);
+  font-size: 12px;
+}
+.triage-ask {
+  margin: 0 0 10px;
+  color: var(--text);
+}
+.triage-actions {
+  display: flex;
+  gap: 8px;
+}
+.triage-actions .btn {
+  flex: 1;
+  width: auto;
+  min-height: 36px;
+}
+.btn.confirm {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+.btn.confirm:hover {
+  background: color-mix(in srgb, var(--accent) 88%, #fff);
+}
+.btn.reject {
+  border-color: color-mix(in srgb, var(--danger) 45%, #fff);
+  color: var(--danger);
+}
+.btn.reject:hover {
+  background: color-mix(in srgb, var(--danger) 7%, #fff);
+}
+.btn.danger {
+  border-color: var(--danger);
+  background: var(--danger);
+  color: #fff;
+}
+.ticket.rejected {
+  opacity: 0.6;
 }
