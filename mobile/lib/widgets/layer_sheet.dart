@@ -3,15 +3,13 @@
 import 'package:flutter/material.dart';
 
 import '../config/env.dart';
-import '../layers/hubs_layer.dart';
 import '../state/layers_state.dart';
 import '../theme.dart';
 
 class LayerSheet extends StatelessWidget {
-  const LayerSheet({super.key, required this.layers, this.legend = const []});
+  const LayerSheet({super.key, required this.layers});
 
   final LayersState layers;
-  final List<({IconData icon, String label})> legend; // the transit hubs' glyphs (layers/hubs_layer.dart)
 
   @override
   Widget build(BuildContext context) {
@@ -22,39 +20,6 @@ class LayerSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              title: const Text(
-                'Transit terminals and stops',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-              ),
-              value: layers.hubsOn,
-              onChanged: layers.setHubs,
-            ),
-            if (layers.hubsOn && legend.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Wrap(
-                  spacing: 12,
-                  runSpacing: 4,
-                  children: [
-                    for (final e in legend)
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(2),
-                            decoration: const BoxDecoration(color: hubBlue, borderRadius: BorderRadius.all(Radius.circular(3))),
-                            child: Icon(e.icon, size: 12, color: Colors.white),
-                          ),
-                          const SizedBox(width: 5),
-                          Text(e.label, style: const TextStyle(fontSize: 11, color: muted)),
-                        ],
-                      ),
-                  ],
-                ),
-              ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               dense: true,

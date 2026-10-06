@@ -436,11 +436,6 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   // "Walk here" on a hub: it becomes the destination, so the route card and line work as for a searched place.
   void _walkTo(Hub hub) => _trip.setDestination(hub.place, from: _near());
 
-  void _nearbyHubs() {
-    _loadHubs(); // if the first try failed
-    showNearbyHubs(context, _hubs, from: _near(), onWalk: _walkTo);
-  }
-
   void _openReport(String id) {
     final report = _reports.where((r) => r.id == id).firstOrNull;
     if (report != null && mounted) showReportSheet(context, report);
@@ -635,7 +630,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            _LocateRow(location: _location, onLocate: _locate, onTransit: _nearbyHubs),
+                            _LocateRow(location: _location, onLocate: _locate),
                             const SizedBox(height: 10),
                             _ReportButton(onPressed: _report),
                             const SizedBox(height: 10),
@@ -648,7 +643,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                                   listenable: _trip,
                                   builder: (context, _) =>
                                       _trip.destination == null
-                                      ? LayerSheet(layers: _layers, legend: hubLegend(_hubs))
+                                      ? LayerSheet(layers: _layers)
                                       : _trip.started
                                       ? NavBar(trip: _trip)
                                       : RouteCard(trip: _trip),
@@ -672,11 +667,10 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
 
 // The GPS accuracy (or why there is no pin) next to the locate button.
 class _LocateRow extends StatelessWidget {
-  const _LocateRow({required this.location, required this.onLocate, required this.onTransit});
+  const _LocateRow({required this.location, required this.onLocate});
 
   final LocationState location;
   final VoidCallback onLocate;
-  final VoidCallback onTransit;
 
   @override
   Widget build(BuildContext context) {
@@ -711,15 +705,6 @@ class _LocateRow extends StatelessWidget {
                     if (action != null) TextButton(onPressed: onAction, child: Text(action)),
                   ],
                 ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            ChipCard(
-              padding: EdgeInsets.zero,
-              child: IconButton(
-                tooltip: 'Transit near me',
-                onPressed: onTransit,
-                icon: const Icon(Icons.directions_bus_outlined, size: 22, color: navy),
               ),
             ),
             const SizedBox(width: 10),
