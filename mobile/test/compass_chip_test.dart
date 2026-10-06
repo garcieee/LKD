@@ -7,12 +7,11 @@ Future<void> show(
   WidgetTester tester, {
   required ValueNotifier<double> bearing,
   required ValueNotifier<bool> following,
-  VoidCallback? onTap,
 }) => tester.pumpWidget(
   MaterialApp(
     home: Scaffold(
       body: Center(
-        child: CompassChip(bearing: bearing, following: following, onTap: onTap ?? () {}),
+        child: CompassChip(bearing: bearing, following: following),
       ),
     ),
   ),
@@ -54,32 +53,24 @@ void main() {
     expect(arrowSin(tester), closeTo(1, 1e-9));
   });
 
-  testWidgets('following shows in the colours and the label, and a tap calls back', (tester) async {
+  testWidgets('following shows in the colours and the label', (tester) async {
     final bearing = ValueNotifier(0.0), following = ValueNotifier(false);
-    var taps = 0;
-    await show(tester, bearing: bearing, following: following, onTap: () => taps++);
+    await show(tester, bearing: bearing, following: following);
     Color? fill() => tester
         .widget<Material>(find.descendant(of: find.byType(CompassChip), matching: find.byType(Material)).first)
         .color;
     expect(fill(), Colors.white);
-    expect(find.bySemanticsLabel(RegExp('Tap to follow your heading')), findsOneWidget);
+    expect(find.bySemanticsLabel(RegExp('Following your heading')), findsNothing);
 
     following.value = true;
     await tester.pump();
     expect(fill(), navy);
     expect(find.bySemanticsLabel(RegExp('Following your heading')), findsOneWidget);
-
-    await tester.tap(find.byType(CompassChip));
-    expect(taps, 1);
   });
 
-  testWidgets('a screen reader can press it, and a thumb can find it', (tester) async {
-    final handle = tester.ensureSemantics();
-    var taps = 0;
-    await show(tester, bearing: ValueNotifier(0.0), following: ValueNotifier(false), onTap: () => taps++);
-    tester.semantics.tap(find.semantics.byLabel(RegExp('^Compass')));
-    expect(taps, 1);
-    expect(tester.getSize(find.byType(InkWell)).height, greaterThanOrEqualTo(48));
-    handle.dispose();
+  testWidgets('it is a display, not a button, and still tall enough to read', (tester) async {
+    await show(tester, bearing: ValueNotifier(0.0), following: ValueNotifier(true));
+    expect(find.descendant(of: find.byType(CompassChip), matching: find.byType(InkWell)), findsNothing);
+    expect(tester.getSize(find.byType(CompassChip)).height, greaterThanOrEqualTo(48));
   });
 }

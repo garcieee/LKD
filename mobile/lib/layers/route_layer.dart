@@ -1,9 +1,10 @@
-// The route: a navy line with a white casing, under the report and destination pins. map/map_view.dart draws
-// what the user has chosen (state/trip_state.dart): a walking route, or a commute option made of several legs,
-// where each walking leg is a thin grey line and each ride the thick navy one.
+// The route: a thick blue line with a white casing and white arrowheads pointing the way, under the report and
+// destination pins. map/map_view.dart draws what the user has chosen (state/trip_state.dart): a walking route, or
+// a commute option made of several legs, where each walking leg is a thinner blue line and each ride the navy one.
 import 'dart:convert';
 import 'dart:ui' show Color;
 
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 import '../api/api_client.dart';
@@ -11,13 +12,15 @@ import '../theme.dart';
 
 const _id = 'route';
 const _casingId = 'route-casing';
+const _chevronId = 'route-chevrons';
+const _chevronImage = 'route-chevron';
 
 String _hex(Color c) => '#${(c.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0')}';
 
 String get _navy => _hex(navy);
-String get _grey => _hex(muted);
+String get _blue => _hex(routeBlue);
 
-// A commute's walking legs carry thin: true; the walking route and every ride do not.
+// A commute's walking legs carry thin: true; the walking route and every ride do not. A ride carries a kind.
 final _thin = [
   '==',
   ['get', 'thin'],
@@ -41,6 +44,31 @@ Map<String, Object> _line(String id, Object color, List<Object> width) => {
   'source': _id,
   'layout': {'line-cap': 'round', 'line-join': 'round'},
   'paint': {'line-color': color, 'line-width': width},
+};
+
+// White arrowheads along the line, turned the way the route goes (the line runs from the user to the destination).
+final _chevrons = {
+  'id': _chevronId,
+  'type': 'symbol',
+  'source': _id,
+  'layout': {
+    'symbol-placement': 'line',
+    'symbol-spacing': 38,
+    'icon-image': _chevronImage,
+    'icon-size': [
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      12,
+      ['case', _thin, 0.28, 0.35],
+      16,
+      ['case', _thin, 0.5, 0.65],
+      19,
+      ['case', _thin, 0.75, 1.0],
+    ],
+    'icon-allow-overlap': true,
+    'icon-ignore-placement': true,
+  },
 };
 
 /// The GeoJSON for a walking route.
@@ -74,7 +102,7 @@ Future<void> showCommute(MapboxMap map, CommuteOption? option) =>
 /// cleared them. Raw style-spec JSON, like reports_layer.dart.
 Future<void> _draw(MapboxMap map, Map<String, Object>? geojson) async {
   if (geojson == null) {
-    for (final id in [_id, _casingId]) {
+    for (final id in [_chevronId, _id, _casingId]) {
       if (await map.styleLayerExists(id)) await map.removeStyleLayer(id);
     }
     if (await map.styleSourceExists(_id)) await map.removeStyleSource(_id);
@@ -93,9 +121,9 @@ Future<void> _draw(MapboxMap map, Map<String, Object>? geojson) async {
           _casingId,
           '#ffffff',
           _widths([
-            [12, 6, 4],
-            [16, 10, 6],
-            [19, 14, 9],
+            [12, 8, 6],
+            [16, 15, 10],
+            [19, 22, 15],
           ]),
         ),
       ),
@@ -103,21 +131,36 @@ Future<void> _draw(MapboxMap map, Map<String, Object>? geojson) async {
     );
   }
   if (!await map.styleLayerExists(_id)) {
-    final color = ['case', _thin, _grey, _navy];
+    // A ride (it has a kind) is navy; a walk, the whole route or a leg of a commute, is blue.
+    final color = [
+      'case',
+      _thin,
+      _blue,
+      ['has', 'kind'],
+      _navy,
+      _blue,
+    ];
     await map.addStyleLayer(
       jsonEncode(
         _line(
           _id,
           color,
           _widths([
-            [12, 3, 2],
-            [16, 6, 3],
-            [19, 9, 5],
+            [12, 5, 4],
+            [16, 10, 7],
+            [19, 16, 11],
           ]),
         ),
       ),
       below,
     );
+  }
+  if (!await map.styleLayerExists(_chevronId)) {
+    if (!await map.hasStyleImage(_chevronImage)) {
+      final bytes = (await rootBundle.load('assets/route_chevron.png')).buffer.asUint8List();
+      await map.addImage(_chevronImage, 3, StyleImage.bytes(bytes));
+    }
+    await map.addStyleLayer(jsonEncode(_chevrons), below);
   }
   await map.setStyleSourceProperty(_id, 'data', jsonEncode(geojson));
 }

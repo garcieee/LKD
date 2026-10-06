@@ -1,5 +1,6 @@
-// The trip card over the map: where to, then either the suggested commutes or the walking routes (mode toggle,
-// and what the chosen route is like: length, time, and how many reported hazards it still passes).
+// The trip card over the map: where to, then either the trip options (walk-ride-walk commutes) or the walking routes
+// (mode toggle, what the chosen route is like: length, time, how many reported hazards it still passes, and Start
+// for a walk all the way).
 import 'package:flutter/material.dart';
 
 import '../../api/api_client.dart';
@@ -85,12 +86,20 @@ class RouteCard extends StatelessWidget {
                     trip.planned ? 'Finding the route…' : 'Waiting for your location…',
                     style: const TextStyle(fontSize: 12, color: muted),
                   ),
+                const SizedBox(height: 10),
+                // Not commuting: walk the whole way in the picked mode. Otherwise look at the ways to ride.
+                FilledButton.icon(
+                  onPressed: trip.canStart ? trip.start : null,
+                  style: FilledButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: radiusButton)),
+                  icon: const Icon(Icons.directions_walk, size: 18),
+                  label: const Text('Start walking'),
+                ),
                 if (trip.hasCommute) ...[
-                  const SizedBox(height: 10),
-                  FilledButton(
+                  const SizedBox(height: 6),
+                  OutlinedButton(
                     onPressed: route == null ? null : trip.toCommute,
-                    style: FilledButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: radiusButton)),
-                    child: const Text('Next: ride options'),
+                    style: OutlinedButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: radiusButton)),
+                    child: const Text('Next: trip options'),
                   ),
                 ],
               ],
