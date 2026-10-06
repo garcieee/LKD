@@ -1,7 +1,7 @@
 """The report shape. Mirrored by dashboard/src/types/api.ts and mobile/lib/api/api_client.dart."""
 from typing import Literal
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, Field, model_validator
 
 # "sos" is not a hazard a person picks: only POST /sos files one, from the app's hold-to-record button.
 # The four after "blocked_sidewalk" are accessibility barriers for persons with disability (services/hazards.py).
@@ -28,6 +28,7 @@ class Report(BaseModel):
     photo_url: str  # path on this server, e.g. /photos/<id>.jpg. Empty for an SOS, which has a video instead
     video_url: str | None = None  # SOS only: path on this server, e.g. /videos/<id>.mp4
     sos_kind: SosKind | None = None  # SOS only: who must respond, set at the dashboard; None until sorted
+    handler: str | None = None  # who was assigned to fix it, picked at the dashboard once the ticket is verified
     status: Status
     created_at: str  # ISO 8601, UTC
     updated_at: str
@@ -39,13 +40,18 @@ class Report(BaseModel):
 
 
 class TicketChange(BaseModel):
-    """PATCH /reports/{id}: a new status, an SOS's kind, or both."""
+    """PATCH /reports/{id}: a new status, an SOS's kind, a handler, or any of them together."""
 
     status: Status | None = None
     sos_kind: SosKind | None = None
+    handler: str | None = Field(None, min_length=1, max_length=60)  # a name, as picked or typed at the dashboard
 
     @model_validator(mode="after")
     def _not_empty(self):
-        if self.status is None and self.sos_kind is None:
-            raise ValueError("Send a status, an sos_kind, or both.")
+        if self.handler is not None:
+            self.handler = self.handler.strip()
+            if not self.handler:
+                raise ValueError("A handler needs a name.")
+        if self.status is None and self.sos_kind is None and self.handler is None:
+            raise ValueError("Send a status, an sos_kind, a handler, or any of them.")
         return self
