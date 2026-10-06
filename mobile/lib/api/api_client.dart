@@ -212,13 +212,14 @@ final api = ApiClient();
 class ApiClient {
   ApiClient({
     http.Client? client,
-    this.base = Env.apiBaseUrl,
+    String base = Env.apiBaseUrl,
     this.timeout = const Duration(seconds: 20),
     this.sosTimeout = const Duration(seconds: 90),
-  }) : _http = client ?? http.Client();
+  }) : base = base.replaceFirst(RegExp(r'/+$'), ''), // "http://host:8000/" would make every call "//reports"
+       _http = client ?? http.Client();
 
   final http.Client _http;
-  final String base;
+  final String base; // no trailing slash
   final Duration timeout; // per call, upload included
   final Duration sosTimeout; // a video over a weak connection: longer than a photo, still one call
 
