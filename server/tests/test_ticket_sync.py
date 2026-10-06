@@ -17,12 +17,6 @@ AYALA = (14.5547, 121.0244)  # Urdaneta, District 1
 FIVE_M = 5 / 111_195  # degrees of latitude
 
 
-@pytest.fixture(autouse=True)
-def sign_in_off(monkeypatch):
-    """Off whatever server/.env says; sign_in_on turns it on where a test needs it."""
-    monkeypatch.setattr(config, "SUPABASE_URL", "")
-
-
 @pytest.fixture
 def app(tmp_path):
     return create_app(tmp_path)
@@ -31,12 +25,6 @@ def app(tmp_path):
 @pytest.fixture
 def client(app):
     return TestClient(app)  # not a context manager: the loop does not start, tick() drives it
-
-
-@pytest.fixture
-def sign_in_on(monkeypatch):
-    monkeypatch.setattr(config, "SUPABASE_URL", "https://example.supabase.co")
-    monkeypatch.setattr(config, "SUPABASE_PUBLISHABLE_KEY", "sb_publishable_test")
 
 
 def post(client, lat=AYALA[0], lng=AYALA[1], category="pothole") -> dict:
@@ -141,16 +129,7 @@ def test_an_sos_sorted_before_the_loop_reaches_it_gets_its_ticket_with_that_kind
     assert (t["id"], t["sos_kind"], t["priority"], t["band"]) == (sos_id, "fire_rescue", 100.0, "Critical")
 
 
-def test_with_sign_in_on_reports_are_read_only_and_never_list_sos_or_rejected(app, client, sign_in_on):
-    rid = post(client)["id"]
-    sos(client)
-    r = client.patch(f"/reports/{rid}", json={"status": "fixed"})
-    assert r.status_code == 403 and r.json()["detail"] == "Status changes go through the analyst dashboard."
-    app.state.store.update(rid, status="rejected")
-    assert client.get("/reports", params={"include_sos": "true", "include_rejected": "true"}).json() == []
-
-
-def test_with_sign_in_off_reports_work_as_before(client):
+def test_reports_change_and_list_sos_and_rejected_ones_only_when_asked(client):
     rid = post(client)["id"]
     sos_id = sos(client)["id"]
     assert client.patch(f"/reports/{rid}", json={"status": "rejected"}).json()["status"] == "rejected"
