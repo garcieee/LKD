@@ -163,6 +163,8 @@ class _ReportScreenState extends State<ReportScreen>
         _sosFinish(cancel: false).whenComplete(() {
           if (mounted && _camera == camera) setState(() => _camera = null);
           camera.dispose();
+          // The upload outlasted the call and they are back: nothing else would bring the camera up again.
+          if (mounted && WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) _startCamera();
         });
         return;
       }
