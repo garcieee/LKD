@@ -4,9 +4,10 @@ where it does). Plain dataclasses, no I/O.
 """
 from dataclasses import dataclass
 
-# The six the evaluations in eval/ were built and scored on.
 HAZARDS = ("pothole", "open_manhole", "flooded_drain", "broken_streetlight", "blocked_sidewalk", "other")
-CATEGORIES = HAZARDS
+# Barriers for persons with disability (PWD). They came after the evaluations in eval/, which cover HAZARDS only.
+ACCESSIBILITY = ("missing_ramp", "blocked_tactile_paving", "broken_elevator", "unsafe_sidewalk")
+CATEGORIES = HAZARDS + ACCESSIBILITY
 STATUSES = ("open", "verified", "assigned", "fixed")
 
 

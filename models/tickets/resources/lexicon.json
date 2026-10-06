@@ -29,6 +29,23 @@
       "blocked sidewalk", "nakaparada", "parked on the sidewalk", "illegal parking", "vendor", "vendors", "paninda",
       "tindera", "tindahan", "walkway", "footpath", "pedestrian lane", "walang madaanan"
     ],
+    "missing_ramp": [
+      "walang rampa", "no ramp", "missing ramp", "wheelchair ramp", "pwd ramp", "rampa para sa pwd", "ramp sa bangketa",
+      "sidewalk ramp", "curb cut", "curb cuts", "curb ramp", "kerb cut", "kerb ramp"
+    ],
+    "blocked_tactile_paving": [
+      "tactile", "tactile paving", "tactile tiles", "tactile strip", "tactile path", "tactile blocks", "guide tiles",
+      "yellow tiles", "dilaw na tiles", "tiles para sa bulag"
+    ],
+    "broken_elevator": [
+      "elevator", "elevators", "escalator", "escalators", "sirang elevator", "sira ang elevator", "sirang escalator",
+      "sira ang escalator", "elevator is broken", "escalator is broken", "elevator not working", "escalator not working"
+    ],
+    "unsafe_sidewalk": [
+      "steep", "too steep", "tarik", "matarik", "sobrang tarik", "steep sidewalk", "broken sidewalk",
+      "cracked sidewalk", "uneven sidewalk", "damaged sidewalk", "sirang bangketa", "sira ang bangketa",
+      "basag na bangketa", "bako bakong bangketa", "lubak sa bangketa"
+    ],
     "other": [
       "puno", "tree", "fallen tree", "natumbang puno", "wire", "wires", "kable", "hanging wires", "nakalawit na kable",
       "stray dog", "stray dogs", "aso", "basura", "garbage", "trash", "signage", "karatula", "traffic light",

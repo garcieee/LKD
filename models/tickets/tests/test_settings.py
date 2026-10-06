@@ -1,7 +1,10 @@
 """The settings are the one place numbers live, so check that they hang together."""
 from models.tickets import settings as s
 
-CATEGORIES = {"pothole", "open_manhole", "flooded_drain", "broken_streetlight", "blocked_sidewalk", "other"}
+CATEGORIES = {
+    "pothole", "open_manhole", "flooded_drain", "broken_streetlight", "blocked_sidewalk",
+    "missing_ramp", "blocked_tactile_paving", "broken_elevator", "unsafe_sidewalk", "other",
+}
 
 
 def fresh_report_belief() -> float:
