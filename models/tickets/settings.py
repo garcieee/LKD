@@ -63,3 +63,10 @@ EXPOSURE_DEFAULT = 0.5  # used when the places file is missing
 # ---- classification ----------------------------------------------------------------------------
 URGENT_MIN_PEOPLE = 2  # one "urgent" tap is noise, two independent ones count
 QUALITY_MAX_ACCURACY_M = 50.0  # a worse GPS fix marks the report "needs review" (never rejected)
+FLOOD_MAX_PER_HOUR = 10  # more reports than this from one phone in an hour: "needs review"
+PHOTO_MIN_PX = 320  # a photo smaller than this on its short side: "needs review"
+PHRASE_WEIGHT = 1.5  # a matched phrase is worth more than a matched single word
+HINT_MIN_SCORE = 1.0  # the top category needs at least this much matched evidence to give a hint
+HINT_MIN_MARGIN = 0.5  # ... and this much more than the runner-up
+DANGER_MIN_SCORE = 1.0  # un-negated danger evidence needed to flag a note
+NEGATION_WINDOW = 3  # a negator this many words or fewer before a danger word cancels it

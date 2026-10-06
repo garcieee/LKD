@@ -18,6 +18,20 @@ def test_places_are_within_reach_of_the_city_box_and_every_kind_has_a_weight():
     assert {kind for _, _, kind, _ in places} <= set(s.EXPOSURE_WEIGHTS)
 
 
+def test_the_lexicon_has_every_category_and_only_usable_terms():
+    from models.tickets.classification.classify import tokens
+    from models.tickets.resources.load import load_lexicon
+    from models.tickets.types import CATEGORIES
+
+    lexicon = load_lexicon()
+    assert set(lexicon["categories"]) == set(CATEGORIES)
+    every_term = [t for terms in lexicon["categories"].values() for t in terms] + lexicon["danger"] + lexicon["negators"]
+    assert all(tokens(t) for t in every_term)  # nothing that normalises to nothing
+    for terms in [*lexicon["categories"].values(), lexicon["danger"]]:
+        normal = [" ".join(tokens(t)) for t in terms]
+        assert len(normal) == len(set(normal))  # no repeats inside one list
+
+
 def test_places_file_credits_openstreetmap():
     meta = json.loads((RESOURCES / "places.json").read_text())
     assert "OpenStreetMap" in meta["source"] and "ODbL" in meta["source"]
