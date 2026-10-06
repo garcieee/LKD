@@ -60,4 +60,17 @@ void main() {
     await tester.pump();
     expect(find.text('Place search is busy.'), findsOneWidget);
   });
+
+  testWidgets('a destination set from elsewhere (a transit hub) shows in the field, and clearing it empties it', (tester) async {
+    await mount(tester, (text, near) async => []);
+    trip.setDestination(const Place(label: 'Washington Terminal', lat: 14.55856, lng: 121.01033));
+    await tester.pump();
+    expect(tester.widget<TextField>(find.byType(TextField)).controller!.text, 'Washington Terminal');
+    expect(find.byTooltip('Clear'), findsOneWidget);
+    expect(find.byType(ListTile), findsNothing, reason: 'no suggestions for a chosen place');
+
+    trip.clear();
+    await tester.pump();
+    expect(tester.widget<TextField>(find.byType(TextField)).controller!.text, isEmpty);
+  });
 }
