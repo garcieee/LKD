@@ -341,4 +341,61 @@ void main() {
       expect(routeModes.keys, ['fastest', 'walkable', 'accessible']);
     });
   });
+
+  group('ApiClient.hubs', () {
+    // A hub as GET /transit/hubs sends it (server/app/routers/transit.py).
+    Map<String, dynamic> serverHub({String name = 'Washington Terminal', String kind = 'terminal'}) => {
+      'id': 'washington-terminal',
+      'name': name,
+      'kind': kind,
+      'modes': ['jeepney', 'uv_express'],
+      'lat': 14.55856,
+      'lng': 121,
+      'error_m': 80,
+      'distance_m': null,
+    };
+
+    test('asks for the list and reads each hub', () async {
+      late http.Request got;
+      final api = apiWith(
+        MockClient((req) async {
+          got = req;
+          return jsonResponse([serverHub(), serverHub(name: 'Dian', kind: 'stop')], 200);
+        }),
+      );
+      final hubs = await api.hubs();
+      expect(got.url.path, '/transit/hubs');
+      expect(got.url.queryParameters, {'limit': '50'});
+      expect(hubs.map((h) => h.name), ['Washington Terminal', 'Dian']);
+      expect(hubs.map((h) => h.isTerminal), [true, false]);
+      expect(hubs.first.lat, 14.55856);
+      expect(hubs.first.lng, 121.0, reason: 'a whole number is read as a double');
+      expect(hubs.first.errorM, 80);
+      expect(hubs.first.modesLabel, 'Jeepney · UV Express');
+    });
+
+    test('passes the kind and mode filters along', () async {
+      late http.Request got;
+      final api = apiWith(
+        MockClient((req) async {
+          got = req;
+          return jsonResponse([], 200);
+        }),
+      );
+      expect(await api.hubs(kind: 'terminal', mode: 'p2p_bus', limit: 5), isEmpty);
+      expect(got.url.queryParameters, {'limit': '5', 'kind': 'terminal', 'mode': 'p2p_bus'});
+    });
+
+    test('a hub becomes a Place to walk to; an unknown mode shows as sent', () {
+      final hub = Hub.fromJson({...serverHub(), 'modes': ['jeepney', 'ferry']});
+      expect(hub.place.label, 'Washington Terminal');
+      expect(hub.place.lat, 14.55856);
+      expect(hub.modesLabel, 'Jeepney · ferry');
+    });
+
+    test('a server error is an ApiException', () {
+      final api = apiWith(MockClient((_) async => jsonResponse({'detail': 'Server error.'}, 500)));
+      expect(api.hubs(), apiError('Server error.'));
+    });
+  });
 }
