@@ -30,7 +30,7 @@
       "tindera", "tindahan", "walkway", "footpath", "pedestrian lane", "walang madaanan"
     ],
     "missing_ramp": [
-      "walang rampa", "no ramp", "missing ramp", "wheelchair ramp", "pwd ramp", "rampa para sa pwd", "ramp sa bangketa",
+      "walang rampa", "walang ramp", "no ramp", "missing ramp", "wheelchair ramp", "pwd ramp", "rampa para sa pwd", "ramp sa bangketa",
       "sidewalk ramp", "curb cut", "curb cuts", "curb ramp", "kerb cut", "kerb ramp"
     ],
     "blocked_tactile_paving": [
