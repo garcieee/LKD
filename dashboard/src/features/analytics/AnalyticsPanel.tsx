@@ -1,6 +1,7 @@
 // Insights: backlog funnel, what is breaking, aging, throughput, hotspots, from the polled reports.
 // Docked on the right: the map keeps the other 70% of the screen (phones: a full sheet over the map).
 import { useMemo } from "react";
+import ResizeGrip from "../../panels/ResizeGrip";
 import type { Report } from "../../types/api";
 import { CATEGORY_LABEL, STATUS_LABEL, timeAgo } from "../queue/tickets";
 import { duration, summarize } from "./metrics";
@@ -53,6 +54,7 @@ export default function AnalyticsPanel({ reports, online, now, onClose, onShow }
 
   return (
     <section id="insights" className="insights" aria-labelledby="insights-title">
+      <ResizeGrip />
       <header className="queue-head">
         <h2 id="insights-title" className="panel-title" tabIndex={-1}>
           Insights

@@ -2,6 +2,7 @@
 // heat layer shows that moment; drag back to "Now" to return to live. The past is simulated and the future is a
 // seasonal forecast of it: the panel says so, because nothing here is a count.
 import { useEffect, useRef, useState } from "react";
+import ResizeGrip from "../../panels/ResizeGrip";
 import type { FootfallDistrict } from "../../types/api";
 import { useSeries } from "./useSeries";
 import { WINDOWS, geometry, label, nextPeak, niceMax, slice, ticks, type Box } from "./series";
@@ -14,8 +15,9 @@ type Props = {
   onClose: () => void;
 };
 
-// Drawn at the dock's narrowest width (340 px) so text stays its real size there; wider docks scale it up.
-const BOX: Box = { w: 320, h: 200, l: 26, r: 6, t: 14, b: 22 };
+// The chart is drawn in units that are px at the dock's narrowest width (340), so text stays its real size there;
+// BOX.w is replaced with the real width as the dock grows.
+const BASE: Box = { w: 320, h: 200, l: 26, r: 6, t: 14, b: 22 };
 
 const Icon = ({ d }: { d: string }) => (
   <svg viewBox="0 0 20 20" aria-hidden="true">
@@ -28,6 +30,20 @@ export default function ForecastPanel({ districts, hourKey, cursor, onCursor, on
   const [winId, setWinId] = useState("week");
   const { data, error } = useSeries(true, zone, hourKey);
   const svg = useRef<SVGSVGElement>(null);
+  const panel = useRef<HTMLElement>(null);
+
+  // Dragging the dock wider does two things: text and controls grow a little (--k, a zoom on the body), and the
+  // chart gets more width to draw in, at the same height, so it stretches sideways instead of just growing taller.
+  const [dockW, setDockW] = useState(340);
+  useEffect(() => {
+    const el = panel.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setDockW(el.offsetWidth));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const k = Math.min(1.8, 1 + Math.max(0, dockW / 340 - 1) / 2);
+  const BOX = { ...BASE, w: Math.max(300, Math.round(dockW / k - 28)) }; // 28: the body's side padding
 
   const win = WINDOWS.find((w) => w.id === winId) ?? WINDOWS[1];
   const { pts, nowIdx } = data ? slice(data.points, win) : { pts: [], nowIdx: 0 };
@@ -59,7 +75,8 @@ export default function ForecastPanel({ districts, hourKey, cursor, onCursor, on
   const zoneLabel = zone === "all" ? "All of Makati" : (districts.find((d) => d.id === zone)?.name ?? zone).replace(/ \(.*\)$/, "");
 
   return (
-    <section id="forecast" className="insights forecast" aria-labelledby="forecast-title">
+    <section id="forecast" className="insights forecast" aria-labelledby="forecast-title" ref={panel} style={{ "--k": k } as React.CSSProperties}>
+      <ResizeGrip />
       <header className="queue-head">
         <h2 id="forecast-title" className="panel-title" tabIndex={-1}>
           Forecast

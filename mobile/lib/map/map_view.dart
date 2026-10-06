@@ -17,6 +17,7 @@ import '../features/search/place_search.dart';
 import '../features/search/search_bar.dart';
 import '../features/transfer_walk/hub_picker.dart';
 import '../features/transfer_walk/route_card.dart';
+import '../layers/buildings_layer.dart';
 import '../layers/congestion_layer.dart';
 import '../layers/destination_layer.dart';
 import '../layers/hubs_layer.dart';
@@ -63,12 +64,16 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     infiniteBounds: false,
   );
 
+  // The tilt every camera move ends on: flat in 2D.
+  bool _threeDShown = true; // what the camera and the buildings layer last matched
+  double get _pitch => _layers.threeD ? Makati.pitch : 0;
+
   // Where the camera is when the whole city cannot be fitted: Makati.zoom frames it on a ~390px phone.
-  static final _fallback = CameraOptions(
+  CameraOptions get _fallback => CameraOptions(
     center: Point(coordinates: Position(Makati.lng, Makati.lat)),
     zoom: Makati.zoom,
     bearing: 0,
-    pitch: 0,
+    pitch: _pitch,
   );
 
   // The first frames, until the style loads and the whole city is framed.
@@ -84,6 +89,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _layers.addListener(_apply);
     _location.addListener(_syncPuck);
     _location.addListener(_planWhenLocated);
+    _location.addListener(_startNearUser);
     _location.start();
     _trip.addListener(_onTrip);
     _timer = Timer.periodic(congestionRefresh, (_) {
@@ -182,13 +188,33 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     }
   }
 
+  // A walking app opens at street level on the user, not on the whole city: once, on the first fix
+  // inside Makati (whether it comes before or after the map is framed). Reset still returns to the city.
+  bool _startedNearUser = false;
+
+  void _startNearUser() {
+    final map = _map, fix = _location.fix;
+    if (_startedNearUser || map == null || !_framed || fix == null || !inMakati(fix.latitude, fix.longitude)) return;
+    _startedNearUser = true;
+    if (_trip.destination != null) return; // they already picked somewhere: that framing wins
+    map.flyTo(
+      CameraOptions(
+        center: Point(coordinates: Position(fix.longitude, fix.latitude)),
+        zoom: Makati.walkZoom,
+        bearing: 0,
+        pitch: _pitch,
+      ),
+      MapAnimationOptions(duration: 1200),
+    );
+  }
+
   // Both pins on screen; just the destination when we do not know where the user is (or they are
   // outside the city).
   Future<void> _frameTrip(MapboxMap map, Place place) async {
     final fix = _location.fix;
     final dest = Point(coordinates: Position(place.lng, place.lat));
     if (fix == null || !inMakati(fix.latitude, fix.longitude)) {
-      await map.flyTo(CameraOptions(center: dest, zoom: 16, bearing: 0, pitch: 0), MapAnimationOptions(duration: 1000));
+      await map.flyTo(CameraOptions(center: dest, zoom: 16, bearing: 0, pitch: _pitch), MapAnimationOptions(duration: 1000));
       return;
     }
     await _fit(map, [Point(coordinates: Position(fix.longitude, fix.latitude)), dest]);
@@ -204,7 +230,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     );
     // Points close together would zoom to street-corner level: stop at 17.
     final zoom = fit.zoom;
-    final camera = zoom != null && zoom.isFinite ? CameraOptions(center: fit.center, zoom: math.min(zoom, 17), bearing: 0, pitch: 0) : fit;
+    final camera = zoom != null && zoom.isFinite ? CameraOptions(center: fit.center, zoom: math.min(zoom, 17), bearing: 0, pitch: _pitch) : fit;
     await map.flyTo(camera, MapAnimationOptions(duration: 1000));
   }
 
@@ -224,9 +250,9 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     map?.flyTo(
       CameraOptions(
         center: Point(coordinates: Position(fix.longitude, fix.latitude)),
-        zoom: 17,
+        zoom: Makati.walkZoom,
         bearing: 0,
-        pitch: 0,
+        pitch: _pitch,
       ),
       MapAnimationOptions(duration: 1000),
     );
@@ -321,6 +347,20 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     } catch (e) {
       debugPrint('map layers: $e'); // a failed refresh must not take the app down
     }
+    try {
+      final threeD = _layers.threeD;
+      if (threeD != _threeDShown) {
+        _threeDShown = threeD;
+        await map.easeTo(CameraOptions(pitch: _pitch), MapAnimationOptions(duration: 600));
+      }
+      if (threeD) {
+        await addBuildings(map); // no-op once there
+      } else {
+        await removeBuildings(map);
+      }
+    } catch (e) {
+      debugPrint('buildings layer: $e'); // a flat map is fine
+    }
   }
 
   Future<void> _onMapCreated(MapboxMap map) async {
@@ -333,7 +373,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     await Future.wait([
       map.logo.updateSettings(LogoSettings(marginBottom: lift)),
       map.attribution.updateSettings(AttributionSettings(marginBottom: lift)),
-      map.compass.updateSettings(CompassSettings(enabled: false)), // under the status bar; Reset squares the map up
+      map.compass.updateSettings(CompassSettings(enabled: false)), // under the status bar; Reset squares the map up and restores the tilt
       map.scaleBar.updateSettings(ScaleBarSettings(enabled: false)),
     ]);
     await _ready();
@@ -343,7 +383,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   Future<void> _ready() async {
     final map = _map;
     if (map == null || !await map.isStyleLoaded()) return;
-    _apply();
+    _apply(); // also redraws the buildings a new style dropped
     _loadReports();
     _loadHubs();
     _puckOn = false; // a new style drops the puck
@@ -355,6 +395,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
       if (!_framed) {
         _framed = true;
         await _frame(map, animate: false);
+        _startNearUser(); // the fix may have arrived first
       }
     } catch (e) {
       debugPrint('camera lock: $e');
@@ -385,7 +426,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
         maxZoom: Makati.maxZoom,
       ),
     );
-    final camera = fits ? fit : _fallback;
+    final camera = fits ? CameraOptions(center: fit.center, zoom: fit.zoom, bearing: 0, pitch: _pitch) : _fallback;
     if (animate) {
       await map.flyTo(camera, MapAnimationOptions(duration: 1200));
     } else {

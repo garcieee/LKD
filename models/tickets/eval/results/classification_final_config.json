@@ -1,0 +1,150 @@
+{
+  "configs": {
+    "hybrid": {
+      "danger": {
+        "f1": 0.16232641797205372,
+        "f2": 0.09513312378885612,
+        "recall90": 0.18175289316436177
+      },
+      "hint": {
+        "min_conf": 0.6356169677522787
+      },
+      "spec": {
+        "category": {
+          "C": 30.0,
+          "lex_weight": 2.0
+        },
+        "danger": {
+          "C": 30.0,
+          "lex_weight": 0.5
+        },
+        "kind": "hybrid"
+      }
+    },
+    "lexicon_v0": {
+      "danger": {
+        "f1": 1.0,
+        "f2": 1.0,
+        "recall90": 0.0
+      },
+      "hint": {
+        "min_margin": 0.0,
+        "min_score": 1.0
+      },
+      "spec": {
+        "kind": "lexicon",
+        "lexicon": "v0",
+        "variant": null
+      }
+    },
+    "lexicon_v1": {
+      "danger": {
+        "f1": 1.0,
+        "f2": 1.0,
+        "recall90": 0.0
+      },
+      "hint": {
+        "min_margin": 0.0,
+        "min_score": 1.0
+      },
+      "spec": {
+        "kind": "lexicon",
+        "lexicon": "v1",
+        "variant": null
+      }
+    },
+    "lexicon_v1+repeats+prefix+suffix+typo1_strict": {
+      "danger": {
+        "f1": 1.0,
+        "f2": 1.0,
+        "recall90": 0.0
+      },
+      "hint": {
+        "min_margin": 0.0,
+        "min_score": 1.0
+      },
+      "spec": {
+        "kind": "lexicon",
+        "lexicon": "v1",
+        "variant": {
+          "prefix": true,
+          "squeeze": true,
+          "suffix": true,
+          "typo": true,
+          "typo_min_len": 7,
+          "typo_same_first": true
+        }
+      }
+    },
+    "logistic_regression": {
+      "danger": {
+        "f1": 0.18899553302673747,
+        "f2": 0.18899553302673747,
+        "recall90": 0.22138461303387977
+      },
+      "hint": {
+        "min_conf": 0.8974598378661661
+      },
+      "spec": {
+        "category": {
+          "C": 10000.0
+        },
+        "danger": {
+          "C": 100.0
+        },
+        "kind": "lr"
+      }
+    },
+    "naive_bayes": {
+      "danger": {
+        "f1": 0.47104316347706354,
+        "f2": 0.029932617244882144,
+        "recall90": 0.11332995288863876
+      },
+      "hint": {
+        "min_conf": 0.5306791731581284
+      },
+      "spec": {
+        "category": {
+          "alpha": 0.3,
+          "variant": "complement"
+        },
+        "danger": {
+          "alpha": 0.03,
+          "variant": "multinomial"
+        },
+        "kind": "nb"
+      }
+    }
+  },
+  "meta": {
+    "git_commit": "1f95006",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T13:39:08+00:00"
+  },
+  "refit": "train+validation (learned models only)",
+  "split": {
+    "fractions": [
+      0.75,
+      0.25
+    ],
+    "seed": 4,
+    "train_families": 60,
+    "train_rows": 1120,
+    "validation_danger_families": 5,
+    "validation_danger_share": 0.21578947368421053,
+    "validation_families": 20,
+    "validation_families_by_category": {
+      "blocked_sidewalk": 2,
+      "broken_streetlight": 3,
+      "flooded_drain": 3,
+      "none": 5,
+      "open_manhole": 3,
+      "other": 2,
+      "pothole": 2
+    },
+    "validation_rows": 380
+  }
+}

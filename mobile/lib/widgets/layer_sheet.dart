@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 import '../config/env.dart';
+import '../layers/hubs_layer.dart';
 import '../state/layers_state.dart';
 import '../theme.dart';
 
@@ -10,7 +11,7 @@ class LayerSheet extends StatelessWidget {
   const LayerSheet({super.key, required this.layers, this.legend = const []});
 
   final LayersState layers;
-  final List<({Color color, String label})> legend; // the transit hubs' colours (layers/hubs_layer.dart)
+  final List<({IconData icon, String label})> legend; // the transit hubs' glyphs (layers/hubs_layer.dart)
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +44,9 @@ class LayerSheet extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Container(
-                            width: 10,
-                            height: 10,
-                            decoration: BoxDecoration(color: e.color, shape: BoxShape.circle),
+                            padding: const EdgeInsets.all(2),
+                            decoration: const BoxDecoration(color: hubBlue, borderRadius: BorderRadius.all(Radius.circular(3))),
+                            child: Icon(e.icon, size: 12, color: Colors.white),
                           ),
                           const SizedBox(width: 5),
                           Text(e.label, style: const TextStyle(fontSize: 11, color: muted)),
@@ -63,6 +64,16 @@ class LayerSheet extends StatelessWidget {
               ),
               value: layers.congestionOn,
               onChanged: layers.setCongestion,
+            ),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              title: const Text(
+                '3D map',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+              ),
+              value: layers.threeD,
+              onChanged: layers.setThreeD,
             ),
             Row(
               children: [

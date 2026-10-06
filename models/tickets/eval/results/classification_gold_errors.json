@@ -1,0 +1,939 @@
+{
+  "best_category_model": "logistic_regression",
+  "best_danger_model": "hybrid",
+  "category_mistakes": [
+    {
+      "id": "gd-0039",
+      "predicted": "flooded_drain",
+      "slices": [
+        "(no slice)"
+      ],
+      "text": "Cracked open na naman ang semento sa kanto ng Zobel at Pasong Tamo, ilang beses na tinapalan.",
+      "true": "pothole"
+    },
+    {
+      "id": "gd-0044",
+      "predicted": "blocked_sidewalk",
+      "slices": [
+        "multi-hazard"
+      ],
+      "text": "Sidewalk is also blocked and the lights flicker, but what we want addressed first is the garbage truck that never comes, the pile is now taller than a person.",
+      "true": "other"
+    },
+    {
+      "id": "gd-0094",
+      "predicted": "flooded_drain",
+      "slices": [
+        "caps-rant"
+      ],
+      "text": "ANO BA NAMAN YAN?!? SINASAYANG NIYO LANG ANG ORAS NAMIN, STILL NO ACTION!!!",
+      "true": "none"
+    },
+    {
+      "id": "gd-0110",
+      "predicted": "other",
+      "slices": [
+        "(no slice)"
+      ],
+      "text": "Road surface along Kamagong St is falling apart near the intersection, there are about five holes within one block.",
+      "true": "pothole"
+    },
+    {
+      "id": "gd-0111",
+      "predicted": "other",
+      "slices": [
+        "other-language"
+      ],
+      "text": "Dako ang buho sa dalan sa atubangan sa eskwelahan, kinahanglan nang ayuhon.",
+      "true": "pothole"
+    },
+    {
+      "id": "gd-0124",
+      "predicted": "other",
+      "slices": [
+        "implicit"
+      ],
+      "text": "Lumubog ang gulong at humampas ang underside ng kotse namin sa semento pagdaan sa Kalayaan kagabi, may tumutulo nang langis ngayon.",
+      "true": "pothole"
+    },
+    {
+      "id": "gd-0140",
+      "predicted": "other",
+      "slices": [
+        "(no slice)"
+      ],
+      "text": "A motorcycle skidded on the broken asphalt near the Guadalupe bridge and the rider hit the curb, he was limping when he stood up.",
+      "true": "pothole"
+    },
+    {
+      "id": "gd-0198",
+      "predicted": "flooded_drain",
+      "slices": [
+        "(no slice)"
+      ],
+      "text": "Naglalaglagan ang aspalto sa kalsada namin sa Singkamas tuwing umuulan, parang binubungkal.",
+      "true": "pothole"
+    },
+    {
+      "id": "gd-0220",
+      "predicted": "other",
+      "slices": [
+        "(no slice)"
+      ],
+      "text": "Ang sakit sa mata ng sirang kalsada sa Bangkal, parang binomba, sana mapalitan na ng bagong semento.",
+      "true": "pothole"
+    },
+    {
+      "id": "gd-0230",
+      "predicted": "other",
+      "slices": [
+        "sarcasm"
+      ],
+      "text": "Wow, three months and counting. Truly the most responsive city ever.",
+      "true": "none"
+    },
+    {
+      "id": "gd-0293",
+      "predicted": "open_manhole",
+      "slices": [
+        "(no slice)"
+      ],
+      "text": "Pothole the size of a manhole cover on Chino Roces, right where the jeepneys turn.",
+      "true": "pothole"
+    },
+    {
+      "id": "gd-0307",
+      "predicted": "flooded_drain",
+      "slices": [
+        "implicit"
+      ],
+      "text": "I am late for work again because the usual path for pedestrians on Arnaiz is full of crates and wooden benches.",
+      "true": "blocked_sidewalk"
+    },
+    {
+      "id": "gd-0319",
+      "predicted": "none",
+      "slices": [
+        "other-language"
+      ],
+      "text": "May buho sa dalan malapit sa simbahan sang Guadalupe, palihog ayuha.",
+      "true": "pothole"
+    },
+    {
+      "id": "gd-0366",
+      "predicted": "blocked_sidewalk",
+      "slices": [
+        "(no slice)"
+      ],
+      "text": "Two of the four lamps in the Ayala Triangle walkway are not working.",
+      "true": "broken_streetlight"
+    },
+    {
+      "id": "gd-0389",
+      "predicted": "none",
+      "slices": [
+        "typo"
+      ],
+      "text": "open manhoel on Jupiter, a boy fell in this morning, pls send help",
+      "true": "open_manhole"
+    }
+  ],
+  "configs": {
+    "hybrid": {
+      "danger_false_negatives_by_slice": {
+        "caps-rant": 1,
+        "multi-hazard": 1,
+        "other-language": 1,
+        "sarcasm": 2
+      },
+      "danger_false_positives_by_slice": {
+        "(no slice)": 7,
+        "caps-rant": 1,
+        "code-switch": 1,
+        "implicit": 4,
+        "keyboard-artifact": 1,
+        "long": 2,
+        "negation": 3
+      },
+      "lowest_accuracy_slices": [
+        {
+          "accuracy": 0.4,
+          "n": 20,
+          "slice": "multi-hazard"
+        },
+        {
+          "accuracy": 0.44,
+          "n": 25,
+          "slice": "implicit"
+        },
+        {
+          "accuracy": 0.875,
+          "n": 16,
+          "slice": "other-language"
+        },
+        {
+          "accuracy": 0.8888888888888888,
+          "n": 18,
+          "slice": "sarcasm"
+        }
+      ],
+      "lowest_danger_recall_slices": [
+        {
+          "danger_notes": 4,
+          "recall": 0.5,
+          "slice": "sarcasm"
+        },
+        {
+          "danger_notes": 4,
+          "recall": 0.75,
+          "slice": "multi-hazard"
+        },
+        {
+          "danger_notes": 5,
+          "recall": 0.8,
+          "slice": "other-language"
+        },
+        {
+          "danger_notes": 6,
+          "recall": 0.8333333333333334,
+          "slice": "caps-rant"
+        }
+      ],
+      "top_confusions": [
+        {
+          "count": 6,
+          "predicted": "none",
+          "true": "pothole"
+        },
+        {
+          "count": 3,
+          "predicted": "flooded_drain",
+          "true": "open_manhole"
+        },
+        {
+          "count": 3,
+          "predicted": "none",
+          "true": "flooded_drain"
+        },
+        {
+          "count": 3,
+          "predicted": "blocked_sidewalk",
+          "true": "broken_streetlight"
+        },
+        {
+          "count": 2,
+          "predicted": "flooded_drain",
+          "true": "pothole"
+        },
+        {
+          "count": 2,
+          "predicted": "pothole",
+          "true": "open_manhole"
+        },
+        {
+          "count": 2,
+          "predicted": "pothole",
+          "true": "flooded_drain"
+        },
+        {
+          "count": 2,
+          "predicted": "pothole",
+          "true": "broken_streetlight"
+        }
+      ]
+    },
+    "lexicon_v0": {
+      "danger_false_negatives_by_slice": {
+        "(no slice)": 10,
+        "caps-rant": 2,
+        "code-switch": 1,
+        "implicit": 2,
+        "keyboard-artifact": 1,
+        "long": 1,
+        "multi-hazard": 3,
+        "negation": 1,
+        "other-language": 3,
+        "sarcasm": 3
+      },
+      "danger_false_positives_by_slice": {
+        "(no slice)": 2,
+        "code-switch": 2,
+        "implicit": 3,
+        "long": 1,
+        "negation": 3,
+        "typo": 1
+      },
+      "lowest_accuracy_slices": [
+        {
+          "accuracy": 0.32,
+          "n": 25,
+          "slice": "implicit"
+        },
+        {
+          "accuracy": 0.35,
+          "n": 20,
+          "slice": "multi-hazard"
+        },
+        {
+          "accuracy": 0.55,
+          "n": 20,
+          "slice": "typo"
+        },
+        {
+          "accuracy": 0.6875,
+          "n": 16,
+          "slice": "long"
+        }
+      ],
+      "lowest_danger_recall_slices": [
+        {
+          "danger_notes": 4,
+          "recall": 0.25,
+          "slice": "multi-hazard"
+        },
+        {
+          "danger_notes": 4,
+          "recall": 0.25,
+          "slice": "sarcasm"
+        },
+        {
+          "danger_notes": 5,
+          "recall": 0.4,
+          "slice": "other-language"
+        },
+        {
+          "danger_notes": 6,
+          "recall": 0.6666666666666666,
+          "slice": "caps-rant"
+        }
+      ],
+      "top_confusions": [
+        {
+          "count": 18,
+          "predicted": "none",
+          "true": "pothole"
+        },
+        {
+          "count": 14,
+          "predicted": "none",
+          "true": "broken_streetlight"
+        },
+        {
+          "count": 13,
+          "predicted": "none",
+          "true": "other"
+        },
+        {
+          "count": 11,
+          "predicted": "none",
+          "true": "flooded_drain"
+        },
+        {
+          "count": 7,
+          "predicted": "none",
+          "true": "blocked_sidewalk"
+        },
+        {
+          "count": 5,
+          "predicted": "none",
+          "true": "open_manhole"
+        },
+        {
+          "count": 3,
+          "predicted": "flooded_drain",
+          "true": "pothole"
+        },
+        {
+          "count": 2,
+          "predicted": "blocked_sidewalk",
+          "true": "broken_streetlight"
+        }
+      ]
+    },
+    "lexicon_v1": {
+      "danger_false_negatives_by_slice": {
+        "(no slice)": 5,
+        "caps-rant": 2,
+        "code-switch": 1,
+        "implicit": 1,
+        "multi-hazard": 3,
+        "negation": 1,
+        "other-language": 3,
+        "sarcasm": 3
+      },
+      "danger_false_positives_by_slice": {
+        "(no slice)": 4,
+        "code-switch": 2,
+        "implicit": 4,
+        "long": 2,
+        "negation": 4,
+        "sarcasm": 1,
+        "typo": 1
+      },
+      "lowest_accuracy_slices": [
+        {
+          "accuracy": 0.4,
+          "n": 25,
+          "slice": "implicit"
+        },
+        {
+          "accuracy": 0.5,
+          "n": 20,
+          "slice": "multi-hazard"
+        },
+        {
+          "accuracy": 0.6,
+          "n": 20,
+          "slice": "typo"
+        },
+        {
+          "accuracy": 0.6875,
+          "n": 16,
+          "slice": "other-language"
+        }
+      ],
+      "lowest_danger_recall_slices": [
+        {
+          "danger_notes": 4,
+          "recall": 0.25,
+          "slice": "multi-hazard"
+        },
+        {
+          "danger_notes": 4,
+          "recall": 0.25,
+          "slice": "sarcasm"
+        },
+        {
+          "danger_notes": 5,
+          "recall": 0.4,
+          "slice": "other-language"
+        },
+        {
+          "danger_notes": 6,
+          "recall": 0.6666666666666666,
+          "slice": "caps-rant"
+        }
+      ],
+      "top_confusions": [
+        {
+          "count": 15,
+          "predicted": "none",
+          "true": "pothole"
+        },
+        {
+          "count": 15,
+          "predicted": "none",
+          "true": "other"
+        },
+        {
+          "count": 10,
+          "predicted": "none",
+          "true": "flooded_drain"
+        },
+        {
+          "count": 10,
+          "predicted": "none",
+          "true": "broken_streetlight"
+        },
+        {
+          "count": 4,
+          "predicted": "none",
+          "true": "open_manhole"
+        },
+        {
+          "count": 4,
+          "predicted": "none",
+          "true": "blocked_sidewalk"
+        },
+        {
+          "count": 3,
+          "predicted": "blocked_sidewalk",
+          "true": "broken_streetlight"
+        },
+        {
+          "count": 1,
+          "predicted": "open_manhole",
+          "true": "pothole"
+        }
+      ]
+    },
+    "lexicon_v1+repeats+prefix+suffix+typo1_strict": {
+      "danger_false_negatives_by_slice": {
+        "(no slice)": 5,
+        "caps-rant": 1,
+        "code-switch": 1,
+        "implicit": 1,
+        "multi-hazard": 3,
+        "negation": 1,
+        "other-language": 3,
+        "sarcasm": 2
+      },
+      "danger_false_positives_by_slice": {
+        "(no slice)": 4,
+        "caps-rant": 1,
+        "code-switch": 2,
+        "implicit": 4,
+        "long": 2,
+        "multi-hazard": 1,
+        "negation": 4,
+        "sarcasm": 1,
+        "typo": 2
+      },
+      "lowest_accuracy_slices": [
+        {
+          "accuracy": 0.4,
+          "n": 25,
+          "slice": "implicit"
+        },
+        {
+          "accuracy": 0.5,
+          "n": 20,
+          "slice": "multi-hazard"
+        },
+        {
+          "accuracy": 0.6875,
+          "n": 16,
+          "slice": "other-language"
+        },
+        {
+          "accuracy": 0.8,
+          "n": 20,
+          "slice": "typo"
+        }
+      ],
+      "lowest_danger_recall_slices": [
+        {
+          "danger_notes": 4,
+          "recall": 0.25,
+          "slice": "multi-hazard"
+        },
+        {
+          "danger_notes": 5,
+          "recall": 0.4,
+          "slice": "other-language"
+        },
+        {
+          "danger_notes": 4,
+          "recall": 0.5,
+          "slice": "sarcasm"
+        },
+        {
+          "danger_notes": 5,
+          "recall": 0.8,
+          "slice": "code-switch"
+        }
+      ],
+      "top_confusions": [
+        {
+          "count": 15,
+          "predicted": "none",
+          "true": "pothole"
+        },
+        {
+          "count": 12,
+          "predicted": "none",
+          "true": "other"
+        },
+        {
+          "count": 10,
+          "predicted": "none",
+          "true": "flooded_drain"
+        },
+        {
+          "count": 9,
+          "predicted": "none",
+          "true": "broken_streetlight"
+        },
+        {
+          "count": 3,
+          "predicted": "none",
+          "true": "open_manhole"
+        },
+        {
+          "count": 3,
+          "predicted": "blocked_sidewalk",
+          "true": "broken_streetlight"
+        },
+        {
+          "count": 3,
+          "predicted": "none",
+          "true": "blocked_sidewalk"
+        },
+        {
+          "count": 1,
+          "predicted": "open_manhole",
+          "true": "pothole"
+        }
+      ]
+    },
+    "logistic_regression": {
+      "danger_false_negatives_by_slice": {
+        "(no slice)": 2,
+        "caps-rant": 2,
+        "multi-hazard": 1,
+        "negation": 1,
+        "other-language": 2,
+        "sarcasm": 3,
+        "typo": 1
+      },
+      "danger_false_positives_by_slice": {
+        "(no slice)": 4,
+        "implicit": 4,
+        "long": 1,
+        "negation": 1,
+        "other-language": 1
+      },
+      "lowest_accuracy_slices": [
+        {
+          "accuracy": 0.68,
+          "n": 25,
+          "slice": "implicit"
+        },
+        {
+          "accuracy": 0.75,
+          "n": 20,
+          "slice": "multi-hazard"
+        },
+        {
+          "accuracy": 0.8125,
+          "n": 16,
+          "slice": "other-language"
+        },
+        {
+          "accuracy": 0.8888888888888888,
+          "n": 18,
+          "slice": "sarcasm"
+        }
+      ],
+      "lowest_danger_recall_slices": [
+        {
+          "danger_notes": 4,
+          "recall": 0.25,
+          "slice": "sarcasm"
+        },
+        {
+          "danger_notes": 5,
+          "recall": 0.6,
+          "slice": "other-language"
+        },
+        {
+          "danger_notes": 6,
+          "recall": 0.6666666666666666,
+          "slice": "caps-rant"
+        },
+        {
+          "danger_notes": 3,
+          "recall": 0.6666666666666666,
+          "slice": "typo"
+        }
+      ],
+      "top_confusions": [
+        {
+          "count": 7,
+          "predicted": "other",
+          "true": "pothole"
+        },
+        {
+          "count": 2,
+          "predicted": "flooded_drain",
+          "true": "pothole"
+        },
+        {
+          "count": 2,
+          "predicted": "blocked_sidewalk",
+          "true": "broken_streetlight"
+        },
+        {
+          "count": 2,
+          "predicted": "flooded_drain",
+          "true": "other"
+        },
+        {
+          "count": 2,
+          "predicted": "other",
+          "true": "none"
+        },
+        {
+          "count": 1,
+          "predicted": "open_manhole",
+          "true": "pothole"
+        },
+        {
+          "count": 1,
+          "predicted": "none",
+          "true": "pothole"
+        },
+        {
+          "count": 1,
+          "predicted": "pothole",
+          "true": "open_manhole"
+        }
+      ]
+    },
+    "naive_bayes": {
+      "danger_false_negatives_by_slice": {
+        "(no slice)": 1,
+        "caps-rant": 1,
+        "multi-hazard": 1,
+        "other-language": 1,
+        "sarcasm": 1
+      },
+      "danger_false_positives_by_slice": {
+        "(no slice)": 13,
+        "code-switch": 1,
+        "implicit": 7,
+        "keyboard-artifact": 1,
+        "long": 1,
+        "negation": 4,
+        "other-language": 3,
+        "sarcasm": 3,
+        "typo": 1
+      },
+      "lowest_accuracy_slices": [
+        {
+          "accuracy": 0.75,
+          "n": 20,
+          "slice": "multi-hazard"
+        },
+        {
+          "accuracy": 0.75,
+          "n": 16,
+          "slice": "other-language"
+        },
+        {
+          "accuracy": 0.76,
+          "n": 25,
+          "slice": "implicit"
+        },
+        {
+          "accuracy": 0.7777777777777778,
+          "n": 18,
+          "slice": "sarcasm"
+        }
+      ],
+      "lowest_danger_recall_slices": [
+        {
+          "danger_notes": 4,
+          "recall": 0.75,
+          "slice": "multi-hazard"
+        },
+        {
+          "danger_notes": 4,
+          "recall": 0.75,
+          "slice": "sarcasm"
+        },
+        {
+          "danger_notes": 5,
+          "recall": 0.8,
+          "slice": "other-language"
+        },
+        {
+          "danger_notes": 6,
+          "recall": 0.8333333333333334,
+          "slice": "caps-rant"
+        }
+      ],
+      "top_confusions": [
+        {
+          "count": 4,
+          "predicted": "pothole",
+          "true": "none"
+        },
+        {
+          "count": 3,
+          "predicted": "open_manhole",
+          "true": "pothole"
+        },
+        {
+          "count": 3,
+          "predicted": "broken_streetlight",
+          "true": "other"
+        },
+        {
+          "count": 3,
+          "predicted": "blocked_sidewalk",
+          "true": "other"
+        },
+        {
+          "count": 2,
+          "predicted": "flooded_drain",
+          "true": "pothole"
+        },
+        {
+          "count": 2,
+          "predicted": "pothole",
+          "true": "flooded_drain"
+        },
+        {
+          "count": 2,
+          "predicted": "pothole",
+          "true": "other"
+        },
+        {
+          "count": 2,
+          "predicted": "flooded_drain",
+          "true": "other"
+        }
+      ]
+    }
+  },
+  "danger_mistakes": [
+    {
+      "id": "gd-0032",
+      "kind": "missed",
+      "score": 0.017143,
+      "slices": [
+        "multi-hazard"
+      ],
+      "text": "May baha rin dito and sira ang ilaw, pero yung pinakamalaking problema is yung lubak na nagpatumba na ng dalawang motor ngayong linggo.",
+      "true_danger": true
+    },
+    {
+      "id": "gd-0141",
+      "kind": "missed",
+      "score": 0.030228,
+      "slices": [
+        "sarcasm"
+      ],
+      "text": "Thanks to the pothole on Gil Puyat I now know exactly how it feels to be launched from a catapult, three stitches on my chin as a souvenir.",
+      "true_danger": true
+    },
+    {
+      "id": "gd-0174",
+      "kind": "missed",
+      "score": 0.010362,
+      "slices": [
+        "caps-rant"
+      ],
+      "text": "LUBOG NA NAMAN SA BAHA ANG BUONG KALYE!!! MAY MATANDANG NAKAKAPIT SA POSTE PARA HINDI MATANGAY!!! TULUNGAN NIYO NA KAMI!!!",
+      "true_danger": true
+    },
+    {
+      "id": "gd-0046",
+      "kind": "false alarm",
+      "score": 0.181762,
+      "slices": [
+        "(no slice)"
+      ],
+      "text": "Ang tagal nang walang ilaw dito sa Rockwell Drive, di na namin makita ang gate pag gabi, please naman.",
+      "true_danger": false
+    },
+    {
+      "id": "gd-0067",
+      "kind": "false alarm",
+      "score": 0.111558,
+      "slices": [
+        "(no slice)"
+      ],
+      "text": "Please help us.",
+      "true_danger": false
+    },
+    {
+      "id": "gd-0086",
+      "kind": "false alarm",
+      "score": 0.216858,
+      "slices": [
+        "code-switch"
+      ],
+      "text": "Nag-flicker yung ilaw sa poste kagabi tapos namatay na completely, can we request a replacement po?",
+      "true_danger": false
+    },
+    {
+      "id": "gd-0105",
+      "kind": "false alarm",
+      "score": 0.713068,
+      "slices": [
+        "implicit"
+      ],
+      "text": "A huge branch fell across the street this morning and nothing could get through for an hour, the whole block was stuck.",
+      "true_danger": false
+    },
+    {
+      "id": "gd-0118",
+      "kind": "false alarm",
+      "score": 0.144859,
+      "slices": [
+        "(no slice)"
+      ],
+      "text": "Hit a pothole on Gil Puyat last night and now my front wheel wobbles, going to the shop tomorrow.",
+      "true_danger": false
+    },
+    {
+      "id": "gd-0179",
+      "kind": "false alarm",
+      "score": 0.130991,
+      "slices": [
+        "negation"
+      ],
+      "text": "Hindi naman ako nasaktan or nadisgrasya, pero nakakaasar na talaga yung mga lubak sa Pasong Tamo.",
+      "true_danger": false
+    },
+    {
+      "id": "gd-0240",
+      "kind": "false alarm",
+      "score": 0.096541,
+      "slices": [
+        "(no slice)"
+      ],
+      "text": "I was told to send this through the app.",
+      "true_danger": false
+    },
+    {
+      "id": "gd-0272",
+      "kind": "false alarm",
+      "score": 0.125239,
+      "slices": [
+        "long"
+      ],
+      "text": "Our street in Bangkal has had no working lights for almost four months. I have lost count of how many times we have reported it, to the village office, to the city, even through this app. The standard answer is that the electric company is checking. We pay our taxes on time and we only ask that the lamp posts we see every day finally be fixed. Thank you for reading.",
+      "true_danger": false
+    },
+    {
+      "id": "gd-0321",
+      "kind": "false alarm",
+      "score": 0.214152,
+      "slices": [
+        "(no slice)"
+      ],
+      "text": "Nakaharang yung mga bike at scooter sa sidewalk sa tapat ng coffee shop, hindi na makalusot ang mga naglalakad.",
+      "true_danger": false
+    },
+    {
+      "id": "gd-0328",
+      "kind": "false alarm",
+      "score": 0.974825,
+      "slices": [
+        "implicit"
+      ],
+      "text": "Pinaglalaruan na lang ng mga bata sa amin ang tubig sa kalsada, may bangka-bangkaan pa sa harap ng bahay namin, tapos dumadaloy na rin sa loob ng sala.",
+      "true_danger": false
+    },
+    {
+      "id": "gd-0346",
+      "kind": "false alarm",
+      "score": 0.105201,
+      "slices": [
+        "caps-rant"
+      ],
+      "text": "ANG DAMING ASONG GALA SA KANTO NAMIN, NAGKAKALAT NG BASURA AT NAG-IINGAY SA GABI, NAKAKAINIS NA!!!",
+      "true_danger": false
+    },
+    {
+      "id": "gd-0350",
+      "kind": "false alarm",
+      "score": 0.101966,
+      "slices": [
+        "keyboard-artifact"
+      ],
+      "text": "The pothole on Makati Ave is getting wider by the day.. someone please fix it Sent from my iPhone",
+      "true_danger": false
+    }
+  ],
+  "meta": {
+    "git_commit": "1f95006",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T13:50:42+00:00"
+  }
+}

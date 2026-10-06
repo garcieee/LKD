@@ -1,0 +1,490 @@
+{
+  "bootstrap_resamples": 1000,
+  "information": {
+    "by_votes": [
+      {
+        "brier_skill_vs_always_0.8": {
+          "hi": 0.22968,
+          "lo": 0.22518,
+          "point": 0.22748
+        },
+        "false_flag_rate": {
+          "events": 0,
+          "hi": 0.0,
+          "lo": 0.0,
+          "of": 17762,
+          "point": 0.0
+        },
+        "flag_recall_of_gone": {
+          "events": 0,
+          "hi": 0.0,
+          "lo": 0.0,
+          "of": 14599,
+          "point": 0.0
+        },
+        "n": 32361,
+        "prevalence": 0.54887,
+        "roc_auc": {
+          "hi": 0.84085,
+          "lo": 0.83283,
+          "point": 0.83686
+        },
+        "share_of_tickets_reaching_it": 0.64722,
+        "votes": 1
+      },
+      {
+        "brier_skill_vs_always_0.8": {
+          "hi": 0.34315,
+          "lo": 0.33675,
+          "point": 0.34006
+        },
+        "false_flag_rate": {
+          "events": 0,
+          "hi": 0.0,
+          "lo": 0.0,
+          "of": 10901,
+          "point": 0.0
+        },
+        "flag_recall_of_gone": {
+          "events": 0,
+          "hi": 0.0,
+          "lo": 0.0,
+          "of": 11831,
+          "point": 0.0
+        },
+        "n": 22732,
+        "prevalence": 0.47954,
+        "roc_auc": {
+          "hi": 0.90343,
+          "lo": 0.89583,
+          "point": 0.89982
+        },
+        "share_of_tickets_reaching_it": 0.45464,
+        "votes": 2
+      },
+      {
+        "brier_skill_vs_always_0.8": {
+          "hi": 0.41724,
+          "lo": 0.4089,
+          "point": 0.41296
+        },
+        "false_flag_rate": {
+          "events": 0,
+          "hi": 0.0,
+          "lo": 0.0,
+          "of": 7004,
+          "point": 0.0
+        },
+        "flag_recall_of_gone": {
+          "events": 0,
+          "hi": 0.0,
+          "lo": 0.0,
+          "of": 9030,
+          "point": 0.0
+        },
+        "n": 16034,
+        "prevalence": 0.43682,
+        "roc_auc": {
+          "hi": 0.92888,
+          "lo": 0.92176,
+          "point": 0.92519
+        },
+        "share_of_tickets_reaching_it": 0.32068,
+        "votes": 3
+      },
+      {
+        "brier_skill_vs_always_0.8": {
+          "hi": 0.46775,
+          "lo": 0.45705,
+          "point": 0.46216
+        },
+        "false_flag_rate": {
+          "events": 2,
+          "hi": 0.00112,
+          "lo": 0.0,
+          "of": 4515,
+          "point": 0.00044
+        },
+        "flag_recall_of_gone": {
+          "events": 2478,
+          "hi": 0.38318,
+          "lo": 0.3602,
+          "of": 6669,
+          "point": 0.37157
+        },
+        "n": 11184,
+        "prevalence": 0.4037,
+        "roc_auc": {
+          "hi": 0.93937,
+          "lo": 0.93128,
+          "point": 0.93523
+        },
+        "share_of_tickets_reaching_it": 0.22368,
+        "votes": 4
+      },
+      {
+        "brier_skill_vs_always_0.8": {
+          "hi": 0.50101,
+          "lo": 0.48854,
+          "point": 0.495
+        },
+        "false_flag_rate": {
+          "events": 1,
+          "hi": 0.00103,
+          "lo": 0.0,
+          "of": 2957,
+          "point": 0.00034
+        },
+        "flag_recall_of_gone": {
+          "events": 1437,
+          "hi": 0.30974,
+          "lo": 0.28497,
+          "of": 4841,
+          "point": 0.29684
+        },
+        "n": 7798,
+        "prevalence": 0.3792,
+        "roc_auc": {
+          "hi": 0.94394,
+          "lo": 0.93475,
+          "point": 0.93937
+        },
+        "share_of_tickets_reaching_it": 0.15596,
+        "votes": 5
+      },
+      {
+        "brier_skill_vs_always_0.8": {
+          "hi": 0.52971,
+          "lo": 0.51372,
+          "point": 0.52167
+        },
+        "false_flag_rate": {
+          "events": 0,
+          "hi": 0.0,
+          "lo": 0.0,
+          "of": 1933,
+          "point": 0.0
+        },
+        "flag_recall_of_gone": {
+          "events": 875,
+          "hi": 0.26461,
+          "lo": 0.23553,
+          "of": 3506,
+          "point": 0.24957
+        },
+        "n": 5439,
+        "prevalence": 0.3554,
+        "roc_auc": {
+          "hi": 0.94804,
+          "lo": 0.93705,
+          "point": 0.94256
+        },
+        "share_of_tickets_reaching_it": 0.10878,
+        "votes": 6
+      },
+      {
+        "brier_skill_vs_always_0.8": {
+          "hi": 0.55297,
+          "lo": 0.53251,
+          "point": 0.54231
+        },
+        "false_flag_rate": {
+          "events": 0,
+          "hi": 0.0,
+          "lo": 0.0,
+          "of": 1332,
+          "point": 0.0
+        },
+        "flag_recall_of_gone": {
+          "events": 1129,
+          "hi": 0.47333,
+          "lo": 0.43377,
+          "of": 2491,
+          "point": 0.45323
+        },
+        "n": 3823,
+        "prevalence": 0.34842,
+        "roc_auc": {
+          "hi": 0.95247,
+          "lo": 0.94016,
+          "point": 0.94619
+        },
+        "share_of_tickets_reaching_it": 0.07646,
+        "votes": 7
+      },
+      {
+        "brier_skill_vs_always_0.8": {
+          "hi": 0.58003,
+          "lo": 0.55739,
+          "point": 0.56876
+        },
+        "false_flag_rate": {
+          "events": 0,
+          "hi": 0.0,
+          "lo": 0.0,
+          "of": 890,
+          "point": 0.0
+        },
+        "flag_recall_of_gone": {
+          "events": 746,
+          "hi": 0.43537,
+          "lo": 0.39106,
+          "of": 1807,
+          "point": 0.41284
+        },
+        "n": 2697,
+        "prevalence": 0.33,
+        "roc_auc": {
+          "hi": 0.96136,
+          "lo": 0.94783,
+          "point": 0.95481
+        },
+        "share_of_tickets_reaching_it": 0.05394,
+        "votes": 8
+      },
+      {
+        "brier_skill_vs_always_0.8": {
+          "hi": 0.58977,
+          "lo": 0.56237,
+          "point": 0.57655
+        },
+        "false_flag_rate": {
+          "events": 0,
+          "hi": 0.0,
+          "lo": 0.0,
+          "of": 607,
+          "point": 0.0
+        },
+        "flag_recall_of_gone": {
+          "events": 676,
+          "hi": 0.5578,
+          "lo": 0.50407,
+          "of": 1272,
+          "point": 0.53145
+        },
+        "n": 1879,
+        "prevalence": 0.32304,
+        "roc_auc": {
+          "hi": 0.96301,
+          "lo": 0.9475,
+          "point": 0.95595
+        },
+        "share_of_tickets_reaching_it": 0.03758,
+        "votes": 9
+      },
+      {
+        "brier_skill_vs_always_0.8": {
+          "hi": 0.61431,
+          "lo": 0.57729,
+          "point": 0.59678
+        },
+        "false_flag_rate": {
+          "events": 0,
+          "hi": 0.0,
+          "lo": 0.0,
+          "of": 405,
+          "point": 0.0
+        },
+        "flag_recall_of_gone": {
+          "events": 452,
+          "hi": 0.54658,
+          "lo": 0.47919,
+          "of": 878,
+          "point": 0.51481
+        },
+        "n": 1283,
+        "prevalence": 0.31567,
+        "roc_auc": {
+          "hi": 0.96405,
+          "lo": 0.94256,
+          "point": 0.95403
+        },
+        "share_of_tickets_reaching_it": 0.02566,
+        "votes": 10
+      }
+    ],
+    "snapshot": {
+      "30": {
+        "belief_roc_auc": {
+          "hi": 0.73133,
+          "lo": 0.72166,
+          "point": 0.72663
+        },
+        "brier_belief_minus_always_0.8": {
+          "hi": -0.09726,
+          "lo": -0.10016,
+          "point": -0.0987
+        },
+        "false_flag_rate": {
+          "events": 0,
+          "hi": 0.0,
+          "lo": 0.0,
+          "of": 9660,
+          "point": 0.0
+        },
+        "flag_recall_of_gone": {
+          "events": 2632,
+          "hi": 0.06771,
+          "lo": 0.06282,
+          "of": 40340,
+          "point": 0.06525
+        },
+        "gate_cut_share_of_gone": {
+          "events": 20045,
+          "hi": 0.50161,
+          "lo": 0.49197,
+          "of": 40340,
+          "point": 0.4969
+        },
+        "gate_cut_share_of_there": {
+          "events": 2090,
+          "hi": 0.22464,
+          "lo": 0.20816,
+          "of": 9660,
+          "point": 0.21636
+        },
+        "gone_with_belief_at_least_0.8": {
+          "events": 20295,
+          "hi": 0.50803,
+          "lo": 0.49839,
+          "of": 40340,
+          "point": 0.5031
+        },
+        "no_vote_at_all": {
+          "hi": 0.36812,
+          "lo": 0.35952,
+          "point": 0.36376
+        },
+        "share_gone": {
+          "hi": 0.81014,
+          "lo": 0.80344,
+          "point": 0.8068
+        }
+      },
+      "7": {
+        "belief_roc_auc": {
+          "hi": 0.71944,
+          "lo": 0.71117,
+          "point": 0.71529
+        },
+        "brier_belief_minus_always_0.8": {
+          "hi": -0.05028,
+          "lo": -0.05247,
+          "point": -0.05136
+        },
+        "false_flag_rate": {
+          "events": 1,
+          "hi": 0.00013,
+          "lo": 0.0,
+          "of": 23144,
+          "point": 4e-05
+        },
+        "flag_recall_of_gone": {
+          "events": 776,
+          "hi": 0.03074,
+          "lo": 0.02698,
+          "of": 26856,
+          "point": 0.02889
+        },
+        "gate_cut_share_of_gone": {
+          "events": 11035,
+          "hi": 0.41648,
+          "lo": 0.40509,
+          "of": 26856,
+          "point": 0.4109
+        },
+        "gate_cut_share_of_there": {
+          "events": 3438,
+          "hi": 0.15345,
+          "lo": 0.14403,
+          "of": 23144,
+          "point": 0.14855
+        },
+        "gone_with_belief_at_least_0.8": {
+          "events": 15821,
+          "hi": 0.59491,
+          "lo": 0.58352,
+          "of": 26856,
+          "point": 0.5891
+        },
+        "no_vote_at_all": {
+          "hi": 0.50388,
+          "lo": 0.49506,
+          "point": 0.49942
+        },
+        "share_gone": {
+          "hi": 0.54118,
+          "lo": 0.53268,
+          "point": 0.53712
+        }
+      }
+    }
+  },
+  "meta": {
+    "git_commit": "feb001e",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T12:47:17+00:00"
+  },
+  "notes": [
+    "k votes = k taps after the first report, which counts as one yes",
+    "truth = the hazard is there at the moment of the vote",
+    "intervals: 95% percentile bootstrap over whole tickets",
+    "a target is met only when the whole interval passes"
+  ],
+  "seeds": [
+    3000,
+    3001,
+    3002,
+    3003,
+    3004
+  ],
+  "settings": {
+    "BELIEF_PRIOR": [
+      3,
+      1
+    ],
+    "GATE_LOW": 0.3,
+    "GATE_MIN": 0.25,
+    "GATE_SPAN": 0.5,
+    "LIKELY_GONE_BELOW": 0.45
+  },
+  "sim_config": {
+    "gone_before_votes": 0.3,
+    "gone_tap_rate": 1.0,
+    "lifetime_means": [
+      5.0,
+      15.0,
+      60.0
+    ],
+    "max_votes": 16,
+    "no_votes": 0.35,
+    "noise": 0.1,
+    "sensitivity": 0.85,
+    "specificity": 0.9,
+    "staff_days": [
+      2.0,
+      45.0
+    ],
+    "staff_share": 0.25,
+    "tickets": 10000,
+    "vote_delay_days": 10.0,
+    "votes_geometric_p": 0.3
+  },
+  "split": "test",
+  "train_seeds": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1004
+  ],
+  "validation_seeds": [
+    2000,
+    2001,
+    2002,
+    2003,
+    2004
+  ]
+}

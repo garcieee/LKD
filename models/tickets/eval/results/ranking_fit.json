@@ -1,0 +1,1379 @@
+{
+  "bradley_terry": {
+    "by_stratum": {
+      "train": {
+        "fitted weights": {
+          "clear": {
+            "accuracy": 0.9583333333333334,
+            "n": 48
+          },
+          "close": {
+            "accuracy": 0.6666666666666666,
+            "n": 45
+          },
+          "trade_off": {
+            "accuracy": 0.8125,
+            "n": 48
+          }
+        },
+        "hand weights": {
+          "clear": {
+            "accuracy": 0.9583333333333334,
+            "n": 48
+          },
+          "close": {
+            "accuracy": 0.5555555555555556,
+            "n": 45
+          },
+          "trade_off": {
+            "accuracy": 0.75,
+            "n": 48
+          }
+        }
+      },
+      "validation": {
+        "fitted weights": {
+          "clear": {
+            "accuracy": 0.9375,
+            "n": 16
+          },
+          "close": {
+            "accuracy": 0.8125,
+            "n": 16
+          },
+          "trade_off": {
+            "accuracy": 0.75,
+            "n": 16
+          }
+        },
+        "hand weights": {
+          "clear": {
+            "accuracy": 0.9375,
+            "n": 16
+          },
+          "close": {
+            "accuracy": 0.625,
+            "n": 16
+          },
+          "trade_off": {
+            "accuracy": 0.8125,
+            "n": 16
+          }
+        }
+      }
+    },
+    "chosen_lambda": 1.0,
+    "decision": {
+      "fitted_validation_accuracy": 0.8333333333333334,
+      "hand_validation_accuracy": 0.7916666666666666,
+      "margin": 0.03,
+      "non_negative": true,
+      "replace": true,
+      "validation_gain": 0.04166666666666674,
+      "weights_of_record": {
+        "danger": 0.31841852345729094,
+        "foot_traffic": 0.3029557539186053,
+        "reports": 0.1842479336454586,
+        "waiting": 0.19437778897864513
+      }
+    },
+    "fitted_weights": {
+      "danger": 0.31841852345729094,
+      "foot_traffic": 0.3029557539186053,
+      "reports": 0.1842479336454586,
+      "waiting": 0.19437778897864513
+    },
+    "hand_weights": {
+      "danger": 0.5,
+      "foot_traffic": 0.18,
+      "reports": 0.2,
+      "waiting": 0.12
+    },
+    "raw_weights": {
+      "danger": 1.044732145646101,
+      "foot_traffic": 0.9939987516764848,
+      "reports": 0.6045180316719194,
+      "waiting": 0.6377541178845484
+    },
+    "sweep": [
+      {
+        "full_score_accuracy": {
+          "train": 0.8333333333333334,
+          "validation": 0.8541666666666666
+        },
+        "lambda": 0.0,
+        "linear_accuracy": {
+          "train": 0.6453900709219859,
+          "validation": 0.625
+        },
+        "normalised": {
+          "danger": 0.37310564172673216,
+          "foot_traffic": 0.2872378575311464,
+          "reports": 0.1604271936552491,
+          "waiting": 0.1792293070868723
+        },
+        "train_log_loss": 0.5988958313192162,
+        "validation_log_loss": 0.647888710995084,
+        "weights": {
+          "danger": 2.3486456481695313,
+          "foot_traffic": 1.808120458747091,
+          "reports": 1.0098658076642413,
+          "waiting": 1.128222371995999
+        }
+      },
+      {
+        "full_score_accuracy": {
+          "train": 0.8262411347517731,
+          "validation": 0.8541666666666666
+        },
+        "lambda": 0.01,
+        "linear_accuracy": {
+          "train": 0.6453900709219859,
+          "validation": 0.625
+        },
+        "normalised": {
+          "danger": 0.37225332842502185,
+          "foot_traffic": 0.2875580904959747,
+          "reports": 0.16072951438371616,
+          "waiting": 0.17945906669528727
+        },
+        "train_log_loss": 0.5989057167127716,
+        "validation_log_loss": 0.6469334241602381,
+        "weights": {
+          "danger": 2.314475934979555,
+          "foot_traffic": 1.787885371441773,
+          "reports": 0.9993318116348,
+          "waiting": 1.1157823435386491
+        }
+      },
+      {
+        "full_score_accuracy": {
+          "train": 0.8262411347517731,
+          "validation": 0.8541666666666666
+        },
+        "lambda": 0.03,
+        "linear_accuracy": {
+          "train": 0.6453900709219859,
+          "validation": 0.625
+        },
+        "normalised": {
+          "danger": 0.37058922395512256,
+          "foot_traffic": 0.28817313527502164,
+          "reports": 0.1613292697097551,
+          "waiting": 0.17990837106010069
+        },
+        "train_log_loss": 0.5989789970243328,
+        "validation_log_loss": 0.6451932740511621,
+        "weights": {
+          "danger": 2.2499795028848766,
+          "foot_traffic": 1.7496020006490722,
+          "reports": 0.979487601361803,
+          "waiting": 1.0922879595971533
+        }
+      },
+      {
+        "full_score_accuracy": {
+          "train": 0.8120567375886525,
+          "validation": 0.8541666666666666
+        },
+        "lambda": 0.1,
+        "linear_accuracy": {
+          "train": 0.6524822695035462,
+          "validation": 0.625
+        },
+        "normalised": {
+          "danger": 0.36512996198034453,
+          "foot_traffic": 0.29010310962767855,
+          "reports": 0.1633784404636035,
+          "waiting": 0.18138848792837342
+        },
+        "train_log_loss": 0.599644488000354,
+        "validation_log_loss": 0.6404890325428004,
+        "weights": {
+          "danger": 2.056718401569268,
+          "foot_traffic": 1.6341041986464868,
+          "reports": 0.9202845011641938,
+          "waiting": 1.021732204423129
+        }
+      },
+      {
+        "full_score_accuracy": {
+          "train": 0.8120567375886525,
+          "validation": 0.8333333333333334
+        },
+        "lambda": 0.3,
+        "linear_accuracy": {
+          "train": 0.6382978723404256,
+          "validation": 0.6458333333333334
+        },
+        "normalised": {
+          "danger": 0.35176433866425616,
+          "foot_traffic": 0.29435666589265685,
+          "reports": 0.1688315357279094,
+          "waiting": 0.18504745971517758
+        },
+        "train_log_loss": 0.603135832826159,
+        "validation_log_loss": 0.6336236044687792,
+        "weights": {
+          "danger": 1.6741258558460574,
+          "foot_traffic": 1.4009097883054114,
+          "reports": 0.8035073717750087,
+          "waiting": 0.8806826128088393
+        }
+      },
+      {
+        "full_score_accuracy": {
+          "train": 0.8156028368794326,
+          "validation": 0.8333333333333334
+        },
+        "lambda": 1.0,
+        "linear_accuracy": {
+          "train": 0.6595744680851063,
+          "validation": 0.6458333333333334
+        },
+        "normalised": {
+          "danger": 0.31841852345729094,
+          "foot_traffic": 0.3029557539186053,
+          "reports": 0.1842479336454586,
+          "waiting": 0.19437778897864513
+        },
+        "train_log_loss": 0.6166703350203224,
+        "validation_log_loss": 0.6309448525215025,
+        "weights": {
+          "danger": 1.044732145646101,
+          "foot_traffic": 0.9939987516764848,
+          "reports": 0.6045180316719194,
+          "waiting": 0.6377541178845484
+        }
+      },
+      {
+        "full_score_accuracy": {
+          "train": 0.7978723404255319,
+          "validation": 0.8333333333333334
+        },
+        "lambda": 3.0,
+        "linear_accuracy": {
+          "train": 0.6524822695035462,
+          "validation": 0.7083333333333334
+        },
+        "normalised": {
+          "danger": 0.2669559655555371,
+          "foot_traffic": 0.31299011193185045,
+          "reports": 0.2106094901245181,
+          "waiting": 0.20944443238809432
+        },
+        "train_log_loss": 0.6400836805764677,
+        "validation_log_loss": 0.6419792883193328,
+        "weights": {
+          "danger": 0.5012668579829559,
+          "foot_traffic": 0.5877058025705474,
+          "reports": 0.39546431246222374,
+          "waiting": 0.39327666765836794
+        }
+      },
+      {
+        "full_score_accuracy": {
+          "train": 0.7872340425531915,
+          "validation": 0.8541666666666666
+        },
+        "lambda": 10.0,
+        "linear_accuracy": {
+          "train": 0.6382978723404256,
+          "validation": 0.75
+        },
+        "normalised": {
+          "danger": 0.20749295317877872,
+          "foot_traffic": 0.32188852189705475,
+          "reports": 0.24250110989217574,
+          "waiting": 0.2281174150319909
+        },
+        "train_log_loss": 0.6666832481181894,
+        "validation_log_loss": 0.664097677554841,
+        "weights": {
+          "danger": 0.1655342043541372,
+          "foot_traffic": 0.25679696368795907,
+          "reports": 0.19346309195575148,
+          "waiting": 0.18198803486163467
+        }
+      },
+      {
+        "full_score_accuracy": {
+          "train": 0.7801418439716312,
+          "validation": 0.875
+        },
+        "lambda": 30.0,
+        "linear_accuracy": {
+          "train": 0.6524822695035462,
+          "validation": 0.7708333333333334
+        },
+        "normalised": {
+          "danger": 0.17389363305504169,
+          "foot_traffic": 0.32602639508184594,
+          "reports": 0.2606963899522695,
+          "waiting": 0.23938358191084302
+        },
+        "train_log_loss": 0.6820418586495086,
+        "validation_log_loss": 0.6802460272632441,
+        "weights": {
+          "danger": 0.05355603402670649,
+          "foot_traffic": 0.10041012084140569,
+          "reports": 0.08028968332902683,
+          "waiting": 0.07372573125891274
+        }
+      },
+      {
+        "full_score_accuracy": {
+          "train": 0.7730496453900709,
+          "validation": 0.875
+        },
+        "lambda": 100.0,
+        "linear_accuracy": {
+          "train": 0.6453900709219859,
+          "validation": 0.75
+        },
+        "normalised": {
+          "danger": 0.15838077186579458,
+          "foot_traffic": 0.3277484261003222,
+          "reports": 0.2690977491805044,
+          "waiting": 0.24477305285337886
+        },
+        "train_log_loss": 0.6894650874454346,
+        "validation_log_loss": 0.6887702995417161,
+        "weights": {
+          "danger": 0.015557088521506949,
+          "foot_traffic": 0.03219337308159993,
+          "reports": 0.026432359532170654,
+          "waiting": 0.02404304516299631
+        }
+      }
+    ],
+    "train_pairs": 141,
+    "validation_pairs": 48
+  },
+  "candidates": {
+    "train": {
+      "by_stratum": {
+        "Bradley-Terry fitted weights (the pre-registered fit)": {
+          "clear": {
+            "accuracy": 0.9583333333333334,
+            "n": 48
+          },
+          "close": {
+            "accuracy": 0.6666666666666666,
+            "n": 45
+          },
+          "trade_off": {
+            "accuracy": 0.8125,
+            "n": 48
+          }
+        },
+        "danger bonus 10 -> 20": {
+          "clear": {
+            "accuracy": 0.9583333333333334,
+            "n": 48
+          },
+          "close": {
+            "accuracy": 0.6444444444444445,
+            "n": 45
+          },
+          "trade_off": {
+            "accuracy": 0.7708333333333334,
+            "n": 48
+          }
+        },
+        "flooded drain 0.65 and bonus 20 together": {
+          "clear": {
+            "accuracy": 0.9583333333333334,
+            "n": 48
+          },
+          "close": {
+            "accuracy": 0.8,
+            "n": 45
+          },
+          "trade_off": {
+            "accuracy": 0.8125,
+            "n": 48
+          }
+        },
+        "flooded drain severity 0.85 -> 0.65 (the pothole's)": {
+          "clear": {
+            "accuracy": 0.9583333333333334,
+            "n": 48
+          },
+          "close": {
+            "accuracy": 0.7777777777777778,
+            "n": 45
+          },
+          "trade_off": {
+            "accuracy": 0.8125,
+            "n": 48
+          }
+        },
+        "foot traffic as the raters saw it (3 levels)": {
+          "clear": {
+            "accuracy": 0.9583333333333334,
+            "n": 48
+          },
+          "close": {
+            "accuracy": 0.4666666666666667,
+            "n": 45
+          },
+          "trade_off": {
+            "accuracy": 0.75,
+            "n": 48
+          }
+        },
+        "shipped score": {
+          "clear": {
+            "accuracy": 0.9583333333333334,
+            "n": 48
+          },
+          "close": {
+            "accuracy": 0.5555555555555556,
+            "n": 45
+          },
+          "trade_off": {
+            "accuracy": 0.75,
+            "n": 48
+          }
+        },
+        "the four middle kinds all at severity 0.60": {
+          "clear": {
+            "accuracy": 0.9583333333333334,
+            "n": 48
+          },
+          "close": {
+            "accuracy": 0.8444444444444444,
+            "n": 45
+          },
+          "trade_off": {
+            "accuracy": 0.8541666666666666,
+            "n": 48
+          }
+        },
+        "waiting counted up to 30 days, not 14": {
+          "clear": {
+            "accuracy": 0.9583333333333334,
+            "n": 48
+          },
+          "close": {
+            "accuracy": 0.4888888888888889,
+            "n": 45
+          },
+          "trade_off": {
+            "accuracy": 0.8125,
+            "n": 48
+          }
+        },
+        "waiting weight halved (weights rescaled to sum to 1)": {
+          "clear": {
+            "accuracy": 0.9583333333333334,
+            "n": 48
+          },
+          "close": {
+            "accuracy": 0.5333333333333333,
+            "n": 45
+          },
+          "trade_off": {
+            "accuracy": 0.7916666666666666,
+            "n": 48
+          }
+        }
+      },
+      "n_pairs": 141,
+      "n_tickets": 120,
+      "rows": {
+        "Bradley-Terry fitted weights (the pre-registered fit)": {
+          "accuracy": {
+            "hi": 0.875886524822695,
+            "lo": 0.7481382978723404,
+            "point": 0.8156028368794326
+          },
+          "change_vs_shipped": {
+            "hi": 0.1242021276595744,
+            "lo": -0.01773049645390068,
+            "point": 0.05673758865248224
+          },
+          "kendall_tau_b_with_urgency": 0.6979765265850953
+        },
+        "danger bonus 10 -> 20": {
+          "accuracy": {
+            "hi": 0.8581560283687943,
+            "lo": 0.723404255319149,
+            "point": 0.7943262411347518
+          },
+          "change_vs_shipped": {
+            "hi": 0.07801418439716312,
+            "lo": -0.007092198581560294,
+            "point": 0.03546099290780147
+          },
+          "kendall_tau_b_with_urgency": 0.7242832844562651
+        },
+        "flooded drain 0.65 and bonus 20 together": {
+          "accuracy": {
+            "hi": 0.9148936170212766,
+            "lo": 0.8014184397163121,
+            "point": 0.8581560283687943
+          },
+          "change_vs_shipped": {
+            "hi": 0.16312056737588654,
+            "lo": 0.04255319148936165,
+            "point": 0.099290780141844
+          },
+          "kendall_tau_b_with_urgency": 0.7783306130544336
+        },
+        "flooded drain severity 0.85 -> 0.65 (the pothole's)": {
+          "accuracy": {
+            "hi": 0.9078014184397163,
+            "lo": 0.7943262411347518,
+            "point": 0.851063829787234
+          },
+          "change_vs_shipped": {
+            "hi": 0.14893617021276595,
+            "lo": 0.04255319148936165,
+            "point": 0.09219858156028371
+          },
+          "kendall_tau_b_with_urgency": 0.7376166021322762
+        },
+        "foot traffic as the raters saw it (3 levels)": {
+          "accuracy": {
+            "hi": 0.8014184397163121,
+            "lo": 0.6524822695035462,
+            "point": 0.7304964539007093
+          },
+          "change_vs_shipped": {
+            "hi": 0.014184397163120588,
+            "lo": -0.07092198581560283,
+            "point": -0.028368794326241065
+          },
+          "kendall_tau_b_with_urgency": 0.6757670979181599
+        },
+        "shipped score": {
+          "accuracy": {
+            "hi": 0.8297872340425532,
+            "lo": 0.6879432624113475,
+            "point": 0.7588652482269503
+          },
+          "kendall_tau_b_with_urgency": 0.6855932465383302
+        },
+        "the four middle kinds all at severity 0.60": {
+          "accuracy": {
+            "hi": 0.9361702127659575,
+            "lo": 0.8368794326241135,
+            "point": 0.8865248226950354
+          },
+          "change_vs_shipped": {
+            "hi": 0.1914893617021276,
+            "lo": 0.06382978723404253,
+            "point": 0.12765957446808507
+          },
+          "kendall_tau_b_with_urgency": 0.7504268221643693
+        },
+        "waiting counted up to 30 days, not 14": {
+          "accuracy": {
+            "hi": 0.8297872340425532,
+            "lo": 0.6879432624113475,
+            "point": 0.7588652482269503
+          },
+          "change_vs_shipped": {
+            "hi": 0.042730496453900604,
+            "lo": -0.042553191489361764,
+            "point": 0.0
+          },
+          "kendall_tau_b_with_urgency": 0.687421934108763
+        },
+        "waiting weight halved (weights rescaled to sum to 1)": {
+          "accuracy": {
+            "hi": 0.8297872340425532,
+            "lo": 0.6950354609929078,
+            "point": 0.7659574468085106
+          },
+          "change_vs_shipped": {
+            "hi": 0.06382978723404253,
+            "lo": -0.049645390070921946,
+            "point": 0.007092198581560294
+          },
+          "kendall_tau_b_with_urgency": 0.6816953695839114
+        }
+      },
+      "split": "train"
+    },
+    "validation": {
+      "by_stratum": {
+        "Bradley-Terry fitted weights (the pre-registered fit)": {
+          "clear": {
+            "accuracy": 0.9375,
+            "n": 16
+          },
+          "close": {
+            "accuracy": 0.8125,
+            "n": 16
+          },
+          "trade_off": {
+            "accuracy": 0.75,
+            "n": 16
+          }
+        },
+        "danger bonus 10 -> 20": {
+          "clear": {
+            "accuracy": 0.9375,
+            "n": 16
+          },
+          "close": {
+            "accuracy": 0.5625,
+            "n": 16
+          },
+          "trade_off": {
+            "accuracy": 0.8125,
+            "n": 16
+          }
+        },
+        "flooded drain 0.65 and bonus 20 together": {
+          "clear": {
+            "accuracy": 0.9375,
+            "n": 16
+          },
+          "close": {
+            "accuracy": 0.75,
+            "n": 16
+          },
+          "trade_off": {
+            "accuracy": 0.875,
+            "n": 16
+          }
+        },
+        "flooded drain severity 0.85 -> 0.65 (the pothole's)": {
+          "clear": {
+            "accuracy": 0.9375,
+            "n": 16
+          },
+          "close": {
+            "accuracy": 0.8125,
+            "n": 16
+          },
+          "trade_off": {
+            "accuracy": 0.875,
+            "n": 16
+          }
+        },
+        "foot traffic as the raters saw it (3 levels)": {
+          "clear": {
+            "accuracy": 0.9375,
+            "n": 16
+          },
+          "close": {
+            "accuracy": 0.6875,
+            "n": 16
+          },
+          "trade_off": {
+            "accuracy": 0.8125,
+            "n": 16
+          }
+        },
+        "shipped score": {
+          "clear": {
+            "accuracy": 0.9375,
+            "n": 16
+          },
+          "close": {
+            "accuracy": 0.625,
+            "n": 16
+          },
+          "trade_off": {
+            "accuracy": 0.8125,
+            "n": 16
+          }
+        },
+        "the four middle kinds all at severity 0.60": {
+          "clear": {
+            "accuracy": 0.9375,
+            "n": 16
+          },
+          "close": {
+            "accuracy": 0.75,
+            "n": 16
+          },
+          "trade_off": {
+            "accuracy": 0.875,
+            "n": 16
+          }
+        },
+        "waiting counted up to 30 days, not 14": {
+          "clear": {
+            "accuracy": 0.9375,
+            "n": 16
+          },
+          "close": {
+            "accuracy": 0.625,
+            "n": 16
+          },
+          "trade_off": {
+            "accuracy": 0.8125,
+            "n": 16
+          }
+        },
+        "waiting weight halved (weights rescaled to sum to 1)": {
+          "clear": {
+            "accuracy": 0.9375,
+            "n": 16
+          },
+          "close": {
+            "accuracy": 0.375,
+            "n": 16
+          },
+          "trade_off": {
+            "accuracy": 0.8125,
+            "n": 16
+          }
+        }
+      },
+      "n_pairs": 48,
+      "n_tickets": 40,
+      "rows": {
+        "Bradley-Terry fitted weights (the pre-registered fit)": {
+          "accuracy": {
+            "hi": 0.9171874999999995,
+            "lo": 0.7291666666666666,
+            "point": 0.8333333333333334
+          },
+          "change_vs_shipped": {
+            "hi": 0.16666666666666663,
+            "lo": -0.0625,
+            "point": 0.04166666666666674
+          },
+          "kendall_tau_b_with_urgency": 0.6808995115784607
+        },
+        "danger bonus 10 -> 20": {
+          "accuracy": {
+            "hi": 0.8958333333333334,
+            "lo": 0.6458333333333334,
+            "point": 0.7708333333333334
+          },
+          "change_vs_shipped": {
+            "hi": 0.04166666666666674,
+            "lo": -0.08333333333333337,
+            "point": -0.02083333333333326
+          },
+          "kendall_tau_b_with_urgency": 0.7097587561501202
+        },
+        "flooded drain 0.65 and bonus 20 together": {
+          "accuracy": {
+            "hi": 0.9375,
+            "lo": 0.75,
+            "point": 0.8541666666666666
+          },
+          "change_vs_shipped": {
+            "hi": 0.1875,
+            "lo": -0.04166666666666663,
+            "point": 0.0625
+          },
+          "kendall_tau_b_with_urgency": 0.7848332922107893
+        },
+        "flooded drain severity 0.85 -> 0.65 (the pothole's)": {
+          "accuracy": {
+            "hi": 0.9583333333333334,
+            "lo": 0.7708333333333334,
+            "point": 0.875
+          },
+          "change_vs_shipped": {
+            "hi": 0.16666666666666663,
+            "lo": 0.02083333333333326,
+            "point": 0.08333333333333337
+          },
+          "kendall_tau_b_with_urgency": 0.723539011325057
+        },
+        "foot traffic as the raters saw it (3 levels)": {
+          "accuracy": {
+            "hi": 0.9166666666666666,
+            "lo": 0.7083333333333334,
+            "point": 0.8125
+          },
+          "change_vs_shipped": {
+            "hi": 0.10416666666666674,
+            "lo": -0.0625,
+            "point": 0.02083333333333337
+          },
+          "kendall_tau_b_with_urgency": 0.6333367111381336
+        },
+        "shipped score": {
+          "accuracy": {
+            "hi": 0.8958333333333334,
+            "lo": 0.6666666666666666,
+            "point": 0.7916666666666666
+          },
+          "kendall_tau_b_with_urgency": 0.6298609599606133
+        },
+        "the four middle kinds all at severity 0.60": {
+          "accuracy": {
+            "hi": 0.9375,
+            "lo": 0.75,
+            "point": 0.8541666666666666
+          },
+          "change_vs_shipped": {
+            "hi": 0.16666666666666674,
+            "lo": -0.04166666666666663,
+            "point": 0.0625
+          },
+          "kendall_tau_b_with_urgency": 0.7182090738567325
+        },
+        "waiting counted up to 30 days, not 14": {
+          "accuracy": {
+            "hi": 0.8958333333333334,
+            "lo": 0.6666666666666666,
+            "point": 0.7916666666666666
+          },
+          "change_vs_shipped": {
+            "hi": 0.08333333333333337,
+            "lo": -0.08333333333333337,
+            "point": 0.0
+          },
+          "kendall_tau_b_with_urgency": 0.632524219833597
+        },
+        "waiting weight halved (weights rescaled to sum to 1)": {
+          "accuracy": {
+            "hi": 0.8333333333333334,
+            "lo": 0.5833333333333334,
+            "point": 0.7083333333333334
+          },
+          "change_vs_shipped": {
+            "hi": -0.02083333333333326,
+            "lo": -0.16666666666666663,
+            "point": -0.08333333333333326
+          },
+          "kendall_tau_b_with_urgency": 0.637850739579564
+        }
+      },
+      "split": "validation"
+    }
+  },
+  "config": {
+    "bootstrap": 1000,
+    "decision_on": "validation pairwise accuracy of the full score",
+    "fitted_on": "train pairs",
+    "label_set": "majority",
+    "lambda_chosen_on": "validation log-loss",
+    "lambdas": [
+      0.0,
+      0.01,
+      0.03,
+      0.1,
+      0.3,
+      1.0,
+      3.0,
+      10.0,
+      30.0,
+      100.0
+    ],
+    "margin": 0.03,
+    "seed": 0
+  },
+  "decision": {
+    "fitted_validation_accuracy": 0.8333333333333334,
+    "hand_validation_accuracy": 0.7916666666666666,
+    "margin": 0.03,
+    "non_negative": true,
+    "replace": true,
+    "validation_gain": 0.04166666666666674,
+    "weights_of_record": {
+      "danger": 0.31841852345729094,
+      "foot_traffic": 0.3029557539186053,
+      "reports": 0.1842479336454586,
+      "waiting": 0.19437778897864513
+    }
+  },
+  "flooded_drain_severity_sweep": {
+    "0.5": {
+      "train": 0.8439716312056738,
+      "validation": 0.8958333333333334
+    },
+    "0.55": {
+      "train": 0.851063829787234,
+      "validation": 0.875
+    },
+    "0.6": {
+      "train": 0.851063829787234,
+      "validation": 0.875
+    },
+    "0.65": {
+      "train": 0.851063829787234,
+      "validation": 0.875
+    },
+    "0.7": {
+      "train": 0.851063829787234,
+      "validation": 0.8333333333333334
+    },
+    "0.75": {
+      "train": 0.8439716312056738,
+      "validation": 0.8333333333333334
+    },
+    "0.8": {
+      "train": 0.8014184397163121,
+      "validation": 0.8333333333333334
+    },
+    "0.85": {
+      "train": 0.7588652482269503,
+      "validation": 0.7916666666666666
+    }
+  },
+  "meta": {
+    "git_commit": "3e8d6cf",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T13:34:35+00:00"
+  },
+  "nnls": {
+    "intercept": 0.06938797262819198,
+    "n_tickets": 120,
+    "normalised": {
+      "danger": 0.46210434789593285,
+      "foot_traffic": 0.2591759750236247,
+      "reports": 0.20526137610257275,
+      "waiting": 0.07345830097786957
+    },
+    "r2_train": 0.46573648606856033,
+    "r2_validation": 0.2610513860804142,
+    "spearman_validation": 0.5747469398490428,
+    "split_fitted_on": "train",
+    "weights": {
+      "danger": 2.3677340265199387,
+      "foot_traffic": 1.3279679745798796,
+      "reports": 1.0517199129184942,
+      "waiting": 0.37638624165209994
+    }
+  },
+  "nnls_extended": {
+    "implied_bonus_points": 22.391059453317034,
+    "intercept": 0.01121689523839176,
+    "n_tickets": 120,
+    "normalised": {
+      "danger": 0.4877041695177706,
+      "foot_traffic": 0.3055349041748806,
+      "reports": 0.15161409383912958,
+      "waiting": 0.055146832468219296
+    },
+    "note_coefficient": 1.1566825497193365,
+    "r2_train": 0.7889542090453805,
+    "r2_validation": 0.7614080807852885,
+    "spearman_validation": 0.8802696988393265,
+    "split_fitted_on": "train",
+    "weights": {
+      "danger": 2.5193935261647358,
+      "foot_traffic": 1.5783393042480622,
+      "reports": 0.783211607297357,
+      "waiting": 0.284878787988013
+    }
+  },
+  "test": {
+    "by_stratum": {
+      "fitted weights": {
+        "clear": {
+          "accuracy": 0.9375,
+          "n": 16
+        },
+        "close": {
+          "accuracy": 0.7857142857142857,
+          "n": 14
+        },
+        "trade_off": {
+          "accuracy": 0.8125,
+          "n": 16
+        }
+      },
+      "hand weights": {
+        "clear": {
+          "accuracy": 0.9375,
+          "n": 16
+        },
+        "close": {
+          "accuracy": 0.5,
+          "n": 14
+        },
+        "trade_off": {
+          "accuracy": 0.875,
+          "n": 16
+        }
+      }
+    },
+    "compare": {
+      "consensus": {
+        "n_pairs": 41,
+        "rows": {
+          "fitted weights": {
+            "accuracy": {
+              "hi": 0.975609756097561,
+              "lo": 0.7560975609756098,
+              "point": 0.8780487804878049
+            },
+            "this_minus_reference": {
+              "hi": 0.1707317073170732,
+              "lo": -0.024390243902439046,
+              "point": 0.07317073170731703
+            }
+          },
+          "hand weights": {
+            "accuracy": {
+              "hi": 0.926829268292683,
+              "lo": 0.6829268292682927,
+              "point": 0.8048780487804879
+            }
+          }
+        },
+        "split": "test"
+      },
+      "majority": {
+        "n_pairs": 46,
+        "rows": {
+          "fitted weights": {
+            "accuracy": {
+              "hi": 0.9347826086956522,
+              "lo": 0.7391304347826086,
+              "point": 0.8478260869565217
+            },
+            "this_minus_reference": {
+              "hi": 0.17391304347826086,
+              "lo": -0.021739130434782594,
+              "point": 0.06521739130434778
+            }
+          },
+          "hand weights": {
+            "accuracy": {
+              "hi": 0.8913043478260869,
+              "lo": 0.6521739130434783,
+              "point": 0.782608695652174
+            }
+          }
+        },
+        "split": "test"
+      },
+      "unanimous": {
+        "n_pairs": 31,
+        "rows": {
+          "fitted weights": {
+            "accuracy": {
+              "hi": 0.967741935483871,
+              "lo": 0.7419354838709677,
+              "point": 0.8709677419354839
+            },
+            "this_minus_reference": {
+              "hi": 0.19354838709677413,
+              "lo": -0.06451612903225801,
+              "point": 0.06451612903225812
+            }
+          },
+          "hand weights": {
+            "accuracy": {
+              "hi": 0.9354838709677419,
+              "lo": 0.6774193548387096,
+              "point": 0.8064516129032258
+            }
+          }
+        },
+        "split": "test"
+      }
+    },
+    "headline": {
+      "fitted weights": {
+        "consensus": {
+          "accuracy": {
+            "hi": 0.975609756097561,
+            "lo": 0.7560975609756098,
+            "point": 0.8780487804878049
+          },
+          "accuracy_ticket_resampled": {
+            "hi": 1.0,
+            "lo": 0.6666666666666666,
+            "point": 0.8780487804878049
+          },
+          "ceiling": {
+            "hi": 0.975609756097561,
+            "lo": 0.921951219512195,
+            "point": 0.9512195121951219
+          },
+          "n_pairs": 41,
+          "ratio_to_ceiling": {
+            "hi": 1.0256578947368422,
+            "lo": 0.8031088082901555,
+            "point": 0.9230769230769231
+          },
+          "ratio_to_ceiling_like_for_like": {
+            "hi": 1.0256578947368422,
+            "lo": 0.8031088082901555,
+            "point": 0.9230769230769232
+          },
+          "split": "test"
+        },
+        "majority": {
+          "accuracy": {
+            "hi": 0.9347826086956522,
+            "lo": 0.7391304347826086,
+            "point": 0.8478260869565217
+          },
+          "accuracy_ticket_resampled": {
+            "hi": 1.0,
+            "lo": 0.6530612244897959,
+            "point": 0.8478260869565217
+          },
+          "ceiling": {
+            "hi": 0.9470531400966185,
+            "lo": 0.8597122890029867,
+            "point": 0.9075002516862982
+          },
+          "n_pairs": 46,
+          "ratio_to_ceiling": {
+            "hi": 1.037128292785345,
+            "lo": 0.8201465897656904,
+            "point": 0.9342433628873478
+          },
+          "ratio_to_ceiling_like_for_like": {
+            "hi": 1.0583741158187019,
+            "lo": 0.830892350010614,
+            "point": 0.9531461471899891
+          },
+          "split": "test"
+        },
+        "unanimous": {
+          "accuracy": {
+            "hi": 0.967741935483871,
+            "lo": 0.7419354838709677,
+            "point": 0.8709677419354839
+          },
+          "accuracy_ticket_resampled": {
+            "hi": 1.0,
+            "lo": 0.6363636363636364,
+            "point": 0.8709677419354839
+          },
+          "ceiling": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "n_pairs": 31,
+          "ratio_to_ceiling": {
+            "hi": 0.967741935483871,
+            "lo": 0.7419354838709677,
+            "point": 0.8709677419354839
+          },
+          "ratio_to_ceiling_like_for_like": {
+            "hi": 0.967741935483871,
+            "lo": 0.7419354838709677,
+            "point": 0.8709677419354838
+          },
+          "split": "test"
+        }
+      },
+      "hand weights": {
+        "consensus": {
+          "accuracy": {
+            "hi": 0.926829268292683,
+            "lo": 0.6829268292682927,
+            "point": 0.8048780487804879
+          },
+          "accuracy_ticket_resampled": {
+            "hi": 0.9787451150673034,
+            "lo": 0.5609512195121952,
+            "point": 0.8048780487804879
+          },
+          "ceiling": {
+            "hi": 0.975609756097561,
+            "lo": 0.921951219512195,
+            "point": 0.9512195121951219
+          },
+          "n_pairs": 41,
+          "ratio_to_ceiling": {
+            "hi": 0.9743589743589745,
+            "lo": 0.7070707070707072,
+            "point": 0.8461538461538463
+          },
+          "ratio_to_ceiling_like_for_like": {
+            "hi": 0.9743589743589746,
+            "lo": 0.7070707070707072,
+            "point": 0.8461538461538463
+          },
+          "split": "test"
+        },
+        "majority": {
+          "accuracy": {
+            "hi": 0.8913043478260869,
+            "lo": 0.6521739130434783,
+            "point": 0.782608695652174
+          },
+          "accuracy_ticket_resampled": {
+            "hi": 0.9444444444444444,
+            "lo": 0.583173076923077,
+            "point": 0.782608695652174
+          },
+          "ceiling": {
+            "hi": 0.9470531400966185,
+            "lo": 0.8597122890029867,
+            "point": 0.9075002516862982
+          },
+          "n_pairs": 46,
+          "ratio_to_ceiling": {
+            "hi": 0.9883651203820656,
+            "lo": 0.7269040822761476,
+            "point": 0.8623784888190903
+          },
+          "ratio_to_ceiling_like_for_like": {
+            "hi": 1.0027487590025461,
+            "lo": 0.7270668037423657,
+            "point": 0.8762508042865701
+          },
+          "split": "test"
+        },
+        "unanimous": {
+          "accuracy": {
+            "hi": 0.9354838709677419,
+            "lo": 0.6774193548387096,
+            "point": 0.8064516129032258
+          },
+          "accuracy_ticket_resampled": {
+            "hi": 1.0,
+            "lo": 0.5555555555555556,
+            "point": 0.8064516129032258
+          },
+          "ceiling": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "n_pairs": 31,
+          "ratio_to_ceiling": {
+            "hi": 0.9354838709677419,
+            "lo": 0.6774193548387096,
+            "point": 0.8064516129032258
+          },
+          "ratio_to_ceiling_like_for_like": {
+            "hi": 0.9354838709677418,
+            "lo": 0.6774193548387096,
+            "point": 0.8064516129032258
+          },
+          "split": "test"
+        }
+      }
+    },
+    "post_stratified": {
+      "assumption": "in-between pairs behave like the trade-off pairs",
+      "ceiling": {
+        "hi": 0.9469242788461539,
+        "lo": 0.8378141903502482,
+        "point": 0.8982967032967033
+      },
+      "pairs_by_stratum": {
+        "clear": 16,
+        "close": 14,
+        "trade_off": 16
+      },
+      "rows": {
+        "fitted weights": {
+          "accuracy": {
+            "hi": 0.946886446886447,
+            "lo": 0.7656822344322345,
+            "point": 0.8652129120879122
+          },
+          "minus_reference": {
+            "hi": 0.09294871794871784,
+            "lo": -0.030792124542124544,
+            "point": 0.03107829670329676
+          },
+          "ratio_to_ceiling": {
+            "hi": 1.0633537786926157,
+            "lo": 0.8551729981447778,
+            "point": 0.9631705303076642
+          }
+        },
+        "hand weights": {
+          "accuracy": {
+            "hi": 0.9116858402014651,
+            "lo": 0.7346611721611722,
+            "point": 0.8341346153846154
+          },
+          "ratio_to_ceiling": {
+            "hi": 1.0197757693812286,
+            "lo": 0.8301162677347194,
+            "point": 0.9285736130650193
+          }
+        }
+      },
+      "shares": {
+        "between": 0.3525641025641026,
+        "clear": 0.46153846153846156,
+        "close": 0.1858974358974359
+      },
+      "split": "test"
+    },
+    "split": "test",
+    "tickets": {
+      "fitted weights": {
+        "kendall_tau_b": {
+          "hi": 0.7563308444322148,
+          "lo": 0.4590200928405408,
+          "point": 0.6209691382381429
+        },
+        "n_tickets": 40,
+        "ndcg_at_10": {
+          "hi": 0.987894453083318,
+          "lo": 0.839717170441826,
+          "point": 0.9463717600390572
+        },
+        "spearman": {
+          "hi": 0.8871488396130425,
+          "lo": 0.5931050306627886,
+          "point": 0.7754841214186512
+        },
+        "split": "test"
+      },
+      "hand weights": {
+        "kendall_tau_b": {
+          "hi": 0.7291859228840164,
+          "lo": 0.4211206169418024,
+          "point": 0.5836576878719025
+        },
+        "n_tickets": 40,
+        "ndcg_at_10": {
+          "hi": 0.988223851725983,
+          "lo": 0.8672294776201195,
+          "point": 0.9452152424529952
+        },
+        "spearman": {
+          "hi": 0.8724397550142784,
+          "lo": 0.5666405438087335,
+          "point": 0.7573706236920841
+        },
+        "split": "test"
+      }
+    }
+  },
+  "urgency_by_category": {
+    "blocked_sidewalk": {
+      "mean_urgency": 2.6375,
+      "n": 16,
+      "table_severity": 0.5
+    },
+    "broken_streetlight": {
+      "mean_urgency": 2.4461538461538463,
+      "n": 13,
+      "table_severity": 0.55
+    },
+    "flooded_drain": {
+      "mean_urgency": 2.626666666666666,
+      "n": 15,
+      "table_severity": 0.85
+    },
+    "open_manhole": {
+      "mean_urgency": 4.171428571428571,
+      "n": 21,
+      "table_severity": 1.0
+    },
+    "other": {
+      "mean_urgency": 1.9866666666666668,
+      "n": 15,
+      "table_severity": 0.25
+    },
+    "pothole": {
+      "mean_urgency": 2.5000000000000004,
+      "n": 18,
+      "table_severity": 0.65
+    }
+  }
+}

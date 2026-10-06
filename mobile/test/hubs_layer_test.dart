@@ -1,4 +1,4 @@
-import 'package:flutter/painting.dart' show Color;
+import 'package:flutter/material.dart' show Icons;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lakad/api/api_client.dart';
 import 'package:lakad/layers/hubs_layer.dart';
@@ -14,52 +14,46 @@ Hub hub(String kind, List<String> modes) => Hub.fromJson({
 });
 
 void main() {
-  group('hubColor', () {
-    test('one kind of PUV takes its own colour', () {
-      expect(hubColor(hub('terminal', ['jeepney'])), hubModeColors['jeepney']);
-      expect(hubColor(hub('terminal', ['uv_express'])), hubModeColors['uv_express']);
-      expect(hubColor(hub('stop', ['city_bus'])), hubModeColors['city_bus']);
-      expect(hubColor(hub('terminal', ['p2p_bus'])), hubModeColors['p2p_bus']);
+  group('hubIconKey', () {
+    test('a station is a train, whatever else stops there', () {
+      expect(hubIconKey(hub('station', ['mrt3'])), 'train');
+      expect(hubIconKey(hub('station', ['lrt1', 'jeepney', 'p2p_bus'])), 'train');
     });
 
-    test('several kinds of PUV share the mixed colour', () {
-      expect(hubColor(hub('terminal', ['jeepney', 'uv_express'])), hubMixedColor);
+    test('a terminal or stop takes the glyph of what serves it', () {
+      expect(hubIconKey(hub('stop', ['city_bus'])), 'bus');
+      expect(hubIconKey(hub('terminal', ['p2p_bus'])), 'bus');
+      expect(hubIconKey(hub('terminal', ['jeepney'])), 'jeepney');
+      expect(hubIconKey(hub('terminal', ['uv_express'])), 'jeepney');
     });
 
-    test('a station takes its line colour even when buses stop there too', () {
-      expect(hubColor(hub('station', ['mrt3', 'city_bus'])), hubModeColors['mrt3']);
-      expect(hubColor(hub('station', ['lrt1', 'jeepney', 'p2p_bus'])), hubModeColors['lrt1']);
+    test('kinds that share a glyph stay single; different glyphs are mixed', () {
+      expect(hubIconKey(hub('terminal', ['jeepney', 'uv_express'])), 'jeepney');
+      expect(hubIconKey(hub('terminal', ['city_bus', 'p2p_bus'])), 'bus');
+      expect(hubIconKey(hub('terminal', ['jeepney', 'city_bus'])), 'mixed');
     });
 
-    test('an unknown mode falls back to the mixed colour; every mode has a different colour', () {
-      expect(hubColor(hub('terminal', ['ferry'])), hubMixedColor);
-      expect({...hubModeColors.values, hubMixedColor}.length, hubModeColors.length + 1);
-    });
-
-    test('every mode the server sends has a colour and a label', () {
-      expect(hubModeColors.keys.toSet(), hubModeLabels.keys.toSet());
+    test('every mode and every key has a glyph', () {
+      for (final m in hubModeLabels.keys) {
+        expect(hubIcons, contains(hubIconKey(hub('terminal', [m]))));
+      }
+      expect(hubIcons['mixed']!.icon, Icons.commute);
     });
   });
 
   group('hubLegend', () {
-    test('lists only what is on the map, in the fixed order, with the mixed colour last', () {
+    test('lists only the glyphs on the map, in the fixed order', () {
       final legend = hubLegend([
         hub('stop', ['city_bus']),
         hub('terminal', ['jeepney']),
-        hub('terminal', ['jeepney', 'uv_express']),
+        hub('terminal', ['jeepney', 'city_bus']),
         hub('station', ['mrt3', 'city_bus']),
       ]);
-      expect(legend.map((e) => e.label), ['Jeepney', 'City bus', 'MRT-3', 'Several kinds']);
-      expect(legend.first.color, hubModeColors['jeepney']);
+      expect(legend.map((e) => e.label), ['Train station', 'Bus', 'Jeepney / UV Express', 'Several kinds']);
     });
 
-    test('a bus stop at a station does not add a City bus entry on its own; no hubs, no key', () {
-      expect(hubLegend([hub('station', ['lrt1', 'city_bus'])]).map((e) => e.label), ['LRT-1']);
+    test('no hubs, no key', () {
       expect(hubLegend(const []), isEmpty);
-    });
-
-    test('colours are opaque', () {
-      expect(hubLegend([hub('terminal', ['jeepney'])]).single.color, isA<Color>().having((c) => c.a, 'alpha', 1.0));
     });
   });
 }
