@@ -1,6 +1,6 @@
 # Lakad
 
-Walking navigation and crowd reporting for Makati. Commuters pick a destination, get a walking route that steers around reported hazards, and photograph new problems in an AR camera view. The city sees those reports as a ranked ticket queue.
+Walking navigation and crowd reporting for Makati. Commuters pick a destination, get suggested ways to commute (walk, ride one PUV or train, walk) and walking routes that steer around reported hazards, and photograph new problems in an AR camera view. The city sees those reports as a ranked ticket queue.
 
 Smart Urban Living Hackathon · iACADEMY MPH · Oct 6–7, 2026 · Team **Lakad Kinetic Development**
 Project documentation: [Google Doc](https://docs.google.com/document/d/1-KtQXQGzGgUjQvdE_HK4or0s5GL7DViF/)
@@ -9,9 +9,9 @@ Project documentation: [Google Doc](https://docs.google.com/document/d/1-KtQXQGz
 
 | Folder | What it does | Stack |
 |---|---|---|
-| `mobile/` | Map of Makati with TomTom traffic, your location, destination search, Fastest / Walkable / Accessible walking routes with hazard counts, transit hubs (PUV terminals, MRT-3, LRT-1), report pins, an AR camera for geotagged photo reports, and a hold-to-record SOS on the camera button | Flutter, mapbox_maps_flutter, camera, geolocator, sensors_plus |
+| `mobile/` | Map of Makati with TomTom traffic, your location, destination search, suggested commute routes (walk, ride, walk, with arrival time and the quickest marked) drawn leg by leg, Fastest / Walkable / Accessible walking routes with hazard counts, transit hubs (PUV terminals, MRT-3, LRT-1), report pins, an AR camera for geotagged photo reports, and a hold-to-record SOS on the camera button | Flutter, mapbox_maps_flutter, camera, geolocator, sensors_plus |
 | `dashboard/` | Ticket queue with status workflow (open → verified → assigned → fixed), photo detail, SOS tickets that top the queue and blink on the map, insights panel, traffic layer, predicted foot-traffic layer with a past and forecast view | React, Vite, TypeScript, mapbox-gl |
-| `server/` | `/reports` CRUD and photos, `POST /sos` (video), `/geocode`, `/route/walk`, `/transit/hubs`, `/footfall` and `/footfall/series` (predicted foot traffic), `/health`. JSON file store in `db/` | FastAPI, OpenRouteService |
+| `server/` | `/reports` CRUD and photos, `POST /sos` (video), `/geocode`, `/route/walk`, `/route/commute`, `/transit/hubs`, `/footfall` and `/footfall/series` (predicted foot traffic), `/health`. JSON file store in `db/` | FastAPI, OpenRouteService |
 | `models/` | Ticketing rules: same-place matching, priority score, light note classification, with tests and an evaluation ([models/tickets/EVALUATION.md](models/tickets/EVALUATION.md)). **Not connected to the server yet** | Python standard library; the evaluation also uses numpy, scipy, scikit-learn |
 
 Both clients use the same API, so a phone report and a dashboard status change hit the same data. Unresolved hazard reports become no-go zones for Walkable and Accessible routes. An SOS never does. Full API reference: `/docs` on the running server.
@@ -36,6 +36,12 @@ Both clients use the same API, so a phone report and a dashboard status change h
 - **Hold-and-slide is hard for some people.** There is no alternative for screen-reader or switch users yet.
 - **Clips sit unencrypted in `server/storage/videos/` with no retention limit.** Treat the folder as sensitive: it is not git-ignored yet, so do not `git add` it.
 - **Not run on a physical phone.** Verified with analyzer, widget and unit tests, and a real upload to a real server. The recording itself (camera plugin, Android recorder, haptics) needs a device test.
+
+## Commute routes are estimated
+
+`GET /route/commute` offers up to three options: walk to a nearby hub, ride to another hub that serves the same mode, walk to the destination. The walks are real street routes from OpenRouteService (an estimate stands in if it fails). The ride is not real: the study has no stop order, route lines, timetables or fares, so a ride is the straight line between two hubs, stretched 30% for streets and timed at an assumed speed and wait per mode (`server/data/transit/ride_modes.json`, our judgement, not from a source). Arrival time counts from the moment the list is shown. The app says "Ride times are estimates."
+
+**Known limits.** One ride per trip, no transfers. A hub is a PUV terminal or stop, or a train station, so a route can pair two hubs that no single PUV route links; the study's route list is not checked against the pair. No fares, no schedules, no live positions. Tests: `server/tests/test_commute.py`, `server/tests/test_commute_route.py`, `mobile/test/commute_list_test.dart`.
 
 ## Foot traffic is predicted, not measured
 
@@ -88,7 +94,7 @@ See [SETUP.md](SETUP.md).
 | Traffic | TomTom Traffic flow tiles | Third-party API, free-tier key |
 | Search and routing | OpenRouteService, called by our server | Third-party API, free-tier key. Search text and an optional nearby point go to it through the server |
 | Map data | OpenStreetMap, incl. an Overpass snapshot of MRT-3 and LRT-1 stations (`server/data/transit/stations.geojson`) | Open data (ODbL). Credit OSM |
-| Transit routes and terminals | "PUV Routes in Makati" study (Ayala Land; SYSTRA Philippines, Makati BRT Study, 2025), from the hackathon's Makati Data Hub | Organizer-provided, hackathon use only. Route names and terminals only; positions were looked up by name through OpenRouteService and checked by hand |
+| Transit routes and terminals | "PUV Routes in Makati" study (Ayala Land; SYSTRA Philippines, Makati BRT Study, 2025), from the hackathon's Makati Data Hub | Organizer-provided, hackathon use only. Route names and terminals only; positions were looked up by name through OpenRouteService and checked by hand. Commute options use only the hub positions and modes from it, with our own assumed ride speeds |
 | Foot-traffic estimate and forecast | Our own rules, mode weights and hourly curves, plus a seasonal forecast, in plain Python. No machine-learning model and no scraped data. Inputs: the organizer's transit files and our curated district list | Predicted from assumptions and research, not measured. See "Foot traffic is predicted, not measured" |
 | Ticketing rules | `models/tickets/`: hand-written rules and word lists in plain Python. Places that draw foot traffic: 719 OpenStreetMap places (`models/tickets/resources/places.json`) | Open data (ODbL). Credit OSM. No machine-learning model ships; the evaluation fits some for comparison only |
 | Evaluation data | City of Chicago 311 service requests (potholes, street lights, sidewalks, water), downloaded to test the matcher; only summary numbers and plots are committed. 1,900 notes (training and gold) and 240 ticket pairs with five raters' judgments, all written by AI agents | Chicago: open data, evaluation only. The notes and judgments are AI-generated stand-ins for real data, labelled as such in `models/tickets/EVALUATION.md` |
