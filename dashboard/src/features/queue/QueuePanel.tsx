@@ -1,11 +1,11 @@
-// Ranked fix-it list: unresolved first, an open SOS above everything (unsorted ones on top), then most severe, then
-// oldest. A row opens the ticket in place (DetailPanel); back returns to the list. Floats over the map, never resizes it.
+// Ranked fix-it list: unresolved first, an open SOS above everything (unsorted ones on top), then the ticket engine's
+// priority, then most severe, then oldest. A row opens the ticket in place (DetailPanel); back returns to the list. Floats over the map, never resizes it.
 import { useEffect, useRef, useState } from "react";
 import { photoUrl } from "../../api/client";
 import { ENV } from "../../config/env";
 import type { Report, SosKind, Status } from "../../types/api";
-import DetailPanel, { Severity } from "../../panels/DetailPanel";
-import { STATUS_LABEL, isRejected, isSos, isSosActive, isUnresolved, needsReview, rank, ticketCode, ticketLabel, timeAgo } from "./tickets";
+import DetailPanel, { BandChip, Severity } from "../../panels/DetailPanel";
+import { STATUS_LABEL, isRejected, isSos, isSosActive, isUnresolved, needsReview, rank, sightings, sightingsLabel, ticketCode, ticketLabel, timeAgo } from "./tickets";
 
 type Props = {
   reports: Report[] | null; // null until the API first answers
@@ -50,6 +50,7 @@ export default function QueuePanel({
   const review = all.filter(needsReview).length;
   const fixed = all.filter((r) => r.status === "fixed").length;
   const rejected = all.filter(isRejected).length;
+  const count = sightings(all);
   const rows = rank(all).filter((r) => isUnresolved(r) || (r.status === "fixed" ? showFixed : showRejected));
 
   // Keyboard focus follows the view: into the ticket, then back to its row (or the title).
@@ -94,6 +95,7 @@ export default function QueuePanel({
         <DetailPanel
           key={selected.id}
           report={selected}
+          sightings={count}
           now={now}
           onStatus={onStatus}
           onKind={onKind}
@@ -102,7 +104,7 @@ export default function QueuePanel({
         />
       ) : (
         <div className="queue-list">
-          <div className="src">Ranked: SOS first (unsorted on top), then most severe, oldest</div>
+          <div className="src">Ranked: SOS first (unsorted on top), then by priority, severity, oldest</div>
           <label className="switch">
             <input type="checkbox" checked={showFixed} onChange={(e) => setShowFixed(e.target.checked)} />
             <span>Show fixed</span>
@@ -139,6 +141,8 @@ export default function QueuePanel({
                     </span>
                     <small>
                       <span className="tid">{ticketCode(r)}</span>·<Severity level={r.severity} />
+                      <BandChip report={r} />
+                      {sightingsLabel(r, count)}
                       {r.handler && (r.status === "assigned" || r.status === "fixed") && (
                         <>
                           ·<span className="row-handler">{r.handler}</span>

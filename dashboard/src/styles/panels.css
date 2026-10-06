@@ -281,6 +281,19 @@
 .dot[data-status] {
   background: var(--c);
 }
+/* The ticket engine's band, on the same chip as a status: Critical red, High amber, Medium blue, Low grey. */
+[data-band="Critical"] {
+  --c: var(--danger);
+}
+[data-band="High"] {
+  --c: var(--warn);
+}
+[data-band="Medium"] {
+  --c: var(--accent);
+}
+[data-band="Low"] {
+  --c: var(--muted);
+}
 .badge {
   padding: 3px 7px;
   border-radius: 4px;

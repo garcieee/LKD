@@ -20,6 +20,9 @@ export type Status = "open" | "verified" | "assigned" | "fixed" | "rejected";
 // Who must respond to an SOS. Mirrors server/app/db/models.py SosKind.
 export type SosKind = "police" | "medical" | "fire_rescue";
 
+// The ticket engine's priority bands: Critical at 70 and up, High 55, Medium 40, Low below (models/tickets/settings.py).
+export type Band = "Critical" | "High" | "Medium" | "Low";
+
 export type Report = {
   id: string;
   category: Category;
@@ -32,10 +35,14 @@ export type Report = {
   video_url?: string | null; // SOS only: path on the API, e.g. /videos/<id>.mp4
   sos_kind?: SosKind | null; // SOS only: who must respond, picked here; null until sorted
   handler?: string | null; // who was assigned to fix it, picked here once the ticket is verified
-  ticket_id?: string | null; // the ticket this report is a sighting of (set by the server's ticket loop)
   status: Status;
   created_at: string; // ISO 8601, UTC
   updated_at: string;
+  // Set by the server's ticket loop (models/tickets) a few seconds after a report arrives; absent or null until then.
+  ticket_id?: string | null; // the ticket this report is a sighting of; reports of one hazard share it
+  district_id?: number | null; // 1 or 2, null outside both districts
+  priority?: number | null; // 0..100, higher is more urgent; the ticket's, so shared by its reports
+  band?: Band | null;
 };
 
 // PROVISIONAL: GET /route/walk (server/app/routers/routes.py) exists, but the server does not log the routes it
