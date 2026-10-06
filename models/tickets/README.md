@@ -32,7 +32,7 @@ Edit `settings.py`, run the tests. The weights are judgment calls: show a few pe
 
 ## Status
 
-**Built and tested:** `matching/`, `ranking/`, `classification/`, `resources/`, `engine.py` and `storage/` (standard library only, 185 tests), with every number in `settings.py`. `resources/districts.json` holds the boundaries of Makati's 23 barangays after the EMBO ruling (OpenStreetMap, ODbL; rebuilt by `resources/build_districts.py`), and `district_of` puts a point in District 1, District 2 or neither.
+**Built and tested:** `matching/`, `ranking/`, `classification/`, `resources/`, `engine.py` and `storage/` (standard library only), with every number in `settings.py`. `resources/districts.json` holds the boundaries of Makati's 23 barangays after the EMBO ruling (OpenStreetMap, ODbL; rebuilt by `resources/build_districts.py`), and `district_of` puts a point in District 1, District 2 or neither.
 
 **Attached:** a loop inside the server (`server/app/services/ticket_sync.py`, every `SYNC_EVERY_S`) calls `engine.sync_once`: each new report joins or opens a ticket, the ticket gets its district and priority, tickets, sightings and every status change are kept in SQLite (`db/lakad.db`), and `/reports` gains `ticket_id`, `district_id`, `priority` and `band`. Analysts sign in with Supabase Auth and use `GET` and `PATCH /tickets`, which show and change only the tickets of their districts (`engine.tickets_for`, `engine.set_status`).
 
