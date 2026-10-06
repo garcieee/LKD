@@ -1,6 +1,6 @@
 // The server's API at Env.apiBaseUrl: reports (server/app/routers/reports.py), place search
 // (server/app/routers/geocode.py), walking routes (server/app/routers/routes.py) and transit hubs
-// (server/app/routers/transit.py).
+// (server/app/routers/transit.py). An SOS goes up as a video to POST /sos (server/app/routers/reports.py).
 // Report mirrors server/app/db/models.py, minus severity and updated_at, which the app never shows.
 import 'dart:convert';
 import 'dart:math' as math;
@@ -20,6 +20,10 @@ const categoryLabels = {
   'other': 'Other',
 };
 
+/// The category of an SOS. Not in [categoryLabels]: nobody picks it. Only the shutter's hold-to-record files one.
+const sosCategory = 'sos';
+const sosLabel = 'SOS · Crime signal';
+
 /// Open -> Verified -> Assigned -> Fixed, set by the dashboard.
 const statusLabels = {'open': 'Open', 'verified': 'Verified', 'assigned': 'Assigned', 'fixed': 'Fixed'};
 
@@ -33,6 +37,7 @@ class Report {
       heading = (json['heading'] as num?)?.toDouble(),
       note = json['note'] as String? ?? '',
       photoUrl = json['photo_url'] as String,
+      videoUrl = json['video_url'] as String?,
       status = statusLabels.containsKey(json['status']) ? json['status'] as String : 'open',
       createdAt = DateTime.parse(json['created_at'] as String);
 
@@ -42,11 +47,14 @@ class Report {
   final double lng;
   final double? heading; // compass heading of the camera when the photo was taken
   final String note;
-  final String photoUrl; // a path on the server, e.g. /photos/<id>.jpg
+  final String photoUrl; // a path on the server, e.g. /photos/<id>.jpg. Empty for an SOS
+  final String? videoUrl; // an SOS only: a path on the server, e.g. /videos/<id>.mp4
   final String status;
   final DateTime createdAt;
 
-  String get label => categoryLabels[category] ?? 'Other';
+  bool get isSos => category == sosCategory;
+
+  String get label => isSos ? sosLabel : categoryLabels[category] ?? 'Other';
 }
 
 /// The route modes the server takes, with their labels, in the order the toggle shows them.
@@ -149,12 +157,17 @@ class ApiException implements Exception {
 final api = ApiClient();
 
 class ApiClient {
-  ApiClient({http.Client? client, this.base = Env.apiBaseUrl, this.timeout = const Duration(seconds: 20)})
-    : _http = client ?? http.Client();
+  ApiClient({
+    http.Client? client,
+    this.base = Env.apiBaseUrl,
+    this.timeout = const Duration(seconds: 20),
+    this.sosTimeout = const Duration(seconds: 90),
+  }) : _http = client ?? http.Client();
 
   final http.Client _http;
   final String base;
   final Duration timeout; // per call, upload included
+  final Duration sosTimeout; // a video over a weak connection: longer than a photo, still one call
 
   /// Every report, newest first.
   Future<List<Report>> reports() async {
@@ -231,16 +244,39 @@ class ApiClient {
     return Report.fromJson(await _send(req) as Map<String, dynamic>);
   }
 
-  // Aborts the call, socket and all, so a retry after a timeout cannot race a slow first upload.
-  Future<void> _deadline() => Future.delayed(timeout);
+  /// Sends an SOS: the clip the shutter recorded, filed at once as an urgent ticket (POST /sos). [onProgress] gets
+  /// the share uploaded so far, 0..1. The server reads the container from the bytes (MP4, MOV or WebM).
+  Future<Report> sendSos({
+    required Uint8List video,
+    required double lat,
+    required double lng,
+    double? heading,
+    void Function(double sent)? onProgress,
+  }) async {
+    final req = http.AbortableMultipartRequest('POST', Uri.parse('$base/sos'), abortTrigger: _deadline(sosTimeout))
+      ..fields.addAll({'lat': '$lat', 'lng': '$lng', if (heading != null) 'heading': '$heading'})
+      ..files.add(
+        http.MultipartFile(
+          'video',
+          _chunks(video, onProgress),
+          video.length,
+          filename: 'sos.mp4',
+          contentType: http.MediaType('video', 'mp4'),
+        ),
+      );
+    return Report.fromJson(await _send(req, within: sosTimeout) as Map<String, dynamic>);
+  }
 
-  // The answer's JSON.
-  Future<Object?> _send(http.BaseRequest request) async {
+  // Aborts the call, socket and all, so a retry after a timeout cannot race a slow first upload.
+  Future<void> _deadline([Duration? within]) => Future.delayed(within ?? timeout);
+
+  // The answer's JSON. [within] is the deadline the request was given, for the message.
+  Future<Object?> _send(http.BaseRequest request, {Duration? within}) async {
     final http.Response res;
     try {
       res = await http.Response.fromStream(await _http.send(request));
     } on http.RequestAbortedException {
-      throw ApiException('No answer from the server in ${timeout.inSeconds} s. Try again.');
+      throw ApiException('No answer from the server in ${(within ?? timeout).inSeconds} s. Try again.');
     } on http.ClientException catch (e) {
       throw ApiException("Can't reach the server at $base (${e.message}). Check the connection and try again.");
     }
@@ -254,7 +290,7 @@ class ApiClient {
   }
 }
 
-// The photo in 64 KB pieces, so progress moves as the connection takes them.
+// The photo (or SOS video) in 64 KB pieces, so progress moves as the connection takes them.
 Stream<List<int>> _chunks(Uint8List bytes, void Function(double)? onProgress) async* {
   const size = 64 * 1024;
   for (var start = 0; start < bytes.length; start += size) {

@@ -8,6 +8,7 @@ const navy = Color(0xFF212E4A); // primary action and focus
 const warn = Color(0xFF8A6736);
 const hairline = Color(0x2459534E); // rgba(89, 83, 78, 0.14)
 const edgeStrong = Color(0xFFCDCBCA); // ink at 30% over white: switch track when off
+const sosRed = Color(0xFFD6001C); // an SOS: the dashboard's --sos, brighter than a hazard's red so it never reads as one
 
 const radiusButton = BorderRadius.all(Radius.circular(6));
 const radiusChip = BorderRadius.all(Radius.circular(10));

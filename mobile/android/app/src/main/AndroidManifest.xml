@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <!-- The camera plugin asks for the microphone; reports are photos only (enableAudio: false). -->
+    <!-- The camera plugin asks for the microphone; reports are photos and SOS clips are silent video (enableAudio: false). -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove"/>
     <!-- usesCleartextTraffic: the API runs as plain HTTP on the laptop's hotspot IP.
          enableOnBackInvokedCallback: Android 15 predictive back. -->

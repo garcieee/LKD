@@ -5,6 +5,7 @@
 // No testWidgets in this file: its binding would swap real HTTP for a fake that answers 400.
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -20,6 +21,9 @@ final jpeg = base64Decode(
   '/9j/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAALCAAB'
   'AAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAAAP/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AP//Z',
 );
+
+// An MP4's first bytes (an `ftyp` box) and filler: the server reads the container from the bytes.
+final mp4 = Uint8List.fromList([0, 0, 0, 0x18, ...'ftypmp42'.codeUnits, ...List.filled(2048, 0)]);
 
 Object fields(Report r) => (r.id, r.category, r.lat, r.lng, r.heading, r.note, r.photoUrl, r.status, r.createdAt);
 
@@ -52,6 +56,21 @@ void main() {
     expect(photo.statusCode, 200);
     expect(photo.headers['content-type'], 'image/jpeg');
     expect(photo.bodyBytes, jpeg);
+  }, skip: skip);
+
+  test('an SOS goes up as a video, comes back as an urgent ticket with its clip, and stays out of the public list', () async {
+    final sent = await api.sendSos(video: mp4, lat: 14.5547, lng: 121.0244, heading: 12);
+    expect((sent.category, sent.isSos, sent.status, sent.photoUrl), ('sos', true, 'open', ''));
+    expect(sent.videoUrl, '/videos/${sent.id}.mp4');
+
+    final clip = await http.get(Uri.parse('$base${sent.videoUrl}')); // what the dashboard plays
+    expect(clip.statusCode, 200);
+    expect(clip.headers['content-type'], 'video/mp4');
+    expect(clip.bodyBytes, mp4);
+
+    expect((await api.reports()).any((r) => r.id == sent.id), isFalse, reason: 'the public list leaves SOS out');
+    final all = await http.get(Uri.parse('$base/reports?include_sos=true')); // the dashboard asks for them
+    expect((jsonDecode(all.body) as List).first['id'], sent.id);
   }, skip: skip);
 
   test('the server takes every category the picker offers, and a heading of 0 or 360', () async {

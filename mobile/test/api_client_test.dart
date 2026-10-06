@@ -21,8 +21,26 @@ Map<String, dynamic> serverReport({Object? heading = 87.5, String status = 'open
   'updated_at': '2026-10-06T07:31:05+00:00',
 };
 
-ApiClient apiWith(MockClient mock) =>
-    ApiClient(client: mock, base: 'http://server', timeout: const Duration(milliseconds: 50));
+ApiClient apiWith(MockClient mock) => ApiClient(
+  client: mock,
+  base: 'http://server',
+  timeout: const Duration(milliseconds: 50),
+  sosTimeout: const Duration(milliseconds: 50),
+);
+
+// An SOS as the server sends it: urgent, no photo, a video.
+Map<String, dynamic> serverSos() => {
+  ...serverReport(),
+  'id': '9c1d',
+  'category': 'sos',
+  'severity': 3,
+  'note': '',
+  'photo_url': '',
+  'video_url': '/videos/9c1d.mp4',
+};
+
+// The start of an MP4 (an `ftyp` box), then 150 KB: three 64 KB pieces for the progress callback.
+final clip = Uint8List.fromList([0, 0, 0, 0x18, ...'ftypmp42'.codeUnits, ...List.filled(150 * 1024, 0x42)]);
 
 http.Response jsonResponse(Object body, int status) =>
     http.Response(jsonEncode(body), status, headers: {'content-type': 'application/json'});
@@ -68,6 +86,14 @@ void main() {
       for (final s in statusLabels.keys) {
         expect(Report.fromJson(serverReport(status: s)).status, s);
       }
+    });
+
+    test('reads an SOS: a video and no photo, and it is labelled as one', () {
+      final r = Report.fromJson(serverSos());
+      expect((r.category, r.isSos, r.label), ('sos', true, 'SOS · Crime signal'));
+      expect((r.photoUrl, r.videoUrl), ('', '/videos/9c1d.mp4'));
+      expect(Report.fromJson(serverReport()).videoUrl, isNull, reason: 'a hazard report has no video');
+      expect(Report.fromJson(serverReport()).isSos, isFalse);
     });
 
     test('labels the server categories, and anything else as Other', () {
@@ -209,6 +235,82 @@ void main() {
         }),
       );
       expect(send(api), apiError(startsWith('No answer from the server')));
+    });
+  });
+
+  group('ApiClient.sendSos', () {
+    test('posts the video and the place as multipart to /sos and returns the ticket', () async {
+      late http.BaseRequest sent;
+      late List<int> bytes;
+      final api = apiWith(
+        MockClient.streaming((req, body) async {
+          sent = req;
+          bytes = await body.toBytes();
+          return http.StreamedResponse(Stream.value(utf8.encode(jsonEncode(serverSos()))), 201);
+        }),
+      );
+      final progress = <double>[];
+      final report = await api.sendSos(video: clip, lat: 14.5547, lng: 121.0244, heading: 12.5, onProgress: progress.add);
+
+      expect((report.id, report.isSos, report.videoUrl), ('9c1d', true, '/videos/9c1d.mp4'));
+      expect(sent.method, 'POST');
+      expect(sent.url.toString(), 'http://server/sos');
+      expect(sent.contentLength, bytes.length);
+      final body = latin1.decode(bytes);
+      String field(String name, String value) => 'name="$name"\r\n\r\n$value\r\n';
+      expect(body, contains(field('lat', '14.5547')));
+      expect(body, contains(field('lng', '121.0244')));
+      expect(body, contains(field('heading', '12.5')));
+      expect(body, isNot(contains('name="category"')), reason: 'the server files it as an SOS by itself');
+      expect(
+        body,
+        contains('content-type: video/mp4\r\ncontent-disposition: form-data; name="video"; filename="sos.mp4"'),
+      );
+      expect(body, contains(latin1.decode(clip))); // every byte, in order
+      expect(progress, hasLength(3));
+      expect(progress.last, 1.0);
+    });
+
+    test('leaves out a missing heading', () async {
+      late String body;
+      final api = apiWith(
+        MockClient((req) async {
+          body = latin1.decode(req.bodyBytes);
+          return jsonResponse(serverSos(), 201);
+        }),
+      );
+      await api.sendSos(video: clip, lat: 14.5547, lng: 121.0244);
+      expect(body, isNot(contains('name="heading"')));
+    });
+
+    test("shows the server's own message, so the retry card can say why", () {
+      final api = apiWith(MockClient((_) async => jsonResponse({'detail': 'That location is outside the city.'}, 422)));
+      expect(api.sendSos(video: clip, lat: 40.7, lng: -74.0), apiError('That location is outside the city.'));
+    });
+
+    test('waits for its own, longer deadline, not the photo one', () async {
+      // The photo deadline here is 50 ms; the SOS one is 400 ms and the server answers at 150 ms.
+      final api = ApiClient(
+        client: MockClient.streaming((req, body) async {
+          await body.drain<void>();
+          await Future<void>.delayed(const Duration(milliseconds: 150));
+          return http.StreamedResponse(Stream.value(utf8.encode(jsonEncode(serverSos()))), 201);
+        }),
+        base: 'http://server',
+        timeout: const Duration(milliseconds: 50),
+        sosTimeout: const Duration(milliseconds: 400),
+      );
+      expect((await api.sendSos(video: clip, lat: 14.5547, lng: 121.0244)).isSos, isTrue);
+    });
+
+    test('gives up when the server does not answer in time', () {
+      final api = apiWith(
+        MockClient.streaming((req, _) async {
+          await (req as http.Abortable).abortTrigger;
+          throw http.RequestAbortedException(req.url);
+        }),
+      );
+      expect(api.sendSos(video: clip, lat: 14.5547, lng: 121.0244), apiError(startsWith('No answer from the server')));
     });
   });
 

@@ -291,7 +291,9 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
       MaterialPageRoute(builder: (_) => const ReportScreen()),
     );
     if (sent == null || !mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Report sent. Thanks!')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(sent.isSos ? 'SOS sent. The city has your video and location.' : 'Report sent. Thanks!')),
+    );
     _loadReports(); // the new pin
   }
 

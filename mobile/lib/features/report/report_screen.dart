@@ -3,6 +3,11 @@
 // reports already filed nearby, placed by bearing and distance, so people see a hazard is reported
 // before they file it twice. The shot springs into a corner thumbnail, iPhone-screenshot style, then
 // opens into the tag sheet. Pops with the new Report once the server has it.
+//
+// SOS: hold the shutter instead of tapping it. It records a silent video while the screen slowly reddens,
+// arrows point up to a cancel target, and letting go anywhere else sends the clip to the city at once as an
+// urgent ticket (sos_hold.dart has the rules, sos_overlay.dart the look). The clip is kept in memory until
+// the server has it, so a bad connection offers a retry instead of losing it.
 import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
@@ -18,6 +23,8 @@ import '../../layers/reports_layer.dart';
 import '../../theme.dart';
 import 'ar_math.dart';
 import 'category_picker.dart';
+import 'sos_hold.dart';
+import 'sos_overlay.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
@@ -29,7 +36,7 @@ class ReportScreen extends StatefulWidget {
 enum _Gps { starting, ok, off, denied, blocked }
 
 class _ReportScreenState extends State<ReportScreen>
-    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
+    with WidgetsBindingObserver, TickerProviderStateMixin {
   CameraController? _camera;
   CameraException? _cameraError;
   bool _cameraStarting = false;
@@ -52,6 +59,24 @@ class _ReportScreenState extends State<ReportScreen>
   late final _snap = AnimationController(vsync: this, duration: const Duration(milliseconds: 550));
   Timer? _autoOpen;
   bool _tagging = false;
+
+  // SOS: recording while the shutter is held.
+  bool _sos = false;
+  CameraController? _sosCamera; // the one recording, kept so letting go can stop it even if _camera is freed
+  Future<void>? _sosStarting; // startVideoRecording, in flight: a very short hold may end before it resolves
+  Position? _sosFix; // where the hold began
+  double? _sosHeading;
+  final _clock = Stopwatch();
+  Timer? _ticker;
+  final _recorded = ValueNotifier<Duration>(Duration.zero);
+  final _slide = ValueNotifier<double>(0); // 0..1: how far the finger has slid toward cancel
+  late final _ramp = AnimationController(vsync: this, duration: sosVignetteRamp); // the red creeping in
+  // Recorded and not yet delivered. Kept until the server has it (or the user discards it).
+  ({Uint8List video, Position fix, double? heading})? _sosClip;
+  bool _sosSending = false;
+  double? _sosProgress; // share of the video uploaded; null once the server has all of it
+  String? _sosError;
+  bool _sosSent = false;
 
   // The tag sheet.
   String? _category;
@@ -110,6 +135,10 @@ class _ReportScreenState extends State<ReportScreen>
     _heading.dispose();
     _snap.dispose();
     _autoOpen?.cancel();
+    _ticker?.cancel();
+    _ramp.dispose();
+    _slide.dispose();
+    _recorded.dispose();
     _note.dispose();
     // Dark bar icons again for the map (main.dart): this screen's AnnotatedRegion leaves with it.
     SystemChrome.setSystemUIOverlayStyle(
@@ -128,6 +157,15 @@ class _ReportScreenState extends State<ReportScreen>
     if (state == AppLifecycleState.hidden) {
       final camera = _camera;
       if (camera == null) return;
+      if (_sos) {
+        // A call or the lock key in the middle of an SOS is not a cancel: finish as if the finger had lifted
+        // (what was recorded still goes), then free the camera.
+        _sosFinish(cancel: false).whenComplete(() {
+          if (mounted && _camera == camera) setState(() => _camera = null);
+          camera.dispose();
+        });
+        return;
+      }
       setState(() => _camera = null);
       camera.dispose();
     } else if (state == AppLifecycleState.resumed) {
@@ -149,11 +187,14 @@ class _ReportScreenState extends State<ReportScreen>
       final back =
           cameras.where((c) => c.lensDirection == CameraLensDirection.back).firstOrNull ?? cameras.firstOrNull;
       if (back == null) throw CameraException('NoCamera', 'This phone has no camera.');
-      // JPEG stills either way on CameraX: the format group only sets the image-stream format.
+      // JPEG stills either way on CameraX: the format group only sets the image-stream format. No audio: an SOS
+      // is video only (the manifest strips the microphone permission), so no one's conversation is recorded.
+      // 2.5 Mbit/s keeps a 30 s clip under 10 MB for the upload.
       camera = CameraController(
         back,
         ResolutionPreset.high,
         enableAudio: false,
+        videoBitrate: 2500000,
         imageFormatGroup: ImageFormatGroup.jpeg,
       );
       await camera.initialize(); // asks for the camera permission the first time
@@ -209,6 +250,8 @@ class _ReportScreenState extends State<ReportScreen>
     final fix = _fix;
     return _camera != null &&
         !_shooting &&
+        !_sos &&
+        _sosClip == null &&
         _shot == null &&
         fix != null &&
         inMakati(fix.latitude, fix.longitude);
@@ -241,6 +284,132 @@ class _ReportScreenState extends State<ReportScreen>
       if (mounted) setState(() => _shooting = false);
     }
   }
+
+  // ---- SOS: hold the shutter to record, slide up to cancel, let go to send ----
+
+  void _say(String text) {
+    if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  // The hold is long enough to be an SOS: record, and let the screen redden.
+  Future<void> _sosStart() async {
+    if (!_canShoot) return; // the GPS fix may have gone since the finger went down
+    final camera = _camera!;
+    HapticFeedback.heavyImpact();
+    _sosCamera = camera;
+    _sosFix = _fix;
+    _sosHeading = _heading.value;
+    _slide.value = 0;
+    _recorded.value = Duration.zero;
+    _clock
+      ..reset()
+      ..start();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _ramp.value = 0.6; // no creep for people who turned animations off: a steady red
+    } else {
+      _ramp.forward(from: 0);
+    }
+    setState(() => _sos = true);
+    _ticker = Timer.periodic(const Duration(milliseconds: 200), (_) {
+      _recorded.value = _clock.elapsed;
+      if (_clock.elapsed >= sosMaxRecording) _sosFinish(cancel: false); // the limit: sent as if let go
+    });
+    _sosStarting = camera.startVideoRecording();
+    try {
+      await _sosStarting;
+    } on CameraException catch (e) {
+      _sosStopped();
+      _say('SOS did not start: ${e.description ?? e.code}');
+    }
+  }
+
+  // Back to the plain camera: the clock stopped, the red fading out.
+  void _sosStopped() {
+    _ticker?.cancel();
+    _ticker = null;
+    _clock.stop();
+    _sosCamera = null;
+    _sosStarting = null;
+    if (!mounted) return;
+    setState(() => _sos = false);
+    _ramp.animateBack(0, duration: const Duration(milliseconds: 250));
+    _slide.value = 0;
+  }
+
+  void _sosMove(double dy) {
+    final onTarget = _slide.value >= 1;
+    _slide.value = cancelProgress(dy);
+    if (!onTarget && _slide.value >= 1) HapticFeedback.selectionClick(); // on the X: letting go cancels
+  }
+
+  // The finger lifted, on the X or not.
+  Future<void> _sosEnd(double dy) => _sosFinish(cancel: inCancelZone(dy));
+
+  // Everything but an explicit slide to the X sends: lifting the finger, the 30 s limit, the system taking the
+  // touch away, the app leaving the screen. Only a clip under a second is dropped, with a hint.
+  Future<void> _sosFinish({required bool cancel}) async {
+    final camera = _sosCamera;
+    if (!_sos || camera == null) return; // already finishing
+    final recorded = _clock.elapsed, fix = _sosFix, heading = _sosHeading, starting = _sosStarting;
+    _sosStopped();
+    XFile? file;
+    try {
+      await starting; // a very short hold can end before the recorder is up
+      if (camera.value.isRecordingVideo) file = await camera.stopVideoRecording();
+    } on CameraException catch (e) {
+      debugPrint('SOS stop: ${e.code} ${e.description}');
+    }
+    final outcome = sosOutcome(recorded: recorded, cancelZone: cancel);
+    if (outcome != SosOutcome.send || file == null || fix == null) {
+      if (file != null) File(file.path).delete().ignore(); // thrown away: no copy is kept on the phone
+      HapticFeedback.mediumImpact();
+      _say(switch (outcome) {
+        SosOutcome.cancel => 'SOS cancelled. Nothing was sent.',
+        SosOutcome.tooShort => 'Keep holding to send an SOS.',
+        SosOutcome.send => 'The SOS video could not be saved. Hold the button to try again.',
+      });
+      return;
+    }
+    final video = await file.readAsBytes();
+    File(file.path).delete().ignore(); // the server keeps the copy that matters; the bytes stay here until it has them
+    if (!mounted) return;
+    setState(() => _sosClip = (video: video, fix: fix, heading: heading));
+    await _sosSend();
+  }
+
+  Future<void> _sosSend() async {
+    final clip = _sosClip!;
+    setState(() {
+      _sosSending = true;
+      _sosProgress = 0;
+      _sosError = null;
+    });
+    try {
+      final report = await api.sendSos(
+        video: clip.video,
+        lat: clip.fix.latitude,
+        lng: clip.fix.longitude,
+        heading: clip.heading,
+        onProgress: (sent) {
+          if (mounted) setState(() => _sosProgress = sent < 1 ? sent : null);
+        },
+      );
+      if (!mounted) return;
+      HapticFeedback.heavyImpact();
+      setState(() => _sosSent = true);
+      await Future<void>.delayed(const Duration(milliseconds: 1500)); // let the tick show
+      if (mounted) Navigator.pop(context, report);
+    } catch (e) {
+      if (mounted) setState(() => _sosError = '$e'); // an ApiException prints as its message
+    } finally {
+      if (mounted) setState(() => _sosSending = false);
+    }
+  }
+
+  void _sosDiscard() => setState(() {
+    _sosClip = null;
+    _sosError = null;
+  });
 
   void _openSheet() {
     _autoOpen?.cancel();
@@ -293,9 +462,10 @@ class _ReportScreenState extends State<ReportScreen>
     final camera = _camera;
     final motion = MediaQuery.disableAnimationsOf(context) ? Duration.zero : const Duration(milliseconds: 250);
     return PopScope<Object?>(
-      canPop: _shot == null,
+      // Not while an SOS records or waits to be delivered: leaving would lose it.
+      canPop: _shot == null && _sosClip == null && !_sos,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop && !_sending && !_sent) _retake(); // back drops the shot, not the screen
+        if (!didPop && !_sending && !_sent && _sosClip == null && !_sos) _retake(); // back drops the shot, not the screen
       },
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
@@ -312,8 +482,10 @@ class _ReportScreenState extends State<ReportScreen>
             fit: StackFit.expand,
             children: [
               if (camera != null) _Preview(camera) else _NoCamera(error: _cameraError, onRetry: _startCamera),
-              if (!_tagging) ...[const _Reticle(), _nearbyChips(), _controls()],
+              SosVignette(ramp: _ramp, cancel: _slide),
+              if (!_tagging) ...[if (!_sos) ...[const _Reticle(), _nearbyChips()], _controls()],
               if (_shot != null) ...[_scrim(motion), _shotCard(motion), _sheet(motion)],
+              if (_sosClip != null) _sosCard(),
             ],
           ),
         ),
@@ -356,18 +528,19 @@ class _ReportScreenState extends State<ReportScreen>
       minimum: const EdgeInsets.all(14),
       child: Stack(
         children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: IconButton.filled(
-              onPressed: () => Navigator.maybePop(context),
-              tooltip: 'Close',
-              style: IconButton.styleFrom(
-                backgroundColor: const Color(0x66000000),
-                foregroundColor: Colors.white,
+          if (!_sos)
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton.filled(
+                onPressed: () => Navigator.maybePop(context),
+                tooltip: 'Close',
+                style: IconButton.styleFrom(
+                  backgroundColor: const Color(0x66000000),
+                  foregroundColor: Colors.white,
+                ),
+                icon: const Icon(Icons.close),
               ),
-              icon: const Icon(Icons.close),
             ),
-          ),
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
@@ -375,6 +548,7 @@ class _ReportScreenState extends State<ReportScreen>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  if (_sos) ...[SosBanner(cancel: _slide, recorded: _recorded), const SizedBox(height: 8)],
                   _readout(),
                   if (_problem() case final problem?) ...[const SizedBox(height: 8), problem],
                 ],
@@ -384,7 +558,36 @@ class _ReportScreenState extends State<ReportScreen>
           if (_shot == null)
             Align(
               alignment: Alignment.bottomCenter,
-              child: _Shutter(onPressed: _canShoot ? _shoot : null, busy: _shooting),
+              // The shutter at the bottom; while an SOS records, the arrows and the X above it, in the same box.
+              child: SizedBox(
+                width: 240,
+                height: sosGuideHeight,
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    if (_sos)
+                      Positioned.fill(
+                        child: SosGuide(cancel: _slide, reduceMotion: MediaQuery.disableAnimationsOf(context)),
+                      ),
+                    ValueListenableBuilder<double>(
+                      valueListenable: _slide,
+                      builder: (context, slid, _) => SosShutter(
+                        enabled: _canShoot,
+                        busy: _shooting,
+                        armed: _sos,
+                        cancelling: _sos && slid >= 1,
+                        onTap: () {
+                          if (_canShoot) _shoot();
+                        },
+                        onSosStart: _sosStart,
+                        onSosMove: _sosMove,
+                        onSosEnd: _sosEnd,
+                        onSosAbort: () => _sosFinish(cancel: false),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
         ],
       ),
@@ -455,6 +658,61 @@ class _ReportScreenState extends State<ReportScreen>
           ),
           if (action != null) TextButton(onPressed: onPressed, child: Text(action)),
         ],
+      ),
+    );
+  }
+
+  // An SOS on its way: sending, sent, or not sent with the clip still held for another try.
+  Widget _sosCard() {
+    final error = _sosError;
+    final icon = _sosSent ? Icons.check_circle : (error != null ? Icons.error_outline : Icons.sos);
+    final title = _sosSent ? 'SOS sent' : (error != null ? 'SOS not sent' : 'Sending SOS');
+    return Positioned.fill(
+      child: ColoredBox(
+        color: const Color(0xCC000000),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(28),
+            child: Semantics(
+              liveRegion: true,
+              child: ChipCard(
+                padding: const EdgeInsets.fromLTRB(22, 22, 22, 18),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (_sosSending && !_sosSent)
+                      SizedBox.square(
+                        dimension: 44,
+                        child: CircularProgressIndicator(value: _sosProgress, strokeWidth: 4, color: sosRed),
+                      )
+                    else
+                      Icon(icon, color: sosRed, size: 44),
+                    const SizedBox(height: 12),
+                    Text(title, style: const TextStyle(fontFamily: serif, fontSize: 22, fontWeight: FontWeight.w500)),
+                    const SizedBox(height: 6),
+                    Text(
+                      _sosSent
+                          ? 'The city has your video and your location.'
+                          : error ??
+                                (_sosProgress == null ? 'Saving…' : 'Uploading ${(_sosProgress! * 100).round()}%'),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 13, color: error != null ? warn : muted),
+                    ),
+                    if (error != null) ...[
+                      const SizedBox(height: 14),
+                      FilledButton(
+                        onPressed: _sosSending ? null : _sosSend,
+                        style: FilledButton.styleFrom(backgroundColor: sosRed),
+                        child: const Text('Try again'),
+                      ),
+                      TextButton(onPressed: _sosSending ? null : _sosDiscard, child: const Text('Discard the video')),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -761,41 +1019,6 @@ class _Reticle extends StatelessWidget {
               corner(Alignment.bottomLeft, const Border(bottom: side, left: side)),
               corner(Alignment.bottomRight, const Border(bottom: side, right: side)),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Shutter extends StatelessWidget {
-  const _Shutter({required this.onPressed, required this.busy});
-
-  final VoidCallback? onPressed;
-  final bool busy;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      enabled: onPressed != null,
-      label: 'Take photo',
-      child: GestureDetector(
-        onTap: onPressed,
-        child: AnimatedOpacity(
-          opacity: onPressed == null && !busy ? 0.4 : 1,
-          duration: const Duration(milliseconds: 150),
-          child: Container(
-            width: 76,
-            height: 76,
-            padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 4),
-            ),
-            child: busy
-                ? const CircularProgressIndicator(color: Colors.white, strokeWidth: 3)
-                : const DecoratedBox(decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle)),
           ),
         ),
       ),

@@ -55,7 +55,8 @@ void main() {
 
   group('matches the dashboard', () {
     test('category and status labels', () {
-      expect(categoryLabels, dashboardTable('features/queue/tickets.ts', 'CATEGORY_LABEL'));
+      // The dashboard also labels the SOS, which the app files from the shutter and never lists in its picker.
+      expect({...categoryLabels, sosCategory: sosLabel}, dashboardTable('features/queue/tickets.ts', 'CATEGORY_LABEL'));
       expect(statusLabels, dashboardTable('features/queue/tickets.ts', 'STATUS_LABEL'));
     });
 
