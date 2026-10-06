@@ -13,10 +13,14 @@ import '../config/makati.dart';
 import '../config/map_styles.dart';
 import '../features/report/ar_math.dart' show inMakati;
 import '../features/report/report_screen.dart';
+import '../features/search/place_search.dart';
+import '../features/search/search_bar.dart';
 import '../layers/congestion_layer.dart';
+import '../layers/destination_layer.dart';
 import '../layers/reports_layer.dart';
 import '../state/layers_state.dart';
 import '../state/location_state.dart';
+import '../state/trip_state.dart';
 import '../theme.dart';
 import '../widgets/layer_sheet.dart';
 import 'pin_chip.dart';
@@ -34,6 +38,8 @@ class MapView extends StatefulWidget {
 class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   final _layers = LayersState();
   final _location = LocationState();
+  final _trip = TripState();
+  late final _search = PlaceSearch((text, near) => api.geocode(text, near: near));
   MapboxMap? _map;
   Timer? _timer;
   Timer? _reportsTimer;
@@ -73,6 +79,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _layers.addListener(_apply);
     _location.addListener(_syncPuck);
     _location.start();
+    _trip.addListener(_onDestination);
     _timer = Timer.periodic(congestionRefresh, (_) {
       if (_layers.congestionOn) _layers.refresh();
     });
@@ -86,6 +93,8 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _reportsTimer?.cancel();
     _layers.dispose();
     _location.dispose();
+    _trip.dispose();
+    _search.dispose();
     super.dispose();
   }
 
@@ -119,6 +128,48 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
       _puckOn = false; // try again on the next fix
       debugPrint('location puck: $e');
     }
+  }
+
+  // The user's position as the search's focus: results near them rank first.
+  Near? _near() {
+    final fix = _location.fix;
+    return fix == null ? null : (lat: fix.latitude, lng: fix.longitude);
+  }
+
+  // A place was picked (or cleared): draw its pin, then frame it with the user's pin.
+  void _onDestination() {
+    _queue = _queue.then((_) async {
+      final map = _map, place = _trip.destination;
+      if (map == null) return;
+      try {
+        if (!await map.isStyleLoaded()) return; // _ready() draws it once the style is up
+        await showDestination(map, place);
+        if (place != null) await _frameTrip(map, place);
+      } catch (e) {
+        debugPrint('destination: $e');
+      }
+    });
+  }
+
+  // Both pins on screen, clear of the search field above and the buttons below; just the
+  // destination when we do not know where the user is (or they are outside the city).
+  Future<void> _frameTrip(MapboxMap map, Place place) async {
+    final fix = _location.fix;
+    final dest = Point(coordinates: Position(place.lng, place.lat));
+    if (fix == null || !inMakati(fix.latitude, fix.longitude)) {
+      await map.flyTo(CameraOptions(center: dest, zoom: 16, bearing: 0, pitch: 0), MapAnimationOptions(duration: 1000));
+      return;
+    }
+    final fit = await map.cameraForCoordinates(
+      [Point(coordinates: Position(fix.longitude, fix.latitude)), dest],
+      MbxEdgeInsets(top: 190, left: 60, bottom: 300, right: 60),
+      0,
+      0,
+    );
+    // Two close points would zoom to street-corner level: stop at 17.
+    final zoom = fit.zoom;
+    final camera = zoom != null && zoom.isFinite ? CameraOptions(center: fit.center, zoom: math.min(zoom, 17), bearing: 0, pitch: 0) : fit;
+    await map.flyTo(camera, MapAnimationOptions(duration: 1000));
   }
 
   // The locate button: fly to the pin. Outside Makati the camera is locked to the city, so say so.
@@ -223,6 +274,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _loadReports();
     _puckOn = false; // a new style drops the puck
     _syncPuck();
+    if (_trip.destination != null) showDestination(map, _trip.destination); // and the destination pin
     try {
       // Mercator, whatever the style asks for: the lock below is worked out for it.
       await map.setProjection(StyleProjection(name: StyleProjectionName.mercator));
@@ -292,8 +344,21 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
             minimum: const EdgeInsets.all(14),
             child: Stack(
               children: [
-                const Align(alignment: Alignment.topLeft, child: _Brand()),
-                Align(alignment: Alignment.topRight, child: _ResetChip(onPressed: _reset)),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [const _Brand(), _ResetChip(onPressed: _reset)],
+                      ),
+                      const SizedBox(height: 10),
+                      PlaceSearchBar(search: _search, trip: _trip, near: _near),
+                    ],
+                  ),
+                ),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(
