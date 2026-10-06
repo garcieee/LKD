@@ -57,3 +57,9 @@ def test_foot_traffic_settings():
     assert all(0 < w <= 1 for w in s.EXPOSURE_WEIGHTS.values())
     assert 0 < s.EXPOSURE_FLOOR < s.EXPOSURE_DEFAULT < 1
     assert s.EXPOSURE_REACH_M > s.EXPOSURE_FADE_M > 0 and s.EXPOSURE_SCALE > 0
+
+
+def test_loop_settings():
+    assert s.SYNC_EVERY_S > 0 and s.SYNC_MAX_TRIES >= 1
+    # Matching reads the cache, so a fixed ticket must stay there for as long as a new report can still reopen it.
+    assert s.CACHE_KEEP_DAYS >= s.REOPEN_WINDOW_DAYS
