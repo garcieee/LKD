@@ -88,21 +88,24 @@ class Place {
   final double lng;
 }
 
-/// The kinds of PUV a hub is served by, with their labels (the study's four modes).
+/// What serves a hub, with labels: the study's four kinds of PUV, then the two running train lines.
 const hubModeLabels = {
   'jeepney': 'Jeepney',
   'uv_express': 'UV Express',
   'city_bus': 'City bus',
   'p2p_bus': 'P2P bus',
+  'mrt3': 'MRT-3',
+  'lrt1': 'LRT-1',
 };
 
-/// A terminal or bus stop from the 2025 Makati PUV study: GET /transit/hubs answers a list of these.
-/// The position is an estimate, [errorM] metres of doubt around it.
+/// A PUV terminal or bus stop from the 2025 Makati PUV study, or an MRT-3 / LRT-1 station: GET /transit/hubs
+/// answers a list of these. The position is an estimate, [errorM] metres of doubt around it.
+/// A station also lists the PUV that stop at it, train first.
 class Hub {
   Hub.fromJson(Map<String, dynamic> json)
     : id = json['id'] as String,
       name = json['name'] as String,
-      isTerminal = json['kind'] == 'terminal',
+      kind = json['kind'] as String,
       modes = [for (final m in json['modes'] as List) m as String],
       lat = (json['lat'] as num).toDouble(),
       lng = (json['lng'] as num).toDouble(),
@@ -110,11 +113,21 @@ class Hub {
 
   final String id;
   final String name; // as printed on the study's map, e.g. "Washington Terminal"
-  final bool isTerminal; // false: a bus stop
+  final String kind; // 'terminal', 'stop' (a bus stop) or 'station' (a train station)
   final List<String> modes; // keys of hubModeLabels
   final double lat;
   final double lng;
   final int errorM;
+
+  bool get isTerminal => kind == 'terminal';
+  bool get isStation => kind == 'station';
+
+  /// "Terminal", "Bus stop" or "Station".
+  String get kindLabel => switch (kind) {
+    'terminal' => 'Terminal',
+    'station' => 'Station',
+    _ => 'Bus stop',
+  };
 
   /// "Jeepney · UV Express".
   String get modesLabel => [for (final m in modes) hubModeLabels[m] ?? m].join(' · ');
