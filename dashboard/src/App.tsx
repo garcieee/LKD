@@ -3,10 +3,14 @@ import MapCanvas, { type MapHandle } from "./map/MapCanvas";
 import Legend from "./panels/Legend";
 import QueuePanel from "./features/queue/QueuePanel";
 import AnalyticsPanel from "./features/analytics/AnalyticsPanel";
+import FootfallPanel from "./features/footfall/FootfallPanel";
+import ForecastPanel from "./features/footfall/ForecastPanel";
+import { useFootfall } from "./features/footfall/useFootfall";
 import { useTickets } from "./features/queue/useTickets";
 import { isUnresolved } from "./features/queue/tickets";
 import { ENV } from "./config/env";
 import { REFRESH_MS } from "./layers/congestion";
+import { manilaNow } from "./layers/footfall";
 import type { Report } from "./types/api";
 
 const clock = (d: Date) => d.toLocaleTimeString([], { hour12: false });
@@ -14,6 +18,10 @@ const PHONE = "(max-width: 700px)"; // the breakpoint in panels.css
 
 export default function App() {
   const [congestionOn, setCongestionOn] = useState(true);
+  // Foot traffic is live when on: the estimate for this hour in Manila, following the clock. The Forecast panel can
+  // pin the map to another moment (cursor); null means live.
+  const [footfallOn, setFootfallOn] = useState(false);
+  const [cursor, setCursor] = useState<Date | null>(null);
   const [stamp, setStamp] = useState(() => Date.now());
   const [now, setNow] = useState(() => new Date());
   // Starts closed on every load, nothing is remembered.
@@ -25,8 +33,12 @@ export default function App() {
   const [queueOpen, setQueueOpen] = useState(() => !matchMedia(PHONE).matches);
   // Docked beside the map (the map keeps 70%), so it can be open together with Tickets.
   const [insightsOpen, setInsightsOpen] = useState(false);
+  // Shares that dock with Insights: opening one closes the other.
+  const [forecastOpen, setForecastOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const tickets = useTickets();
+  const when = manilaNow(cursor ?? now);
+  const footfall = useFootfall(footfallOn, when.day, when.hour);
   const toggle = useRef<HTMLButtonElement>(null);
   const mapView = useRef<MapHandle>(null);
   const unresolved = tickets.reports?.filter(isUnresolved).length ?? 0;
@@ -46,16 +58,16 @@ export default function App() {
 
   // Esc closes the sidebar first (focus back to its toggle), then the Tickets panel.
   useEffect(() => {
-    if (!navOpen && !queueOpen && !insightsOpen) return;
+    if (!navOpen && !queueOpen && !insightsOpen && !forecastOpen) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
-      if (!navOpen) return queueOpen ? closeQueue() : closeInsights();
+      if (!navOpen) return queueOpen ? closeQueue() : insightsOpen ? closeInsights() : closeForecast();
       setNavOpen(false);
       toggle.current?.focus();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [navOpen, queueOpen, insightsOpen]);
+  }, [navOpen, queueOpen, insightsOpen, forecastOpen]);
 
   // A pin click opens its ticket.
   const selectPin = useCallback((id: string) => {
@@ -75,15 +87,30 @@ export default function App() {
     setInsightsOpen(false);
   }
 
-  function openView(view: "map" | "tickets" | "insights") {
+  function closeForecast() {
+    if (document.getElementById("forecast")?.contains(document.activeElement)) toggle.current?.focus();
+    setForecastOpen(false);
+    setCursor(null); // the map goes back to live
+  }
+
+  function openView(view: "map" | "tickets" | "insights" | "forecast") {
     setNavOpen(false);
     if (view === "map") {
       closeQueue();
       closeInsights();
+      closeForecast();
       toggle.current?.focus();
       return;
     }
+    if (view === "forecast") {
+      setInsightsOpen(false);
+      setFootfallOn(true); // the chart drives the map's foot-traffic layer
+      setForecastOpen(true);
+      document.getElementById("forecast-title")?.focus();
+      return;
+    }
     if (view === "insights") {
+      closeForecast();
       setInsightsOpen(true);
       document.getElementById("insights-title")?.focus();
       return;
@@ -102,12 +129,13 @@ export default function App() {
     if (phone) {
       closeQueue(true);
       closeInsights();
+      closeForecast();
     }
     mapView.current?.show(r.lng, r.lat, phone ? 0 : stageRight - left);
   }
 
   return (
-    <div className={insightsOpen ? "shell split" : "shell"}>
+    <div className={insightsOpen || forecastOpen ? "shell split" : "shell"}>
       <div className="chrome">
         <header className="cluster">
           <button
@@ -131,8 +159,8 @@ export default function App() {
         <nav id="sidebar" className={`nav${navOpen ? " open" : ""}`} aria-label="Main" inert={!navOpen}>
           <div className="nav-label">OPERATIONS</div>
           <button
-            className={queueOpen || insightsOpen ? "nav-link" : "nav-link active"}
-            aria-current={queueOpen || insightsOpen ? undefined : "page"}
+            className={queueOpen || insightsOpen || forecastOpen ? "nav-link" : "nav-link active"}
+            aria-current={queueOpen || insightsOpen || forecastOpen ? undefined : "page"}
             onClick={() => openView("map")}
           >
             Map
@@ -157,6 +185,13 @@ export default function App() {
           >
             Insights
           </button>
+          <button
+            className={forecastOpen ? "nav-link active" : "nav-link"}
+            aria-current={forecastOpen ? "page" : undefined}
+            onClick={() => openView("forecast")}
+          >
+            Forecast
+          </button>
         </nav>
       </div>
 
@@ -165,6 +200,7 @@ export default function App() {
           ref={mapView}
           congestionOn={congestionOn}
           stamp={stamp}
+          footfall={footfallOn ? footfall.data : null}
           reports={tickets.reports}
           selectedId={selectedId}
           onSelect={selectPin}
@@ -233,6 +269,22 @@ export default function App() {
             )}
           </details>
 
+          <FootfallPanel
+            on={footfallOn}
+            onToggle={(on) => {
+              setFootfallOn(on);
+              if (!on) setCursor(null);
+            }}
+            when={when}
+            pinned={cursor !== null}
+            onLive={() => setCursor(null)}
+            data={footfall.data}
+            error={footfallOn ? footfall.error : null}
+            onShow={(d) => showOnMap(d)}
+            forecastOpen={forecastOpen}
+            onForecast={() => (forecastOpen ? closeForecast() : openView("forecast"))}
+          />
+
           {queueOpen && (
             <QueuePanel
               reports={tickets.reports}
@@ -259,6 +311,16 @@ export default function App() {
           )}
         </div>
       </main>
+
+      {forecastOpen && (
+        <ForecastPanel
+          districts={footfall.data?.districts ?? []}
+          hourKey={Math.floor(now.getTime() / 3_600_000)}
+          cursor={cursor}
+          onCursor={setCursor}
+          onClose={closeForecast}
+        />
+      )}
 
       {insightsOpen && (
         <AnalyticsPanel reports={tickets.reports} online={tickets.online} now={now.getTime()} onClose={closeInsights} onShow={showOnMap} />
