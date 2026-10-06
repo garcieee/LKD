@@ -24,6 +24,16 @@ class LayerSheet extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
               dense: true,
               title: const Text(
+                'Transit terminals and stops',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+              ),
+              value: layers.hubsOn,
+              onChanged: layers.setHubs,
+            ),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              title: const Text(
                 'Traffic flow',
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
               ),
