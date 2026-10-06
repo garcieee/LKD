@@ -62,7 +62,7 @@ Update at every progress check. Undisclosed tools are penalized.
 | Dashboards | React, Vite, TypeScript, mapbox-gl | Open-source libraries. Mapbox free tier |
 | Congestion | TomTom Traffic API | Third-party API, free-tier key |
 | Place search and routing | OpenRouteService API, called by our server | Third-party API, free-tier key. The app's search text and an optional nearby point go to it through the server |
-| Map data | OpenStreetMap through osmnx | Open data (ODbL). Credit OSM |
+| Map data | OpenStreetMap through osmnx, and an Overpass snapshot of the MRT-3 and LRT-1 stations (server/data/transit/stations.geojson) | Open data (ODbL). Credit OSM |
 | Transit routes and terminals | "PUV Routes in Makati" study (Ayala Land; SYSTRA Philippines, Makati BRT Study, 2025) from the hackathon's Makati Data Hub | Organizer-provided data, hackathon use only. Route names and terminals only; positions are looked up by name through OpenRouteService and checked by hand |
 | API | FastAPI, networkx, a JSON file store | Open-source libraries |
 | Image AI | CLIP (open_clip ViT-B-32), MediaPipe and OpenCV | AI models, open weights, run locally |
