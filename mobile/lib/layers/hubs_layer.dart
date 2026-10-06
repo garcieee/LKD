@@ -1,9 +1,12 @@
-// Transit hubs, one dot each, coloured by what serves them: PUV terminals (large) and bus stops (small), and
-// MRT-3 / LRT-1 stations (largest, dark ring, always named). Names show at close zoom.
+// Transit hubs, one blue badge each; the glyph says what serves it: a train for MRT-3 / LRT-1 stations,
+// a bus, a van for jeepney and UV Express, or "commute" where several kinds meet. Size says what it is:
+// stations (largest, always named), PUV terminals, bus stops (small). Names show at close zoom.
 // map/map_view.dart loads them once and draws them; a tap opens the hub card (features/transfer_walk/hub_picker.dart).
 import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
-import 'package:flutter/painting.dart' show Color;
+import 'package:flutter/material.dart' show Colors, IconData, Icons, TextPainter, TextSpan, TextStyle;
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 import '../api/api_client.dart';
@@ -12,35 +15,41 @@ const _id = 'hubs';
 const _labelId = 'hubs-label';
 const _stationLabelId = 'hubs-station-label';
 
-/// The colour of each kind of PUV, in the study's own order. A hub served by one kind takes its colour; a
-/// station takes its line's colour; a hub served by several kinds is [hubMixedColor].
-const hubModeColors = {
-  'jeepney': Color(0xFFE8590C), // orange, as on the study's jeepney map
-  'uv_express': Color(0xFF0E9AB7), // teal
-  'city_bus': Color(0xFFD99A00), // gold
-  'p2p_bus': Color(0xFFC2185B), // magenta
-  'mrt3': Color(0xFF1565C0), // blue
-  'lrt1': Color(0xFF388E3C), // green
-};
-const hubMixedColor = Color(0xFF6C4E8A); // purple
+const hubBlue = ui.Color(0xFF1D6FD8); // every hub, whatever serves it
 
-Color hubColor(Hub h) {
-  final single = h.isStation || h.modes.length == 1;
-  return (single ? hubModeColors[h.modes.first] : null) ?? hubMixedColor;
+/// Glyph per icon key (see [hubIconKey]) and its legend label. The key is also the image id suffix.
+const hubIcons = {
+  'train': (icon: Icons.train, label: 'Train station'),
+  'bus': (icon: Icons.directions_bus, label: 'Bus'),
+  'jeepney': (icon: Icons.airport_shuttle, label: 'Jeepney / UV Express'), // Material has no jeepney
+  'mixed': (icon: Icons.commute, label: 'Several kinds'),
+};
+
+const _iconOfMode = {
+  'mrt3': 'train',
+  'lrt1': 'train',
+  'city_bus': 'bus',
+  'p2p_bus': 'bus',
+  'jeepney': 'jeepney',
+  'uv_express': 'jeepney',
+};
+
+/// Which glyph a hub wears: a station is a train; any other hub takes the glyph of what serves it, or
+/// "mixed" when its kinds of service have different glyphs.
+String hubIconKey(Hub h) {
+  if (h.isStation) return 'train';
+  final keys = {for (final m in h.modes) _iconOfMode[m] ?? 'mixed'};
+  return keys.length == 1 ? keys.single : 'mixed';
 }
 
-/// The colour key for the hubs on the map: only what is there, in a fixed order.
-List<({Color color, String label})> hubLegend(List<Hub> hubs) {
-  final single = {for (final h in hubs) if (!h.isStation && h.modes.length == 1) h.modes.first};
-  final lines = {for (final h in hubs) if (h.isStation) h.modes.first};
+/// The key for the hubs on the map: only the glyphs that are there, in a fixed order.
+List<({IconData icon, String label})> hubLegend(List<Hub> hubs) {
+  final present = {for (final h in hubs) hubIconKey(h)};
   return [
-    for (final m in hubModeColors.keys)
-      if (single.contains(m) || lines.contains(m)) (color: hubModeColors[m]!, label: hubModeLabels[m] ?? m),
-    if (hubs.any((h) => !h.isStation && h.modes.length > 1)) (color: hubMixedColor, label: 'Several kinds'),
+    for (final MapEntry(:key, :value) in hubIcons.entries)
+      if (present.contains(key)) value,
   ];
 }
-
-String _hex(Color c) => '#${(c.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0')}';
 
 Object _byKind(Object station, Object terminal, Object stop) => [
   'case',
@@ -51,20 +60,41 @@ Object _byKind(Object station, Object terminal, Object stop) => [
   stop,
 ];
 
+// A blue rounded square with a white glyph, as a PNG. 96 px drawn at scale 3 = 32 logical px.
+Future<Uint8List> _badge(IconData icon) async {
+  const size = 96.0;
+  final rec = ui.PictureRecorder();
+  final canvas = ui.Canvas(rec);
+  canvas.drawRRect(
+    ui.RRect.fromRectAndRadius(const ui.Rect.fromLTWH(0, 0, size, size), const ui.Radius.circular(22)),
+    ui.Paint()..color = hubBlue,
+  );
+  final glyph = TextPainter(
+    text: TextSpan(
+      text: String.fromCharCode(icon.codePoint),
+      style: TextStyle(fontFamily: icon.fontFamily, package: icon.fontPackage, fontSize: 64, color: Colors.white),
+    ),
+    textDirection: ui.TextDirection.ltr,
+  )..layout();
+  glyph.paint(canvas, ui.Offset((size - glyph.width) / 2, (size - glyph.height) / 2));
+  final img = await rec.endRecording().toImage(size.toInt(), size.toInt());
+  return (await img.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+}
+
 final _layer = {
   'id': _id,
-  'type': 'circle',
+  'type': 'symbol',
   'source': _id,
-  'paint': {
-    'circle-color': ['get', 'color'],
-    'circle-radius': [
+  'layout': {
+    'icon-image': ['concat', 'hub-', ['get', 'icon']],
+    'icon-size': [
       'interpolate', ['linear'], ['zoom'],
-      12, _byKind(6, 4, 2.5),
-      16, _byKind(11, 8, 5),
-      19, _byKind(14, 11, 7),
+      12, _byKind(0.6, 0.5, 0.35),
+      16, _byKind(1.0, 0.8, 0.6),
+      19, _byKind(1.2, 1.0, 0.75),
     ],
-    'circle-stroke-width': _byKind(3, 2, 2),
-    'circle-stroke-color': _byKind('#262626', '#ffffff', '#ffffff'),
+    'icon-allow-overlap': true, // a hub never hides because another is near
+    'symbol-sort-key': _byKind(3, 2, 1), // stations on top
   },
 };
 
@@ -99,12 +129,17 @@ final _labels = {
     'text-anchor': 'top',
     'text-optional': true,
   },
-  'paint': {'text-color': '#3f2d57', 'text-halo-color': '#ffffff', 'text-halo-width': 1.5},
+  'paint': {'text-color': '#1D6FD8', 'text-halo-color': '#ffffff', 'text-halo-width': 1.5},
 };
 
 /// Draws [hubs]. Adds the source and layers when a style load has cleared them, under the report pins
 /// so a pothole is never hidden by a terminal or a station.
 Future<void> showHubs(MapboxMap map, List<Hub> hubs) async {
+  for (final MapEntry(:key, :value) in hubIcons.entries) {
+    if (!await map.hasStyleImage('hub-$key')) {
+      await map.addImage('hub-$key', 3, StyleImage.bytes(await _badge(value.icon)));
+    }
+  }
   if (!await map.styleSourceExists(_id)) {
     await map.addStyleSource(_id, jsonEncode({'type': 'geojson', 'data': ''}));
   }
@@ -125,7 +160,7 @@ Future<void> showHubs(MapboxMap map, List<Hub> hubs) async {
               'type': 'Point',
               'coordinates': [h.lng, h.lat],
             },
-            'properties': {'id': h.id, 'name': h.name, 'kind': h.kind, 'color': _hex(hubColor(h))},
+            'properties': {'id': h.id, 'name': h.name, 'kind': h.kind, 'icon': hubIconKey(h)},
           },
       ],
     }),

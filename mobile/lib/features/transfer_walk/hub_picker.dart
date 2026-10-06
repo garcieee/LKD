@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 import '../../api/api_client.dart';
-import '../../layers/hubs_layer.dart' show hubColor;
+import '../../layers/hubs_layer.dart' show hubBlue, hubIconKey, hubIcons;
 import '../../theme.dart';
 import '../report/ar_math.dart' show distanceM;
 import 'route_card.dart' show distanceLabel;
@@ -83,8 +83,8 @@ Future<void> showNearbyHubs(
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Icon(
-                        r.hub.isStation ? Icons.train_outlined : Icons.directions_bus_outlined,
-                        color: hubColor(r.hub),
+                        hubIcons[hubIconKey(r.hub)]!.icon,
+                        color: hubBlue,
                       ),
                       title: Text(r.hub.name),
                       subtitle: Text(r.hub.modesLabel, style: const TextStyle(fontSize: 12)),
