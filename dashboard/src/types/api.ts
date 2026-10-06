@@ -17,6 +17,9 @@ export type Category =
 // "rejected": a person looked at a new ticket and judged it not real. Hidden everywhere but kept, and can be reopened.
 export type Status = "open" | "verified" | "assigned" | "fixed" | "rejected";
 
+// Who must respond to an SOS. Mirrors server/app/db/models.py SosKind.
+export type SosKind = "police" | "medical" | "fire_rescue";
+
 export type Report = {
   id: string;
   category: Category;
@@ -27,6 +30,7 @@ export type Report = {
   note: string;
   photo_url: string; // path on the API, e.g. /photos/<id>.jpg. Empty for an SOS
   video_url?: string | null; // SOS only: path on the API, e.g. /videos/<id>.mp4
+  sos_kind?: SosKind | null; // SOS only: who must respond, picked here; null until sorted
   status: Status;
   created_at: string; // ISO 8601, UTC
   updated_at: string;

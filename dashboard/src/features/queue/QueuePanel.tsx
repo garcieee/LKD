@@ -1,11 +1,11 @@
-// Ranked fix-it list: unresolved first, an open SOS above everything, then most severe, then oldest. A row opens the ticket
-// in place (DetailPanel); back returns to the list. Floats over the map, never resizes it.
+// Ranked fix-it list: unresolved first, an open SOS above everything (unsorted ones on top), then most severe, then
+// oldest. A row opens the ticket in place (DetailPanel); back returns to the list. Floats over the map, never resizes it.
 import { useEffect, useRef, useState } from "react";
 import { photoUrl } from "../../api/client";
 import { ENV } from "../../config/env";
-import type { Report, Status } from "../../types/api";
+import type { Report, SosKind, Status } from "../../types/api";
 import DetailPanel, { Severity } from "../../panels/DetailPanel";
-import { CATEGORY_LABEL, STATUS_LABEL, isRejected, isSos, isSosActive, isUnresolved, needsReview, rank, timeAgo } from "./tickets";
+import { STATUS_LABEL, isRejected, isSos, isSosActive, isUnresolved, needsReview, rank, ticketLabel, timeAgo } from "./tickets";
 
 type Props = {
   reports: Report[] | null; // null until the API first answers
@@ -16,6 +16,7 @@ type Props = {
   onSelect: (id: string | null) => void;
   onClose: () => void;
   onStatus: (id: string, status: Status) => Promise<string | null>;
+  onKind: (id: string, kind: SosKind) => Promise<string | null>;
   onShowOnMap: (report: Report) => void;
 };
 
@@ -34,6 +35,7 @@ export default function QueuePanel({
   onSelect,
   onClose,
   onStatus,
+  onKind,
   onShowOnMap,
 }: Props) {
   const [showFixed, setShowFixed] = useState(false);
@@ -92,11 +94,12 @@ export default function QueuePanel({
           report={selected}
           now={now}
           onStatus={onStatus}
+          onKind={onKind}
           onShowOnMap={onShowOnMap}
         />
       ) : (
         <div className="queue-list">
-          <div className="src">Ranked: SOS first, then most severe, oldest</div>
+          <div className="src">Ranked: SOS first (unsorted on top), then most severe, oldest</div>
           <label className="switch">
             <input type="checkbox" checked={showFixed} onChange={(e) => setShowFixed(e.target.checked)} />
             <span>Show fixed</span>
@@ -124,7 +127,7 @@ export default function QueuePanel({
                     ) : (
                       <img src={photoUrl(r.photo_url)} alt="" loading="lazy" />
                     )}
-                    <b>{CATEGORY_LABEL[r.category]}</b>
+                    <b>{ticketLabel(r)}</b>
                     <span className="badge" data-status={r.status}>
                       {needsReview(r) ? "To review" : STATUS_LABEL[r.status]}
                     </span>

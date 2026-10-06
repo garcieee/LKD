@@ -2,7 +2,7 @@ import { test, type TestContext } from "node:test";
 import assert from "node:assert/strict";
 import type { Report } from "../types/api.ts";
 import { ENV } from "../config/env.ts";
-import { listReports, patchStatus } from "./client.ts";
+import { listReports, patchSosKind, patchStatus } from "./client.ts";
 import { onServerAnswer, roleLabel, signIn, signOut, type Role } from "./supabase.ts";
 
 const API = "http://localhost:8000"; // ENV.apiBaseUrl with nothing set
@@ -143,4 +143,18 @@ test("sign-in on: the server's 401, 403 and 503 reach the gate; a 404 keeps the 
     [200, ""],
     [404, "No such ticket."],
   ]);
+});
+
+test("sign-in on: who must respond to an SOS goes to PATCH /tickets/{id} as {sos_kind}, with the token", async (t) => {
+  signInOn(t);
+  const fetch = serve(t, {
+    [`POST ${SUPABASE}/auth/v1/token?grant_type=password`]: () => json(SESSION),
+    [`PATCH ${API}/tickets/a`]: (init) => json({ ...ticket, category: "sos", ...JSON.parse(String(init?.body)) }),
+  });
+  await signIn("district1@example.com", "pw");
+  assert.equal((await patchSosKind("a", "fire_rescue")).sos_kind, "fire_rescue");
+
+  const [init] = fetch.mock.calls.filter((c) => String(c.arguments[0]).startsWith(API)).map((c) => c.arguments[1]);
+  assert.equal(init?.body, JSON.stringify({ sos_kind: "fire_rescue" }));
+  assert.equal(new Headers(init?.headers).get("Authorization"), "Bearer token-1");
 });

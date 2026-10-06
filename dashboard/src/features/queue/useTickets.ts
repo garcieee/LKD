@@ -1,7 +1,7 @@
 // Tickets from the Lakad API: polled every 10 s, status changes applied optimistically.
 import { useEffect, useMemo, useRef, useState } from "react";
-import { listReports, patchStatus } from "../../api/client";
-import type { Report, Status } from "../../types/api";
+import { listReports, patchSosKind, patchStatus } from "../../api/client";
+import type { Report, SosKind, Status } from "../../types/api";
 import { CATEGORY_LABEL, isSosActive, newReports } from "./tickets";
 
 export const POLL_MS = 10_000;
@@ -33,7 +33,7 @@ export function useTickets() {
         if (added.length) {
           const sos = added.some(isSosActive);
           const text = sos
-            ? "SOS · crime signal received"
+            ? "SOS received"
             : added.length === 1
               ? `New ticket · ${CATEGORY_LABEL[added[0].category]}`
               : `${added.length} new tickets`;
@@ -83,6 +83,18 @@ export function useTickets() {
     }
   };
 
+  // Who must respond to an SOS. Not optimistic: the server's answer replaces the ticket. Resolves to null when
+  // saved, else the error message.
+  const changeKind = async (id: string, kind: SosKind): Promise<string | null> => {
+    try {
+      const saved = await patchSosKind(id, kind);
+      setReports((rs) => rs && rs.map((r) => (r.id === id ? saved : r)));
+      return null;
+    } catch (e) {
+      return e instanceof Error ? e.message : String(e);
+    }
+  };
+
   const shown = useMemo(
     () =>
       reports &&
@@ -93,5 +105,5 @@ export function useTickets() {
     [reports, pending],
   );
 
-  return { reports: shown, online, fresh, toast, changeStatus };
+  return { reports: shown, online, fresh, toast, changeStatus, changeKind };
 }

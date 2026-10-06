@@ -1,10 +1,12 @@
-// One ticket, shown in the Tickets panel: photo (an SOS: its video), what and where, and the status stepper.
+// One ticket, shown in the Tickets panel: photo (an SOS: its video and who must respond), what and where, and the
+// status stepper.
 import { useState } from "react";
 import { photoUrl, videoUrl } from "../api/client";
-import type { Report, Status } from "../types/api";
+import type { Report, SosKind, Status } from "../types/api";
+import SosKindCard from "../features/queue/SosKindCard";
 import StatusStepper from "../features/queue/StatusStepper";
 import TriageCard from "../features/queue/TriageCard";
-import { CATEGORY_LABEL, SEVERITY_LABEL, STATUS_LABEL, isSos, timeAgo } from "../features/queue/tickets";
+import { SEVERITY_LABEL, STATUS_LABEL, isSos, ticketLabel, timeAgo } from "../features/queue/tickets";
 
 const when = (iso: string) =>
   new Date(iso).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false });
@@ -27,12 +29,13 @@ type Props = {
   report: Report;
   now: number;
   onStatus: (id: string, status: Status) => Promise<string | null>;
+  onKind: (id: string, kind: SosKind) => Promise<string | null>;
   onShowOnMap: (report: Report) => void;
 };
 
-export default function DetailPanel({ report: r, now, onStatus, onShowOnMap }: Props) {
+export default function DetailPanel({ report: r, now, onStatus, onKind, onShowOnMap }: Props) {
   const [error, setError] = useState<string | null>(null);
-  const label = CATEGORY_LABEL[r.category];
+  const label = ticketLabel(r);
   const photo = photoUrl(r.photo_url);
   const sos = isSos(r);
   const change = async (status: Status) => {
@@ -77,6 +80,7 @@ export default function DetailPanel({ report: r, now, onStatus, onShowOnMap }: P
         {r.note || (sos ? "Sent with the app's SOS button: a short video, no sound." : "No note from the reporter.")}
       </p>
 
+      {sos && <SosKindCard report={r} onChange={(kind) => onKind(r.id, kind)} />}
       {/* A new ticket is reviewed first (Confirm or Reject); only then does it move along the stepper. */}
       <TriageCard report={r} onChange={change} />
       {r.status !== "open" && r.status !== "rejected" && <StatusStepper status={r.status} onChange={change} />}

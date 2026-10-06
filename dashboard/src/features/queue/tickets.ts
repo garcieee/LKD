@@ -1,5 +1,5 @@
 // Ticket logic with no React or mapbox-gl, so `node --test` runs it (tickets.test.ts).
-import type { Category, Report, Status } from "../../types/api.ts";
+import type { Category, Report, SosKind, Status } from "../../types/api.ts";
 
 export const CATEGORY_LABEL: Record<Category, string> = {
   pothole: "Pothole",
@@ -12,7 +12,7 @@ export const CATEGORY_LABEL: Record<Category, string> = {
   broken_elevator: "Broken elevator or escalator",
   unsafe_sidewalk: "Steep or broken sidewalk",
   other: "Other",
-  sos: "SOS · Crime signal",
+  sos: "SOS",
 };
 
 export const SEVERITY_LABEL: Record<Report["severity"], string> = { 1: "Low", 2: "Medium", 3: "Urgent" };
@@ -38,16 +38,39 @@ export const needsReview = (r: Report) => r.status === "open";
 export const isSos = (r: Report) => r.category === "sos";
 export const isSosActive = (r: Report) => isSos(r) && isUnresolved(r);
 
-// The fix-it order: unresolved first (rejected tickets last of all), SOS before everything else, then most severe,
-// then oldest. Times only
-// have whole seconds, so ties are common; the API lists newest first, and sorting it reversed keeps ties in
-// arrival order.
+// Who must respond to an SOS, picked here after watching its silent video (the phone does not ask).
+// Mirrors models/ticket_sos/sos.py KINDS, in the same order.
+export const SOS_KINDS: SosKind[] = ["police", "medical", "fire_rescue"];
+export const SOS_KIND_LABEL: Record<SosKind, string> = {
+  police: "Police",
+  medical: "Medical",
+  fire_rescue: "Fire and rescue",
+};
+export const SOS_KIND_HINT: Record<SosKind, string> = {
+  police: "Crime, violence or a threat",
+  medical: "Injury, collapse or illness",
+  fire_rescue: "Fire, flood or someone trapped",
+};
+
+// An SOS still waiting for someone to say who must respond: listed above the sorted ones.
+export const needsSorting = (r: Report) => isSosActive(r) && !r.sos_kind;
+
+// "SOS · Police", "SOS · Unsorted", or a hazard's category.
+export const ticketLabel = (r: Report) =>
+  isSos(r)
+    ? `${CATEGORY_LABEL.sos} · ${r.sos_kind ? SOS_KIND_LABEL[r.sos_kind] : "Unsorted"}`
+    : CATEGORY_LABEL[r.category];
+
+// The fix-it order: unresolved first (rejected tickets last of all), SOS before everything else (unsorted ones on
+// top), then most severe, then oldest. Times only have whole seconds, so ties are common; the API lists newest
+// first, and sorting it reversed keeps ties in arrival order.
 export function rank(reports: Report[]): Report[] {
   return reports.toReversed().sort(
     (a, b) =>
       Number(isUnresolved(b)) - Number(isUnresolved(a)) ||
       Number(isRejected(a)) - Number(isRejected(b)) ||
       Number(isSosActive(b)) - Number(isSosActive(a)) ||
+      Number(needsSorting(b)) - Number(needsSorting(a)) ||
       b.severity - a.severity ||
       Date.parse(a.created_at) - Date.parse(b.created_at),
   );
