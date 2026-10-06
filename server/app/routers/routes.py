@@ -2,11 +2,10 @@
 
 fastest     foot-walking, quickest.
 walkable    foot-walking, steering around no-go zones drawn on unresolved reports (potholes, open
-            manholes, blocked sidewalks). OpenRouteService has no sidewalk data, so crowd reports are
-            what makes this route differ.
+            manholes, blocked or broken sidewalks). OpenRouteService has no sidewalk data, so crowd reports
+            are what makes this route differ.
 accessible  the wheelchair profile (no steps, kinder surfaces), steering around the same zones and also
-            around accessibility barriers (missing ramps, blocked tactile paving, broken elevators, steep or
-            broken sidewalks), which the other two modes ignore.
+            around missing ramps, blocked tactile paving and broken elevators, which the other two ignore.
 
 Every route says which unresolved reports it still passes, so the app can show a mode's hazards.
 """

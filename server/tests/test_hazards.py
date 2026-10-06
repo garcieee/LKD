@@ -60,7 +60,16 @@ def test_near_route_ignores_fixed_and_copes_with_tiny_routes():
 
 
 def test_accessibility_barriers_are_in_the_way_of_the_accessible_mode_only():
-    rs = [{**report("ramp"), "category": "missing_ramp"}, {**report("hole"), "category": "pothole"}]
-    assert [r["id"] for r in hazards.for_mode(rs, "accessible")] == ["ramp", "hole"]
+    rs = [{**report("ramp"), "category": "missing_ramp"}, {**report("hole"), "category": "pothole"},
+          {**report("slab"), "category": "unsafe_sidewalk"}]  # a broken sidewalk trips anyone
+    assert [r["id"] for r in hazards.for_mode(rs, "accessible")] == ["ramp", "hole", "slab"]
     for mode in ("fastest", "walkable"):
-        assert [r["id"] for r in hazards.for_mode(rs, mode)] == ["hole"]
+        assert [r["id"] for r in hazards.for_mode(rs, mode)] == ["hole", "slab"]
+
+
+def test_the_accessible_only_barriers_are_pwd_categories_of_the_ticket_rules():
+    from app.services import ticket_sync  # noqa: F401  (puts models/ on the import path)
+    from models.tickets.types import ACCESSIBILITY
+
+    assert hazards.ACCESSIBLE_ONLY == set(ACCESSIBILITY) - {"unsafe_sidewalk"}
+

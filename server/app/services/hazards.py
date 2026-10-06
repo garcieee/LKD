@@ -8,8 +8,9 @@ import math
 M_PER_DEG = 111_320.0  # metres per degree of latitude; longitude shrinks with cos(lat)
 ZONE_HALF_M = 20.0  # a no-go zone is a square this far to each side of the report (40 m across)
 
-# Barriers to a wheelchair, a cane or a white cane, not to someone walking: only the Accessible route counts them.
-ACCESSIBILITY = {"missing_ramp", "blocked_tactile_paving", "broken_elevator", "unsafe_sidewalk"}
+# PWD barriers that stop a wheelchair, a cane or a white cane but not someone walking: only the Accessible route counts
+# them. The fourth PWD category, a steep or broken sidewalk, trips anyone, so every hazard-avoiding mode counts it.
+ACCESSIBLE_ONLY = {"missing_ramp", "blocked_tactile_paving", "broken_elevator"}
 
 
 def unresolved(reports: list[dict]) -> list[dict]:
@@ -23,13 +24,14 @@ def unresolved(reports: list[dict]) -> list[dict]:
 
 
 def for_mode(reports: list[dict], mode: str) -> list[dict]:
-    """The reports that are in the way in this route mode: accessibility barriers only for Accessible."""
-    return reports if mode == "accessible" else [r for r in reports if r.get("category") not in ACCESSIBILITY]
+    """The reports that are in the way in this route mode: the ACCESSIBLE_ONLY barriers only for Accessible."""
+    return reports if mode == "accessible" else [r for r in reports if r.get("category") not in ACCESSIBLE_ONLY]
 
 
 def _metres(lat0: float, lat: float, lng0: float, lng: float) -> tuple[float, float]:
     """(east, north) of (lat, lng) from (lat0, lng0)."""
     return (lng - lng0) * M_PER_DEG * math.cos(math.radians(lat0)), (lat - lat0) * M_PER_DEG
+
 
 
 def avoid_polygons(reports: list[dict], keep_clear: list[tuple[float, float]]) -> dict | None:

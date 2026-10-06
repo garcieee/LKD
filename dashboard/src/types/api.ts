@@ -5,7 +5,8 @@ export type Category =
   | "flooded_drain"
   | "broken_streetlight"
   | "blocked_sidewalk"
-  // Accessibility barriers for persons with disability: only the Accessible route steers around them.
+  // Accessibility barriers for persons with disability. Only the Accessible route steers around the first three;
+  // a steep or broken sidewalk trips anyone, so Walkable avoids it too.
   | "missing_ramp"
   | "blocked_tactile_paving"
   | "broken_elevator"
