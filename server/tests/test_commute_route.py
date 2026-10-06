@@ -23,8 +23,8 @@ def key(monkeypatch):
     monkeypatch.setattr(ors, "ORS_API_KEY", "test-key")
 
 
-def report(rid, lat, lng):
-    return {"id": rid, "category": "pothole", "lat": lat, "lng": lng, "heading": None, "note": "", "photo_url": f"/photos/{rid}.jpg", "status": "open", "created_at": "2026-10-06T00:00:00+00:00", "updated_at": "2026-10-06T00:00:00+00:00"}
+def report(rid, lat, lng, category="pothole"):
+    return {"id": rid, "category": category, "lat": lat, "lng": lng, "heading": None, "note": "", "photo_url": f"/photos/{rid}.jpg", "status": "open", "created_at": "2026-10-06T00:00:00+00:00", "updated_at": "2026-10-06T00:00:00+00:00"}
 
 
 def make_client(tmp_path, handler, reports=()):
@@ -86,6 +86,19 @@ def test_walking_legs_follow_the_picked_mode(tmp_path):
     fastest = sent("fastest")
     assert all(path.endswith("/foot-walking/geojson") and "options" not in body for path, body in fastest)
     assert all(body["preference"] == "fastest" for _, body in fastest)
+
+
+def test_the_accessible_mode_skips_a_station_with_a_barrier_at_it(tmp_path):
+    c = make_client(tmp_path, ors_walk)
+
+    def boarding(mode):  # where each option's ride starts, [lng, lat]
+        options = c.get("/route/commute", params={**PARAMS, "mode": mode}).json()
+        return [next(leg for leg in o["legs"] if leg["kind"] != "walk")["geometry"][0] for o in options]
+
+    lng, lat = boarding("accessible")[0]
+    c.app.state.store.add(report("lift", lat, lng, category="broken_elevator"))
+    assert [lng, lat] not in boarding("accessible"), "no boarding there in a wheelchair"
+    assert [lng, lat] in boarding("walkable"), "on foot the stairs still work"
 
 
 def test_mode_defaults_to_walkable_and_rejects_unknown_modes(tmp_path):

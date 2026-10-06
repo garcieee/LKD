@@ -129,7 +129,7 @@ def urgency_by_category(survey, splits=("train", "validation")) -> dict:
     mask = np.isin(survey.ticket_split, splits) & np.array([not t["danger"] and t["gone_votes"] == 0 for t in survey.truth])
     urgency = ag.mean_urgency(survey)
     return {c: {"n": int((mask & np.array([t["category"] == c for t in survey.truth])).sum()),
-                "mean_urgency": float(urgency[mask & np.array([t["category"] == c for t in survey.truth])].mean()), "table_severity": S.SEVERITY[c]} for c in S.SEVERITY}
+                "mean_urgency": float(urgency[mask & np.array([t["category"] == c for t in survey.truth])].mean()), "table_severity": S.SEVERITY[c]} for c in S.SEVERITY if c in ev.CATEGORIES}
 
 
 # ---- candidate changes ----------------------------------------------------------------------------------------------

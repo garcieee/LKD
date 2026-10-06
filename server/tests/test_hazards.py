@@ -57,3 +57,27 @@ def test_near_route_ignores_fixed_and_copes_with_tiny_routes():
     assert hazards.near_route(route, [report("a", status="fixed")]) == []
     assert hazards.near_route([], [report("a")]) == []
     assert hazards.near_route(line((0, 5)), [report("a")]) == ["a"]  # a single point is a route of length zero
+
+
+def test_accessibility_barriers_are_in_the_way_of_the_accessible_mode_only():
+    rs = [{**report("ramp"), "category": "missing_ramp"}, {**report("hole"), "category": "pothole"},
+          {**report("slab"), "category": "unsafe_sidewalk"}]  # a broken sidewalk trips anyone
+    assert [r["id"] for r in hazards.for_mode(rs, "accessible")] == ["ramp", "hole", "slab"]
+    for mode in ("fastest", "walkable"):
+        assert [r["id"] for r in hazards.for_mode(rs, mode)] == ["hole", "slab"]
+
+
+def test_the_accessible_only_barriers_are_pwd_categories_of_the_ticket_rules():
+    from app.services import ticket_sync  # noqa: F401  (puts models/ on the import path)
+    from models.tickets.types import ACCESSIBILITY
+
+    assert hazards.ACCESSIBLE_ONLY == set(ACCESSIBILITY) - {"unsafe_sidewalk"}
+
+
+def test_a_barrier_at_a_point_bars_it_and_a_hazard_or_a_fixed_barrier_does_not():
+    ramp = {**report("ramp", east_m=10), "category": "missing_ramp"}
+    here = (LAT, LNG)
+    assert hazards.barred(here, [ramp])
+    assert not hazards.barred(here, [{**ramp, "category": "pothole"}])
+    assert not hazards.barred(here, [{**ramp, "status": "fixed"}])
+    assert not hazards.barred(here, [{**report("far", east_m=50), "category": "missing_ramp"}])

@@ -27,6 +27,11 @@ SEVERITY = {  # "danger": how bad this kind of hazard is, 0..1
     "pothole": 0.65,
     "broken_streetlight": 0.55,
     "blocked_sidewalk": 0.5,
+    # PWD accessibility barriers, valued like a blocked sidewalk: a judgement, no rater has scored them yet
+    "missing_ramp": 0.5,
+    "blocked_tactile_paving": 0.5,
+    "broken_elevator": 0.5,
+    "unsafe_sidewalk": 0.5,
     "other": 0.25,
 }
 WEIGHTS = {"danger": 0.50, "reports": 0.20, "foot_traffic": 0.18, "waiting": 0.12}  # sums to 1
@@ -42,7 +47,7 @@ GATE_SPAN = 0.50  # the gate reaches 1 at GATE_LOW + GATE_SPAN
 GATE_MIN = 0.25
 LIKELY_GONE_BELOW = 0.45  # belief under this flags "likely gone: verify"
 STALE_DAYS = 21  # a low-danger ticket with no sighting or vote for this long: "verify?"
-STALE_BELOW_DANGER = 0.6  # "low-danger" means a SEVERITY value under this (blocked sidewalk, other)
+STALE_BELOW_DANGER = 0.6  # "low-danger" means a SEVERITY value under this (blocked sidewalk, the PWD barriers, other)
 
 # ---- foot traffic: who walks past? -------------------------------------------------------------
 EXPOSURE_WEIGHTS = {  # per kind of nearby place (OpenStreetMap, see resources/)

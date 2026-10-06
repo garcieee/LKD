@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lakad/api/api_client.dart';
 import 'package:lakad/features/report/category_picker.dart';
@@ -39,6 +40,25 @@ void main() {
     }
     expect(value, 'open_manhole');
     expect(selected(), ['Open manhole']);
+  });
+
+  testWidgets('CategoryPicker: every label shows in full on a small phone with large text', (tester) async {
+    tester.view.physicalSize = const Size(320, 640);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MediaQuery(
+        data: const MediaQueryData(size: Size(320, 640), textScaler: TextScaler.linear(1.5)),
+        child: MaterialApp(
+          home: Material(child: SingleChildScrollView(child: CategoryPicker(value: null, onChanged: (_) {}))),
+        ),
+      ),
+    );
+    for (final label in categoryLabels.values) {
+      final text = tester.renderObject<RenderParagraph>(find.text(label));
+      // Not cut at the bottom, and not running past the chip's right edge (a faded one-line label does that).
+      expect(text.didExceedMaxLines || text.textSize.width > text.size.width, isFalse, reason: label);
+    }
   });
 
   test('ago: just under and exactly on each boundary', () {

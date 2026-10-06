@@ -5,5 +5,9 @@
   "flooded_drain": "Drainage and flood control (confirm)",
   "broken_streetlight": "Street lighting and electrical (confirm)",
   "blocked_sidewalk": "Traffic and public order (confirm)",
+  "missing_ramp": "Engineering, with the PWD affairs office (confirm)",
+  "blocked_tactile_paving": "Engineering, with the PWD affairs office (confirm)",
+  "broken_elevator": "The station operator or the overpass owner (confirm)",
+  "unsafe_sidewalk": "Engineering, with the PWD affairs office (confirm)",
   "other": "Unassigned"
 }

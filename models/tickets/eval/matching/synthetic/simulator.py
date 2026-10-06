@@ -16,7 +16,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from models.tickets.matching.geo import EARTH_RADIUS_M
-from models.tickets.types import CATEGORIES
+from models.tickets.types import HAZARDS as CATEGORIES  # built on these six: no data yet for the PWD barriers
 
 AYALA = (14.5547, 121.0244)
 REAL_CATEGORIES = tuple(c for c in CATEGORIES if c != "other")  # the five a reporter can really see

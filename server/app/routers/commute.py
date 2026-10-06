@@ -12,7 +12,7 @@ from pydantic import BaseModel
 
 from app.config import in_city
 from app.routers.routes import Mode, walk_leg
-from app.services import commute, ors
+from app.services import commute, hazards, ors
 
 router = APIRouter()
 
@@ -72,7 +72,10 @@ def route_commute(
 ):
     if not (in_city(from_lat, from_lng) and in_city(to_lat, to_lng)):
         raise HTTPException(422, "Both ends of the trip must be in Makati.")
-    state = request.app.state
-    options = commute.plan(state.hubs, state.rides, (from_lat, from_lng), (to_lat, to_lng))
-    _refine(options, mode, state.store.all(), getattr(state, "ors_client", None))
+    state, reports = request.app.state, request.app.state.store.all()
+    hubs = state.hubs
+    if mode == "accessible":  # a missing ramp or a broken elevator at a station closes it to a wheelchair
+        hubs = [h for h in hubs if not hazards.barred((h["lat"], h["lng"]), reports)]
+    options = commute.plan(hubs, state.rides, (from_lat, from_lng), (to_lat, to_lng))
+    _refine(options, mode, reports, getattr(state, "ors_client", None))
     return commute.rank(options)  # street distances can reorder them

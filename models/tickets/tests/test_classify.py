@@ -103,6 +103,11 @@ SHIPPED = c.Lexicon(load_lexicon())
         ("the street light is out and the road is dark", "broken_streetlight"),
         ("nakaharang ang mga vendor sa bangketa", "blocked_sidewalk"),
         ("cars parked on the sidewalk, no way to walk", "blocked_sidewalk"),
+        ("walang rampa sa tawiran, hindi makadaan ang naka-wheelchair", "missing_ramp"),
+        ("the tactile paving is blocked by a parked motorcycle", "blocked_tactile_paving"),
+        ("sira ang elevator sa overpass", "broken_elevator"),
+        ("sobrang tarik ng bangketa, delikado sa wheelchair", "unsafe_sidewalk"),
+        ("broken sidewalk near the school", "unsafe_sidewalk"),
     ],
 )
 def test_the_shipped_lexicon_gets_the_obvious_notes_right(note, category):

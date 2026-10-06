@@ -25,7 +25,8 @@ from models.tickets.eval.common import plots, results
 from models.tickets.eval.ranking import aggregate as ag
 from models.tickets.eval.ranking import pairs
 from models.tickets.ranking import priority
-from models.tickets.types import CATEGORIES, TicketFacts
+from models.tickets.types import HAZARDS as CATEGORIES  # built on these six: no data yet for the PWD barriers
+from models.tickets.types import TicketFacts
 
 import matplotlib.pyplot as plt  # noqa: E402  (after common.plots, which selects the Agg backend)
 

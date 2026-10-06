@@ -2,9 +2,10 @@
 
 fastest     foot-walking, quickest.
 walkable    foot-walking, steering around no-go zones drawn on unresolved reports (potholes, open
-            manholes, blocked sidewalks). OpenRouteService has no sidewalk data, so crowd reports are
-            what makes this route differ.
-accessible  the wheelchair profile (no steps, kinder surfaces), steering around the same zones.
+            manholes, blocked or broken sidewalks). OpenRouteService has no sidewalk data, so crowd reports
+            are what makes this route differ.
+accessible  the wheelchair profile (no steps, kinder surfaces), steering around the same zones and also
+            around missing ramps, blocked tactile paving and broken elevators, which the other two ignore.
 
 Every route says which unresolved reports it still passes, so the app can show a mode's hazards.
 """
@@ -28,25 +29,28 @@ class Route(BaseModel):
     distance_m: float
     duration_s: float
     geometry: list[list[float]]  # [[lng, lat], ...], the order Mapbox takes
-    hazard_ids: list[str]  # unresolved reports within 20 m of the line
+    hazard_ids: list[str]  # unresolved reports within 20 m of the line that are in the way in this mode
     avoids_hazards: bool  # false for Fastest, and for a mode that could not route around them
 
 
 def walk_leg(mode: str, start: tuple, end: tuple, reports: list, client=None) -> tuple[dict, bool]:
-    """One walking route in `mode`: ({distance_m, duration_s, geometry}, whether it steers around hazard zones).
+    """One walking route in `mode`: ({distance_m, duration_s, geometry}, whether it steers around all the mode's zones).
 
     Raises ors.OrsError. Shared with /route/commute, whose walking legs follow the mode the user picked.
     """
-    avoid = hazards.avoid_polygons(reports, [start, end]) if mode != "fastest" else None
-    try:
-        found = ors.directions(PROFILE[mode], start, end, PREFERENCE[mode], avoid, client)
-    except ors.OrsError as e:
-        if e.status != 404 or not avoid:
-            raise
-        # The zones may box the trip in: a route past a hazard beats no route.
-        avoid = None
-        found = ors.directions(PROFILE[mode], start, end, PREFERENCE[mode], None, client)
-    return found, avoid is not None
+    tries = [hazards.avoid_polygons(hazards.for_mode(reports, mode), [start, end])] if mode != "fastest" else []
+    if mode == "accessible":  # boxed in by barriers: still keep clear of the hazards, a manhole is still a manhole
+        tries.append(hazards.avoid_polygons(hazards.for_mode(reports, "walkable"), [start, end]))
+    for i, avoid in enumerate(tries):
+        if not avoid or avoid in tries[:i]:
+            continue
+        try:
+            return ors.directions(PROFILE[mode], start, end, PREFERENCE[mode], avoid, client), i == 0
+        except ors.OrsError as e:
+            if e.status != 404:
+                raise
+    # The zones may box the trip in: a route past a hazard beats no route.
+    return ors.directions(PROFILE[mode], start, end, PREFERENCE[mode], None, client), False
 
 
 @router.get("/route/walk", response_model=Route)
@@ -70,6 +74,6 @@ def route_walk(
     return Route(
         mode=mode,
         **found,
-        hazard_ids=hazards.near_route(found["geometry"], reports),
+        hazard_ids=hazards.near_route(found["geometry"], hazards.for_mode(reports, mode)),
         avoids_hazards=avoids,
     )

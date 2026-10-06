@@ -7,6 +7,10 @@ export const CATEGORY_LABEL: Record<Category, string> = {
   flooded_drain: "Flooded drain",
   broken_streetlight: "Broken streetlight",
   blocked_sidewalk: "Blocked sidewalk",
+  missing_ramp: "Missing or broken ramp",
+  blocked_tactile_paving: "Blocked or missing tactile paving",
+  broken_elevator: "Broken elevator or escalator",
+  unsafe_sidewalk: "Steep or broken sidewalk",
   other: "Other",
   sos: "SOS · Crime signal",
 };

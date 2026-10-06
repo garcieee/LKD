@@ -19,8 +19,8 @@ def ors_route(distance=480.5, duration=345.2, coords=LINE):
     return {"features": [{"geometry": {"type": "LineString", "coordinates": coords}, "properties": {"summary": {"distance": distance, "duration": duration}}}]}
 
 
-def report(rid, lat, lng, status="open"):
-    return {"id": rid, "category": "pothole", "lat": lat, "lng": lng, "heading": None, "note": "", "photo_url": f"/photos/{rid}.jpg", "status": status, "created_at": "2026-10-06T00:00:00+00:00", "updated_at": "2026-10-06T00:00:00+00:00"}
+def report(rid, lat, lng, status="open", category="pothole"):
+    return {"id": rid, "category": category, "lat": lat, "lng": lng, "heading": None, "note": "", "photo_url": f"/photos/{rid}.jpg", "status": status, "created_at": "2026-10-06T00:00:00+00:00", "updated_at": "2026-10-06T00:00:00+00:00"}
 
 
 @pytest.fixture(autouse=True)
@@ -78,12 +78,42 @@ def test_accessible_uses_the_wheelchair_profile_and_the_same_zones(tmp_path):
     assert body["mode"] == "accessible"
 
 
+def zones(body: dict) -> int:
+    return len(body.get("options", {}).get("avoid_polygons", {}).get("coordinates", []))
+
+
+# A pothole and a missing ramp, both on LINE and far enough from either end to get a zone.
+HOLE_AND_RAMP = (report("hole", 14.5540, 121.0230), report("ramp", 14.5535, 121.0220, category="missing_ramp"))
+
+
+@pytest.mark.parametrize("mode, zone_count, passed", [("fastest", 0, ["hole"]), ("walkable", 1, ["hole"]), ("accessible", 2, ["hole", "ramp"])])
+def test_an_accessibility_barrier_counts_only_on_the_accessible_route(tmp_path, mode, zone_count, passed):
+    sent = []
+    c = make_client(tmp_path, lambda req: sent.append(json.loads(req.content)) or httpx.Response(200, json=ors_route()), HOLE_AND_RAMP)
+    body = c.get("/route/walk", params={**PARAMS, "mode": mode}).json()
+    assert zones(sent[0]) == zone_count, "the ramp gets a zone only where a wheelchair cannot pass it"
+    assert body["hazard_ids"] == passed
+
+
+def test_boxed_in_by_barriers_the_accessible_route_still_keeps_clear_of_hazards(tmp_path):
+    sent = []
+
+    def handler(req):
+        sent.append(zones(json.loads(req.content)))
+        return httpx.Response(404, json={"error": {"code": 2009}}) if sent[-1] == 2 else httpx.Response(200, json=ors_route())
+
+    body = make_client(tmp_path, handler, HOLE_AND_RAMP).get("/route/walk", params={**PARAMS, "mode": "accessible"}).json()
+    assert sent == [2, 1], "the ramp's zone goes first, the pothole's stays"
+    assert body["avoids_hazards"] is False and body["hazard_ids"] == ["hole", "ramp"]
+
+
 def test_walkable_is_the_default_mode(tmp_path):
     c = make_client(tmp_path, lambda req: httpx.Response(200, json=ors_route()))
     assert c.get("/route/walk", params=PARAMS).json()["mode"] == "walkable"
 
 
-def test_a_zone_that_boxes_the_trip_in_is_dropped_and_the_route_says_so(tmp_path):
+@pytest.mark.parametrize("mode", ["walkable", "accessible"])
+def test_a_zone_that_boxes_the_trip_in_is_dropped_and_the_route_says_so(tmp_path, mode):
     bodies = []
 
     def handler(req):
@@ -91,7 +121,8 @@ def test_a_zone_that_boxes_the_trip_in_is_dropped_and_the_route_says_so(tmp_path
         return httpx.Response(404, json={"error": {"code": 2009}}) if "options" in bodies[-1] else httpx.Response(200, json=ors_route())
 
     c = make_client(tmp_path, handler, [report("a", 14.5538, 121.0225)])
-    body = c.get("/route/walk", params={**PARAMS, "mode": "walkable"}).json()
+    body = c.get("/route/walk", params={**PARAMS, "mode": mode}).json()
+    # With no barrier on the way, Accessible has nothing to drop first, so it asks ORS no more often than Walkable.
     assert len(bodies) == 2 and "options" in bodies[0] and "options" not in bodies[1]
     assert body["avoids_hazards"] is False
 

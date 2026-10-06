@@ -103,6 +103,10 @@ void main() {
         'flooded_drain',
         'broken_streetlight',
         'blocked_sidewalk',
+        'missing_ramp',
+        'blocked_tactile_paving',
+        'broken_elevator',
+        'unsafe_sidewalk',
         'other',
       ]);
       expect(Report.fromJson({...serverReport(), 'category': 'open_manhole'}).label, 'Open manhole');

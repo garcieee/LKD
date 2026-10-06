@@ -18,7 +18,9 @@ class CategoryPicker extends StatelessWidget {
       children: [
         for (final MapEntry(key: id, value: label) in categoryLabels.entries)
           ChoiceChip(
-            label: Text(label),
+            // A chip label is one line that fades out by default. At large text sizes the long ones (the PWD
+            // barriers) would lose their end, so they wrap instead.
+            label: Text(label, softWrap: true, maxLines: 3),
             selected: id == value,
             onSelected: (_) => onChanged(id),
             showCheckmark: false,

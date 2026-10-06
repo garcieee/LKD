@@ -10,6 +10,7 @@ import threading
 from contextlib import contextmanager
 
 # One script per schema version; PRAGMA user_version counts how many have run. Add a script, never edit one.
+# Each runs in its own transaction with foreign keys off (see Db.__init__).
 MIGRATIONS = (
     """
     create table if not exists tickets (
@@ -54,7 +55,50 @@ MIGRATIONS = (
     );
     create index if not exists ticket_events_ticket on ticket_events (ticket_id);
     """,
+    # 2: the four PWD accessibility barriers. SQLite cannot change a check, so tickets is rebuilt the documented way
+    # (sqlite.org/lang_altertable.html, section 7). Foreign keys are off while it runs (Db.__init__), so dropping the
+    # old table does not cascade to the sightings and events, which keep pointing at "tickets" by name.
+    """
+    create table tickets_new (
+      id text primary key,
+      category text not null check (category in
+        ('pothole', 'open_manhole', 'flooded_drain', 'broken_streetlight', 'blocked_sidewalk', 'missing_ramp',
+         'blocked_tactile_paving', 'broken_elevator', 'unsafe_sidewalk', 'other', 'sos')),
+      status text not null default 'open' check (status in ('open', 'verified', 'assigned', 'fixed', 'rejected')),
+      district_id integer,
+      lat real not null,
+      lng real not null,
+      priority real not null default 0 check (priority between 0 and 100),
+      band text not null default 'Low' check (band in ('Critical', 'High', 'Medium', 'Low')),
+      breakdown text not null default '{}',
+      reporters integer not null default 1 check (reporters >= 1),
+      note text not null default '',
+      photo_url text not null default '',
+      video_url text,
+      created_at text not null,
+      updated_at text not null,
+      fixed_at text
+    );
+    insert into tickets_new select * from tickets;
+    drop table tickets;
+    alter table tickets_new rename to tickets;
+    create index tickets_district on tickets (district_id);
+    """,
 )
+
+
+def _statements(script: str):
+    """A migration script one statement at a time, for execute() inside a transaction (executescript would commit it).
+    SQLite decides where each ends, so a ";" inside a string or a comment does not split it."""
+    *pieces, rest = script.split(";")
+    statement = ""
+    for piece in pieces:
+        statement += piece + ";"
+        if sqlite3.complete_statement(statement):
+            yield statement
+            statement = ""
+    if (statement + rest).strip():
+        yield statement + rest  # unfinished: execute() says so instead of it being dropped
 
 
 def _upsert(table: str, row: dict) -> str:
@@ -73,10 +117,17 @@ class Db:
         self._conn.row_factory = sqlite3.Row
         self._lock = threading.Lock()
         self._conn.execute("pragma journal_mode = wal")
-        self._conn.execute("pragma foreign_keys = on")
+        # Off while migrating, whatever this SQLite's default: a rebuilt table's drop must not cascade (migration 2).
+        self._conn.execute("pragma foreign_keys = off")
         version = self._conn.execute("pragma user_version").fetchone()[0]
         for number, script in enumerate(MIGRATIONS[version:], start=version + 1):
-            self._conn.executescript(f"begin; {script} pragma user_version = {number}; commit;")
+            with self._tx() as db:
+                # Read again under the write lock: a process opening the file at the same moment may have run it.
+                if db.execute("pragma user_version").fetchone()[0] < number:
+                    for statement in _statements(script):
+                        db.execute(statement)
+                    db.execute(f"pragma user_version = {number}")
+        self._conn.execute("pragma foreign_keys = on")
 
     @contextmanager
     def _tx(self):

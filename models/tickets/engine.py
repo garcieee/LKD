@@ -21,7 +21,7 @@ from .matching import match
 from .ranking import exposure, priority
 from .resources import load
 from .storage.db import Db
-from .types import Sighting, TicketFacts, TicketSpot
+from .types import ACCESSIBILITY, Sighting, TicketFacts, TicketSpot
 
 # The columns of the tickets and sightings tables (storage/db.py). tests/test_storage.py keeps them equal.
 TICKET_COLUMNS = ("id", "category", "status", "district_id", "lat", "lng", "priority", "band", "breakdown",
@@ -48,6 +48,7 @@ class World:
     lexicon: Lexicon  # resources/lexicon.json
     offices: dict  # resources/offices.json
     districts: list  # resources/districts.json: (district_id, barangay, box, rings) per barangay
+    barrier_lexicon: Lexicon  # the same lists, for a PWD barrier's notes: see load_world
 
 
 @dataclass(frozen=True)
@@ -67,7 +68,11 @@ class SyncStats:
 
 
 def load_world() -> World:
-    return World(load.load_places(), Lexicon(load.load_lexicon()), load.load_offices(), load.load_districts())
+    data = load.load_lexicon()
+    # A PWD barrier's note names who it stops ("walang rampa para sa pwd"): there "pwd" and "wheelchair" describe the
+    # category, not a danger, so its notes are read without them. Every other danger word still counts.
+    barrier = {**data, "danger": [w for w in data["danger"] if w not in ("pwd", "wheelchair")]}
+    return World(load.load_places(), Lexicon(data), load.load_offices(), load.load_districts(), Lexicon(barrier))
 
 
 def _ts(iso: str) -> float:
@@ -130,6 +135,7 @@ def attach(report: dict, cached: list[dict], world: World, now: float) -> Attach
     if report["category"] == "sos":
         score, band, breakdown = 100.0, "Critical", {"sos": True, "review": review, "office": office}
     else:
+        lexicon = world.barrier_lexicon if report["category"] in ACCESSIBILITY else world.lexicon
         facts = TicketFacts(
             report["category"],
             # ponytail: counts reports, not people, so one phone reporting twice counts twice. Count distinct
@@ -137,7 +143,7 @@ def attach(report: dict, cached: list[dict], world: World, now: float) -> Attach
             reporters=len(reports),
             days_open=max(0.0, now - min(_ts(r["created_at"]) for r in reports)) / DAY,
             foot_traffic=exposure.foot_traffic(lat, lng, world.places),
-            danger=any(classify.has_danger(note, 0, world.lexicon) for note in notes),
+            danger=any(classify.has_danger(note, 0, lexicon) for note in notes),
         )
         b = priority.score(facts)
         hint = classify.category_hint("\n".join(notes), world.lexicon)

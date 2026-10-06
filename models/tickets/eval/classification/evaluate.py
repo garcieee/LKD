@@ -233,8 +233,12 @@ def family_bootstrap(metric, arrays, families, n: int = BOOT, seed: int = 0, oth
 
 # ---- the validation run ---------------------------------------------------------------------------------------------------------
 def lexicon_data(version: str) -> dict:
-    """The word lists: v0 is the shipped resources/lexicon.json, v1 is the one tune_lexicon.py wrote beside this file."""
-    return load_lexicon() if version == "v0" else json.loads(LEXICON_V1.read_text())
+    """The word lists: v0 is the shipped resources/lexicon.json, v1 is the one tune_lexicon.py wrote beside this file.
+    Only the HAZARDS lists: the PWD barrier lists came later and no labelled note has them."""
+    if version != "v0":
+        return json.loads(LEXICON_V1.read_text())
+    v0 = load_lexicon()
+    return {**v0, "categories": {c: v0["categories"][c] for c in HAZARDS}}
 
 
 def configuration_report(out: Outputs, y, d, op: dict | None = None) -> tuple[dict, dict]:
@@ -257,7 +261,7 @@ def robustness(rows: list[dict], seeds: list[int]) -> dict:
     A look at how far one split moves the answer; it changes nothing that was frozen."""
     from models.tickets.eval.classification import baselines, tune_lexicon
 
-    v0, table = load_lexicon(), {}
+    v0, table = lexicon_data("v0"), {}
     for seed in seeds:
         train, validation = split_rows(rows, seed)
         y, d = targets_of(validation)

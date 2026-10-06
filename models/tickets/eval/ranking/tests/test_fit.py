@@ -178,7 +178,7 @@ def test_nnls_will_not_use_a_negative_weight_for_a_part_that_hurts(survey):
 
 def test_urgency_by_category_covers_every_kind_on_train_and_validation_only(survey):
     out = fit.urgency_by_category(survey)
-    assert set(out) == set(S.SEVERITY) and sum(r["n"] for r in out.values()) < 120 + 40
+    assert set(out) == set(ev.CATEGORIES) and sum(r["n"] for r in out.values()) < 120 + 40
     assert out["open_manhole"]["mean_urgency"] == max(r["mean_urgency"] for r in out.values())
     assert out["other"]["mean_urgency"] == min(r["mean_urgency"] for r in out.values())
     only_test = fit.urgency_by_category(survey, splits=("test",))

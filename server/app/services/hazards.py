@@ -8,6 +8,10 @@ import math
 M_PER_DEG = 111_320.0  # metres per degree of latitude; longitude shrinks with cos(lat)
 ZONE_HALF_M = 20.0  # a no-go zone is a square this far to each side of the report (40 m across)
 
+# PWD barriers that stop a wheelchair, a cane or a white cane but not someone walking: only the Accessible route counts
+# them. The fourth PWD category, a steep or broken sidewalk, trips anyone, so every hazard-avoiding mode counts it.
+ACCESSIBLE_ONLY = {"missing_ramp", "blocked_tactile_paving", "broken_elevator"}
+
 
 def unresolved(reports: list[dict]) -> list[dict]:
     """Fixed and rejected are no longer in the way: assigned and verified still are. A rejected report was judged not
@@ -19,9 +23,25 @@ def unresolved(reports: list[dict]) -> list[dict]:
     return [r for r in reports if r["status"] not in ("fixed", "rejected") and r.get("category") != "sos"]
 
 
+def for_mode(reports: list[dict], mode: str) -> list[dict]:
+    """The reports that are in the way in this route mode: the ACCESSIBLE_ONLY barriers only for Accessible."""
+    return reports if mode == "accessible" else [r for r in reports if r.get("category") not in ACCESSIBLE_ONLY]
+
+
 def _metres(lat0: float, lat: float, lng0: float, lng: float) -> tuple[float, float]:
     """(east, north) of (lat, lng) from (lat0, lng0)."""
     return (lng - lng0) * M_PER_DEG * math.cos(math.radians(lat0)), (lat - lat0) * M_PER_DEG
+
+
+def _at(r: dict, point: tuple[float, float]) -> bool:
+    """Whether a report is too close to a point (lat, lng) to draw a zone there without boxing the point in."""
+    return max(map(abs, _metres(r["lat"], point[0], r["lng"], point[1]))) < 2 * ZONE_HALF_M
+
+
+def barred(point: tuple[float, float], reports: list[dict]) -> bool:
+    """An unresolved ACCESSIBLE_ONLY barrier at this point, a station say. Zones never cover the ends of a walk, so
+    the Accessible mode has to leave such a point out itself."""
+    return any(r.get("category") in ACCESSIBLE_ONLY and _at(r, point) for r in unresolved(reports))
 
 
 def avoid_polygons(reports: list[dict], keep_clear: list[tuple[float, float]]) -> dict | None:
@@ -32,9 +52,9 @@ def avoid_polygons(reports: list[dict], keep_clear: list[tuple[float, float]]) -
     """
     polygons = []
     for r in unresolved(reports):
-        lat, lng = r["lat"], r["lng"]
-        if any(max(map(abs, _metres(lat, la, lng, ln))) < 2 * ZONE_HALF_M for la, ln in keep_clear):
+        if any(_at(r, point) for point in keep_clear):
             continue
+        lat, lng = r["lat"], r["lng"]
         dlat = ZONE_HALF_M / M_PER_DEG
         dlng = ZONE_HALF_M / (M_PER_DEG * math.cos(math.radians(lat)))
         ring = [[lng - dlng, lat - dlat], [lng + dlng, lat - dlat], [lng + dlng, lat + dlat], [lng - dlng, lat + dlat]]
