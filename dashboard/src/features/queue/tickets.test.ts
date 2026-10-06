@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { Report } from "../../types/api.ts";
-import { CATEGORY_LABEL, SOS_KINDS, SOS_KIND_HINT, SOS_KIND_LABEL, STATUSES, STATUS_LABEL, isRejected, isSos, isSosActive, isUnresolved, needsReview, needsSorting, newReports, rank, steps, ticketLabel, timeAgo, toGeoJSON } from "./tickets.ts";
+import { CATEGORY_LABEL, SOS_KINDS, SOS_KIND_HINT, SOS_KIND_LABEL, STATUSES, STATUS_LABEL, bandOf, isRejected, isSos, isSosActive, isUnresolved, needsReview, needsSorting, newReports, rank, sightings, sightingsLabel, steps, ticketLabel, timeAgo, toGeoJSON } from "./tickets.ts";
 
 const T0 = Date.parse("2026-10-06T07:00:00Z");
 const at = (min: number) => new Date(T0 + min * 60_000).toISOString();
@@ -259,4 +259,20 @@ test("rank: an active SOS and resolved tickets keep their places whatever the pr
     "fixed-top",
     "rejected-top",
   ]);
+});
+
+test("bandOf: one of the engine's four bands, or null before the report is scored", () => {
+  assert.equal(bandOf(report("a", { band: "Critical" })), "Critical");
+  assert.equal(bandOf(report("a", { band: "Low" })), "Low");
+  for (const band of [null, undefined, "Urgent" as never]) assert.equal(bandOf(report("a", { band })), null, String(band));
+});
+
+test("sightings: reports that share a ticket_id are counted, and only a ticket with two or more says so", () => {
+  const input = [report("a", { ticket_id: "t1" }), report("b", { ticket_id: "t1" }), report("c", { ticket_id: "t2" }), report("d"), report("e", { ticket_id: null })];
+  const count = sightings(input);
+  assert.deepEqual([...count], [["t1", 2], ["t2", 1]]);
+  assert.equal(sightingsLabel(input[0], count), "2 reports");
+  assert.equal(sightingsLabel(input[2], count), "", "one report is not worth a label");
+  assert.equal(sightingsLabel(input[3], count), "", "no ticket yet");
+  assert.equal(sightingsLabel(input[4], count), "");
 });

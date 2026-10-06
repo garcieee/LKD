@@ -6,7 +6,7 @@ import type { Report, SosKind, Status } from "../types/api";
 import SosKindCard from "../features/queue/SosKindCard";
 import StatusStepper from "../features/queue/StatusStepper";
 import TriageCard from "../features/queue/TriageCard";
-import { SEVERITY_LABEL, STATUS_LABEL, isSos, ticketLabel, timeAgo } from "../features/queue/tickets";
+import { SEVERITY_LABEL, STATUS_LABEL, bandOf, isSos, sightingsLabel, ticketLabel, timeAgo } from "../features/queue/tickets";
 
 const when = (iso: string) =>
   new Date(iso).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false });
@@ -25,15 +25,22 @@ export function Severity({ level }: { level: Report["severity"] }) {
   );
 }
 
+// The ticket engine's band as a chip; nothing until the server's ticket loop has scored the report.
+export function BandChip({ report }: { report: Report }) {
+  const band = bandOf(report);
+  return band && <span className="badge" data-band={band}>{band}</span>;
+}
+
 type Props = {
   report: Report;
+  sightings?: ReadonlyMap<string, number>; // reports per ticket_id, to say "3 reports" on a ticket several people filed
   now: number;
   onStatus: (id: string, status: Status) => Promise<string | null>;
   onKind: (id: string, kind: SosKind) => Promise<string | null>;
   onShowOnMap: (report: Report) => void;
 };
 
-export default function DetailPanel({ report: r, now, onStatus, onKind, onShowOnMap }: Props) {
+export default function DetailPanel({ report: r, sightings, now, onStatus, onKind, onShowOnMap }: Props) {
   const [error, setError] = useState<string | null>(null);
   const label = ticketLabel(r);
   const photo = photoUrl(r.photo_url);
@@ -78,6 +85,8 @@ export default function DetailPanel({ report: r, now, onStatus, onKind, onShowOn
           {STATUS_LABEL[r.status]}
         </span>
         <Severity level={r.severity} />
+        <BandChip report={r} />
+        {sightings && sightingsLabel(r, sightings)}
       </div>
       <h3 ref={title} className="detail-title" tabIndex={-1}>
         {label}
