@@ -49,6 +49,28 @@ def test_opening_again_keeps_the_rows_and_runs_no_migration_twice(tmp_path):
     assert [t["id"] for t in again.tickets()] == ["t"] and again.tickets()[0]["breakdown"] == {"why": "test"}
 
 
+def test_the_category_migration_keeps_every_row_and_takes_the_pwd_barriers(tmp_path):
+    old = Db(tmp_path / "lakad.db")
+    old._conn.executescript("pragma foreign_keys = off; drop table ticket_events; drop table sightings; drop table tickets;"
+                            f"{MIGRATIONS[0]} pragma user_version = 1; pragma foreign_keys = on;")  # a file from before
+    old.save(ticket(status="open"), sighting(), AT)
+    old.set_status("t", "assigned", "analyst-1", AT, allowed=lambda t: True)
+    with pytest.raises(sqlite3.IntegrityError):
+        old.save(ticket("ramp", category="missing_ramp"), sighting("ramp", "ramp"), AT)
+
+    new = Db(tmp_path / "lakad.db")
+    assert new._conn.execute("pragma user_version").fetchone()[0] == len(MIGRATIONS)
+    assert [(t["id"], t["status"]) for t in new.tickets()] == [("t", "assigned")]
+    assert new._conn.execute("select count(*) from sightings").fetchone()[0] == 1, "the rebuild must not cascade"
+    assert events(new) == [("t", "analyst-1", "open", "assigned", AT)]
+    new.save(ticket("ramp", category="missing_ramp"), sighting("ramp", "ramp"), LATER)
+    assert {t["category"] for t in new.tickets()} == {"pothole", "missing_ramp"}
+    assert new._conn.execute("pragma foreign_key_check").fetchall() == []
+    assert new._conn.execute("pragma foreign_keys").fetchone()[0] == 1
+    with pytest.raises(sqlite3.IntegrityError):  # the foreign key still holds after the rebuild
+        new.save(ticket("x"), sighting("x", tid="nowhere"), LATER)
+
+
 def test_a_save_without_a_status_keeps_the_one_an_analyst_set(db):
     db.save(ticket(status="open"), sighting(), AT)
     db.set_status("t", "assigned", "analyst-1", AT, allowed=lambda t: True)

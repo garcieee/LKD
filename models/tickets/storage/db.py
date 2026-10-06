@@ -54,6 +54,35 @@ MIGRATIONS = (
     );
     create index if not exists ticket_events_ticket on ticket_events (ticket_id);
     """,
+    # 2: the four PWD accessibility barriers. SQLite cannot change a check, so tickets is rebuilt the documented way
+    # (sqlite.org/lang_altertable.html, section 7). Foreign keys are off while it runs (Db.__init__), so dropping the
+    # old table does not cascade to the sightings and events, which keep pointing at "tickets" by name.
+    """
+    create table tickets_new (
+      id text primary key,
+      category text not null check (category in
+        ('pothole', 'open_manhole', 'flooded_drain', 'broken_streetlight', 'blocked_sidewalk', 'missing_ramp',
+         'blocked_tactile_paving', 'broken_elevator', 'unsafe_sidewalk', 'other', 'sos')),
+      status text not null default 'open' check (status in ('open', 'verified', 'assigned', 'fixed', 'rejected')),
+      district_id integer,
+      lat real not null,
+      lng real not null,
+      priority real not null default 0 check (priority between 0 and 100),
+      band text not null default 'Low' check (band in ('Critical', 'High', 'Medium', 'Low')),
+      breakdown text not null default '{}',
+      reporters integer not null default 1 check (reporters >= 1),
+      note text not null default '',
+      photo_url text not null default '',
+      video_url text,
+      created_at text not null,
+      updated_at text not null,
+      fixed_at text
+    );
+    insert into tickets_new select * from tickets;
+    drop table tickets;
+    alter table tickets_new rename to tickets;
+    create index tickets_district on tickets (district_id);
+    """,
 )
 
 
@@ -73,10 +102,11 @@ class Db:
         self._conn.row_factory = sqlite3.Row
         self._lock = threading.Lock()
         self._conn.execute("pragma journal_mode = wal")
-        self._conn.execute("pragma foreign_keys = on")
+        # Migrations run before foreign keys go on: a rebuilt table's drop must not cascade (see migration 2).
         version = self._conn.execute("pragma user_version").fetchone()[0]
         for number, script in enumerate(MIGRATIONS[version:], start=version + 1):
             self._conn.executescript(f"begin; {script} pragma user_version = {number}; commit;")
+        self._conn.execute("pragma foreign_keys = on")
 
     @contextmanager
     def _tx(self):
