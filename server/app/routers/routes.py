@@ -34,20 +34,23 @@ class Route(BaseModel):
 
 
 def walk_leg(mode: str, start: tuple, end: tuple, reports: list, client=None) -> tuple[dict, bool]:
-    """One walking route in `mode`: ({distance_m, duration_s, geometry}, whether it steers around hazard zones).
+    """One walking route in `mode`: ({distance_m, duration_s, geometry}, whether it steers around all the mode's zones).
 
     Raises ors.OrsError. Shared with /route/commute, whose walking legs follow the mode the user picked.
     """
-    avoid = hazards.avoid_polygons(hazards.for_mode(reports, mode), [start, end]) if mode != "fastest" else None
-    try:
-        found = ors.directions(PROFILE[mode], start, end, PREFERENCE[mode], avoid, client)
-    except ors.OrsError as e:
-        if e.status != 404 or not avoid:
-            raise
-        # The zones may box the trip in: a route past a hazard beats no route.
-        avoid = None
-        found = ors.directions(PROFILE[mode], start, end, PREFERENCE[mode], None, client)
-    return found, avoid is not None
+    tries = [hazards.avoid_polygons(hazards.for_mode(reports, mode), [start, end])] if mode != "fastest" else []
+    if mode == "accessible":  # boxed in by barriers: still keep clear of the hazards, a manhole is still a manhole
+        tries.append(hazards.avoid_polygons(hazards.for_mode(reports, "walkable"), [start, end]))
+    for i, avoid in enumerate(tries):
+        if not avoid or avoid in tries[:i]:
+            continue
+        try:
+            return ors.directions(PROFILE[mode], start, end, PREFERENCE[mode], avoid, client), i == 0
+        except ors.OrsError as e:
+            if e.status != 404:
+                raise
+    # The zones may box the trip in: a route past a hazard beats no route.
+    return ors.directions(PROFILE[mode], start, end, PREFERENCE[mode], None, client), False
 
 
 @router.get("/route/walk", response_model=Route)
