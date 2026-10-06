@@ -1,1 +1,36 @@
-/* colors, radius, shadows, panel widths. Stub: no styles until kickoff (Tue 1:00 PM). */
+/* colors, radius, shadows, panel widths */
+:root {
+  --bg: #0a1220;
+  --panel: rgba(16, 28, 46, 0.92);
+  --line: rgba(255, 255, 255, 0.08);
+  --text: #e6edf7;
+  --muted: #7b8ca6;
+  --accent: #00d4c8;
+  --warn: #ff9b4d;
+  --radius: 10px;
+  --shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  --side-w: 248px;
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.45 system-ui, -apple-system, Segoe UI, sans-serif;
+}
+
+code {
+  font-family: var(--mono);
+  color: var(--accent);
+}

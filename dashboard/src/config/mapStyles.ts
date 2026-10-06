@@ -1,6 +1,6 @@
 // Map (light, like the reference screenshots) and Satellite. Switched by map/MapStyleToggle.tsx.
 export const MAP_STYLES = {
-  map: "mapbox://styles/mapbox/light-v11",
+  map: "mapbox://styles/mapbox/dark-v11",
   satellite: "mapbox://styles/mapbox/satellite-streets-v12",
 } as const;
 

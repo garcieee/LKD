@@ -1,1 +1,234 @@
-/* floating panel and collapse styles. Stub: no styles until kickoff (Tue 1:00 PM). */
+/* floating panel and collapse styles */
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+  background: #0b1426;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: var(--accent);
+}
+.brand b {
+  display: block;
+  letter-spacing: 0.1em;
+}
+.brand small {
+  display: block;
+  color: var(--muted);
+  font: 10px/1.2 var(--mono);
+  letter-spacing: 0.14em;
+}
+
+.tabs {
+  flex: 1;
+}
+.tab {
+  padding: 6px 14px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: none;
+  color: var(--muted);
+  font: 12px var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.tab.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(0, 212, 200, 0.08);
+}
+
+.clock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font: 12px var(--mono);
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.stage {
+  position: relative;
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
+  padding: 14px;
+}
+
+.panel-title {
+  font: 11px var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.side {
+  width: var(--side-w);
+  margin: 12px;
+  align-self: flex-start;
+}
+.src {
+  margin: 2px 0 14px;
+  color: var(--accent);
+  font: 10px var(--mono);
+  letter-spacing: 0.1em;
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+  cursor: pointer;
+}
+.switch input {
+  accent-color: var(--accent);
+}
+.chip {
+  margin-left: auto;
+  padding: 2px 7px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font: 10px var(--mono);
+}
+.chip.on {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.readout {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 4px 10px;
+  margin: 10px 0;
+  font: 11px var(--mono);
+}
+.readout dt {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.readout dd {
+  margin: 0;
+  text-align: right;
+}
+
+.btn {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font: 11px var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.warn {
+  margin: 12px 0 0;
+  color: var(--warn);
+  font-size: 12px;
+}
+
+.map-area {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+.map-wrap,
+.map-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.map-reset {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+  font: 11px var(--mono);
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+.map-reset:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.map-missing {
+  display: grid;
+  place-content: center;
+  gap: 6px;
+  height: 100%;
+  text-align: center;
+}
+.muted {
+  color: var(--muted);
+}
+
+.legend {
+  position: absolute;
+  left: 12px;
+  bottom: 24px;
+  width: 210px;
+}
+.legend-bar {
+  height: 8px;
+  margin: 8px 0 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2ecc71, #f7d154, #f28c28, #e54b4b);
+}
+.legend-ends {
+  display: flex;
+  justify-content: space-between;
+  font: 10px var(--mono);
+  color: var(--muted);
+}
+.legend-note {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 10px;
+}
