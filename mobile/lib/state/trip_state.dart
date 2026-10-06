@@ -1,7 +1,7 @@
 // Where the user wants to go, the walking routes there in each mode, and the commute options (walk, ride, walk).
 // The trip goes in steps: compare the walking routes and pick a mode, then pick a commute option (its walking legs
 // use that mode). The map draws the pin and the chosen route's line. The start is the user's live location, given
-// when the destination is picked. The start is the user's live location, given when the destination is picked.
+// when the destination is picked.
 // ponytail: the routes are worked out once from that start and not redone as the user walks. Upgrade:
 // re-plan when the location drifts a block from the line.
 import 'package:flutter/foundation.dart';
