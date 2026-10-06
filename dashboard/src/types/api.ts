@@ -8,7 +8,8 @@ export type Category =
   | "other"
   | "sos"; // not picked: the phone's hold-to-record button files it (POST /sos), with a video
 
-export type Status = "open" | "verified" | "assigned" | "fixed";
+// "rejected": a person looked at a new ticket and judged it not real. Hidden everywhere but kept, and can be reopened.
+export type Status = "open" | "verified" | "assigned" | "fixed" | "rejected";
 
 export type Report = {
   id: string;

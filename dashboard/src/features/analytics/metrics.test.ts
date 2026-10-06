@@ -131,3 +131,15 @@ test("duration: minutes under an hour, hours under two days, then days", () => {
   assert.equal(duration(47 * HOUR), "47 h");
   assert.equal(duration(72 * HOUR), "3 d");
 });
+
+test("summarize ignores rejected tickets: they were judged not real", () => {
+  const s = summarize(
+    [report("a"), report("b", { status: "fixed" }), report("spam", { status: "rejected", severity: 3, category: "open_manhole" })],
+    NOW,
+  );
+  assert.equal(s.total, 2);
+  assert.equal(s.unresolved, 1);
+  assert.equal(s.urgent, 0, "the rejected urgent ticket is not counted");
+  assert.deepEqual(s.byCategory.map((c) => c.category), ["pothole"]);
+  assert.equal(s.funnel.reduce((n, f) => n + f.count, 0), 2);
+});

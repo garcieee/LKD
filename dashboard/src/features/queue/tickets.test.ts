@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { Report } from "../../types/api.ts";
-import { CATEGORY_LABEL, STATUSES, isSos, isSosActive, newReports, rank, steps, timeAgo, toGeoJSON } from "./tickets.ts";
+import { CATEGORY_LABEL, STATUSES, STATUS_LABEL, isRejected, isSos, isSosActive, isUnresolved, needsReview, newReports, rank, steps, timeAgo, toGeoJSON } from "./tickets.ts";
 
 const T0 = Date.parse("2026-10-06T07:00:00Z");
 const at = (min: number) => new Date(T0 + min * 60_000).toISOString();
@@ -131,4 +131,28 @@ test("toGeoJSON: only an unfixed SOS is an alert, which is what makes its pin bl
     (f) => f.properties.alert,
   );
   assert.deepEqual(props, [true, false, false]);
+});
+
+test("a new ticket needs review; Confirm (verified) and Reject (rejected) both end that", () => {
+  assert.ok(needsReview(report("a")));
+  for (const status of ["verified", "assigned", "fixed", "rejected"] as const) assert.ok(!needsReview(report("a", { status })), status);
+});
+
+test("a rejected ticket is not unresolved, not an active SOS, and is not a step of the workflow", () => {
+  const rejected = report("r", { status: "rejected" });
+  assert.ok(isRejected(rejected) && !isUnresolved(rejected));
+  assert.ok(!isSosActive(sos("s", { status: "rejected" })), "a rejected SOS stops blinking");
+  assert.equal(STATUS_LABEL.rejected, "Rejected");
+  assert.ok(!STATUSES.includes("rejected"), "the stepper stays Open, Verified, Assigned, Fixed");
+  assert.ok(steps("rejected").every((s) => !s.reached && !s.current));
+});
+
+test("rank: rejected tickets go last, after fixed ones, even an urgent or SOS one", () => {
+  const input = [
+    report("rejected-urgent", { status: "rejected", severity: 3, created_at: at(-500) }),
+    report("fixed", { status: "fixed", severity: 1 }),
+    sos("rejected-sos", { status: "rejected" }),
+    report("open", { severity: 1 }),
+  ];
+  assert.deepEqual(rank(input).map((r) => r.id), ["open", "fixed", "rejected-urgent", "rejected-sos"]);
 });

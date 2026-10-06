@@ -20,21 +20,29 @@ export const STATUS_LABEL: Record<Status, string> = {
   verified: "Verified",
   assigned: "Assigned",
   fixed: "Fixed",
+  rejected: "Rejected",
 };
 
-export const isUnresolved = (r: Report) => r.status !== "fixed";
+// Rejected is not a step of the workflow (STATUSES): it is the answer to "is this real?", given to a new ticket.
+export const isRejected = (r: Report) => r.status === "rejected";
+export const isUnresolved = (r: Report) => r.status !== "fixed" && r.status !== "rejected";
+
+// A ticket nobody has looked at yet: the dashboard asks the receiver to Confirm (-> Verified) or Reject it.
+export const needsReview = (r: Report) => r.status === "open";
 
 // A call for help from the phone's SOS button. While nobody has marked it fixed it tops the queue and blinks on the map.
 export const isSos = (r: Report) => r.category === "sos";
 export const isSosActive = (r: Report) => isSos(r) && isUnresolved(r);
 
-// The fix-it order: unresolved first, SOS before everything else, then most severe, then oldest. Times only
+// The fix-it order: unresolved first (rejected tickets last of all), SOS before everything else, then most severe,
+// then oldest. Times only
 // have whole seconds, so ties are common; the API lists newest first, and sorting it reversed keeps ties in
 // arrival order.
 export function rank(reports: Report[]): Report[] {
   return reports.toReversed().sort(
     (a, b) =>
       Number(isUnresolved(b)) - Number(isUnresolved(a)) ||
+      Number(isRejected(a)) - Number(isRejected(b)) ||
       Number(isSosActive(b)) - Number(isSosActive(a)) ||
       b.severity - a.severity ||
       Date.parse(a.created_at) - Date.parse(b.created_at),
