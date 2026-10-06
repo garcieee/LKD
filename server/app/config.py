@@ -20,3 +20,23 @@ STORAGE_DIR = SERVER_DIR / os.getenv("STORAGE_DIR", "../db")
 CITY_BOUNDS = tuple(
     float(v) for v in os.getenv("CITY_BOUNDS", "120.9987,14.5296,121.0501,14.5796").split(",")
 )
+
+# ~450 m past the city line, so a hazard on a border street still counts. Same as the map's lockMargin.
+CITY_MARGIN = 0.004
+
+
+def in_city(lat: float, lng: float) -> bool:
+    """Whether a point is in Makati plus CITY_MARGIN. Written so NaN is outside: every comparison with NaN is False."""
+    west, south, east, north = CITY_BOUNDS
+    return south - CITY_MARGIN <= lat <= north + CITY_MARGIN and west - CITY_MARGIN <= lng <= east + CITY_MARGIN
+
+
+# Makati PUV routes and terminals (data/transit/), from the 2025 study. Hackathon use only.
+TRANSIT_DIR = SERVER_DIR / "data" / "transit"
+
+# Curated districts, mode weights and hourly profiles for the modeled foot-traffic index (data/footfall/).
+FOOTFALL_DIR = SERVER_DIR / "data" / "footfall"
+
+# OpenRouteService key (openrouteservice.org, free tier): place search now, walking routes next.
+# Empty means /geocode answers 503 and everything else keeps working.
+ORS_API_KEY = os.getenv("ORS_API_KEY", "")

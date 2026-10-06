@@ -229,4 +229,173 @@ void main() {
     expect(reports.map((r) => r.id), ['3f2a', 'older']);
     expect(reports.last.status, 'fixed');
   });
+
+  group('ApiClient.geocode', () {
+    // A place as GET /geocode sends it (server/app/routers/geocode.py).
+    Map<String, dynamic> place({String label = 'Ayala Triangle Gardens, Makati, Philippines'}) => {
+      'label': label,
+      'lat': 14.5547,
+      'lng': 121,
+    };
+
+    test('asks for the text, reads places in order, takes whole-number coordinates', () async {
+      late http.Request got;
+      final api = apiWith(
+        MockClient((req) async {
+          got = req;
+          return jsonResponse([place(), place(label: 'Greenbelt, Makati')], 200);
+        }),
+      );
+      final places = await api.geocode('Ayala');
+      expect(got.method, 'GET');
+      expect(got.url.path, '/geocode');
+      expect(got.url.queryParameters, {'q': 'Ayala'}, reason: 'no position sent unless given');
+      expect(places.map((p) => p.label), ['Ayala Triangle Gardens, Makati, Philippines', 'Greenbelt, Makati']);
+      expect(places.first.lat, 14.5547);
+      expect(places.first.lng, 121.0);
+    });
+
+    test('sends the position so nearby places rank first, and escapes the text', () async {
+      late http.Request got;
+      final api = apiWith(
+        MockClient((req) async {
+          got = req;
+          return jsonResponse([], 200);
+        }),
+      );
+      expect(await api.geocode('Jupiter & Makati Ave', near: (lat: 14.55, lng: 121.02)), isEmpty);
+      expect(got.url.queryParameters, {'q': 'Jupiter & Makati Ave', 'lat': '14.55', 'lng': '121.02'});
+    });
+
+    test("shows the server's message when search is down", () {
+      final api = apiWith(
+        MockClient((_) async => jsonResponse({'detail': 'Place search is unavailable. Try again.'}, 502)),
+      );
+      expect(api.geocode('Ayala'), apiError('Place search is unavailable. Try again.'));
+    });
+
+    test('the server not being reachable reads as an error, not a crash', () {
+      final api = apiWith(MockClient((_) async => throw http.ClientException('no route to host')));
+      expect(api.geocode('Ayala'), apiError(contains("Can't reach the server")));
+    });
+  });
+
+  group('ApiClient.route', () {
+    // A route as GET /route/walk sends it (server/app/routers/routes.py).
+    Map<String, dynamic> serverRoute({String mode = 'walkable', List<String> hazards = const ['a1']}) => {
+      'mode': mode,
+      'distance_m': 480,
+      'duration_s': 345.2,
+      'geometry': [
+        [121.0244, 14.5547],
+        [121.021, 14.553],
+      ],
+      'hazard_ids': hazards,
+      'avoids_hazards': true,
+    };
+
+    const from = (lat: 14.5547, lng: 121.0244), to = (lat: 14.553, lng: 121.021);
+
+    test('asks for the walk in the chosen mode and reads the route', () async {
+      late http.Request got;
+      final api = apiWith(
+        MockClient((req) async {
+          got = req;
+          return jsonResponse(serverRoute(), 200);
+        }),
+      );
+      final r = await api.route(from: from, to: to, mode: 'walkable');
+      expect(got.method, 'GET');
+      expect(got.url.path, '/route/walk');
+      expect(got.url.queryParameters, {
+        'from_lat': '14.5547',
+        'from_lng': '121.0244',
+        'to_lat': '14.553',
+        'to_lng': '121.021',
+        'mode': 'walkable',
+      });
+      expect(r.mode, 'walkable');
+      expect(r.distanceM, 480.0, reason: 'a whole number is read as a double');
+      expect(r.durationS, 345.2);
+      expect(r.line, [
+        [121.0244, 14.5547],
+        [121.021, 14.553],
+      ]);
+      expect(r.hazardIds, ['a1']);
+      expect(r.avoidsHazards, isTrue);
+    });
+
+    test('a route that passes no hazards has an empty list', () async {
+      final api = apiWith(MockClient((_) async => jsonResponse(serverRoute(hazards: []), 200)));
+      expect((await api.route(from: from, to: to, mode: 'fastest')).hazardIds, isEmpty);
+    });
+
+    test("shows the server's message when there is no route", () {
+      final api = apiWith(
+        MockClient((_) async => jsonResponse({'detail': 'No walking route found between those points.'}, 404)),
+      );
+      expect(api.route(from: from, to: to, mode: 'fastest'), apiError('No walking route found between those points.'));
+    });
+
+    test('the modes are the three the server takes, in toggle order', () {
+      expect(routeModes.keys, ['fastest', 'walkable', 'accessible']);
+    });
+  });
+
+  group('ApiClient.hubs', () {
+    // A hub as GET /transit/hubs sends it (server/app/routers/transit.py).
+    Map<String, dynamic> serverHub({String name = 'Washington Terminal', String kind = 'terminal'}) => {
+      'id': 'washington-terminal',
+      'name': name,
+      'kind': kind,
+      'modes': ['jeepney', 'uv_express'],
+      'lat': 14.55856,
+      'lng': 121,
+      'error_m': 80,
+      'distance_m': null,
+    };
+
+    test('asks for the list and reads each hub', () async {
+      late http.Request got;
+      final api = apiWith(
+        MockClient((req) async {
+          got = req;
+          return jsonResponse([serverHub(), serverHub(name: 'Dian', kind: 'stop')], 200);
+        }),
+      );
+      final hubs = await api.hubs();
+      expect(got.url.path, '/transit/hubs');
+      expect(got.url.queryParameters, {'limit': '50'});
+      expect(hubs.map((h) => h.name), ['Washington Terminal', 'Dian']);
+      expect(hubs.map((h) => h.isTerminal), [true, false]);
+      expect(hubs.first.lat, 14.55856);
+      expect(hubs.first.lng, 121.0, reason: 'a whole number is read as a double');
+      expect(hubs.first.errorM, 80);
+      expect(hubs.first.modesLabel, 'Jeepney · UV Express');
+    });
+
+    test('passes the kind and mode filters along', () async {
+      late http.Request got;
+      final api = apiWith(
+        MockClient((req) async {
+          got = req;
+          return jsonResponse([], 200);
+        }),
+      );
+      expect(await api.hubs(kind: 'terminal', mode: 'p2p_bus', limit: 5), isEmpty);
+      expect(got.url.queryParameters, {'limit': '5', 'kind': 'terminal', 'mode': 'p2p_bus'});
+    });
+
+    test('a hub becomes a Place to walk to; an unknown mode shows as sent', () {
+      final hub = Hub.fromJson({...serverHub(), 'modes': ['jeepney', 'ferry']});
+      expect(hub.place.label, 'Washington Terminal');
+      expect(hub.place.lat, 14.55856);
+      expect(hub.modesLabel, 'Jeepney · ferry');
+    });
+
+    test('a server error is an ApiException', () {
+      final api = apiWith(MockClient((_) async => jsonResponse({'detail': 'Server error.'}, 500)));
+      expect(api.hubs(), apiError('Server error.'));
+    });
+  });
 }

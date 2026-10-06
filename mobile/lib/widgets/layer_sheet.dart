@@ -7,9 +7,10 @@ import '../state/layers_state.dart';
 import '../theme.dart';
 
 class LayerSheet extends StatelessWidget {
-  const LayerSheet({super.key, required this.layers});
+  const LayerSheet({super.key, required this.layers, this.legend = const []});
 
   final LayersState layers;
+  final List<({Color color, String label})> legend; // the transit hubs' colours (layers/hubs_layer.dart)
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +21,39 @@ class LayerSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              title: const Text(
+                'Transit terminals and stops',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+              ),
+              value: layers.hubsOn,
+              onChanged: layers.setHubs,
+            ),
+            if (layers.hubsOn && legend.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Wrap(
+                  spacing: 12,
+                  runSpacing: 4,
+                  children: [
+                    for (final e in legend)
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(color: e.color, shape: BoxShape.circle),
+                          ),
+                          const SizedBox(width: 5),
+                          Text(e.label, style: const TextStyle(fontSize: 11, color: muted)),
+                        ],
+                      ),
+                  ],
+                ),
+              ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               dense: true,

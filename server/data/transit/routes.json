@@ -1,0 +1,473 @@
+{
+  "source": "PUV Routes in Makati (Ayala Land; SYSTRA Philippines, Makati BRT Study, 2025), provided by the City Government of Makati for the Poland–Philippines Smart Cities Hackathon, 6–7 Oct 2026. Hackathon use only: do not share outside the registered participants.",
+  "note": "Route names and end points only. The study has no stop order, schedules or route geometry, and its map lines are not georeferenced.",
+  "counts": {
+    "jeepney": 17,
+    "uv_express": 20,
+    "city_bus": 8,
+    "p2p_bus": 11
+  },
+  "routes": [
+    {
+      "id": "jeepney-ayala-pateros",
+      "mode": "jeepney",
+      "number": null,
+      "name": "Ayala – Pateros",
+      "ends": [
+        "Ayala",
+        "Pateros"
+      ]
+    },
+    {
+      "id": "jeepney-ayala-washington",
+      "mode": "jeepney",
+      "number": null,
+      "name": "Ayala – Washington",
+      "ends": [
+        "Ayala",
+        "Washington"
+      ]
+    },
+    {
+      "id": "jeepney-bel-air-washington",
+      "mode": "jeepney",
+      "number": null,
+      "name": "Bel Air – Washington",
+      "ends": [
+        "Bel Air",
+        "Washington"
+      ]
+    },
+    {
+      "id": "jeepney-guadalupe-cartimar",
+      "mode": "jeepney",
+      "number": null,
+      "name": "Guadalupe – Cartimar",
+      "ends": [
+        "Guadalupe",
+        "Cartimar"
+      ]
+    },
+    {
+      "id": "jeepney-l-guinto-guadalupe",
+      "mode": "jeepney",
+      "number": null,
+      "name": "L Guinto – Guadalupe",
+      "ends": [
+        "L Guinto",
+        "Guadalupe"
+      ]
+    },
+    {
+      "id": "jeepney-makati-ave-l-guinto",
+      "mode": "jeepney",
+      "number": null,
+      "name": "Makati Ave – L Guinto",
+      "ends": [
+        "Makati Ave",
+        "L Guinto"
+      ]
+    },
+    {
+      "id": "jeepney-libertad-washington",
+      "mode": "jeepney",
+      "number": null,
+      "name": "Libertad – Washington",
+      "ends": [
+        "Libertad",
+        "Washington"
+      ]
+    },
+    {
+      "id": "jeepney-ayala-jp-rizal",
+      "mode": "jeepney",
+      "number": null,
+      "name": "Ayala – JP Rizal",
+      "ends": [
+        "Ayala",
+        "JP Rizal"
+      ]
+    },
+    {
+      "id": "jeepney-ayala-guadalupe-ibabaw",
+      "mode": "jeepney",
+      "number": null,
+      "name": "Ayala – Guadalupe Ibabaw",
+      "ends": [
+        "Ayala",
+        "Guadalupe Ibabaw"
+      ]
+    },
+    {
+      "id": "jeepney-mandaluyong-mrt-buendia",
+      "mode": "jeepney",
+      "number": null,
+      "name": "Mandaluyong – MRT Buendia",
+      "ends": [
+        "Mandaluyong",
+        "MRT Buendia"
+      ]
+    },
+    {
+      "id": "jeepney-makati-loop",
+      "mode": "jeepney",
+      "number": null,
+      "name": "Makati Loop",
+      "ends": []
+    },
+    {
+      "id": "jeepney-pasay-rd-libertad",
+      "mode": "jeepney",
+      "number": null,
+      "name": "Pasay Rd – Libertad",
+      "ends": [
+        "Pasay Rd",
+        "Libertad"
+      ]
+    },
+    {
+      "id": "jeepney-kayamanan-c-prc",
+      "mode": "jeepney",
+      "number": null,
+      "name": "Kayamanan C – PRC",
+      "ends": [
+        "Kayamanan C",
+        "PRC"
+      ]
+    },
+    {
+      "id": "jeepney-prc-libertad",
+      "mode": "jeepney",
+      "number": null,
+      "name": "PRC – Libertad",
+      "ends": [
+        "PRC",
+        "Libertad"
+      ]
+    },
+    {
+      "id": "jeepney-pasay-picc-kalayaan",
+      "mode": "jeepney",
+      "number": null,
+      "name": "Pasay (PICC) – Kalayaan",
+      "ends": [
+        "Pasay (PICC)",
+        "Kalayaan"
+      ]
+    },
+    {
+      "id": "jeepney-mantrade-washington",
+      "mode": "jeepney",
+      "number": null,
+      "name": "Mantrade – Washington",
+      "ends": [
+        "Mantrade",
+        "Washington"
+      ]
+    },
+    {
+      "id": "jeepney-del-pan-guadalupe-ibabaw",
+      "mode": "jeepney",
+      "number": null,
+      "name": "Del Pan – Guadalupe Ibabaw",
+      "ends": [
+        "Del Pan",
+        "Guadalupe Ibabaw"
+      ]
+    },
+    {
+      "id": "uv_express-marikina-heights",
+      "mode": "uv_express",
+      "number": null,
+      "name": "Marikina Heights",
+      "ends": []
+    },
+    {
+      "id": "uv_express-suki-market",
+      "mode": "uv_express",
+      "number": null,
+      "name": "Suki Market",
+      "ends": []
+    },
+    {
+      "id": "uv_express-imus",
+      "mode": "uv_express",
+      "number": null,
+      "name": "Imus",
+      "ends": []
+    },
+    {
+      "id": "uv_express-san-mateo",
+      "mode": "uv_express",
+      "number": null,
+      "name": "San Mateo",
+      "ends": []
+    },
+    {
+      "id": "uv_express-sucat-evacom",
+      "mode": "uv_express",
+      "number": null,
+      "name": "Sucat Evacom",
+      "ends": []
+    },
+    {
+      "id": "uv_express-molino",
+      "mode": "uv_express",
+      "number": null,
+      "name": "Molino",
+      "ends": []
+    },
+    {
+      "id": "uv_express-pacita-binan",
+      "mode": "uv_express",
+      "number": null,
+      "name": "Pacita – Binan",
+      "ends": []
+    },
+    {
+      "id": "uv_express-balic-balic",
+      "mode": "uv_express",
+      "number": null,
+      "name": "Balic – Balic",
+      "ends": []
+    },
+    {
+      "id": "uv_express-las-pinas",
+      "mode": "uv_express",
+      "number": null,
+      "name": "Las Pinas",
+      "ends": []
+    },
+    {
+      "id": "uv_express-antipolo",
+      "mode": "uv_express",
+      "number": null,
+      "name": "Antipolo",
+      "ends": []
+    },
+    {
+      "id": "uv_express-ortigas-avenue-extension",
+      "mode": "uv_express",
+      "number": null,
+      "name": "Ortigas Avenue Extension",
+      "ends": []
+    },
+    {
+      "id": "uv_express-pasig",
+      "mode": "uv_express",
+      "number": null,
+      "name": "Pasig",
+      "ends": []
+    },
+    {
+      "id": "uv_express-sm-bicutan",
+      "mode": "uv_express",
+      "number": null,
+      "name": "SM Bicutan",
+      "ends": []
+    },
+    {
+      "id": "uv_express-fti-arca-south",
+      "mode": "uv_express",
+      "number": null,
+      "name": "FTI / Arca South",
+      "ends": []
+    },
+    {
+      "id": "uv_express-tuktukan-taguig",
+      "mode": "uv_express",
+      "number": null,
+      "name": "Tuktukan Taguig",
+      "ends": []
+    },
+    {
+      "id": "uv_express-malabon",
+      "mode": "uv_express",
+      "number": null,
+      "name": "Malabon",
+      "ends": []
+    },
+    {
+      "id": "uv_express-masinag",
+      "mode": "uv_express",
+      "number": null,
+      "name": "Masinag",
+      "ends": []
+    },
+    {
+      "id": "uv_express-bf-grande",
+      "mode": "uv_express",
+      "number": null,
+      "name": "BF Grande",
+      "ends": []
+    },
+    {
+      "id": "uv_express-bf-resort",
+      "mode": "uv_express",
+      "number": null,
+      "name": "BF Resort",
+      "ends": []
+    },
+    {
+      "id": "uv_express-dasmarinas-the-district",
+      "mode": "uv_express",
+      "number": null,
+      "name": "Dasmarinas (The District)",
+      "ends": []
+    },
+    {
+      "id": "city_bus-1-edsa-carousel",
+      "mode": "city_bus",
+      "number": "1",
+      "name": "EDSA Carousel",
+      "ends": []
+    },
+    {
+      "id": "city_bus-10-ayala-alabang-sucat",
+      "mode": "city_bus",
+      "number": "10",
+      "name": "Ayala – Alabang/Sucat",
+      "ends": [
+        "Ayala",
+        "Alabang/Sucat"
+      ]
+    },
+    {
+      "id": "city_bus-11-pasay-balibago-via-ayala",
+      "mode": "city_bus",
+      "number": "11",
+      "name": "Pasay – Balibago via Ayala",
+      "ends": [
+        "Pasay",
+        "Balibago"
+      ]
+    },
+    {
+      "id": "city_bus-12-ayala-binan-pacita",
+      "mode": "city_bus",
+      "number": "12",
+      "name": "Ayala – Binan/Pacita",
+      "ends": [
+        "Ayala",
+        "Binan/Pacita"
+      ]
+    },
+    {
+      "id": "city_bus-40-sm-fairview-alabang-via-ayala",
+      "mode": "city_bus",
+      "number": "40",
+      "name": "SM Fairview – Alabang via Ayala",
+      "ends": [
+        "SM Fairview",
+        "Alabang"
+      ]
+    },
+    {
+      "id": "city_bus-42-malanday-ayala",
+      "mode": "city_bus",
+      "number": "42",
+      "name": "Malanday – Ayala",
+      "ends": [
+        "Malanday",
+        "Ayala"
+      ]
+    },
+    {
+      "id": "city_bus-45-fti-ayala",
+      "mode": "city_bus",
+      "number": "45",
+      "name": "FTI – Ayala",
+      "ends": [
+        "FTI",
+        "Ayala"
+      ]
+    },
+    {
+      "id": "city_bus-lrt-gil-puyat-ayala-bgc-bus",
+      "mode": "city_bus",
+      "number": null,
+      "name": "LRT Gil Puyat – Ayala (BGC Bus)",
+      "ends": [
+        "LRT Gil Puyat",
+        "Ayala"
+      ]
+    },
+    {
+      "id": "p2p_bus-calamba",
+      "mode": "p2p_bus",
+      "number": null,
+      "name": "Calamba",
+      "ends": []
+    },
+    {
+      "id": "p2p_bus-fairview",
+      "mode": "p2p_bus",
+      "number": null,
+      "name": "Fairview",
+      "ends": []
+    },
+    {
+      "id": "p2p_bus-sta-rosa",
+      "mode": "p2p_bus",
+      "number": null,
+      "name": "Sta. Rosa",
+      "ends": []
+    },
+    {
+      "id": "p2p_bus-antipolo",
+      "mode": "p2p_bus",
+      "number": null,
+      "name": "Antipolo",
+      "ends": []
+    },
+    {
+      "id": "p2p_bus-imus",
+      "mode": "p2p_bus",
+      "number": null,
+      "name": "Imus",
+      "ends": []
+    },
+    {
+      "id": "p2p_bus-noveleta",
+      "mode": "p2p_bus",
+      "number": null,
+      "name": "Noveleta",
+      "ends": []
+    },
+    {
+      "id": "p2p_bus-las-pinas",
+      "mode": "p2p_bus",
+      "number": null,
+      "name": "Las Pinas",
+      "ends": []
+    },
+    {
+      "id": "p2p_bus-bacoor",
+      "mode": "p2p_bus",
+      "number": null,
+      "name": "Bacoor",
+      "ends": []
+    },
+    {
+      "id": "p2p_bus-cainta",
+      "mode": "p2p_bus",
+      "number": null,
+      "name": "Cainta",
+      "ends": []
+    },
+    {
+      "id": "p2p_bus-alabang",
+      "mode": "p2p_bus",
+      "number": null,
+      "name": "Alabang",
+      "ends": []
+    },
+    {
+      "id": "p2p_bus-circuit-makati",
+      "mode": "p2p_bus",
+      "number": null,
+      "name": "Circuit Makati",
+      "ends": []
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-// mapbox-gl map, opens pinned on Makati, draws the congestion layer and the report pins.
+// mapbox-gl map, opens pinned on Makati, draws the foot-traffic and congestion layers and the report pins.
 import { useEffect, useImperativeHandle, useRef, useState, type Ref } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -6,8 +6,9 @@ import { ENV } from "../config/env";
 import { MAKATI, lockBounds } from "../config/makati";
 import { MAP_STYLES, DEFAULT_MAP_STYLE } from "../config/mapStyles";
 import { addCongestion, removeCongestion } from "../layers/congestion";
+import { removeFootfall, setFootfall } from "../layers/footfall";
 import { bindReportPins, setReportPins } from "../layers/reports";
-import type { Report } from "../types/api";
+import type { Footfall, Report } from "../types/api";
 
 // Camera commands for the panels. `coveredRight`: px of map hidden under a panel on the right,
 // so the pin lands in the middle of what is still visible.
@@ -16,13 +17,15 @@ export type MapHandle = { show: (lng: number, lat: number, coveredRight?: number
 type Props = {
   congestionOn: boolean;
   stamp: number;
+  footfall: Footfall | null; // null: the layer is off
+
   reports: Report[] | null;
   selectedId: string | null;
   onSelect: (id: string) => void;
   ref?: Ref<MapHandle>;
 };
 
-export default function MapCanvas({ congestionOn, stamp, reports, selectedId, onSelect, ref }: Props) {
+export default function MapCanvas({ congestionOn, stamp, footfall, reports, selectedId, onSelect, ref }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [loaded, setLoaded] = useState(false);
@@ -49,13 +52,18 @@ export default function MapCanvas({ congestionOn, stamp, reports, selectedId, on
     // stays readable; Mapbox collapses it below 640px.
     map.current.addControl(new mapboxgl.AttributionControl(), "bottom-right");
     // The lock follows the viewport's shape: redo it, and re-frame the city, when that changes.
+    // While the Insights handle is dragged, only the size follows; the lock and framing wait for release.
+    const dragging = () => !!el.closest("[data-dragging]");
     map.current.on("resize", () => {
+      if (dragging()) return;
       const b = lockBounds(el.clientWidth, el.clientHeight);
       map.current?.setMaxBounds(b).fitBounds(b, { duration: 0 });
     });
     map.current.once("load", () => setLoaded(true));
     // The Insights split resizes this container without a window resize; the map lives as long as el.
-    new ResizeObserver(() => map.current?.resize()).observe(el);
+    // Not mid-drag: the panel resizes the map itself, synchronously (an observer fires after the frame's
+    // rAF callbacks, so Mapbox would clear the canvas and draw it a frame late: that was the flicker).
+    new ResizeObserver(() => dragging() || map.current?.resize()).observe(el);
   }, []);
 
   // Both layers are gated on "load" having fired rather than on isStyleLoaded(): that is false
@@ -67,6 +75,14 @@ export default function MapCanvas({ congestionOn, stamp, reports, selectedId, on
     if (congestionOn && ENV.tomtomKey) addCongestion(m, ENV.tomtomKey, stamp);
     else removeCongestion(m);
   }, [loaded, congestionOn, stamp]);
+
+  // Foot traffic follows the day and hour; the layer is added once and later answers only swap its data.
+  useEffect(() => {
+    const m = map.current;
+    if (!loaded || !m) return;
+    if (footfall) setFootfall(m, footfall);
+    else removeFootfall(m);
+  }, [loaded, footfall]);
 
   // Pins follow every poll and selection.
   useEffect(() => {

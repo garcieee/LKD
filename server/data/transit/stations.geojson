@@ -1,0 +1,255 @@
+{
+  "type": "FeatureCollection",
+  "source": "OpenStreetMap contributors (ODbL, openstreetmap.org/copyright), Overpass snapshot of 2026-05-31: railway=station nodes and polygons on the MRT-3 and LRT-1 lines inside the app's map area.",
+  "note": "Running lines only. MRT-3 and LRT-1 operate. The PNR Metro Commuter Line has been suspended in Metro Manila since 2024-03-28 (for the North-South Commuter Railway), so its stations (Dela Rosa, Pasay Road, EDSA, Vito Cruz, San Andres, Paco) are left out until it runs again. Position is the station building's centre. 'merges' names PUV terminals from terminals.geojson that stand at the same station: they are replaced by it and add their modes to it.",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.027919,
+          14.549194
+        ]
+      },
+      "properties": {
+        "id": "ayala-station-mrt-3",
+        "name": "Ayala Station (MRT-3)",
+        "kind": "station",
+        "line": "MRT-3",
+        "modes": [
+          "mrt3"
+        ],
+        "merges": [
+          "MRT3-Ayala/BGC Bus Terminal"
+        ],
+        "osm": "w27663063",
+        "error_m": 40
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.034222,
+          14.55437
+        ]
+      },
+      "properties": {
+        "id": "buendia-station-mrt-3",
+        "name": "Buendia Station (MRT-3)",
+        "kind": "station",
+        "line": "MRT-3",
+        "modes": [
+          "mrt3"
+        ],
+        "merges": [
+          "MRT3-Buendia"
+        ],
+        "osm": "w112320439",
+        "error_m": 40
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.045536,
+          14.567114
+        ]
+      },
+      "properties": {
+        "id": "guadalupe-station-mrt-3",
+        "name": "Guadalupe Station (MRT-3)",
+        "kind": "station",
+        "line": "MRT-3",
+        "modes": [
+          "mrt3"
+        ],
+        "merges": [],
+        "osm": "w60618740",
+        "error_m": 40
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.019392,
+          14.541945
+        ]
+      },
+      "properties": {
+        "id": "magallanes-station-mrt-3",
+        "name": "Magallanes Station (MRT-3)",
+        "kind": "station",
+        "line": "MRT-3",
+        "modes": [
+          "mrt3"
+        ],
+        "merges": [],
+        "osm": "w222628890",
+        "error_m": 40
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.048189,
+          14.573774
+        ]
+      },
+      "properties": {
+        "id": "boni-station-mrt-3",
+        "name": "Boni Station (MRT-3)",
+        "kind": "station",
+        "line": "MRT-3",
+        "modes": [
+          "mrt3"
+        ],
+        "merges": [],
+        "osm": "w60198083",
+        "error_m": 40
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.001818,
+          14.537564
+        ]
+      },
+      "properties": {
+        "id": "taft-avenue-station-mrt-3",
+        "name": "Taft Avenue Station (MRT-3)",
+        "kind": "station",
+        "line": "MRT-3",
+        "modes": [
+          "mrt3"
+        ],
+        "merges": [],
+        "osm": "w222628889",
+        "error_m": 40
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.997166,
+          14.554181
+        ]
+      },
+      "properties": {
+        "id": "gil-puyat-station-lrt-1",
+        "name": "Gil Puyat Station (LRT-1)",
+        "kind": "station",
+        "line": "LRT-1",
+        "modes": [
+          "lrt1"
+        ],
+        "merges": [
+          "LRT1-Gil Puyat"
+        ],
+        "osm": "w288127159",
+        "error_m": 40
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.998637,
+          14.547751
+        ]
+      },
+      "properties": {
+        "id": "libertad-station-lrt-1",
+        "name": "Libertad Station (LRT-1)",
+        "kind": "station",
+        "line": "LRT-1",
+        "modes": [
+          "lrt1"
+        ],
+        "merges": [],
+        "osm": "w290088413",
+        "error_m": 40
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.000619,
+          14.538843
+        ]
+      },
+      "properties": {
+        "id": "edsa-station-lrt-1",
+        "name": "EDSA Station (LRT-1)",
+        "kind": "station",
+        "line": "LRT-1",
+        "modes": [
+          "lrt1"
+        ],
+        "merges": [],
+        "osm": "w222628891",
+        "error_m": 40
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.998398,
+          14.534288
+        ]
+      },
+      "properties": {
+        "id": "baclaran-station-lrt-1",
+        "name": "Baclaran Station (LRT-1)",
+        "kind": "station",
+        "line": "LRT-1",
+        "modes": [
+          "lrt1"
+        ],
+        "merges": [],
+        "osm": "w290189159",
+        "error_m": 40
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.994751,
+          14.56347
+        ]
+      },
+      "properties": {
+        "id": "vito-cruz-station-lrt-1",
+        "name": "Vito Cruz Station (LRT-1)",
+        "kind": "station",
+        "line": "LRT-1",
+        "modes": [
+          "lrt1"
+        ],
+        "merges": [],
+        "osm": "w288126518",
+        "error_m": 40
+      }
+    }
+  ]
+}
