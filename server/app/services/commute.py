@@ -15,6 +15,7 @@ MAX_WALK_M = 800  # farther than this to a hub and it is not a commute leg
 WALK_ONLY_M = 1500  # a trip this short is also offered as a plain walk
 MIN_RIDE_M = 400  # not worth boarding for less
 HUBS_PER_END = 4
+ROAD_KINDS = {"jeepney", "uv_express", "city_bus", "p2p_bus"}  # run on streets; MRT-3 and LRT-1 run on rails
 
 
 def load_ride_modes(directory: Path) -> dict:

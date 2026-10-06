@@ -13,7 +13,12 @@ PARAMS = {"from_lat": AYALA[0], "from_lng": AYALA[1], "to_lat": GIL_PUYAT[0], "t
 STREET = [[121.0244, 14.5547, 12.0], [121.0240, 14.5550, 12.0]]  # a 100 m, 80 s street walk
 
 
-def ors_walk(_req):
+ROAD = [[121.0244, 14.5547, 12.0], [121.0240, 14.5552, 12.0], [121.0200, 14.5552, 12.0], [121.0190, 14.5556, 12.0]]  # a bent 1.2 km street ride
+
+
+def ors_walk(req):
+    if "driving" in req.url.path:
+        return httpx.Response(500)  # the ride is not under test: it keeps its straight-line estimate
     body = {"features": [{"geometry": {"type": "LineString", "coordinates": STREET}, "properties": {"summary": {"distance": 100.0, "duration": 80.0}}}]}
     return httpx.Response(200, json=body)
 
@@ -51,8 +56,9 @@ def test_walk_legs_get_street_routes_and_the_ride_stays_an_estimate(tmp_path):
         assert all(w["duration_s"] == 80.0 and len(w["geometry"][0]) == 2 for w in walks), "ORS route in, elevation dropped"
         assert o["walk_s"] == 160.0
         assert o["total_s"] == 160.0 + rides[0]["duration_s"]
-    assert all(req.url.path == "/v2/directions/foot-walking/geojson" for req in seen)
-    assert len(seen) <= 6
+    assert all(req.url.path == "/v2/directions/foot-walking/geojson" for req in seen if "driving" not in req.url.path)
+    assert len(seen) <= 12
+    assert all(len(leg["geometry"]) == 2 for o in options for leg in o["legs"] if leg["kind"] != "walk"), "ORS was down for the ride"
 
 
 def test_the_list_survives_ors_being_down(tmp_path):
@@ -77,7 +83,7 @@ def test_walking_legs_follow_the_picked_mode(tmp_path):
     def sent(mode):
         seen.clear()
         assert c.get("/route/commute", params={**PARAMS, "mode": mode}).status_code == 200
-        return [(req.url.path, json.loads(req.content)) for req in seen]
+        return [(req.url.path, json.loads(req.content)) for req in seen if "driving" not in req.url.path]
 
     assert all(path.endswith("/wheelchair/geojson") for path, _ in sent("accessible"))
     walkable = sent("walkable")
@@ -122,3 +128,39 @@ def test_a_walking_leg_carries_its_turn_steps_and_a_ride_has_none(tmp_path):
             assert [(s["type"], s["name"], s["at"]) for s in leg["steps"]] == [(1, "Ayala Avenue", 0)]
         else:
             assert leg["steps"] == []
+
+
+def _ride(kind):
+    return {"kind": kind, "duration_s": 1.0, "distance_m": 1.0, "label": "A to B", "geometry": [[121.0244, 14.5547], [121.0190, 14.5556]]}
+
+
+def test_a_road_ride_follows_the_streets_between_its_stops_and_a_train_stays_a_straight_line():
+    from app.routers.commute import _refine
+
+    seen = []
+
+    def handler(req):
+        seen.append((req.url.path, json.loads(req.content)))
+        body = {"features": [{"geometry": {"type": "LineString", "coordinates": ROAD}, "properties": {"summary": {"distance": 1200.0, "duration": 150.0}, "segments": [{"steps": [{"distance": 1200.0, "duration": 150.0, "type": 11, "instruction": "Head west", "name": "Ayala", "way_points": [0, 3]}]}]}}]}
+        return httpx.Response(200, json=body)
+
+    options = [{"id": "x", "total_s": 2.0, "walk_s": 0.0, "tags": [], "legs": [_ride("jeepney"), _ride("mrt3")]}]
+    rides = {"jeepney": {"speed_kmh": 12, "wait_min": 4}, "mrt3": {"speed_kmh": 33, "wait_min": 4}}
+    _refine(options, "walkable", [], httpx.Client(transport=httpx.MockTransport(handler)), rides)
+    jeepney, train = options[0]["legs"]
+    assert [path for path, _ in seen] == ["/v2/directions/driving-car/geojson"], "one street route, none for the train"
+    assert "options" not in seen[0][1], "no walking no-go zones on a road"
+    assert jeepney["geometry"] == [[121.0244, 14.5547], [121.024, 14.5552], [121.02, 14.5552], [121.019, 14.5556]], "the bend is kept, elevation dropped"
+    assert jeepney["distance_m"] == 1200.0
+    assert jeepney["duration_s"] == 4 * 60 + 1200 / (12 / 3.6), "the wait plus the road at the jeepney's assumed speed, not the car's time"
+    assert jeepney["steps"] == [], "a car's turns are not a rider's"
+    assert len(train["geometry"]) == 2 and train["distance_m"] == 1.0
+    assert options[0]["total_s"] == jeepney["duration_s"] + train["duration_s"]
+
+
+def test_a_ride_whose_street_route_fails_keeps_its_straight_line(tmp_path):
+    from app.routers.commute import _refine
+
+    options = [{"id": "x", "total_s": 1.0, "walk_s": 0.0, "tags": [], "legs": [_ride("city_bus")]}]
+    _refine(options, "walkable", [], httpx.Client(transport=httpx.MockTransport(lambda req: httpx.Response(500))), {"city_bus": {"speed_kmh": 15, "wait_min": 6}})
+    assert len(options[0]["legs"][0]["geometry"]) == 2 and options[0]["total_s"] == 1.0
