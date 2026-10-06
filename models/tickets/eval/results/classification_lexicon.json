@@ -1,0 +1,702 @@
+{
+  "changes": [
+    {
+      "change": "add",
+      "effect": 0.026494715740235764,
+      "effect_metric": "pr_auc",
+      "families": 8,
+      "list": "danger",
+      "precision": 0.9375,
+      "support": 16,
+      "term": "baka"
+    },
+    {
+      "change": "add",
+      "effect": 0.001503508185766722,
+      "effect_metric": "pr_auc",
+      "families": 7,
+      "list": "danger",
+      "precision": 1.0,
+      "support": 9,
+      "term": "could"
+    },
+    {
+      "change": "add",
+      "effect": 0.0102949794185484,
+      "effect_metric": "pr_auc",
+      "families": 4,
+      "list": "danger",
+      "precision": 1.0,
+      "support": 7,
+      "term": "batang"
+    },
+    {
+      "change": "add",
+      "effect": 0.008811788910967677,
+      "effect_metric": "pr_auc",
+      "families": 4,
+      "list": "danger",
+      "precision": 1.0,
+      "support": 7,
+      "term": "walking"
+    },
+    {
+      "change": "add",
+      "effect": 0.0176436245977456,
+      "effect_metric": "pr_auc",
+      "families": 4,
+      "list": "danger",
+      "precision": 1.0,
+      "support": 6,
+      "term": "bka"
+    },
+    {
+      "change": "add",
+      "effect": 0.0,
+      "effect_metric": "pr_auc",
+      "families": 3,
+      "list": "danger",
+      "precision": 1.0,
+      "support": 6,
+      "term": "pauwi"
+    },
+    {
+      "change": "add",
+      "effect": 0.006779268585764386,
+      "effect_metric": "pr_auc",
+      "families": 5,
+      "list": "danger",
+      "precision": 1.0,
+      "support": 6,
+      "term": "will"
+    },
+    {
+      "change": "add",
+      "effect": 0.0,
+      "effect_metric": "pr_auc",
+      "families": 3,
+      "list": "danger",
+      "precision": 1.0,
+      "support": 5,
+      "term": "aso"
+    },
+    {
+      "change": "add",
+      "effect": 0.0,
+      "effect_metric": "pr_auc",
+      "families": 4,
+      "list": "danger",
+      "precision": 1.0,
+      "support": 5,
+      "term": "scary"
+    },
+    {
+      "change": "remove",
+      "effect": -0.029647564202072596,
+      "effect_metric": "macro_f1",
+      "families": 4,
+      "list": "other",
+      "precision": 0.0,
+      "support": 9,
+      "term": "basura"
+    },
+    {
+      "change": "add",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 8,
+      "list": "open_manhole",
+      "precision": 0.9285714285714286,
+      "support": 42,
+      "term": "takip"
+    },
+    {
+      "change": "add",
+      "effect": 0.02448193680498978,
+      "effect_metric": "macro_f1",
+      "families": 15,
+      "list": "pothole",
+      "precision": 1.0,
+      "support": 34,
+      "term": "hole"
+    },
+    {
+      "change": "add",
+      "effect": 0.01813845179960194,
+      "effect_metric": "macro_f1",
+      "families": 15,
+      "list": "pothole",
+      "precision": 0.9666666666666667,
+      "support": 30,
+      "term": "butas"
+    },
+    {
+      "change": "add",
+      "effect": 0.007387073610971684,
+      "effect_metric": "macro_f1",
+      "families": 9,
+      "list": "broken_streetlight",
+      "precision": 1.0,
+      "support": 27,
+      "term": "patay"
+    },
+    {
+      "change": "add",
+      "effect": 0.012082636446069328,
+      "effect_metric": "macro_f1",
+      "families": 9,
+      "list": "broken_streetlight",
+      "precision": 0.9375,
+      "support": 16,
+      "term": "lamp"
+    },
+    {
+      "change": "add",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 8,
+      "list": "blocked_sidewalk",
+      "precision": 0.9,
+      "support": 10,
+      "term": "daanan"
+    },
+    {
+      "change": "add",
+      "effect": 0.007387073610971684,
+      "effect_metric": "macro_f1",
+      "families": 6,
+      "list": "broken_streetlight",
+      "precision": 1.0,
+      "support": 10,
+      "term": "dead"
+    },
+    {
+      "change": "add",
+      "effect": 0.0032231795340574854,
+      "effect_metric": "macro_f1",
+      "families": 4,
+      "list": "pothole",
+      "precision": 1.0,
+      "support": 10,
+      "term": "lumalaki"
+    },
+    {
+      "change": "add",
+      "effect": -0.0017061694066310418,
+      "effect_metric": "macro_f1",
+      "families": 4,
+      "list": "broken_streetlight",
+      "precision": 1.0,
+      "support": 10,
+      "term": "meralco"
+    },
+    {
+      "change": "add",
+      "effect": 0.0033070242607593503,
+      "effect_metric": "macro_f1",
+      "families": 5,
+      "list": "blocked_sidewalk",
+      "precision": 1.0,
+      "support": 10,
+      "term": "parked"
+    },
+    {
+      "change": "add",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 5,
+      "list": "broken_streetlight",
+      "precision": 1.0,
+      "support": 8,
+      "term": "bulb"
+    },
+    {
+      "change": "add",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 5,
+      "list": "blocked_sidewalk",
+      "precision": 1.0,
+      "support": 8,
+      "term": "kotse"
+    },
+    {
+      "change": "add",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 6,
+      "list": "flooded_drain",
+      "precision": 1.0,
+      "support": 8,
+      "term": "linisin"
+    },
+    {
+      "change": "add",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 5,
+      "list": "blocked_sidewalk",
+      "precision": 1.0,
+      "support": 7,
+      "term": "madaanan"
+    },
+    {
+      "change": "add",
+      "effect": -0.0009049956254927327,
+      "effect_metric": "macro_f1",
+      "families": 5,
+      "list": "blocked_sidewalk",
+      "precision": 1.0,
+      "support": 7,
+      "term": "materials"
+    },
+    {
+      "change": "add",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 4,
+      "list": "broken_streetlight",
+      "precision": 1.0,
+      "support": 7,
+      "term": "umiilaw"
+    },
+    {
+      "change": "add",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 3,
+      "list": "pothole",
+      "precision": 1.0,
+      "support": 6,
+      "term": "laki"
+    },
+    {
+      "change": "add",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 4,
+      "list": "blocked_sidewalk",
+      "precision": 1.0,
+      "support": 6,
+      "term": "nakaparadang"
+    },
+    {
+      "change": "add",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 4,
+      "list": "blocked_sidewalk",
+      "precision": 1.0,
+      "support": 5,
+      "term": "space"
+    },
+    {
+      "change": "add",
+      "effect": 0.007387073610971684,
+      "effect_metric": "macro_f1",
+      "families": 5,
+      "list": "broken_streetlight",
+      "precision": 1.0,
+      "support": 7,
+      "term": "light pole"
+    }
+  ],
+  "meta": {
+    "git_commit": "3dc677f",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T13:14:42+00:00"
+  },
+  "removal_below_0.9": {
+    "macro_f1": 0.6915462802134764,
+    "pr_auc": 0.7980102695763801
+  },
+  "rule": {
+    "max_words": 3,
+    "min_families": 3,
+    "min_precision": 0.9,
+    "min_support": 5,
+    "remove_when": "judged and precision <= 0.1 (at least 0.9 of its notes are not of its class)"
+  },
+  "split": {
+    "seed": 4,
+    "train_families": 60,
+    "train_rows": 1120,
+    "validation_rows": 380
+  },
+  "summary": {
+    "blocked_sidewalk": {
+      "added": 7,
+      "in_v0": 21,
+      "kept_with_evidence": 4,
+      "not_judged": 12,
+      "removed": 0,
+      "weak_kept": 5
+    },
+    "boundaries": {
+      "added": 0,
+      "in_v0": 8,
+      "kept_with_evidence": 0,
+      "not_judged": 8,
+      "removed": 0,
+      "weak_kept": 0
+    },
+    "broken_streetlight": {
+      "added": 7,
+      "in_v0": 26,
+      "kept_with_evidence": 4,
+      "not_judged": 15,
+      "removed": 0,
+      "weak_kept": 7
+    },
+    "danger": {
+      "added": 9,
+      "in_v0": 68,
+      "kept_with_evidence": 14,
+      "not_judged": 48,
+      "removed": 0,
+      "weak_kept": 6
+    },
+    "flooded_drain": {
+      "added": 1,
+      "in_v0": 30,
+      "kept_with_evidence": 4,
+      "not_judged": 22,
+      "removed": 0,
+      "weak_kept": 4
+    },
+    "negators": {
+      "added": 0,
+      "in_v0": 13,
+      "kept_with_evidence": 3,
+      "not_judged": 10,
+      "removed": 0,
+      "weak_kept": 0
+    },
+    "open_manhole": {
+      "added": 1,
+      "in_v0": 15,
+      "kept_with_evidence": 4,
+      "not_judged": 9,
+      "removed": 0,
+      "weak_kept": 2
+    },
+    "other": {
+      "added": 0,
+      "in_v0": 22,
+      "kept_with_evidence": 0,
+      "not_judged": 16,
+      "removed": 1,
+      "weak_kept": 5
+    },
+    "pothole": {
+      "added": 4,
+      "in_v0": 24,
+      "kept_with_evidence": 3,
+      "not_judged": 21,
+      "removed": 0,
+      "weak_kept": 0
+    }
+  },
+  "validation_v0": {
+    "macro_f1": 0.7451760153528696,
+    "pr_auc": 0.7737299312430761
+  },
+  "validation_v1": {
+    "macro_f1": 0.7835697236330826,
+    "pr_auc": 0.8448761701994427
+  },
+  "weak_kept": [
+    {
+      "change": "would remove",
+      "effect": -0.0062788834931618576,
+      "effect_metric": "pr_auc",
+      "families": 13,
+      "list": "danger",
+      "precision": 0.5294117647058824,
+      "support": 17,
+      "term": "almost"
+    },
+    {
+      "change": "would remove",
+      "effect": -0.022197630894127407,
+      "effect_metric": "pr_auc",
+      "families": 7,
+      "list": "danger",
+      "precision": 0.6666666666666666,
+      "support": 9,
+      "term": "fell"
+    },
+    {
+      "change": "would remove",
+      "effect": -0.001503508185766833,
+      "effect_metric": "pr_auc",
+      "families": 4,
+      "list": "danger",
+      "precision": 0.6,
+      "support": 5,
+      "term": "natumba"
+    },
+    {
+      "change": "would remove",
+      "effect": -0.025465712902952076,
+      "effect_metric": "pr_auc",
+      "families": 8,
+      "list": "danger",
+      "precision": 0.8,
+      "support": 10,
+      "term": "hurt"
+    },
+    {
+      "change": "would remove",
+      "effect": 0.0,
+      "effect_metric": "pr_auc",
+      "families": 3,
+      "list": "danger",
+      "precision": 0.4,
+      "support": 5,
+      "term": "namatay"
+    },
+    {
+      "change": "would remove",
+      "effect": 0.0,
+      "effect_metric": "pr_auc",
+      "families": 7,
+      "list": "danger",
+      "precision": 0.875,
+      "support": 8,
+      "term": "mapanganib"
+    },
+    {
+      "change": "would remove",
+      "effect": -0.01979284421002314,
+      "effect_metric": "macro_f1",
+      "families": 9,
+      "list": "open_manhole",
+      "precision": 0.7870967741935484,
+      "support": 155,
+      "term": "manhole"
+    },
+    {
+      "change": "would remove",
+      "effect": 0.0009258294396581324,
+      "effect_metric": "macro_f1",
+      "families": 7,
+      "list": "open_manhole",
+      "precision": 0.8181818181818182,
+      "support": 22,
+      "term": "manhole cover"
+    },
+    {
+      "change": "would remove",
+      "effect": -0.02272415474621592,
+      "effect_metric": "macro_f1",
+      "families": 10,
+      "list": "flooded_drain",
+      "precision": 0.7636363636363637,
+      "support": 55,
+      "term": "baha"
+    },
+    {
+      "change": "would remove",
+      "effect": -0.004534929544146693,
+      "effect_metric": "macro_f1",
+      "families": 5,
+      "list": "flooded_drain",
+      "precision": 0.7272727272727273,
+      "support": 11,
+      "term": "flood"
+    },
+    {
+      "change": "would remove",
+      "effect": -0.003150260190547538,
+      "effect_metric": "macro_f1",
+      "families": 6,
+      "list": "flooded_drain",
+      "precision": 0.8333333333333334,
+      "support": 12,
+      "term": "flooded"
+    },
+    {
+      "change": "would remove",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 6,
+      "list": "flooded_drain",
+      "precision": 0.7647058823529411,
+      "support": 17,
+      "term": "clogged"
+    },
+    {
+      "change": "would remove",
+      "effect": -0.005174986898015765,
+      "effect_metric": "macro_f1",
+      "families": 3,
+      "list": "broken_streetlight",
+      "precision": 0.8333333333333334,
+      "support": 6,
+      "term": "streetlights"
+    },
+    {
+      "change": "would remove",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 5,
+      "list": "broken_streetlight",
+      "precision": 0.875,
+      "support": 8,
+      "term": "lamp post"
+    },
+    {
+      "change": "would remove",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 9,
+      "list": "broken_streetlight",
+      "precision": 0.8571428571428571,
+      "support": 21,
+      "term": "walang ilaw"
+    },
+    {
+      "change": "would remove",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 10,
+      "list": "broken_streetlight",
+      "precision": 0.7894736842105263,
+      "support": 19,
+      "term": "madilim"
+    },
+    {
+      "change": "would remove",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 9,
+      "list": "broken_streetlight",
+      "precision": 0.7333333333333333,
+      "support": 15,
+      "term": "dark"
+    },
+    {
+      "change": "would remove",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 5,
+      "list": "broken_streetlight",
+      "precision": 0.6666666666666666,
+      "support": 6,
+      "term": "no light"
+    },
+    {
+      "change": "would remove",
+      "effect": -0.0316259288852615,
+      "effect_metric": "macro_f1",
+      "families": 13,
+      "list": "broken_streetlight",
+      "precision": 0.803921568627451,
+      "support": 51,
+      "term": "poste"
+    },
+    {
+      "change": "would remove",
+      "effect": -0.03976955398218629,
+      "effect_metric": "macro_f1",
+      "families": 16,
+      "list": "blocked_sidewalk",
+      "precision": 0.8974358974358975,
+      "support": 78,
+      "term": "sidewalk"
+    },
+    {
+      "change": "would remove",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 12,
+      "list": "blocked_sidewalk",
+      "precision": 0.75,
+      "support": 28,
+      "term": "nakaharang"
+    },
+    {
+      "change": "would remove",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 5,
+      "list": "blocked_sidewalk",
+      "precision": 0.42857142857142855,
+      "support": 7,
+      "term": "harang"
+    },
+    {
+      "change": "would remove",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 5,
+      "list": "blocked_sidewalk",
+      "precision": 0.8333333333333334,
+      "support": 6,
+      "term": "paninda"
+    },
+    {
+      "change": "would remove",
+      "effect": -0.0011724248615468946,
+      "effect_metric": "macro_f1",
+      "families": 7,
+      "list": "blocked_sidewalk",
+      "precision": 0.5,
+      "support": 10,
+      "term": "tindahan"
+    },
+    {
+      "change": "would remove",
+      "effect": 0.01263849843643694,
+      "effect_metric": "macro_f1",
+      "families": 9,
+      "list": "other",
+      "precision": 0.3333333333333333,
+      "support": 21,
+      "term": "puno"
+    },
+    {
+      "change": "would remove",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 3,
+      "list": "other",
+      "precision": 0.8333333333333334,
+      "support": 6,
+      "term": "wire"
+    },
+    {
+      "change": "would remove",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 3,
+      "list": "other",
+      "precision": 0.7,
+      "support": 10,
+      "term": "wires"
+    },
+    {
+      "change": "would remove",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 4,
+      "list": "other",
+      "precision": 0.6153846153846154,
+      "support": 13,
+      "term": "kable"
+    },
+    {
+      "change": "would remove",
+      "effect": 0.0,
+      "effect_metric": "macro_f1",
+      "families": 3,
+      "list": "other",
+      "precision": 0.8,
+      "support": 5,
+      "term": "aso"
+    }
+  ]
+}
