@@ -423,6 +423,25 @@ details[open] > summary.panel-title::after {
   bottom: var(--foot);
   width: 230px;
 }
+/* Auto-hide on devices with a pointer: fades in when the cursor is near, via ::before's extra hit area.
+   Touch screens cannot hover, so they keep it visible. */
+@media (hover: hover) {
+  .legend {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .legend::before {
+    content: "";
+    position: absolute;
+    inset: -32px;
+  }
+  .legend:hover,
+  .legend:focus-within {
+    opacity: 1;
+    transform: none;
+  }
+}
 .legend-bar {
   height: 8px;
   margin: 10px 0 6px;
