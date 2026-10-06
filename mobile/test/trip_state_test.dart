@@ -383,12 +383,14 @@ void main() {
       trip.update(14.5000 + 40 / 111320, 121.0);
       expect(heard, 2, reason: '40 m is');
       expect(trip.progress!.legLeftM, closeTo(222.64 - 40, 1));
+      trip.update(14.5000 + 40 / 111320, 121.0 + 0.002);
+      expect(trip.progress!.offRoute, isTrue);
+      expect(heard, 3, reason: 'going off the line is news');
       trip.update(14.5020, 121.0);
-      expect(heard, 3);
+      expect(heard, 4);
       expect(trip.progress!.leg, 1, reason: 'reaching the hub starts the ride');
       trip.update(14.5020, 121.0 + 0.002);
-      expect(trip.progress!.offRoute, isTrue);
-      expect(heard, 4, reason: 'going off the line is news');
+      expect(trip.progress!.offRoute, isFalse, reason: 'the ride is a straight guess: no such thing as off it');
       trip.dispose();
     });
 
@@ -415,6 +417,135 @@ void main() {
       expect(trip.progress, isNull);
       expect(trip.started, isFalse);
       trip.dispose();
+    });
+
+    group('rerouting', () {
+      // The new walk the server answers with: from 200 m east of the path, back to the end of the leg.
+      WalkRoute fresh() => WalkRoute.fromJson({
+        'mode': 'walkable',
+        'distance_m': 222,
+        'duration_s': 160,
+        'geometry': [
+          [121.002, 14.5005],
+          [121.0, 14.5020],
+        ],
+        'steps': [
+          {'type': 11, 'text': 'Head west on Paseo', 'name': 'Paseo', 'distance_m': 222.0, 'at': 0},
+        ],
+        'hazard_ids': <String>[],
+        'avoids_hazards': true,
+      });
+
+      late List<({({double lat, double lng}) from, ({double lat, double lng}) to, String mode})> calls;
+      late Completer<WalkRoute> answer;
+      late DateTime now;
+
+      Future<TripState> trip() async {
+        calls = [];
+        answer = Completer<WalkRoute>();
+        now = DateTime(2026, 10, 7, 12);
+        final t = TripState((from, to, mode) {
+          if (from.lat == here.lat) return Future.value(route(mode)); // the planner's asks
+          calls.add((from: from, to: to, mode: mode));
+          return answer.future;
+        }, (from, to, mode) async => [twoLegs()]);
+        t.clock = () => now;
+        t.setDestination(place('Greenbelt'), from: here);
+        await Future<void>.delayed(Duration.zero);
+        await t.toCommute();
+        t.start();
+        return t;
+      }
+
+      // 200 m east of the walk, part way up it.
+      void off(TripState t, {bool weak = false}) => t.update(14.5005, 121.002, weak: weak);
+
+      test('three good fixes off the path in a row ask for a new walk from here to the end of the leg', () async {
+        final t = await trip();
+        off(t);
+        off(t);
+        expect(calls, isEmpty);
+        off(t);
+        expect(calls, hasLength(1));
+        expect(calls.single.from, (lat: 14.5005, lng: 121.002));
+        expect(calls.single.to, (lat: 14.5020, lng: 121.0), reason: 'where the leg ended');
+        expect(calls.single.mode, 'walkable');
+        expect(t.rerouting, isTrue);
+
+        final planned = t.activeLegs.first.line;
+        answer.complete(fresh());
+        await Future<void>.delayed(Duration.zero);
+        expect(t.rerouting, isFalse);
+        expect(t.legs.first.line.first, [121.002, 14.5005], reason: 'the leg now starts where the user was');
+        expect(t.legs.first.steps.single.name, 'Paseo');
+        expect(t.legs.first.label, 'walk', reason: 'the leg keeps its name');
+        expect(t.legs[1], same(t.activeLegs[1]), reason: 'the ride is untouched');
+        expect(t.activeLegs.first.line, planned, reason: 'the planned route is not rewritten');
+        expect(t.progress!.offRoute, isFalse, reason: 'they are on the new line');
+        t.dispose();
+      });
+
+      test('a fix back on the path, or a rough one, does not count', () async {
+        final t = await trip();
+        off(t);
+        off(t);
+        t.update(14.5005, 121.0); // back on the line
+        off(t);
+        off(t);
+        expect(calls, isEmpty, reason: 'the count started over');
+        for (var i = 0; i < 5; i++) {
+          off(t, weak: true);
+        }
+        expect(calls, isEmpty, reason: 'a weak fix is a guess');
+        off(t);
+        expect(calls, hasLength(1));
+        t.dispose();
+      });
+
+      test('one ask at a time, and not again within 15 seconds, even if it failed', () async {
+        final t = await trip();
+        for (var i = 0; i < 6; i++) {
+          off(t);
+        }
+        expect(calls, hasLength(1), reason: 'still waiting for the first');
+        answer.completeError(const ApiException('down'));
+        await Future<void>.delayed(Duration.zero);
+        expect(t.rerouting, isFalse);
+        expect(t.legs.first.line, t.activeLegs.first.line, reason: 'the old line stays');
+        expect(t.progress!.offRoute, isTrue, reason: 'and the bar still says so');
+        off(t);
+        expect(calls, hasLength(1), reason: 'too soon');
+        now = now.add(const Duration(seconds: 16));
+        answer = Completer<WalkRoute>();
+        off(t);
+        expect(calls, hasLength(2), reason: 'still off the path: try again');
+        t.dispose();
+      });
+
+      test('an answer that lands after End is dropped', () async {
+        final t = await trip();
+        for (var i = 0; i < 3; i++) {
+          off(t);
+        }
+        t.end();
+        answer.complete(fresh());
+        await Future<void>.delayed(Duration.zero);
+        expect(t.rerouting, isFalse);
+        expect(t.legs.first.line, t.activeLegs.first.line);
+        t.start();
+        expect(t.legs.first.line.first, [121.0, 14.5000], reason: 'the next trip starts from the planned route');
+        t.dispose();
+      });
+
+      test('the ride is never rerouted', () async {
+        final t = await trip();
+        t.update(14.5020, 121.0); // on the ride
+        for (var i = 0; i < 6; i++) {
+          t.update(14.5050, 121.002);
+        }
+        expect(calls, isEmpty);
+        t.dispose();
+      });
     });
 
     test('a walk-only trip is tracked along the walking route', () async {

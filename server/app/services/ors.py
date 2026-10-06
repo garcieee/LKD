@@ -66,7 +66,10 @@ def directions(
     avoid: dict | None = None,
     client: httpx.Client | None = None,
 ) -> dict:
-    """A walking route between two (lat, lng) points: {distance_m, duration_s, geometry: [[lng, lat], ...]}.
+    """A walking route between two (lat, lng) points: {distance_m, duration_s, geometry: [[lng, lat], ...], steps}.
+
+    Each step is {type, text, name, distance_m, at}: `type` is ORS's turn code (0 left ... 10 arrive, 11 depart),
+    `at` the index into geometry where the manoeuvre happens. No steps (ORS sent none) is an empty list, not an error.
 
     `profile` is an ORS profile: foot-walking, or wheelchair for the Accessible mode. `avoid` is a GeoJSON
     MultiPolygon of no-go zones. Status 404 means ORS found no route (try again without `avoid`).
@@ -76,7 +79,7 @@ def directions(
     body = {
         "coordinates": [[start[1], start[0]], [end[1], end[0]]],  # ORS wants [lng, lat]
         "preference": preference,
-        "instructions": False,
+        "instructions": True,  # the turn steps ride along with the line
     }
     if avoid:
         body["options"] = {"avoid_polygons": avoid}
@@ -99,10 +102,40 @@ def directions(
         feature = r.json()["features"][0]
         summary = feature["properties"]["summary"]
         line = [[round(p[0], 6), round(p[1], 6)] for p in feature["geometry"]["coordinates"]]  # drop elevation
-        return {"distance_m": float(summary["distance"]), "duration_s": float(summary["duration"]), "geometry": line}
+        steps = _steps(feature["properties"].get("segments"), len(line))
+        return {
+            "distance_m": float(summary["distance"]),
+            "duration_s": float(summary["duration"]),
+            "geometry": line,
+            "steps": steps,
+        }
     except (KeyError, IndexError, TypeError, ValueError) as e:
         log.warning("ORS route in an unexpected shape")
         raise OrsError(502, "Routing is unavailable. Try again.") from e
+
+
+def _steps(segments, points: int) -> list[dict]:
+    """ORS segments -> [{type, text, name, distance_m, at}], skipping any step that is not in the shape we expect."""
+    out = []
+    for seg in segments or []:
+        for st in seg.get("steps") or []:
+            try:
+                at = int(st["way_points"][0])
+                if not 0 <= at < points:
+                    continue
+                name = str(st.get("name") or "")
+                out.append(
+                    {
+                        "type": int(st["type"]),
+                        "text": str(st["instruction"]),
+                        "name": "" if name == "-" else name,  # ORS writes "-" for an unnamed way
+                        "distance_m": float(st["distance"]),
+                        "at": at,
+                    }
+                )
+            except (KeyError, IndexError, TypeError, ValueError):
+                continue
+    return out
 
 
 def _places(body: dict) -> list[dict]:
