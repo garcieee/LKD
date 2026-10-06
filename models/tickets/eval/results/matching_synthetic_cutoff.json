@@ -1,0 +1,1851 @@
+{
+  "config": {
+    "edges_m": [
+      5,
+      10,
+      15,
+      20,
+      30,
+      40
+    ],
+    "precision_floor": 0.85,
+    "report_split": "test"
+  },
+  "meta": {
+    "git_commit": "21b8f4e",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T13:01:04+00:00"
+  },
+  "scopes": {
+    "all densities": {
+      "acc_new": {
+        "cutoff_m": 5,
+        "policy": {
+          "auto_merge_precision": {
+            "hi": 0.9099,
+            "lo": 0.8957,
+            "point": 0.9026
+          },
+          "auto_merge_recall": {
+            "hi": 0.1668,
+            "lo": 0.1612,
+            "point": 0.1641
+          },
+          "shipped_precision_without_cutoff": {
+            "hi": 0.7828,
+            "lo": 0.7661,
+            "point": 0.774
+          },
+          "shipped_recall_without_cutoff": {
+            "hi": 0.9603,
+            "lo": 0.956,
+            "point": 0.9582
+          },
+          "true_pairs_left_to_suggestions": {
+            "hi": 0.8289,
+            "lo": 0.823,
+            "point": 0.8259
+          },
+          "withheld_merges_that_were_right": {
+            "hi": 0.7613,
+            "lo": 0.7436,
+            "point": 0.7519
+          },
+          "withheld_share_of_merges": {
+            "hi": 0.8559,
+            "lo": 0.8505,
+            "point": 0.8532
+          }
+        },
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 18084,
+            "precision": 0.908,
+            "precision_ci": {
+              "hi": 0.915,
+              "lo": 0.9005,
+              "point": 0.908
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 41619,
+            "precision": 0.8388,
+            "precision_ci": {
+              "hi": 0.8464,
+              "lo": 0.8312,
+              "point": 0.8388
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 31239,
+            "precision": 0.7547,
+            "precision_ci": {
+              "hi": 0.7644,
+              "lo": 0.7446,
+              "point": 0.7547
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 14083,
+            "precision": 0.7076,
+            "precision_ci": {
+              "hi": 0.7208,
+              "lo": 0.6944,
+              "point": 0.7076
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 7994,
+            "precision": 0.6531,
+            "precision_ci": {
+              "hi": 0.6707,
+              "lo": 0.6348,
+              "point": 0.6531
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 3398,
+            "precision": 0.6248,
+            "precision_ci": {
+              "hi": 0.6496,
+              "lo": 0.6013,
+              "point": 0.6248
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 3981,
+            "precision": 0.6285,
+            "precision_ci": {
+              "hi": 0.6525,
+              "lo": 0.6033,
+              "point": 0.6285
+            }
+          }
+        ]
+      },
+      "acc_worst": {
+        "cutoff_m": 10,
+        "policy": {
+          "auto_merge_precision": {
+            "hi": 0.8923,
+            "lo": 0.8794,
+            "point": 0.8858
+          },
+          "auto_merge_recall": {
+            "hi": 0.3899,
+            "lo": 0.3846,
+            "point": 0.3873
+          },
+          "shipped_precision_without_cutoff": {
+            "hi": 0.7828,
+            "lo": 0.7661,
+            "point": 0.774
+          },
+          "shipped_recall_without_cutoff": {
+            "hi": 0.9603,
+            "lo": 0.956,
+            "point": 0.9582
+          },
+          "true_pairs_left_to_suggestions": {
+            "hi": 0.595,
+            "lo": 0.5894,
+            "point": 0.5922
+          },
+          "withheld_merges_that_were_right": {
+            "hi": 0.723,
+            "lo": 0.7038,
+            "point": 0.713
+          },
+          "withheld_share_of_merges": {
+            "hi": 0.65,
+            "lo": 0.6437,
+            "point": 0.6469
+          }
+        },
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 8349,
+            "precision": 0.9249,
+            "precision_ci": {
+              "hi": 0.9324,
+              "lo": 0.9171,
+              "point": 0.9249
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 34591,
+            "precision": 0.8884,
+            "precision_ci": {
+              "hi": 0.8952,
+              "lo": 0.8819,
+              "point": 0.8884
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 31180,
+            "precision": 0.7988,
+            "precision_ci": {
+              "hi": 0.8079,
+              "lo": 0.7897,
+              "point": 0.7988
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 19203,
+            "precision": 0.7339,
+            "precision_ci": {
+              "hi": 0.7442,
+              "lo": 0.7229,
+              "point": 0.7339
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 13082,
+            "precision": 0.6485,
+            "precision_ci": {
+              "hi": 0.6624,
+              "lo": 0.634,
+              "point": 0.6485
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 6116,
+            "precision": 0.6208,
+            "precision_ci": {
+              "hi": 0.6408,
+              "lo": 0.6019,
+              "point": 0.6208
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 7877,
+            "precision": 0.632,
+            "precision_ci": {
+              "hi": 0.6493,
+              "lo": 0.6123,
+              "point": 0.632
+            }
+          }
+        ]
+      },
+      "by_profile": {
+        "canyon": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 62,
+            "precision": 0.6613
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 6257,
+            "precision": 0.7328
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 14856,
+            "precision": 0.7168
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 9781,
+            "precision": 0.6855
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 6823,
+            "precision": 0.6567
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 3366,
+            "precision": 0.6236
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 3975,
+            "precision": 0.6284
+          }
+        ],
+        "city": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 857,
+            "precision": 0.8553
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 18446,
+            "precision": 0.8188
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 15497,
+            "precision": 0.7867
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 4276,
+            "precision": 0.7568
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 1166,
+            "precision": 0.6312
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 32,
+            "precision": 0.75
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 6,
+            "precision": 0.6667
+          }
+        ],
+        "open_sky": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 17165,
+            "precision": 0.9115
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 16916,
+            "precision": 0.8997
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 886,
+            "precision": 0.8307
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 26,
+            "precision": 0.9231
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 5,
+            "precision": 0.8
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 0,
+            "precision": null
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 0,
+            "precision": null
+          }
+        ]
+      },
+      "tuned_z": {
+        "cutoff_m": 15,
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 15751,
+            "precision": 0.9345,
+            "precision_ci": {
+              "hi": 0.9404,
+              "lo": 0.928,
+              "point": 0.9345
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 30103,
+            "precision": 0.9063,
+            "precision_ci": {
+              "hi": 0.9126,
+              "lo": 0.9,
+              "point": 0.9063
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 21206,
+            "precision": 0.8557,
+            "precision_ci": {
+              "hi": 0.8637,
+              "lo": 0.847,
+              "point": 0.8557
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 10156,
+            "precision": 0.829,
+            "precision_ci": {
+              "hi": 0.8396,
+              "lo": 0.8177,
+              "point": 0.829
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 5673,
+            "precision": 0.7782,
+            "precision_ci": {
+              "hi": 0.7947,
+              "lo": 0.7617,
+              "point": 0.7782
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 2591,
+            "precision": 0.6878,
+            "precision_ci": {
+              "hi": 0.7138,
+              "lo": 0.6625,
+              "point": 0.6878
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 3799,
+            "precision": 0.6417,
+            "precision_ci": {
+              "hi": 0.6663,
+              "lo": 0.616,
+              "point": 0.6417
+            }
+          }
+        ],
+        "z": 1.7
+      }
+    },
+    "density 150": {
+      "acc_new": {
+        "cutoff_m": 5,
+        "policy": {
+          "auto_merge_precision": {
+            "hi": 0.8885,
+            "lo": 0.8618,
+            "point": 0.8748
+          },
+          "auto_merge_recall": {
+            "hi": 0.168,
+            "lo": 0.1579,
+            "point": 0.1627
+          },
+          "shipped_precision_without_cutoff": {
+            "hi": 0.7215,
+            "lo": 0.6926,
+            "point": 0.7076
+          },
+          "shipped_recall_without_cutoff": {
+            "hi": 0.9629,
+            "lo": 0.9562,
+            "point": 0.9596
+          },
+          "true_pairs_left_to_suggestions": {
+            "hi": 0.8326,
+            "lo": 0.8219,
+            "point": 0.8276
+          },
+          "withheld_merges_that_were_right": {
+            "hi": 0.6953,
+            "lo": 0.6653,
+            "point": 0.6811
+          },
+          "withheld_share_of_merges": {
+            "hi": 0.8672,
+            "lo": 0.8582,
+            "point": 0.8629
+          }
+        },
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 6032,
+            "precision": 0.8868,
+            "precision_ci": {
+              "hi": 0.8996,
+              "lo": 0.8741,
+              "point": 0.8868
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 14352,
+            "precision": 0.7994,
+            "precision_ci": {
+              "hi": 0.8123,
+              "lo": 0.787,
+              "point": 0.7994
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 11012,
+            "precision": 0.6926,
+            "precision_ci": {
+              "hi": 0.7094,
+              "lo": 0.6735,
+              "point": 0.6926
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 5134,
+            "precision": 0.6375,
+            "precision_ci": {
+              "hi": 0.6599,
+              "lo": 0.617,
+              "point": 0.6375
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 3008,
+            "precision": 0.5871,
+            "precision_ci": {
+              "hi": 0.613,
+              "lo": 0.5588,
+              "point": 0.5871
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 1340,
+            "precision": 0.5463,
+            "precision_ci": {
+              "hi": 0.5881,
+              "lo": 0.5094,
+              "point": 0.5463
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 1537,
+            "precision": 0.5316,
+            "precision_ci": {
+              "hi": 0.5746,
+              "lo": 0.4899,
+              "point": 0.5316
+            }
+          }
+        ]
+      },
+      "acc_worst": {
+        "cutoff_m": 10,
+        "policy": {
+          "auto_merge_precision": {
+            "hi": 0.8673,
+            "lo": 0.8432,
+            "point": 0.8552
+          },
+          "auto_merge_recall": {
+            "hi": 0.3922,
+            "lo": 0.3822,
+            "point": 0.3874
+          },
+          "shipped_precision_without_cutoff": {
+            "hi": 0.7215,
+            "lo": 0.6926,
+            "point": 0.7076
+          },
+          "shipped_recall_without_cutoff": {
+            "hi": 0.9629,
+            "lo": 0.9562,
+            "point": 0.9596
+          },
+          "true_pairs_left_to_suggestions": {
+            "hi": 0.598,
+            "lo": 0.5875,
+            "point": 0.5926
+          },
+          "withheld_merges_that_were_right": {
+            "hi": 0.649,
+            "lo": 0.6174,
+            "point": 0.6336
+          },
+          "withheld_share_of_merges": {
+            "hi": 0.6716,
+            "lo": 0.6603,
+            "point": 0.666
+          }
+        },
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 2780,
+            "precision": 0.9101,
+            "precision_ci": {
+              "hi": 0.9242,
+              "lo": 0.8957,
+              "point": 0.9101
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 11740,
+            "precision": 0.8598,
+            "precision_ci": {
+              "hi": 0.872,
+              "lo": 0.8482,
+              "point": 0.8598
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 10795,
+            "precision": 0.7478,
+            "precision_ci": {
+              "hi": 0.7639,
+              "lo": 0.7315,
+              "point": 0.7478
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 6797,
+            "precision": 0.674,
+            "precision_ci": {
+              "hi": 0.6922,
+              "lo": 0.6559,
+              "point": 0.674
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 4899,
+            "precision": 0.5764,
+            "precision_ci": {
+              "hi": 0.6013,
+              "lo": 0.5495,
+              "point": 0.5764
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 2356,
+            "precision": 0.5399,
+            "precision_ci": {
+              "hi": 0.5701,
+              "lo": 0.5118,
+              "point": 0.5399
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 3048,
+            "precision": 0.5456,
+            "precision_ci": {
+              "hi": 0.5755,
+              "lo": 0.5146,
+              "point": 0.5456
+            }
+          }
+        ]
+      },
+      "by_profile": {
+        "canyon": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 28,
+            "precision": 0.5
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 2258,
+            "precision": 0.6758
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 5288,
+            "precision": 0.6441
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 3574,
+            "precision": 0.6097
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 2574,
+            "precision": 0.5855
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 1335,
+            "precision": 0.5461
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 1535,
+            "precision": 0.5316
+          }
+        ],
+        "city": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 283,
+            "precision": 0.8057
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 6352,
+            "precision": 0.7802
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 5412,
+            "precision": 0.7323
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 1557,
+            "precision": 0.7007
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 432,
+            "precision": 0.5972
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 5,
+            "precision": 0.6
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 2,
+            "precision": 0.5
+          }
+        ],
+        "open_sky": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 5721,
+            "precision": 0.8927
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 5742,
+            "precision": 0.8692
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 312,
+            "precision": 0.8269
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 3,
+            "precision": 1.0
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 2,
+            "precision": 0.5
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 0,
+            "precision": null
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 0,
+            "precision": null
+          }
+        ]
+      },
+      "tuned_z": {
+        "cutoff_m": 10,
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 5237,
+            "precision": 0.9162,
+            "precision_ci": {
+              "hi": 0.9276,
+              "lo": 0.9049,
+              "point": 0.9162
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 10094,
+            "precision": 0.8832,
+            "precision_ci": {
+              "hi": 0.8941,
+              "lo": 0.8721,
+              "point": 0.8832
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 7184,
+            "precision": 0.8144,
+            "precision_ci": {
+              "hi": 0.8289,
+              "lo": 0.7984,
+              "point": 0.8144
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 3519,
+            "precision": 0.7835,
+            "precision_ci": {
+              "hi": 0.8032,
+              "lo": 0.7632,
+              "point": 0.7835
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 2018,
+            "precision": 0.7364,
+            "precision_ci": {
+              "hi": 0.7621,
+              "lo": 0.7067,
+              "point": 0.7364
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 994,
+            "precision": 0.6298,
+            "precision_ci": {
+              "hi": 0.6728,
+              "lo": 0.5896,
+              "point": 0.6298
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 1468,
+            "precision": 0.5443,
+            "precision_ci": {
+              "hi": 0.584,
+              "lo": 0.504,
+              "point": 0.5443
+            }
+          }
+        ],
+        "z": 1.7
+      }
+    },
+    "density 20": {
+      "acc_new": {
+        "cutoff_m": 10,
+        "policy": {
+          "auto_merge_precision": {
+            "hi": 0.9009,
+            "lo": 0.8797,
+            "point": 0.8902
+          },
+          "auto_merge_recall": {
+            "hi": 0.5237,
+            "lo": 0.5106,
+            "point": 0.517
+          },
+          "shipped_precision_without_cutoff": {
+            "hi": 0.8484,
+            "lo": 0.8231,
+            "point": 0.8362
+          },
+          "shipped_recall_without_cutoff": {
+            "hi": 0.9614,
+            "lo": 0.9534,
+            "point": 0.9575
+          },
+          "true_pairs_left_to_suggestions": {
+            "hi": 0.4657,
+            "lo": 0.4515,
+            "point": 0.4591
+          },
+          "withheld_merges_that_were_right": {
+            "hi": 0.7961,
+            "lo": 0.7639,
+            "point": 0.7806
+          },
+          "withheld_share_of_merges": {
+            "hi": 0.4997,
+            "lo": 0.4852,
+            "point": 0.4928
+          }
+        },
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 5797,
+            "precision": 0.9294,
+            "precision_ci": {
+              "hi": 0.94,
+              "lo": 0.919,
+              "point": 0.9294
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 12986,
+            "precision": 0.87,
+            "precision_ci": {
+              "hi": 0.8821,
+              "lo": 0.8583,
+              "point": 0.87
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 9634,
+            "precision": 0.8069,
+            "precision_ci": {
+              "hi": 0.8217,
+              "lo": 0.7912,
+              "point": 0.8069
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 4211,
+            "precision": 0.7599,
+            "precision_ci": {
+              "hi": 0.7818,
+              "lo": 0.7394,
+              "point": 0.7599
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 2374,
+            "precision": 0.7119,
+            "precision_ci": {
+              "hi": 0.7419,
+              "lo": 0.6811,
+              "point": 0.7119
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 999,
+            "precision": 0.7067,
+            "precision_ci": {
+              "hi": 0.7476,
+              "lo": 0.6613,
+              "point": 0.7067
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 1139,
+            "precision": 0.7252,
+            "precision_ci": {
+              "hi": 0.7637,
+              "lo": 0.6891,
+              "point": 0.7252
+            }
+          }
+        ]
+      },
+      "acc_worst": {
+        "cutoff_m": 10,
+        "policy": {
+          "auto_merge_precision": {
+            "hi": 0.9226,
+            "lo": 0.9036,
+            "point": 0.9131
+          },
+          "auto_merge_recall": {
+            "hi": 0.3923,
+            "lo": 0.3824,
+            "point": 0.3873
+          },
+          "shipped_precision_without_cutoff": {
+            "hi": 0.8484,
+            "lo": 0.8231,
+            "point": 0.8362
+          },
+          "shipped_recall_without_cutoff": {
+            "hi": 0.9614,
+            "lo": 0.9534,
+            "point": 0.9575
+          },
+          "true_pairs_left_to_suggestions": {
+            "hi": 0.5972,
+            "lo": 0.5868,
+            "point": 0.592
+          },
+          "withheld_merges_that_were_right": {
+            "hi": 0.8059,
+            "lo": 0.7749,
+            "point": 0.791
+          },
+          "withheld_share_of_merges": {
+            "hi": 0.6353,
+            "lo": 0.624,
+            "point": 0.6295
+          }
+        },
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 2689,
+            "precision": 0.9398,
+            "precision_ci": {
+              "hi": 0.9527,
+              "lo": 0.9273,
+              "point": 0.9398
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 10974,
+            "precision": 0.9143,
+            "precision_ci": {
+              "hi": 0.9234,
+              "lo": 0.9049,
+              "point": 0.9143
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 9701,
+            "precision": 0.8423,
+            "precision_ci": {
+              "hi": 0.8557,
+              "lo": 0.8289,
+              "point": 0.8423
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 5935,
+            "precision": 0.7805,
+            "precision_ci": {
+              "hi": 0.7983,
+              "lo": 0.7629,
+              "point": 0.7805
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 3845,
+            "precision": 0.7014,
+            "precision_ci": {
+              "hi": 0.7271,
+              "lo": 0.6752,
+              "point": 0.7014
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 1722,
+            "precision": 0.7038,
+            "precision_ci": {
+              "hi": 0.7355,
+              "lo": 0.6701,
+              "point": 0.7038
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 2274,
+            "precision": 0.7076,
+            "precision_ci": {
+              "hi": 0.737,
+              "lo": 0.6779,
+              "point": 0.7076
+            }
+          }
+        ]
+      },
+      "by_profile": {
+        "canyon": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 17,
+            "precision": 0.9412
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 1849,
+            "precision": 0.7745
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 4539,
+            "precision": 0.7821
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 2910,
+            "precision": 0.7402
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 1990,
+            "precision": 0.7176
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 993,
+            "precision": 0.7049
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 1135,
+            "precision": 0.7251
+          }
+        ],
+        "city": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 286,
+            "precision": 0.8951
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 5789,
+            "precision": 0.8516
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 4796,
+            "precision": 0.8267
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 1295,
+            "precision": 0.8031
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 381,
+            "precision": 0.6798
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 6,
+            "precision": 1.0
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 4,
+            "precision": 0.75
+          }
+        ],
+        "open_sky": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 5494,
+            "precision": 0.9312
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 5348,
+            "precision": 0.923
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 299,
+            "precision": 0.8662
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 6,
+            "precision": 1.0
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 3,
+            "precision": 1.0
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 0,
+            "precision": null
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 0,
+            "precision": null
+          }
+        ]
+      },
+      "tuned_z": {
+        "cutoff_m": 20,
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 5089,
+            "precision": 0.9534,
+            "precision_ci": {
+              "hi": 0.9618,
+              "lo": 0.945,
+              "point": 0.9534
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 9565,
+            "precision": 0.9283,
+            "precision_ci": {
+              "hi": 0.9383,
+              "lo": 0.9192,
+              "point": 0.9283
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 6755,
+            "precision": 0.8906,
+            "precision_ci": {
+              "hi": 0.903,
+              "lo": 0.8774,
+              "point": 0.8906
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 3139,
+            "precision": 0.8627,
+            "precision_ci": {
+              "hi": 0.8794,
+              "lo": 0.8453,
+              "point": 0.8627
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 1778,
+            "precision": 0.8082,
+            "precision_ci": {
+              "hi": 0.8346,
+              "lo": 0.7803,
+              "point": 0.8082
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 778,
+            "precision": 0.7404,
+            "precision_ci": {
+              "hi": 0.7844,
+              "lo": 0.6912,
+              "point": 0.7404
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 1089,
+            "precision": 0.7365,
+            "precision_ci": {
+              "hi": 0.7754,
+              "lo": 0.6976,
+              "point": 0.7365
+            }
+          }
+        ],
+        "z": 1.7
+      }
+    },
+    "density 60": {
+      "acc_new": {
+        "cutoff_m": 5,
+        "policy": {
+          "auto_merge_precision": {
+            "hi": 0.9212,
+            "lo": 0.8959,
+            "point": 0.9082
+          },
+          "auto_merge_recall": {
+            "hi": 0.169,
+            "lo": 0.1591,
+            "point": 0.164
+          },
+          "shipped_precision_without_cutoff": {
+            "hi": 0.8013,
+            "lo": 0.7726,
+            "point": 0.787
+          },
+          "shipped_recall_without_cutoff": {
+            "hi": 0.9615,
+            "lo": 0.9535,
+            "point": 0.9575
+          },
+          "true_pairs_left_to_suggestions": {
+            "hi": 0.83,
+            "lo": 0.8205,
+            "point": 0.8253
+          },
+          "withheld_merges_that_were_right": {
+            "hi": 0.7809,
+            "lo": 0.7507,
+            "point": 0.7659
+          },
+          "withheld_share_of_merges": {
+            "hi": 0.8556,
+            "lo": 0.8472,
+            "point": 0.8516
+          }
+        },
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 6255,
+            "precision": 0.9086,
+            "precision_ci": {
+              "hi": 0.9205,
+              "lo": 0.896,
+              "point": 0.9086
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 14281,
+            "precision": 0.8499,
+            "precision_ci": {
+              "hi": 0.8621,
+              "lo": 0.8382,
+              "point": 0.8499
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 10593,
+            "precision": 0.7717,
+            "precision_ci": {
+              "hi": 0.787,
+              "lo": 0.7557,
+              "point": 0.7717
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 4738,
+            "precision": 0.737,
+            "precision_ci": {
+              "hi": 0.7572,
+              "lo": 0.7158,
+              "point": 0.737
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 2612,
+            "precision": 0.6757,
+            "precision_ci": {
+              "hi": 0.7029,
+              "lo": 0.6461,
+              "point": 0.6757
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 1059,
+            "precision": 0.6468,
+            "precision_ci": {
+              "hi": 0.6886,
+              "lo": 0.6086,
+              "point": 0.6468
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 1305,
+            "precision": 0.6582,
+            "precision_ci": {
+              "hi": 0.6952,
+              "lo": 0.6195,
+              "point": 0.6582
+            }
+          }
+        ]
+      },
+      "acc_worst": {
+        "cutoff_m": 10,
+        "policy": {
+          "auto_merge_precision": {
+            "hi": 0.9017,
+            "lo": 0.878,
+            "point": 0.8901
+          },
+          "auto_merge_recall": {
+            "hi": 0.3926,
+            "lo": 0.3815,
+            "point": 0.3871
+          },
+          "shipped_precision_without_cutoff": {
+            "hi": 0.8013,
+            "lo": 0.7726,
+            "point": 0.787
+          },
+          "shipped_recall_without_cutoff": {
+            "hi": 0.9615,
+            "lo": 0.9535,
+            "point": 0.9575
+          },
+          "true_pairs_left_to_suggestions": {
+            "hi": 0.5971,
+            "lo": 0.5865,
+            "point": 0.5918
+          },
+          "withheld_merges_that_were_right": {
+            "hi": 0.746,
+            "lo": 0.7135,
+            "point": 0.7297
+          },
+          "withheld_share_of_merges": {
+            "hi": 0.6479,
+            "lo": 0.6373,
+            "point": 0.6425
+          }
+        },
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 2880,
+            "precision": 0.9253,
+            "precision_ci": {
+              "hi": 0.9381,
+              "lo": 0.9111,
+              "point": 0.9253
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 11877,
+            "precision": 0.8928,
+            "precision_ci": {
+              "hi": 0.9035,
+              "lo": 0.882,
+              "point": 0.8928
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 10684,
+            "precision": 0.8109,
+            "precision_ci": {
+              "hi": 0.8256,
+              "lo": 0.7972,
+              "point": 0.8109
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 6471,
+            "precision": 0.7543,
+            "precision_ci": {
+              "hi": 0.7728,
+              "lo": 0.7335,
+              "point": 0.7543
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 4338,
+            "precision": 0.683,
+            "precision_ci": {
+              "hi": 0.7049,
+              "lo": 0.6597,
+              "point": 0.683
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 2038,
+            "precision": 0.6443,
+            "precision_ci": {
+              "hi": 0.6771,
+              "lo": 0.6123,
+              "point": 0.6443
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 2555,
+            "precision": 0.6677,
+            "precision_ci": {
+              "hi": 0.6946,
+              "lo": 0.6401,
+              "point": 0.6677
+            }
+          }
+        ]
+      },
+      "by_profile": {
+        "canyon": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 17,
+            "precision": 0.6471
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 2150,
+            "precision": 0.7567
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 5029,
+            "precision": 0.7343
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 3297,
+            "precision": 0.7194
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 2259,
+            "precision": 0.6844
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 1038,
+            "precision": 0.6455
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 1305,
+            "precision": 0.6582
+          }
+        ],
+        "city": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 288,
+            "precision": 0.8646
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 6305,
+            "precision": 0.8276
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 5289,
+            "precision": 0.806
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 1424,
+            "precision": 0.776
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 353,
+            "precision": 0.6204
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 21,
+            "precision": 0.7143
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 0,
+            "precision": null
+          }
+        ],
+        "open_sky": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 5950,
+            "precision": 0.9114
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 5826,
+            "precision": 0.9083
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 275,
+            "precision": 0.7964
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 17,
+            "precision": 0.8824
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 0,
+            "precision": null
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 0,
+            "precision": null
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 0,
+            "precision": null
+          }
+        ]
+      },
+      "tuned_z": {
+        "cutoff_m": 15,
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 5425,
+            "precision": 0.9344,
+            "precision_ci": {
+              "hi": 0.9445,
+              "lo": 0.9235,
+              "point": 0.9344
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 10444,
+            "precision": 0.9085,
+            "precision_ci": {
+              "hi": 0.9186,
+              "lo": 0.8989,
+              "point": 0.9085
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 7267,
+            "precision": 0.864,
+            "precision_ci": {
+              "hi": 0.8778,
+              "lo": 0.8515,
+              "point": 0.864
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 3498,
+            "precision": 0.8445,
+            "precision_ci": {
+              "hi": 0.8614,
+              "lo": 0.8269,
+              "point": 0.8445
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 1877,
+            "precision": 0.7949,
+            "precision_ci": {
+              "hi": 0.8216,
+              "lo": 0.7668,
+              "point": 0.7949
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 819,
+            "precision": 0.7082,
+            "precision_ci": {
+              "hi": 0.7497,
+              "lo": 0.6637,
+              "point": 0.7082
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 1242,
+            "precision": 0.6739,
+            "precision_ci": {
+              "hi": 0.7118,
+              "lo": 0.6366,
+              "point": 0.6739
+            }
+          }
+        ],
+        "z": 1.7
+      }
+    }
+  }
+}

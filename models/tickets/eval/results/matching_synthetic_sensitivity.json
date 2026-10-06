@@ -1,0 +1,3654 @@
+{
+  "config": {
+    "base": {
+      "accuracy_scale": 1.0,
+      "accuracy_spread": 0.35,
+      "category_weights": [
+        0.35,
+        0.1,
+        0.15,
+        0.25,
+        0.15
+      ],
+      "cluster_mean": 3.0,
+      "cluster_sd_m": 25.0,
+      "cluster_share": 0.5,
+      "days": 30.0,
+      "density": 60,
+      "heavy_alpha": 1.95,
+      "heavy_max": 50,
+      "heavy_tail": false,
+      "mean_delay_days": 2.0,
+      "mean_reports": 1.6,
+      "patch_m": 3000.0,
+      "profile": "city",
+      "standoff_m": [
+        1.0,
+        10.0
+      ],
+      "wrong_category": 0.06
+    },
+    "bootstrap_resamples": 300,
+    "density": 60,
+    "patches_at_60_per_km2": 30,
+    "seed_base": 7000
+  },
+  "grid": {
+    "accuracy_scale=0.5|standoff_max_m=10": {
+      "bcubed_f1": {
+        "hi": 0.9203,
+        "lo": 0.9153,
+        "point": 0.9178
+      },
+      "best_fixed_m_in_sample": 25,
+      "best_z_in_sample": 3.3,
+      "cost_3_to_1": {
+        "hi": 186.8153,
+        "lo": 173.2085,
+        "point": 180.2266
+      },
+      "f05": {
+        "hi": 0.8688,
+        "lo": 0.8523,
+        "point": 0.8605
+      },
+      "f05_best_fixed_in_sample": 0.8675,
+      "f05_best_z_in_sample": 0.8645,
+      "pairs": 39628,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.8917,
+        "lo": 0.8699,
+        "point": 0.8805
+      },
+      "recall": {
+        "hi": 0.7965,
+        "lo": 0.7801,
+        "point": 0.7891
+      }
+    },
+    "accuracy_scale=0.5|standoff_max_m=20": {
+      "bcubed_f1": {
+        "hi": 0.8807,
+        "lo": 0.8751,
+        "point": 0.8778
+      },
+      "best_fixed_m_in_sample": 30,
+      "best_z_in_sample": 4.0,
+      "cost_3_to_1": {
+        "hi": 256.3579,
+        "lo": 240.6982,
+        "point": 249.342
+      },
+      "f05": {
+        "hi": 0.7855,
+        "lo": 0.7666,
+        "point": 0.776
+      },
+      "f05_best_fixed_in_sample": 0.8119,
+      "f05_best_z_in_sample": 0.8069,
+      "pairs": 39545,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.8602,
+        "lo": 0.8365,
+        "point": 0.8474
+      },
+      "recall": {
+        "hi": 0.5885,
+        "lo": 0.571,
+        "point": 0.5803
+      }
+    },
+    "accuracy_scale=0.5|standoff_max_m=3": {
+      "bcubed_f1": {
+        "hi": 0.9375,
+        "lo": 0.9329,
+        "point": 0.9351
+      },
+      "best_fixed_m_in_sample": 20,
+      "best_z_in_sample": 3.0,
+      "cost_3_to_1": {
+        "hi": 157.1254,
+        "lo": 143.5849,
+        "point": 151.2377
+      },
+      "f05": {
+        "hi": 0.8968,
+        "lo": 0.8798,
+        "point": 0.888
+      },
+      "f05_best_fixed_in_sample": 0.8948,
+      "f05_best_z_in_sample": 0.8886,
+      "pairs": 39602,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.9024,
+        "lo": 0.8817,
+        "point": 0.8913
+      },
+      "recall": {
+        "hi": 0.8809,
+        "lo": 0.8673,
+        "point": 0.8748
+      }
+    },
+    "accuracy_scale=0.5|standoff_max_m=30": {
+      "bcubed_f1": {
+        "hi": 0.8451,
+        "lo": 0.8384,
+        "point": 0.8416
+      },
+      "best_fixed_m_in_sample": 40,
+      "best_z_in_sample": 4.0,
+      "cost_3_to_1": {
+        "hi": 322.72,
+        "lo": 305.394,
+        "point": 314.9102
+      },
+      "f05": {
+        "hi": 0.6738,
+        "lo": 0.6523,
+        "point": 0.6615
+      },
+      "f05_best_fixed_in_sample": 0.7481,
+      "f05_best_z_in_sample": 0.7252,
+      "pairs": 39500,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.816,
+        "lo": 0.7853,
+        "point": 0.7983
+      },
+      "recall": {
+        "hi": 0.4017,
+        "lo": 0.3836,
+        "point": 0.3926
+      }
+    },
+    "accuracy_scale=0.5|standoff_max_m=5": {
+      "bcubed_f1": {
+        "hi": 0.9343,
+        "lo": 0.9293,
+        "point": 0.9318
+      },
+      "best_fixed_m_in_sample": 20,
+      "best_z_in_sample": 3.2,
+      "cost_3_to_1": {
+        "hi": 162.9363,
+        "lo": 149.012,
+        "point": 156.4634
+      },
+      "f05": {
+        "hi": 0.8918,
+        "lo": 0.8746,
+        "point": 0.8831
+      },
+      "f05_best_fixed_in_sample": 0.8901,
+      "f05_best_z_in_sample": 0.8832,
+      "pairs": 39628,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.9001,
+        "lo": 0.8791,
+        "point": 0.889
+      },
+      "recall": {
+        "hi": 0.8672,
+        "lo": 0.8523,
+        "point": 0.8602
+      }
+    },
+    "accuracy_scale=0.7|standoff_max_m=10": {
+      "bcubed_f1": {
+        "hi": 0.9347,
+        "lo": 0.9296,
+        "point": 0.9322
+      },
+      "best_fixed_m_in_sample": 25,
+      "best_z_in_sample": 2.6,
+      "cost_3_to_1": {
+        "hi": 184.6323,
+        "lo": 167.451,
+        "point": 176.5267
+      },
+      "f05": {
+        "hi": 0.8669,
+        "lo": 0.8466,
+        "point": 0.8562
+      },
+      "f05_best_fixed_in_sample": 0.8675,
+      "f05_best_z_in_sample": 0.8609,
+      "pairs": 39628,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.8595,
+        "lo": 0.8354,
+        "point": 0.847
+      },
+      "recall": {
+        "hi": 0.9014,
+        "lo": 0.8887,
+        "point": 0.8955
+      }
+    },
+    "accuracy_scale=0.7|standoff_max_m=20": {
+      "bcubed_f1": {
+        "hi": 0.9011,
+        "lo": 0.8952,
+        "point": 0.8981
+      },
+      "best_fixed_m_in_sample": 30,
+      "best_z_in_sample": 3.4,
+      "cost_3_to_1": {
+        "hi": 246.29,
+        "lo": 229.013,
+        "point": 237.6702
+      },
+      "f05": {
+        "hi": 0.8105,
+        "lo": 0.7917,
+        "point": 0.8014
+      },
+      "f05_best_fixed_in_sample": 0.8119,
+      "f05_best_z_in_sample": 0.8038,
+      "pairs": 39545,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.8346,
+        "lo": 0.8097,
+        "point": 0.8217
+      },
+      "recall": {
+        "hi": 0.737,
+        "lo": 0.7199,
+        "point": 0.7292
+      }
+    },
+    "accuracy_scale=0.7|standoff_max_m=3": {
+      "bcubed_f1": {
+        "hi": 0.9463,
+        "lo": 0.9419,
+        "point": 0.9439
+      },
+      "best_fixed_m_in_sample": 20,
+      "best_z_in_sample": 2.4,
+      "cost_3_to_1": {
+        "hi": 162.5571,
+        "lo": 147.4257,
+        "point": 155.9294
+      },
+      "f05": {
+        "hi": 0.8805,
+        "lo": 0.8602,
+        "point": 0.87
+      },
+      "f05_best_fixed_in_sample": 0.8948,
+      "f05_best_z_in_sample": 0.8854,
+      "pairs": 39602,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.8647,
+        "lo": 0.8412,
+        "point": 0.8523
+      },
+      "recall": {
+        "hi": 0.9527,
+        "lo": 0.9443,
+        "point": 0.9488
+      }
+    },
+    "accuracy_scale=0.7|standoff_max_m=30": {
+      "bcubed_f1": {
+        "hi": 0.8655,
+        "lo": 0.8589,
+        "point": 0.8623
+      },
+      "best_fixed_m_in_sample": 40,
+      "best_z_in_sample": 4.0,
+      "cost_3_to_1": {
+        "hi": 309.8643,
+        "lo": 291.8807,
+        "point": 301.2931
+      },
+      "f05": {
+        "hi": 0.7254,
+        "lo": 0.7042,
+        "point": 0.7138
+      },
+      "f05_best_fixed_in_sample": 0.7481,
+      "f05_best_z_in_sample": 0.7426,
+      "pairs": 39500,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.7967,
+        "lo": 0.7659,
+        "point": 0.7797
+      },
+      "recall": {
+        "hi": 0.5423,
+        "lo": 0.5229,
+        "point": 0.5334
+      }
+    },
+    "accuracy_scale=0.7|standoff_max_m=5": {
+      "bcubed_f1": {
+        "hi": 0.9439,
+        "lo": 0.9392,
+        "point": 0.9415
+      },
+      "best_fixed_m_in_sample": 20,
+      "best_z_in_sample": 2.5,
+      "cost_3_to_1": {
+        "hi": 168.2807,
+        "lo": 152.6972,
+        "point": 161.2313
+      },
+      "f05": {
+        "hi": 0.8781,
+        "lo": 0.8573,
+        "point": 0.8673
+      },
+      "f05_best_fixed_in_sample": 0.8901,
+      "f05_best_z_in_sample": 0.8803,
+      "pairs": 39628,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.8636,
+        "lo": 0.8394,
+        "point": 0.851
+      },
+      "recall": {
+        "hi": 0.9439,
+        "lo": 0.9341,
+        "point": 0.9392
+      }
+    },
+    "accuracy_scale=1.0|standoff_max_m=10": {
+      "bcubed_f1": {
+        "hi": 0.9403,
+        "lo": 0.9348,
+        "point": 0.9374
+      },
+      "best_fixed_m_in_sample": 25,
+      "best_z_in_sample": 2.0,
+      "cost_3_to_1": {
+        "hi": 211.3482,
+        "lo": 191.4251,
+        "point": 202.3115
+      },
+      "f05": {
+        "hi": 0.8267,
+        "lo": 0.8026,
+        "point": 0.8143
+      },
+      "f05_best_fixed_in_sample": 0.8675,
+      "f05_best_z_in_sample": 0.8582,
+      "pairs": 39628,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.7969,
+        "lo": 0.7685,
+        "point": 0.7824
+      },
+      "recall": {
+        "hi": 0.9759,
+        "lo": 0.9695,
+        "point": 0.9729
+      }
+    },
+    "accuracy_scale=1.0|standoff_max_m=20": {
+      "bcubed_f1": {
+        "hi": 0.919,
+        "lo": 0.9129,
+        "point": 0.9157
+      },
+      "best_fixed_m_in_sample": 30,
+      "best_z_in_sample": 2.6,
+      "cost_3_to_1": {
+        "hi": 249.3577,
+        "lo": 227.6108,
+        "point": 238.7001
+      },
+      "f05": {
+        "hi": 0.803,
+        "lo": 0.7796,
+        "point": 0.7904
+      },
+      "f05_best_fixed_in_sample": 0.8119,
+      "f05_best_z_in_sample": 0.8003,
+      "pairs": 39545,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.786,
+        "lo": 0.7582,
+        "point": 0.7713
+      },
+      "recall": {
+        "hi": 0.8839,
+        "lo": 0.8704,
+        "point": 0.8776
+      }
+    },
+    "accuracy_scale=1.0|standoff_max_m=3": {
+      "bcubed_f1": {
+        "hi": 0.9446,
+        "lo": 0.9398,
+        "point": 0.9421
+      },
+      "best_fixed_m_in_sample": 20,
+      "best_z_in_sample": 1.8,
+      "cost_3_to_1": {
+        "hi": 200.785,
+        "lo": 182.5712,
+        "point": 192.5468
+      },
+      "f05": {
+        "hi": 0.8299,
+        "lo": 0.8061,
+        "point": 0.818
+      },
+      "f05_best_fixed_in_sample": 0.8948,
+      "f05_best_z_in_sample": 0.8838,
+      "pairs": 39602,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.7976,
+        "lo": 0.7706,
+        "point": 0.7841
+      },
+      "recall": {
+        "hi": 0.9908,
+        "lo": 0.987,
+        "point": 0.989
+      }
+    },
+    "accuracy_scale=1.0|standoff_max_m=30": {
+      "bcubed_f1": {
+        "hi": 0.8895,
+        "lo": 0.8838,
+        "point": 0.8865
+      },
+      "best_fixed_m_in_sample": 40,
+      "best_z_in_sample": 3.2,
+      "cost_3_to_1": {
+        "hi": 303.1141,
+        "lo": 281.8233,
+        "point": 293.3974
+      },
+      "f05": {
+        "hi": 0.7533,
+        "lo": 0.7287,
+        "point": 0.7396
+      },
+      "f05_best_fixed_in_sample": 0.7481,
+      "f05_best_z_in_sample": 0.7412,
+      "pairs": 39500,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.7615,
+        "lo": 0.7313,
+        "point": 0.7442
+      },
+      "recall": {
+        "hi": 0.7299,
+        "lo": 0.7124,
+        "point": 0.7215
+      }
+    },
+    "accuracy_scale=1.0|standoff_max_m=5": {
+      "bcubed_f1": {
+        "hi": 0.9437,
+        "lo": 0.939,
+        "point": 0.9412
+      },
+      "best_fixed_m_in_sample": 20,
+      "best_z_in_sample": 1.8,
+      "cost_3_to_1": {
+        "hi": 203.7805,
+        "lo": 184.9153,
+        "point": 195.255
+      },
+      "f05": {
+        "hi": 0.8306,
+        "lo": 0.8063,
+        "point": 0.8181
+      },
+      "f05_best_fixed_in_sample": 0.8901,
+      "f05_best_z_in_sample": 0.8784,
+      "pairs": 39628,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.7987,
+        "lo": 0.7709,
+        "point": 0.7845
+      },
+      "recall": {
+        "hi": 0.9896,
+        "lo": 0.9853,
+        "point": 0.9876
+      }
+    },
+    "accuracy_scale=1.4|standoff_max_m=10": {
+      "bcubed_f1": {
+        "hi": 0.9314,
+        "lo": 0.9253,
+        "point": 0.9281
+      },
+      "best_fixed_m_in_sample": 25,
+      "best_z_in_sample": 1.5,
+      "cost_3_to_1": {
+        "hi": 269.6181,
+        "lo": 245.7368,
+        "point": 258.6871
+      },
+      "f05": {
+        "hi": 0.7615,
+        "lo": 0.7352,
+        "point": 0.7483
+      },
+      "f05_best_fixed_in_sample": 0.8675,
+      "f05_best_z_in_sample": 0.8566,
+      "pairs": 39628,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.7191,
+        "lo": 0.6901,
+        "point": 0.7046
+      },
+      "recall": {
+        "hi": 0.9968,
+        "lo": 0.9942,
+        "point": 0.9956
+      }
+    },
+    "accuracy_scale=1.4|standoff_max_m=20": {
+      "bcubed_f1": {
+        "hi": 0.9236,
+        "lo": 0.9174,
+        "point": 0.9202
+      },
+      "best_fixed_m_in_sample": 30,
+      "best_z_in_sample": 1.9,
+      "cost_3_to_1": {
+        "hi": 283.4305,
+        "lo": 259.0561,
+        "point": 272.7238
+      },
+      "f05": {
+        "hi": 0.7574,
+        "lo": 0.7316,
+        "point": 0.7438
+      },
+      "f05_best_fixed_in_sample": 0.8119,
+      "f05_best_z_in_sample": 0.7983,
+      "pairs": 39545,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.7184,
+        "lo": 0.6895,
+        "point": 0.7032
+      },
+      "recall": {
+        "hi": 0.9705,
+        "lo": 0.9632,
+        "point": 0.967
+      }
+    },
+    "accuracy_scale=1.4|standoff_max_m=3": {
+      "bcubed_f1": {
+        "hi": 0.9324,
+        "lo": 0.9265,
+        "point": 0.9293
+      },
+      "best_fixed_m_in_sample": 20,
+      "best_z_in_sample": 1.5,
+      "cost_3_to_1": {
+        "hi": 266.8564,
+        "lo": 244.3653,
+        "point": 256.6655
+      },
+      "f05": {
+        "hi": 0.7616,
+        "lo": 0.7363,
+        "point": 0.7485
+      },
+      "f05_best_fixed_in_sample": 0.8948,
+      "f05_best_z_in_sample": 0.8775,
+      "pairs": 39602,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.7189,
+        "lo": 0.6909,
+        "point": 0.7044
+      },
+      "recall": {
+        "hi": 0.9996,
+        "lo": 0.9985,
+        "point": 0.9991
+      }
+    },
+    "accuracy_scale=1.4|standoff_max_m=30": {
+      "bcubed_f1": {
+        "hi": 0.9061,
+        "lo": 0.8994,
+        "point": 0.9022
+      },
+      "best_fixed_m_in_sample": 40,
+      "best_z_in_sample": 2.4,
+      "cost_3_to_1": {
+        "hi": 318.4617,
+        "lo": 292.7043,
+        "point": 306.4805
+      },
+      "f05": {
+        "hi": 0.7401,
+        "lo": 0.7131,
+        "point": 0.7249
+      },
+      "f05_best_fixed_in_sample": 0.7481,
+      "f05_best_z_in_sample": 0.7392,
+      "pairs": 39500,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.7119,
+        "lo": 0.6807,
+        "point": 0.694
+      },
+      "recall": {
+        "hi": 0.8878,
+        "lo": 0.8757,
+        "point": 0.8821
+      }
+    },
+    "accuracy_scale=1.4|standoff_max_m=5": {
+      "bcubed_f1": {
+        "hi": 0.9324,
+        "lo": 0.9263,
+        "point": 0.9291
+      },
+      "best_fixed_m_in_sample": 20,
+      "best_z_in_sample": 1.5,
+      "cost_3_to_1": {
+        "hi": 267.0606,
+        "lo": 244.1716,
+        "point": 256.8944
+      },
+      "f05": {
+        "hi": 0.7623,
+        "lo": 0.7364,
+        "point": 0.7491
+      },
+      "f05_best_fixed_in_sample": 0.8901,
+      "f05_best_z_in_sample": 0.8737,
+      "pairs": 39628,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.7197,
+        "lo": 0.691,
+        "point": 0.7051
+      },
+      "recall": {
+        "hi": 0.9994,
+        "lo": 0.9982,
+        "point": 0.9988
+      }
+    },
+    "accuracy_scale=2.0|standoff_max_m=10": {
+      "bcubed_f1": {
+        "hi": 0.9157,
+        "lo": 0.9089,
+        "point": 0.9122
+      },
+      "best_fixed_m_in_sample": 25,
+      "best_z_in_sample": 1.5,
+      "cost_3_to_1": {
+        "hi": 342.1418,
+        "lo": 316.2957,
+        "point": 329.0232
+      },
+      "f05": {
+        "hi": 0.6995,
+        "lo": 0.671,
+        "point": 0.6844
+      },
+      "f05_best_fixed_in_sample": 0.8675,
+      "f05_best_z_in_sample": 0.8254,
+      "pairs": 39628,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.6506,
+        "lo": 0.62,
+        "point": 0.6344
+      },
+      "recall": {
+        "hi": 0.9999,
+        "lo": 0.9994,
+        "point": 0.9997
+      }
+    },
+    "accuracy_scale=2.0|standoff_max_m=20": {
+      "bcubed_f1": {
+        "hi": 0.9146,
+        "lo": 0.9073,
+        "point": 0.9108
+      },
+      "best_fixed_m_in_sample": 30,
+      "best_z_in_sample": 1.5,
+      "cost_3_to_1": {
+        "hi": 344.7222,
+        "lo": 316.393,
+        "point": 330.7396
+      },
+      "f05": {
+        "hi": 0.7033,
+        "lo": 0.6758,
+        "point": 0.689
+      },
+      "f05_best_fixed_in_sample": 0.8119,
+      "f05_best_z_in_sample": 0.7941,
+      "pairs": 39545,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.6552,
+        "lo": 0.6255,
+        "point": 0.6397
+      },
+      "recall": {
+        "hi": 0.9972,
+        "lo": 0.9951,
+        "point": 0.9961
+      }
+    },
+    "accuracy_scale=2.0|standoff_max_m=3": {
+      "bcubed_f1": {
+        "hi": 0.9156,
+        "lo": 0.9088,
+        "point": 0.9121
+      },
+      "best_fixed_m_in_sample": 20,
+      "best_z_in_sample": 1.5,
+      "cost_3_to_1": {
+        "hi": 341.367,
+        "lo": 316.3336,
+        "point": 329.3664
+      },
+      "f05": {
+        "hi": 0.6977,
+        "lo": 0.6696,
+        "point": 0.6831
+      },
+      "f05_best_fixed_in_sample": 0.8948,
+      "f05_best_z_in_sample": 0.8317,
+      "pairs": 39602,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.6486,
+        "lo": 0.6185,
+        "point": 0.633
+      },
+      "recall": {
+        "hi": 1.0,
+        "lo": 1.0,
+        "point": 1.0
+      }
+    },
+    "accuracy_scale=2.0|standoff_max_m=30": {
+      "bcubed_f1": {
+        "hi": 0.9091,
+        "lo": 0.9018,
+        "point": 0.9052
+      },
+      "best_fixed_m_in_sample": 40,
+      "best_z_in_sample": 1.7,
+      "cost_3_to_1": {
+        "hi": 352.9608,
+        "lo": 326.2375,
+        "point": 340.5805
+      },
+      "f05": {
+        "hi": 0.7051,
+        "lo": 0.6774,
+        "point": 0.6892
+      },
+      "f05_best_fixed_in_sample": 0.7481,
+      "f05_best_z_in_sample": 0.7378,
+      "pairs": 39500,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.6598,
+        "lo": 0.6295,
+        "point": 0.6425
+      },
+      "recall": {
+        "hi": 0.9744,
+        "lo": 0.9682,
+        "point": 0.9713
+      }
+    },
+    "accuracy_scale=2.0|standoff_max_m=5": {
+      "bcubed_f1": {
+        "hi": 0.9155,
+        "lo": 0.9088,
+        "point": 0.912
+      },
+      "best_fixed_m_in_sample": 20,
+      "best_z_in_sample": 1.5,
+      "cost_3_to_1": {
+        "hi": 341.6832,
+        "lo": 317.1742,
+        "point": 329.7479
+      },
+      "f05": {
+        "hi": 0.6983,
+        "lo": 0.6701,
+        "point": 0.6835
+      },
+      "f05_best_fixed_in_sample": 0.8901,
+      "f05_best_z_in_sample": 0.8313,
+      "pairs": 39628,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.6493,
+        "lo": 0.619,
+        "point": 0.6334
+      },
+      "recall": {
+        "hi": 1.0,
+        "lo": 0.9998,
+        "point": 0.9999
+      }
+    },
+    "accuracy_scale=3.0|standoff_max_m=10": {
+      "bcubed_f1": {
+        "hi": 0.9077,
+        "lo": 0.9002,
+        "point": 0.9036
+      },
+      "best_fixed_m_in_sample": 25,
+      "best_z_in_sample": 1.5,
+      "cost_3_to_1": {
+        "hi": 375.4757,
+        "lo": 347.5567,
+        "point": 362.5129
+      },
+      "f05": {
+        "hi": 0.6777,
+        "lo": 0.6491,
+        "point": 0.6622
+      },
+      "f05_best_fixed_in_sample": 0.8675,
+      "f05_best_z_in_sample": 0.7429,
+      "pairs": 39628,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.6272,
+        "lo": 0.5968,
+        "point": 0.6107
+      },
+      "recall": {
+        "hi": 1.0,
+        "lo": 1.0,
+        "point": 1.0
+      }
+    },
+    "accuracy_scale=3.0|standoff_max_m=20": {
+      "bcubed_f1": {
+        "hi": 0.9075,
+        "lo": 0.9,
+        "point": 0.9038
+      },
+      "best_fixed_m_in_sample": 30,
+      "best_z_in_sample": 1.5,
+      "cost_3_to_1": {
+        "hi": 375.5501,
+        "lo": 346.6408,
+        "point": 361.4449
+      },
+      "f05": {
+        "hi": 0.6817,
+        "lo": 0.654,
+        "point": 0.667
+      },
+      "f05_best_fixed_in_sample": 0.8119,
+      "f05_best_z_in_sample": 0.7388,
+      "pairs": 39545,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.6315,
+        "lo": 0.6019,
+        "point": 0.6157
+      },
+      "recall": {
+        "hi": 1.0,
+        "lo": 0.9996,
+        "point": 0.9998
+      }
+    },
+    "accuracy_scale=3.0|standoff_max_m=3": {
+      "bcubed_f1": {
+        "hi": 0.9075,
+        "lo": 0.9002,
+        "point": 0.9035
+      },
+      "best_fixed_m_in_sample": 20,
+      "best_z_in_sample": 1.5,
+      "cost_3_to_1": {
+        "hi": 375.4918,
+        "lo": 348.763,
+        "point": 363.1232
+      },
+      "f05": {
+        "hi": 0.676,
+        "lo": 0.6472,
+        "point": 0.6612
+      },
+      "f05_best_fixed_in_sample": 0.8948,
+      "f05_best_z_in_sample": 0.7437,
+      "pairs": 39602,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.6253,
+        "lo": 0.5947,
+        "point": 0.6096
+      },
+      "recall": {
+        "hi": 1.0,
+        "lo": 1.0,
+        "point": 1.0
+      }
+    },
+    "accuracy_scale=3.0|standoff_max_m=30": {
+      "bcubed_f1": {
+        "hi": 0.9067,
+        "lo": 0.8992,
+        "point": 0.9027
+      },
+      "best_fixed_m_in_sample": 40,
+      "best_z_in_sample": 1.5,
+      "cost_3_to_1": {
+        "hi": 376.5636,
+        "lo": 346.6985,
+        "point": 362.0552
+      },
+      "f05": {
+        "hi": 0.6881,
+        "lo": 0.661,
+        "point": 0.6735
+      },
+      "f05_best_fixed_in_sample": 0.7481,
+      "f05_best_z_in_sample": 0.7206,
+      "pairs": 39500,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.6391,
+        "lo": 0.61,
+        "point": 0.6234
+      },
+      "recall": {
+        "hi": 0.9936,
+        "lo": 0.991,
+        "point": 0.9924
+      }
+    },
+    "accuracy_scale=3.0|standoff_max_m=5": {
+      "bcubed_f1": {
+        "hi": 0.9075,
+        "lo": 0.9005,
+        "point": 0.9037
+      },
+      "best_fixed_m_in_sample": 20,
+      "best_z_in_sample": 1.5,
+      "cost_3_to_1": {
+        "hi": 374.9736,
+        "lo": 347.9019,
+        "point": 362.0933
+      },
+      "f05": {
+        "hi": 0.6767,
+        "lo": 0.6478,
+        "point": 0.6616
+      },
+      "f05_best_fixed_in_sample": 0.8901,
+      "f05_best_z_in_sample": 0.744,
+      "pairs": 39628,
+      "positives": 13758,
+      "precision": {
+        "hi": 0.6261,
+        "lo": 0.5953,
+        "point": 0.61
+      },
+      "recall": {
+        "hi": 1.0,
+        "lo": 1.0,
+        "point": 1.0
+      }
+    }
+  },
+  "meta": {
+    "git_commit": "21b8f4e",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T13:03:41+00:00"
+  },
+  "sweeps": {
+    "accuracy_scale": {
+      "meaning": "the phone reports this many times its true accuracy (1 = right on average, below 1 = over-confident)",
+      "points": [
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.8988,
+              "lo": 0.8926,
+              "point": 0.8955
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 3.2,
+            "cost_3_to_1": {
+              "hi": 275.5056,
+              "lo": 257.6354,
+              "point": 267.46
+            },
+            "f05": {
+              "hi": 0.7723,
+              "lo": 0.7494,
+              "point": 0.7612
+            },
+            "f05_best_fixed_in_sample": 0.7742,
+            "f05_best_z_in_sample": 0.7632,
+            "pairs": 39631,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.7812,
+              "lo": 0.7519,
+              "point": 0.7668
+            },
+            "recall": {
+              "hi": 0.748,
+              "lo": 0.7295,
+              "point": 0.7397
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9203,
+              "lo": 0.9153,
+              "point": 0.9178
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 3.3,
+            "cost_3_to_1": {
+              "hi": 186.8153,
+              "lo": 173.2085,
+              "point": 180.2266
+            },
+            "f05": {
+              "hi": 0.8688,
+              "lo": 0.8523,
+              "point": 0.8605
+            },
+            "f05_best_fixed_in_sample": 0.8675,
+            "f05_best_z_in_sample": 0.8645,
+            "pairs": 39628,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.8917,
+              "lo": 0.8699,
+              "point": 0.8805
+            },
+            "recall": {
+              "hi": 0.7965,
+              "lo": 0.7801,
+              "point": 0.7891
+            }
+          },
+          "cutoff_m": 5,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9418,
+              "lo": 0.9374,
+              "point": 0.9394
+            },
+            "best_fixed_m_in_sample": 15,
+            "best_z_in_sample": 3.5,
+            "cost_3_to_1": {
+              "hi": 130.9157,
+              "lo": 120.0594,
+              "point": 125.9107
+            },
+            "f05": {
+              "hi": 0.9224,
+              "lo": 0.91,
+              "point": 0.9164
+            },
+            "f05_best_fixed_in_sample": 0.9148,
+            "f05_best_z_in_sample": 0.9191,
+            "pairs": 39629,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.9382,
+              "lo": 0.9225,
+              "point": 0.9303
+            },
+            "recall": {
+              "hi": 0.8709,
+              "lo": 0.8572,
+              "point": 0.8647
+            }
+          },
+          "value": 0.5
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9125,
+              "lo": 0.9067,
+              "point": 0.9094
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 2.4,
+            "cost_3_to_1": {
+              "hi": 285.6231,
+              "lo": 262.2413,
+              "point": 274.8217
+            },
+            "f05": {
+              "hi": 0.7619,
+              "lo": 0.7376,
+              "point": 0.7492
+            },
+            "f05_best_fixed_in_sample": 0.7742,
+            "f05_best_z_in_sample": 0.7596,
+            "pairs": 39631,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.7391,
+              "lo": 0.7107,
+              "point": 0.7244
+            },
+            "recall": {
+              "hi": 0.8739,
+              "lo": 0.8598,
+              "point": 0.8676
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9347,
+              "lo": 0.9296,
+              "point": 0.9322
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 2.6,
+            "cost_3_to_1": {
+              "hi": 184.6323,
+              "lo": 167.451,
+              "point": 176.5267
+            },
+            "f05": {
+              "hi": 0.8669,
+              "lo": 0.8466,
+              "point": 0.8562
+            },
+            "f05_best_fixed_in_sample": 0.8675,
+            "f05_best_z_in_sample": 0.8609,
+            "pairs": 39628,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.8595,
+              "lo": 0.8354,
+              "point": 0.847
+            },
+            "recall": {
+              "hi": 0.9014,
+              "lo": 0.8887,
+              "point": 0.8955
+            }
+          },
+          "cutoff_m": 5,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9473,
+              "lo": 0.9428,
+              "point": 0.9448
+            },
+            "best_fixed_m_in_sample": 15,
+            "best_z_in_sample": 2.9,
+            "cost_3_to_1": {
+              "hi": 126.977,
+              "lo": 115.1816,
+              "point": 121.6386
+            },
+            "f05": {
+              "hi": 0.924,
+              "lo": 0.9108,
+              "point": 0.9171
+            },
+            "f05_best_fixed_in_sample": 0.9148,
+            "f05_best_z_in_sample": 0.9171,
+            "pairs": 39629,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.9288,
+              "lo": 0.9121,
+              "point": 0.9202
+            },
+            "recall": {
+              "hi": 0.9102,
+              "lo": 0.8988,
+              "point": 0.9051
+            }
+          },
+          "value": 0.7
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9151,
+              "lo": 0.9088,
+              "point": 0.9118
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 1.8,
+            "cost_3_to_1": {
+              "hi": 316.4996,
+              "lo": 292.9384,
+              "point": 306.1372
+            },
+            "f05": {
+              "hi": 0.7311,
+              "lo": 0.7052,
+              "point": 0.7174
+            },
+            "f05_best_fixed_in_sample": 0.7742,
+            "f05_best_z_in_sample": 0.7572,
+            "pairs": 39631,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.6923,
+              "lo": 0.6635,
+              "point": 0.6769
+            },
+            "recall": {
+              "hi": 0.9477,
+              "lo": 0.9382,
+              "point": 0.9432
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9403,
+              "lo": 0.9348,
+              "point": 0.9374
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 2.0,
+            "cost_3_to_1": {
+              "hi": 211.3482,
+              "lo": 191.4251,
+              "point": 202.3115
+            },
+            "f05": {
+              "hi": 0.8267,
+              "lo": 0.8026,
+              "point": 0.8143
+            },
+            "f05_best_fixed_in_sample": 0.8675,
+            "f05_best_z_in_sample": 0.8582,
+            "pairs": 39628,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.7969,
+              "lo": 0.7685,
+              "point": 0.7824
+            },
+            "recall": {
+              "hi": 0.9759,
+              "lo": 0.9695,
+              "point": 0.9729
+            }
+          },
+          "cutoff_m": 5,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9543,
+              "lo": 0.9501,
+              "point": 0.9521
+            },
+            "best_fixed_m_in_sample": 15,
+            "best_z_in_sample": 2.4,
+            "cost_3_to_1": {
+              "hi": 129.3665,
+              "lo": 115.6506,
+              "point": 123.2788
+            },
+            "f05": {
+              "hi": 0.9159,
+              "lo": 0.8998,
+              "point": 0.9082
+            },
+            "f05_best_fixed_in_sample": 0.9148,
+            "f05_best_z_in_sample": 0.9161,
+            "pairs": 39629,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.9063,
+              "lo": 0.8866,
+              "point": 0.8965
+            },
+            "recall": {
+              "hi": 0.9625,
+              "lo": 0.9543,
+              "point": 0.9586
+            }
+          },
+          "value": 1.0
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9078,
+              "lo": 0.9013,
+              "point": 0.9045
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 359.4279,
+              "lo": 335.0026,
+              "point": 347.9803
+            },
+            "f05": {
+              "hi": 0.6949,
+              "lo": 0.668,
+              "point": 0.6808
+            },
+            "f05_best_fixed_in_sample": 0.7742,
+            "f05_best_z_in_sample": 0.7507,
+            "pairs": 39631,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.6501,
+              "lo": 0.6208,
+              "point": 0.6346
+            },
+            "recall": {
+              "hi": 0.9643,
+              "lo": 0.9561,
+              "point": 0.9603
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9314,
+              "lo": 0.9253,
+              "point": 0.9281
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 269.6181,
+              "lo": 245.7368,
+              "point": 258.6871
+            },
+            "f05": {
+              "hi": 0.7615,
+              "lo": 0.7352,
+              "point": 0.7483
+            },
+            "f05_best_fixed_in_sample": 0.8675,
+            "f05_best_z_in_sample": 0.8566,
+            "pairs": 39628,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.7191,
+              "lo": 0.6901,
+              "point": 0.7046
+            },
+            "recall": {
+              "hi": 0.9968,
+              "lo": 0.9942,
+              "point": 0.9956
+            }
+          },
+          "cutoff_m": 5,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9558,
+              "lo": 0.9511,
+              "point": 0.9533
+            },
+            "best_fixed_m_in_sample": 15,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 147.3943,
+              "lo": 132.2685,
+              "point": 140.4814
+            },
+            "f05": {
+              "hi": 0.89,
+              "lo": 0.8705,
+              "point": 0.8799
+            },
+            "f05_best_fixed_in_sample": 0.9148,
+            "f05_best_z_in_sample": 0.9158,
+            "pairs": 39629,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.8681,
+              "lo": 0.8449,
+              "point": 0.8561
+            },
+            "recall": {
+              "hi": 0.9917,
+              "lo": 0.9878,
+              "point": 0.9897
+            }
+          },
+          "value": 1.4
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9023,
+              "lo": 0.8956,
+              "point": 0.8987
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 385.1063,
+              "lo": 358.7446,
+              "point": 372.8115
+            },
+            "f05": {
+              "hi": 0.6786,
+              "lo": 0.6507,
+              "point": 0.664
+            },
+            "f05_best_fixed_in_sample": 0.7742,
+            "f05_best_z_in_sample": 0.7225,
+            "pairs": 39631,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.632,
+              "lo": 0.6018,
+              "point": 0.6162
+            },
+            "recall": {
+              "hi": 0.9661,
+              "lo": 0.9584,
+              "point": 0.9624
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9157,
+              "lo": 0.9089,
+              "point": 0.9122
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 342.1418,
+              "lo": 316.2957,
+              "point": 329.0232
+            },
+            "f05": {
+              "hi": 0.6995,
+              "lo": 0.671,
+              "point": 0.6844
+            },
+            "f05_best_fixed_in_sample": 0.8675,
+            "f05_best_z_in_sample": 0.8254,
+            "pairs": 39628,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.6506,
+              "lo": 0.62,
+              "point": 0.6344
+            },
+            "recall": {
+              "hi": 0.9999,
+              "lo": 0.9994,
+              "point": 0.9997
+            }
+          },
+          "cutoff_m": 0,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9468,
+              "lo": 0.9415,
+              "point": 0.9439
+            },
+            "best_fixed_m_in_sample": 15,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 198.4993,
+              "lo": 180.2859,
+              "point": 190.2582
+            },
+            "f05": {
+              "hi": 0.8304,
+              "lo": 0.8071,
+              "point": 0.8183
+            },
+            "f05_best_fixed_in_sample": 0.9148,
+            "f05_best_z_in_sample": 0.9141,
+            "pairs": 39629,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.7968,
+              "lo": 0.7701,
+              "point": 0.7829
+            },
+            "recall": {
+              "hi": 0.9996,
+              "lo": 0.9986,
+              "point": 0.9991
+            }
+          },
+          "value": 2.0
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9014,
+              "lo": 0.8948,
+              "point": 0.8978
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 388.2647,
+              "lo": 362.1962,
+              "point": 376.2063
+            },
+            "f05": {
+              "hi": 0.6766,
+              "lo": 0.6485,
+              "point": 0.6619
+            },
+            "f05_best_fixed_in_sample": 0.7742,
+            "f05_best_z_in_sample": 0.678,
+            "pairs": 39631,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.6298,
+              "lo": 0.5995,
+              "point": 0.6139
+            },
+            "recall": {
+              "hi": 0.9662,
+              "lo": 0.9585,
+              "point": 0.9625
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9077,
+              "lo": 0.9002,
+              "point": 0.9036
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 375.4757,
+              "lo": 347.5567,
+              "point": 362.5129
+            },
+            "f05": {
+              "hi": 0.6777,
+              "lo": 0.6491,
+              "point": 0.6622
+            },
+            "f05_best_fixed_in_sample": 0.8675,
+            "f05_best_z_in_sample": 0.7429,
+            "pairs": 39628,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.6272,
+              "lo": 0.5968,
+              "point": 0.6107
+            },
+            "recall": {
+              "hi": 1.0,
+              "lo": 1.0,
+              "point": 1.0
+            }
+          },
+          "cutoff_m": 0,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9293,
+              "lo": 0.9232,
+              "point": 0.9261
+            },
+            "best_fixed_m_in_sample": 15,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 282.9641,
+              "lo": 258.5156,
+              "point": 271.0836
+            },
+            "f05": {
+              "hi": 0.7433,
+              "lo": 0.7168,
+              "point": 0.73
+            },
+            "f05_best_fixed_in_sample": 0.9148,
+            "f05_best_z_in_sample": 0.8852,
+            "pairs": 39629,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.6985,
+              "lo": 0.6694,
+              "point": 0.6838
+            },
+            "recall": {
+              "hi": 1.0,
+              "lo": 0.9998,
+              "point": 0.9999
+            }
+          },
+          "value": 3.0
+        }
+      ]
+    },
+    "accuracy_spread": {
+      "meaning": "sigma of the lognormal noise on the reported accuracy",
+      "points": [
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9174,
+              "lo": 0.9112,
+              "point": 0.914
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 1.9,
+            "cost_3_to_1": {
+              "hi": 312.0549,
+              "lo": 288.1147,
+              "point": 301.1023
+            },
+            "f05": {
+              "hi": 0.7434,
+              "lo": 0.7175,
+              "point": 0.7294
+            },
+            "f05_best_fixed_in_sample": 0.7742,
+            "f05_best_z_in_sample": 0.7669,
+            "pairs": 39631,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.7047,
+              "lo": 0.6759,
+              "point": 0.6891
+            },
+            "recall": {
+              "hi": 0.9564,
+              "lo": 0.9478,
+              "point": 0.9521
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9439,
+              "lo": 0.9386,
+              "point": 0.9408
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 2.1,
+            "cost_3_to_1": {
+              "hi": 199.6015,
+              "lo": 180.6854,
+              "point": 191.517
+            },
+            "f05": {
+              "hi": 0.8495,
+              "lo": 0.8276,
+              "point": 0.8384
+            },
+            "f05_best_fixed_in_sample": 0.8675,
+            "f05_best_z_in_sample": 0.8701,
+            "pairs": 39628,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.8221,
+              "lo": 0.7965,
+              "point": 0.8091
+            },
+            "recall": {
+              "hi": 0.9832,
+              "lo": 0.9779,
+              "point": 0.9807
+            }
+          },
+          "cutoff_m": 5,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9572,
+              "lo": 0.9532,
+              "point": 0.9548
+            },
+            "best_fixed_m_in_sample": 15,
+            "best_z_in_sample": 2.7,
+            "cost_3_to_1": {
+              "hi": 121.5297,
+              "lo": 109.3625,
+              "point": 116.4512
+            },
+            "f05": {
+              "hi": 0.9245,
+              "lo": 0.9088,
+              "point": 0.9164
+            },
+            "f05_best_fixed_in_sample": 0.9148,
+            "f05_best_z_in_sample": 0.9203,
+            "pairs": 39629,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.916,
+              "lo": 0.8971,
+              "point": 0.906
+            },
+            "recall": {
+              "hi": 0.9642,
+              "lo": 0.9566,
+              "point": 0.9607
+            }
+          },
+          "value": 0.0
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9151,
+              "lo": 0.9088,
+              "point": 0.9118
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 1.8,
+            "cost_3_to_1": {
+              "hi": 316.4996,
+              "lo": 292.9384,
+              "point": 306.1372
+            },
+            "f05": {
+              "hi": 0.7311,
+              "lo": 0.7052,
+              "point": 0.7174
+            },
+            "f05_best_fixed_in_sample": 0.7742,
+            "f05_best_z_in_sample": 0.7572,
+            "pairs": 39631,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.6923,
+              "lo": 0.6635,
+              "point": 0.6769
+            },
+            "recall": {
+              "hi": 0.9477,
+              "lo": 0.9382,
+              "point": 0.9432
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9403,
+              "lo": 0.9348,
+              "point": 0.9374
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 2.0,
+            "cost_3_to_1": {
+              "hi": 211.3482,
+              "lo": 191.4251,
+              "point": 202.3115
+            },
+            "f05": {
+              "hi": 0.8267,
+              "lo": 0.8026,
+              "point": 0.8143
+            },
+            "f05_best_fixed_in_sample": 0.8675,
+            "f05_best_z_in_sample": 0.8582,
+            "pairs": 39628,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.7969,
+              "lo": 0.7685,
+              "point": 0.7824
+            },
+            "recall": {
+              "hi": 0.9759,
+              "lo": 0.9695,
+              "point": 0.9729
+            }
+          },
+          "cutoff_m": 5,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9543,
+              "lo": 0.9501,
+              "point": 0.9521
+            },
+            "best_fixed_m_in_sample": 15,
+            "best_z_in_sample": 2.4,
+            "cost_3_to_1": {
+              "hi": 129.3665,
+              "lo": 115.6506,
+              "point": 123.2788
+            },
+            "f05": {
+              "hi": 0.9159,
+              "lo": 0.8998,
+              "point": 0.9082
+            },
+            "f05_best_fixed_in_sample": 0.9148,
+            "f05_best_z_in_sample": 0.9161,
+            "pairs": 39629,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.9063,
+              "lo": 0.8866,
+              "point": 0.8965
+            },
+            "recall": {
+              "hi": 0.9625,
+              "lo": 0.9543,
+              "point": 0.9586
+            }
+          },
+          "value": 0.35
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9075,
+              "lo": 0.9014,
+              "point": 0.9041
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 333.0364,
+              "lo": 309.9384,
+              "point": 322.9202
+            },
+            "f05": {
+              "hi": 0.7167,
+              "lo": 0.6902,
+              "point": 0.7027
+            },
+            "f05_best_fixed_in_sample": 0.7742,
+            "f05_best_z_in_sample": 0.7334,
+            "pairs": 39631,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.6793,
+              "lo": 0.6504,
+              "point": 0.6642
+            },
+            "recall": {
+              "hi": 0.9207,
+              "lo": 0.9098,
+              "point": 0.9155
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9291,
+              "lo": 0.9237,
+              "point": 0.9263
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 246.3613,
+              "lo": 226.3382,
+              "point": 236.9455
+            },
+            "f05": {
+              "hi": 0.7858,
+              "lo": 0.7619,
+              "point": 0.7733
+            },
+            "f05_best_fixed_in_sample": 0.8675,
+            "f05_best_z_in_sample": 0.8293,
+            "pairs": 39628,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.7525,
+              "lo": 0.7253,
+              "point": 0.7385
+            },
+            "recall": {
+              "hi": 0.9571,
+              "lo": 0.9493,
+              "point": 0.9533
+            }
+          },
+          "cutoff_m": 5,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9492,
+              "lo": 0.9446,
+              "point": 0.9466
+            },
+            "best_fixed_m_in_sample": 15,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 154.4881,
+              "lo": 139.6958,
+              "point": 147.843
+            },
+            "f05": {
+              "hi": 0.8846,
+              "lo": 0.8667,
+              "point": 0.8757
+            },
+            "f05_best_fixed_in_sample": 0.9148,
+            "f05_best_z_in_sample": 0.9126,
+            "pairs": 39629,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.8683,
+              "lo": 0.8464,
+              "point": 0.8574
+            },
+            "recall": {
+              "hi": 0.9615,
+              "lo": 0.9534,
+              "point": 0.9576
+            }
+          },
+          "value": 0.7
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9032,
+              "lo": 0.897,
+              "point": 0.8997
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 340.4255,
+              "lo": 317.324,
+              "point": 330.3963
+            },
+            "f05": {
+              "hi": 0.7094,
+              "lo": 0.6827,
+              "point": 0.695
+            },
+            "f05_best_fixed_in_sample": 0.7742,
+            "f05_best_z_in_sample": 0.717,
+            "pairs": 39631,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.6739,
+              "lo": 0.6445,
+              "point": 0.658
+            },
+            "recall": {
+              "hi": 0.9024,
+              "lo": 0.8909,
+              "point": 0.8969
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9232,
+              "lo": 0.9172,
+              "point": 0.92
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 265.5864,
+              "lo": 245.0075,
+              "point": 256.3604
+            },
+            "f05": {
+              "hi": 0.764,
+              "lo": 0.7393,
+              "point": 0.7512
+            },
+            "f05_best_fixed_in_sample": 0.8675,
+            "f05_best_z_in_sample": 0.8016,
+            "pairs": 39628,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.7298,
+              "lo": 0.7016,
+              "point": 0.7151
+            },
+            "recall": {
+              "hi": 0.9449,
+              "lo": 0.936,
+              "point": 0.9409
+            }
+          },
+          "cutoff_m": 0,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9437,
+              "lo": 0.9388,
+              "point": 0.9411
+            },
+            "best_fixed_m_in_sample": 15,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 180.2303,
+              "lo": 162.8583,
+              "point": 172.4072
+            },
+            "f05": {
+              "hi": 0.8505,
+              "lo": 0.8301,
+              "point": 0.8395
+            },
+            "f05_best_fixed_in_sample": 0.9148,
+            "f05_best_z_in_sample": 0.895,
+            "pairs": 39629,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.8272,
+              "lo": 0.8034,
+              "point": 0.8146
+            },
+            "recall": {
+              "hi": 0.9607,
+              "lo": 0.9523,
+              "point": 0.9567
+            }
+          },
+          "value": 1.0
+        }
+      ]
+    },
+    "clustering": {
+      "meaning": "share of hazards that sit in clusters of this mean size (0 = uniform hazards)",
+      "points": [
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.945,
+              "lo": 0.9403,
+              "point": 0.9428
+            },
+            "best_fixed_m_in_sample": 40,
+            "best_z_in_sample": 2.4,
+            "cost_3_to_1": {
+              "hi": 170.2725,
+              "lo": 156.0274,
+              "point": 163.2414
+            },
+            "f05": {
+              "hi": 0.8825,
+              "lo": 0.8667,
+              "point": 0.8747
+            },
+            "f05_best_fixed_in_sample": 0.8883,
+            "f05_best_z_in_sample": 0.8843,
+            "pairs": 30663,
+            "positives": 13376,
+            "precision": {
+              "hi": 0.8677,
+              "lo": 0.8488,
+              "point": 0.8586
+            },
+            "recall": {
+              "hi": 0.9504,
+              "lo": 0.9407,
+              "point": 0.9457
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9597,
+              "lo": 0.956,
+              "point": 0.958
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 2.5,
+            "cost_3_to_1": {
+              "hi": 107.6922,
+              "lo": 97.3447,
+              "point": 102.3281
+            },
+            "f05": {
+              "hi": 0.9415,
+              "lo": 0.9296,
+              "point": 0.9361
+            },
+            "f05_best_fixed_in_sample": 0.9496,
+            "f05_best_z_in_sample": 0.9428,
+            "pairs": 30682,
+            "positives": 13376,
+            "precision": {
+              "hi": 0.9343,
+              "lo": 0.9194,
+              "point": 0.9276
+            },
+            "recall": {
+              "hi": 0.9748,
+              "lo": 0.969,
+              "point": 0.9718
+            }
+          },
+          "cutoff_m": 30,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9636,
+              "lo": 0.9602,
+              "point": 0.962
+            },
+            "best_fixed_m_in_sample": 20,
+            "best_z_in_sample": 3.2,
+            "cost_3_to_1": {
+              "hi": 78.1481,
+              "lo": 70.5564,
+              "point": 74.2893
+            },
+            "f05": {
+              "hi": 0.9713,
+              "lo": 0.9637,
+              "point": 0.9676
+            },
+            "f05_best_fixed_in_sample": 0.9722,
+            "f05_best_z_in_sample": 0.9682,
+            "pairs": 30773,
+            "positives": 13376,
+            "precision": {
+              "hi": 0.9742,
+              "lo": 0.9651,
+              "point": 0.9697
+            },
+            "recall": {
+              "hi": 0.9631,
+              "lo": 0.9554,
+              "point": 0.9593
+            }
+          },
+          "value": [
+            0.0,
+            3.0
+          ]
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9297,
+              "lo": 0.9239,
+              "point": 0.9269
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 2.0,
+            "cost_3_to_1": {
+              "hi": 249.6059,
+              "lo": 228.3823,
+              "point": 239.2958
+            },
+            "f05": {
+              "hi": 0.7958,
+              "lo": 0.7688,
+              "point": 0.7825
+            },
+            "f05_best_fixed_in_sample": 0.8276,
+            "f05_best_z_in_sample": 0.8121,
+            "pairs": 35132,
+            "positives": 13607,
+            "precision": {
+              "hi": 0.7665,
+              "lo": 0.7351,
+              "point": 0.7508
+            },
+            "recall": {
+              "hi": 0.9464,
+              "lo": 0.9368,
+              "point": 0.9416
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9504,
+              "lo": 0.9455,
+              "point": 0.9483
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 2.3,
+            "cost_3_to_1": {
+              "hi": 159.4987,
+              "lo": 143.5726,
+              "point": 151.3455
+            },
+            "f05": {
+              "hi": 0.8782,
+              "lo": 0.8566,
+              "point": 0.8675
+            },
+            "f05_best_fixed_in_sample": 0.9064,
+            "f05_best_z_in_sample": 0.8949,
+            "pairs": 35151,
+            "positives": 13607,
+            "precision": {
+              "hi": 0.8578,
+              "lo": 0.8323,
+              "point": 0.8451
+            },
+            "recall": {
+              "hi": 0.9739,
+              "lo": 0.9673,
+              "point": 0.9708
+            }
+          },
+          "cutoff_m": 10,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9596,
+              "lo": 0.9556,
+              "point": 0.9576
+            },
+            "best_fixed_m_in_sample": 20,
+            "best_z_in_sample": 2.8,
+            "cost_3_to_1": {
+              "hi": 103.6196,
+              "lo": 93.0188,
+              "point": 98.2201
+            },
+            "f05": {
+              "hi": 0.944,
+              "lo": 0.9309,
+              "point": 0.9379
+            },
+            "f05_best_fixed_in_sample": 0.9417,
+            "f05_best_z_in_sample": 0.9403,
+            "pairs": 35209,
+            "positives": 13607,
+            "precision": {
+              "hi": 0.9403,
+              "lo": 0.9245,
+              "point": 0.9329
+            },
+            "recall": {
+              "hi": 0.9628,
+              "lo": 0.9546,
+              "point": 0.9588
+            }
+          },
+          "value": [
+            0.25,
+            3.0
+          ]
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9151,
+              "lo": 0.9088,
+              "point": 0.9118
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 1.8,
+            "cost_3_to_1": {
+              "hi": 316.4996,
+              "lo": 292.9384,
+              "point": 306.1372
+            },
+            "f05": {
+              "hi": 0.7311,
+              "lo": 0.7052,
+              "point": 0.7174
+            },
+            "f05_best_fixed_in_sample": 0.7742,
+            "f05_best_z_in_sample": 0.7572,
+            "pairs": 39631,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.6923,
+              "lo": 0.6635,
+              "point": 0.6769
+            },
+            "recall": {
+              "hi": 0.9477,
+              "lo": 0.9382,
+              "point": 0.9432
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9403,
+              "lo": 0.9348,
+              "point": 0.9374
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 2.0,
+            "cost_3_to_1": {
+              "hi": 211.3482,
+              "lo": 191.4251,
+              "point": 202.3115
+            },
+            "f05": {
+              "hi": 0.8267,
+              "lo": 0.8026,
+              "point": 0.8143
+            },
+            "f05_best_fixed_in_sample": 0.8675,
+            "f05_best_z_in_sample": 0.8582,
+            "pairs": 39628,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.7969,
+              "lo": 0.7685,
+              "point": 0.7824
+            },
+            "recall": {
+              "hi": 0.9759,
+              "lo": 0.9695,
+              "point": 0.9729
+            }
+          },
+          "cutoff_m": 5,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9543,
+              "lo": 0.9501,
+              "point": 0.9521
+            },
+            "best_fixed_m_in_sample": 15,
+            "best_z_in_sample": 2.4,
+            "cost_3_to_1": {
+              "hi": 129.3665,
+              "lo": 115.6506,
+              "point": 123.2788
+            },
+            "f05": {
+              "hi": 0.9159,
+              "lo": 0.8998,
+              "point": 0.9082
+            },
+            "f05_best_fixed_in_sample": 0.9148,
+            "f05_best_z_in_sample": 0.9161,
+            "pairs": 39629,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.9063,
+              "lo": 0.8866,
+              "point": 0.8965
+            },
+            "recall": {
+              "hi": 0.9625,
+              "lo": 0.9543,
+              "point": 0.9586
+            }
+          },
+          "value": [
+            0.5,
+            3.0
+          ]
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.8642,
+              "lo": 0.856,
+              "point": 0.8601
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 548.8364,
+              "lo": 516.4798,
+              "point": 532.3192
+            },
+            "f05": {
+              "hi": 0.5574,
+              "lo": 0.5326,
+              "point": 0.5457
+            },
+            "f05_best_fixed_in_sample": 0.6586,
+            "f05_best_z_in_sample": 0.622,
+            "pairs": 52892,
+            "positives": 13711,
+            "precision": {
+              "hi": 0.5054,
+              "lo": 0.4804,
+              "point": 0.4935
+            },
+            "recall": {
+              "hi": 0.9506,
+              "lo": 0.9408,
+              "point": 0.9455
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9049,
+              "lo": 0.898,
+              "point": 0.9015
+            },
+            "best_fixed_m_in_sample": 20,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 376.4381,
+              "lo": 350.6093,
+              "point": 363.2706
+            },
+            "f05": {
+              "hi": 0.6789,
+              "lo": 0.6544,
+              "point": 0.6663
+            },
+            "f05_best_fixed_in_sample": 0.7766,
+            "f05_best_z_in_sample": 0.7658,
+            "pairs": 52948,
+            "positives": 13711,
+            "precision": {
+              "hi": 0.6311,
+              "lo": 0.605,
+              "point": 0.6177
+            },
+            "recall": {
+              "hi": 0.9748,
+              "lo": 0.9691,
+              "point": 0.9721
+            }
+          },
+          "cutoff_m": 0,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9356,
+              "lo": 0.9297,
+              "point": 0.933
+            },
+            "best_fixed_m_in_sample": 15,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 225.8149,
+              "lo": 206.6412,
+              "point": 215.4872
+            },
+            "f05": {
+              "hi": 0.8246,
+              "lo": 0.8044,
+              "point": 0.8147
+            },
+            "f05_best_fixed_in_sample": 0.8564,
+            "f05_best_z_in_sample": 0.8565,
+            "pairs": 52912,
+            "positives": 13711,
+            "precision": {
+              "hi": 0.7967,
+              "lo": 0.7732,
+              "point": 0.785
+            },
+            "recall": {
+              "hi": 0.9631,
+              "lo": 0.9557,
+              "point": 0.9597
+            }
+          },
+          "value": [
+            0.8,
+            6.0
+          ]
+        }
+      ]
+    },
+    "popularity": {
+      "meaning": "reports per hazard",
+      "points": [
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9151,
+              "lo": 0.9088,
+              "point": 0.9118
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 1.8,
+            "cost_3_to_1": {
+              "hi": 316.4996,
+              "lo": 292.9384,
+              "point": 306.1372
+            },
+            "f05": {
+              "hi": 0.7311,
+              "lo": 0.7052,
+              "point": 0.7174
+            },
+            "f05_best_fixed_in_sample": 0.7742,
+            "f05_best_z_in_sample": 0.7572,
+            "pairs": 39631,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.6923,
+              "lo": 0.6635,
+              "point": 0.6769
+            },
+            "recall": {
+              "hi": 0.9477,
+              "lo": 0.9382,
+              "point": 0.9432
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9403,
+              "lo": 0.9348,
+              "point": 0.9374
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 2.0,
+            "cost_3_to_1": {
+              "hi": 211.3482,
+              "lo": 191.4251,
+              "point": 202.3115
+            },
+            "f05": {
+              "hi": 0.8267,
+              "lo": 0.8026,
+              "point": 0.8143
+            },
+            "f05_best_fixed_in_sample": 0.8675,
+            "f05_best_z_in_sample": 0.8582,
+            "pairs": 39628,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.7969,
+              "lo": 0.7685,
+              "point": 0.7824
+            },
+            "recall": {
+              "hi": 0.9759,
+              "lo": 0.9695,
+              "point": 0.9729
+            }
+          },
+          "cutoff_m": 5,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9543,
+              "lo": 0.9501,
+              "point": 0.9521
+            },
+            "best_fixed_m_in_sample": 15,
+            "best_z_in_sample": 2.4,
+            "cost_3_to_1": {
+              "hi": 129.3665,
+              "lo": 115.6506,
+              "point": 123.2788
+            },
+            "f05": {
+              "hi": 0.9159,
+              "lo": 0.8998,
+              "point": 0.9082
+            },
+            "f05_best_fixed_in_sample": 0.9148,
+            "f05_best_z_in_sample": 0.9161,
+            "pairs": 39629,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.9063,
+              "lo": 0.8866,
+              "point": 0.8965
+            },
+            "recall": {
+              "hi": 0.9625,
+              "lo": 0.9543,
+              "point": 0.9586
+            }
+          },
+          "value": "geometric, mean 1.6"
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.8736,
+              "lo": 0.8652,
+              "point": 0.869
+            },
+            "best_fixed_m_in_sample": 40,
+            "best_z_in_sample": 2.6,
+            "cost_3_to_1": {
+              "hi": 240.2248,
+              "lo": 223.6275,
+              "point": 232.9048
+            },
+            "f05": {
+              "hi": 0.9224,
+              "lo": 0.9068,
+              "point": 0.9147
+            },
+            "f05_best_fixed_in_sample": 0.9113,
+            "f05_best_z_in_sample": 0.9169,
+            "pairs": 307077,
+            "positives": 222427,
+            "precision": {
+              "hi": 0.9175,
+              "lo": 0.8987,
+              "point": 0.9083
+            },
+            "recall": {
+              "hi": 0.9446,
+              "lo": 0.9385,
+              "point": 0.9415
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.8925,
+              "lo": 0.8838,
+              "point": 0.8879
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 2.7,
+            "cost_3_to_1": {
+              "hi": 166.6184,
+              "lo": 154.8014,
+              "point": 161.5763
+            },
+            "f05": {
+              "hi": 0.9562,
+              "lo": 0.9439,
+              "point": 0.9501
+            },
+            "f05_best_fixed_in_sample": 0.9587,
+            "f05_best_z_in_sample": 0.9515,
+            "pairs": 307141,
+            "positives": 222428,
+            "precision": {
+              "hi": 0.9523,
+              "lo": 0.9371,
+              "point": 0.9448
+            },
+            "recall": {
+              "hi": 0.9734,
+              "lo": 0.9704,
+              "point": 0.9719
+            }
+          },
+          "cutoff_m": null,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9004,
+              "lo": 0.8917,
+              "point": 0.8958
+            },
+            "best_fixed_m_in_sample": 20,
+            "best_z_in_sample": 3.3,
+            "cost_3_to_1": {
+              "hi": 116.2478,
+              "lo": 106.8609,
+              "point": 111.8428
+            },
+            "f05": {
+              "hi": 0.9763,
+              "lo": 0.9673,
+              "point": 0.9718
+            },
+            "f05_best_fixed_in_sample": 0.975,
+            "f05_best_z_in_sample": 0.9726,
+            "pairs": 307252,
+            "positives": 222428,
+            "precision": {
+              "hi": 0.9808,
+              "lo": 0.9692,
+              "point": 0.9749
+            },
+            "recall": {
+              "hi": 0.9612,
+              "lo": 0.9573,
+              "point": 0.9592
+            }
+          },
+          "value": "heavy tail, mean 3"
+        }
+      ]
+    },
+    "standoff_max_m": {
+      "meaning": "the reporter stands 1 to this many metres from the hazard (the matcher assumes about 4 m)",
+      "points": [
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9174,
+              "lo": 0.9113,
+              "point": 0.9142
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 1.7,
+            "cost_3_to_1": {
+              "hi": 312.5292,
+              "lo": 289.4626,
+              "point": 302.1322
+            },
+            "f05": {
+              "hi": 0.7337,
+              "lo": 0.7068,
+              "point": 0.7196
+            },
+            "f05_best_fixed_in_sample": 0.7872,
+            "f05_best_z_in_sample": 0.7698,
+            "pairs": 39638,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.6938,
+              "lo": 0.6641,
+              "point": 0.6781
+            },
+            "recall": {
+              "hi": 0.9572,
+              "lo": 0.9487,
+              "point": 0.9532
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9446,
+              "lo": 0.9398,
+              "point": 0.9421
+            },
+            "best_fixed_m_in_sample": 20,
+            "best_z_in_sample": 1.8,
+            "cost_3_to_1": {
+              "hi": 200.785,
+              "lo": 182.5712,
+              "point": 192.5468
+            },
+            "f05": {
+              "hi": 0.8299,
+              "lo": 0.8061,
+              "point": 0.818
+            },
+            "f05_best_fixed_in_sample": 0.8948,
+            "f05_best_z_in_sample": 0.8838,
+            "pairs": 39602,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.7976,
+              "lo": 0.7706,
+              "point": 0.7841
+            },
+            "recall": {
+              "hi": 0.9908,
+              "lo": 0.987,
+              "point": 0.989
+            }
+          },
+          "cutoff_m": 5,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9649,
+              "lo": 0.9612,
+              "point": 0.9628
+            },
+            "best_fixed_m_in_sample": 15,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 110.8391,
+              "lo": 99.2749,
+              "point": 105.3133
+            },
+            "f05": {
+              "hi": 0.9273,
+              "lo": 0.9111,
+              "point": 0.9189
+            },
+            "f05_best_fixed_in_sample": 0.9513,
+            "f05_best_z_in_sample": 0.9513,
+            "pairs": 39619,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.9111,
+              "lo": 0.8917,
+              "point": 0.9009
+            },
+            "recall": {
+              "hi": 0.9993,
+              "lo": 0.998,
+              "point": 0.9987
+            }
+          },
+          "value": 3
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9172,
+              "lo": 0.9115,
+              "point": 0.9141
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 1.8,
+            "cost_3_to_1": {
+              "hi": 311.5625,
+              "lo": 288.8593,
+              "point": 301.4838
+            },
+            "f05": {
+              "hi": 0.7338,
+              "lo": 0.7075,
+              "point": 0.7201
+            },
+            "f05_best_fixed_in_sample": 0.7837,
+            "f05_best_z_in_sample": 0.7678,
+            "pairs": 39636,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.6937,
+              "lo": 0.6648,
+              "point": 0.6787
+            },
+            "recall": {
+              "hi": 0.9568,
+              "lo": 0.9483,
+              "point": 0.9526
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9437,
+              "lo": 0.939,
+              "point": 0.9412
+            },
+            "best_fixed_m_in_sample": 20,
+            "best_z_in_sample": 1.8,
+            "cost_3_to_1": {
+              "hi": 203.7805,
+              "lo": 184.9153,
+              "point": 195.255
+            },
+            "f05": {
+              "hi": 0.8306,
+              "lo": 0.8063,
+              "point": 0.8181
+            },
+            "f05_best_fixed_in_sample": 0.8901,
+            "f05_best_z_in_sample": 0.8784,
+            "pairs": 39628,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.7987,
+              "lo": 0.7709,
+              "point": 0.7845
+            },
+            "recall": {
+              "hi": 0.9896,
+              "lo": 0.9853,
+              "point": 0.9876
+            }
+          },
+          "cutoff_m": 5,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9643,
+              "lo": 0.9604,
+              "point": 0.962
+            },
+            "best_fixed_m_in_sample": 15,
+            "best_z_in_sample": 1.5,
+            "cost_3_to_1": {
+              "hi": 111.5059,
+              "lo": 99.6348,
+              "point": 106.3814
+            },
+            "f05": {
+              "hi": 0.9266,
+              "lo": 0.9096,
+              "point": 0.918
+            },
+            "f05_best_fixed_in_sample": 0.9475,
+            "f05_best_z_in_sample": 0.9475,
+            "pairs": 39625,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.9108,
+              "lo": 0.8905,
+              "point": 0.9004
+            },
+            "recall": {
+              "hi": 0.9971,
+              "lo": 0.9944,
+              "point": 0.9958
+            }
+          },
+          "value": 5
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9151,
+              "lo": 0.9088,
+              "point": 0.9118
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 1.8,
+            "cost_3_to_1": {
+              "hi": 316.4996,
+              "lo": 292.9384,
+              "point": 306.1372
+            },
+            "f05": {
+              "hi": 0.7311,
+              "lo": 0.7052,
+              "point": 0.7174
+            },
+            "f05_best_fixed_in_sample": 0.7742,
+            "f05_best_z_in_sample": 0.7572,
+            "pairs": 39631,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.6923,
+              "lo": 0.6635,
+              "point": 0.6769
+            },
+            "recall": {
+              "hi": 0.9477,
+              "lo": 0.9382,
+              "point": 0.9432
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9403,
+              "lo": 0.9348,
+              "point": 0.9374
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 2.0,
+            "cost_3_to_1": {
+              "hi": 211.3482,
+              "lo": 191.4251,
+              "point": 202.3115
+            },
+            "f05": {
+              "hi": 0.8267,
+              "lo": 0.8026,
+              "point": 0.8143
+            },
+            "f05_best_fixed_in_sample": 0.8675,
+            "f05_best_z_in_sample": 0.8582,
+            "pairs": 39628,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.7969,
+              "lo": 0.7685,
+              "point": 0.7824
+            },
+            "recall": {
+              "hi": 0.9759,
+              "lo": 0.9695,
+              "point": 0.9729
+            }
+          },
+          "cutoff_m": 5,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9543,
+              "lo": 0.9501,
+              "point": 0.9521
+            },
+            "best_fixed_m_in_sample": 15,
+            "best_z_in_sample": 2.4,
+            "cost_3_to_1": {
+              "hi": 129.3665,
+              "lo": 115.6506,
+              "point": 123.2788
+            },
+            "f05": {
+              "hi": 0.9159,
+              "lo": 0.8998,
+              "point": 0.9082
+            },
+            "f05_best_fixed_in_sample": 0.9148,
+            "f05_best_z_in_sample": 0.9161,
+            "pairs": 39629,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.9063,
+              "lo": 0.8866,
+              "point": 0.8965
+            },
+            "recall": {
+              "hi": 0.9625,
+              "lo": 0.9543,
+              "point": 0.9586
+            }
+          },
+          "value": 10
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9115,
+              "lo": 0.9056,
+              "point": 0.9082
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 1.9,
+            "cost_3_to_1": {
+              "hi": 321.5404,
+              "lo": 298.3834,
+              "point": 311.2484
+            },
+            "f05": {
+              "hi": 0.7281,
+              "lo": 0.7025,
+              "point": 0.7139
+            },
+            "f05_best_fixed_in_sample": 0.7587,
+            "f05_best_z_in_sample": 0.7425,
+            "pairs": 39587,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.6913,
+              "lo": 0.6623,
+              "point": 0.6752
+            },
+            "recall": {
+              "hi": 0.9325,
+              "lo": 0.921,
+              "point": 0.9266
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9313,
+              "lo": 0.9259,
+              "point": 0.9283
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 2.2,
+            "cost_3_to_1": {
+              "hi": 225.7759,
+              "lo": 205.6142,
+              "point": 216.8059
+            },
+            "f05": {
+              "hi": 0.8176,
+              "lo": 0.793,
+              "point": 0.8048
+            },
+            "f05_best_fixed_in_sample": 0.8429,
+            "f05_best_z_in_sample": 0.8317,
+            "pairs": 39586,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.7931,
+              "lo": 0.7638,
+              "point": 0.7778
+            },
+            "recall": {
+              "hi": 0.9387,
+              "lo": 0.9287,
+              "point": 0.9344
+            }
+          },
+          "cutoff_m": 5,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9301,
+              "lo": 0.9252,
+              "point": 0.9273
+            },
+            "best_fixed_m_in_sample": 20,
+            "best_z_in_sample": 3.2,
+            "cost_3_to_1": {
+              "hi": 171.0347,
+              "lo": 156.1564,
+              "point": 164.1683
+            },
+            "f05": {
+              "hi": 0.8851,
+              "lo": 0.869,
+              "point": 0.8766
+            },
+            "f05_best_fixed_in_sample": 0.8822,
+            "f05_best_z_in_sample": 0.8772,
+            "pairs": 39571,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.8959,
+              "lo": 0.8754,
+              "point": 0.885
+            },
+            "recall": {
+              "hi": 0.8513,
+              "lo": 0.8366,
+              "point": 0.8442
+            }
+          },
+          "value": 15
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9059,
+              "lo": 0.8993,
+              "point": 0.9023
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 2.2,
+            "cost_3_to_1": {
+              "hi": 332.9885,
+              "lo": 308.9062,
+              "point": 322.1192
+            },
+            "f05": {
+              "hi": 0.7216,
+              "lo": 0.6947,
+              "point": 0.7072
+            },
+            "f05_best_fixed_in_sample": 0.737,
+            "f05_best_z_in_sample": 0.7236,
+            "pairs": 39545,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.6882,
+              "lo": 0.6573,
+              "point": 0.6715
+            },
+            "recall": {
+              "hi": 0.904,
+              "lo": 0.8913,
+              "point": 0.8982
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.919,
+              "lo": 0.9129,
+              "point": 0.9157
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 2.6,
+            "cost_3_to_1": {
+              "hi": 249.3577,
+              "lo": 227.6108,
+              "point": 238.7001
+            },
+            "f05": {
+              "hi": 0.803,
+              "lo": 0.7796,
+              "point": 0.7904
+            },
+            "f05_best_fixed_in_sample": 0.8119,
+            "f05_best_z_in_sample": 0.8003,
+            "pairs": 39545,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.786,
+              "lo": 0.7582,
+              "point": 0.7713
+            },
+            "recall": {
+              "hi": 0.8839,
+              "lo": 0.8704,
+              "point": 0.8776
+            }
+          },
+          "cutoff_m": 5,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9021,
+              "lo": 0.8963,
+              "point": 0.8992
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 3.8,
+            "cost_3_to_1": {
+              "hi": 219.641,
+              "lo": 204.5537,
+              "point": 212.1143
+            },
+            "f05": {
+              "hi": 0.8339,
+              "lo": 0.8165,
+              "point": 0.8254
+            },
+            "f05_best_fixed_in_sample": 0.8437,
+            "f05_best_z_in_sample": 0.8385,
+            "pairs": 39559,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.8779,
+              "lo": 0.8548,
+              "point": 0.866
+            },
+            "recall": {
+              "hi": 0.7026,
+              "lo": 0.6863,
+              "point": 0.695
+            }
+          },
+          "value": 20
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.8913,
+              "lo": 0.8845,
+              "point": 0.8874
+            },
+            "best_fixed_m_in_sample": 40,
+            "best_z_in_sample": 2.6,
+            "cost_3_to_1": {
+              "hi": 362.0043,
+              "lo": 337.0711,
+              "point": 350.6503
+            },
+            "f05": {
+              "hi": 0.7004,
+              "lo": 0.6742,
+              "point": 0.6865
+            },
+            "f05_best_fixed_in_sample": 0.7004,
+            "f05_best_z_in_sample": 0.6884,
+            "pairs": 39485,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.676,
+              "lo": 0.6458,
+              "point": 0.6598
+            },
+            "recall": {
+              "hi": 0.8257,
+              "lo": 0.811,
+              "point": 0.8189
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.8895,
+              "lo": 0.8838,
+              "point": 0.8865
+            },
+            "best_fixed_m_in_sample": 40,
+            "best_z_in_sample": 3.2,
+            "cost_3_to_1": {
+              "hi": 303.1141,
+              "lo": 281.8233,
+              "point": 293.3974
+            },
+            "f05": {
+              "hi": 0.7533,
+              "lo": 0.7287,
+              "point": 0.7396
+            },
+            "f05_best_fixed_in_sample": 0.7481,
+            "f05_best_z_in_sample": 0.7412,
+            "pairs": 39500,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.7615,
+              "lo": 0.7313,
+              "point": 0.7442
+            },
+            "recall": {
+              "hi": 0.7299,
+              "lo": 0.7124,
+              "point": 0.7215
+            }
+          },
+          "cutoff_m": 0,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.8558,
+              "lo": 0.8488,
+              "point": 0.8521
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 4.0,
+            "cost_3_to_1": {
+              "hi": 300.965,
+              "lo": 284.7797,
+              "point": 293.1304
+            },
+            "f05": {
+              "hi": 0.7088,
+              "lo": 0.6865,
+              "point": 0.6966
+            },
+            "f05_best_fixed_in_sample": 0.7683,
+            "f05_best_z_in_sample": 0.751,
+            "pairs": 39491,
+            "positives": 13758,
+            "precision": {
+              "hi": 0.8322,
+              "lo": 0.8014,
+              "point": 0.8137
+            },
+            "recall": {
+              "hi": 0.4512,
+              "lo": 0.4317,
+              "point": 0.4421
+            }
+          },
+          "value": 30
+        }
+      ]
+    },
+    "uniform_density": {
+      "meaning": "hazards with no clustering at all (Poisson), at this many per km2: the main run's densities without the bunching",
+      "points": [
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9603,
+              "lo": 0.9565,
+              "point": 0.9585
+            },
+            "best_fixed_m_in_sample": 50,
+            "best_z_in_sample": 3.1,
+            "cost_3_to_1": {
+              "hi": 94.8403,
+              "lo": 85.4933,
+              "point": 90.1898
+            },
+            "f05": {
+              "hi": 0.9541,
+              "lo": 0.9445,
+              "point": 0.9491
+            },
+            "f05_best_fixed_in_sample": 0.9449,
+            "f05_best_z_in_sample": 0.9491,
+            "pairs": 20127,
+            "positives": 14316,
+            "precision": {
+              "hi": 0.9568,
+              "lo": 0.945,
+              "point": 0.9509
+            },
+            "recall": {
+              "hi": 0.9463,
+              "lo": 0.9374,
+              "point": 0.9418
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9679,
+              "lo": 0.9641,
+              "point": 0.9661
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 3.0,
+            "cost_3_to_1": {
+              "hi": 67.7403,
+              "lo": 60.5446,
+              "point": 64.2854
+            },
+            "f05": {
+              "hi": 0.9771,
+              "lo": 0.9704,
+              "point": 0.974
+            },
+            "f05_best_fixed_in_sample": 0.9803,
+            "f05_best_z_in_sample": 0.974,
+            "pairs": 20127,
+            "positives": 14316,
+            "precision": {
+              "hi": 0.9788,
+              "lo": 0.97,
+              "point": 0.9748
+            },
+            "recall": {
+              "hi": 0.974,
+              "lo": 0.9676,
+              "point": 0.9707
+            }
+          },
+          "cutoff_m": null,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9675,
+              "lo": 0.9637,
+              "point": 0.9654
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 3.7,
+            "cost_3_to_1": {
+              "hi": 59.6504,
+              "lo": 53.5297,
+              "point": 56.8299
+            },
+            "f05": {
+              "hi": 0.9861,
+              "lo": 0.9817,
+              "point": 0.984
+            },
+            "f05_best_fixed_in_sample": 0.9892,
+            "f05_best_z_in_sample": 0.9882,
+            "pairs": 20142,
+            "positives": 14316,
+            "precision": {
+              "hi": 0.9937,
+              "lo": 0.9888,
+              "point": 0.9913
+            },
+            "recall": {
+              "hi": 0.9597,
+              "lo": 0.9519,
+              "point": 0.9559
+            }
+          },
+          "value": 20
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.945,
+              "lo": 0.9403,
+              "point": 0.9428
+            },
+            "best_fixed_m_in_sample": 40,
+            "best_z_in_sample": 2.4,
+            "cost_3_to_1": {
+              "hi": 170.2725,
+              "lo": 156.0274,
+              "point": 163.2414
+            },
+            "f05": {
+              "hi": 0.8825,
+              "lo": 0.8667,
+              "point": 0.8747
+            },
+            "f05_best_fixed_in_sample": 0.8883,
+            "f05_best_z_in_sample": 0.8843,
+            "pairs": 30663,
+            "positives": 13376,
+            "precision": {
+              "hi": 0.8677,
+              "lo": 0.8488,
+              "point": 0.8586
+            },
+            "recall": {
+              "hi": 0.9504,
+              "lo": 0.9407,
+              "point": 0.9457
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9597,
+              "lo": 0.956,
+              "point": 0.958
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 2.5,
+            "cost_3_to_1": {
+              "hi": 107.6922,
+              "lo": 97.3447,
+              "point": 102.3281
+            },
+            "f05": {
+              "hi": 0.9415,
+              "lo": 0.9296,
+              "point": 0.9361
+            },
+            "f05_best_fixed_in_sample": 0.9496,
+            "f05_best_z_in_sample": 0.9428,
+            "pairs": 30682,
+            "positives": 13376,
+            "precision": {
+              "hi": 0.9343,
+              "lo": 0.9194,
+              "point": 0.9276
+            },
+            "recall": {
+              "hi": 0.9748,
+              "lo": 0.969,
+              "point": 0.9718
+            }
+          },
+          "cutoff_m": 30,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9636,
+              "lo": 0.9602,
+              "point": 0.962
+            },
+            "best_fixed_m_in_sample": 20,
+            "best_z_in_sample": 3.2,
+            "cost_3_to_1": {
+              "hi": 78.1481,
+              "lo": 70.5564,
+              "point": 74.2893
+            },
+            "f05": {
+              "hi": 0.9713,
+              "lo": 0.9637,
+              "point": 0.9676
+            },
+            "f05_best_fixed_in_sample": 0.9722,
+            "f05_best_z_in_sample": 0.9682,
+            "pairs": 30773,
+            "positives": 13376,
+            "precision": {
+              "hi": 0.9742,
+              "lo": 0.9651,
+              "point": 0.9697
+            },
+            "recall": {
+              "hi": 0.9631,
+              "lo": 0.9554,
+              "point": 0.9593
+            }
+          },
+          "value": 60
+        },
+        {
+          "canyon": {
+            "bcubed_f1": {
+              "hi": 0.9163,
+              "lo": 0.9106,
+              "point": 0.9137
+            },
+            "best_fixed_m_in_sample": 30,
+            "best_z_in_sample": 1.7,
+            "cost_3_to_1": {
+              "hi": 312.5059,
+              "lo": 291.6612,
+              "point": 301.3787
+            },
+            "f05": {
+              "hi": 0.7508,
+              "lo": 0.7317,
+              "point": 0.7412
+            },
+            "f05_best_fixed_in_sample": 0.8136,
+            "f05_best_z_in_sample": 0.7848,
+            "pairs": 59438,
+            "positives": 14260,
+            "precision": {
+              "hi": 0.7139,
+              "lo": 0.6927,
+              "point": 0.7035
+            },
+            "recall": {
+              "hi": 0.9479,
+              "lo": 0.9392,
+              "point": 0.9433
+            }
+          },
+          "city": {
+            "bcubed_f1": {
+              "hi": 0.9474,
+              "lo": 0.9427,
+              "point": 0.9453
+            },
+            "best_fixed_m_in_sample": 25,
+            "best_z_in_sample": 2.1,
+            "cost_3_to_1": {
+              "hi": 174.2938,
+              "lo": 159.3565,
+              "point": 165.5969
+            },
+            "f05": {
+              "hi": 0.8693,
+              "lo": 0.8527,
+              "point": 0.8606
+            },
+            "f05_best_fixed_in_sample": 0.9065,
+            "f05_best_z_in_sample": 0.8946,
+            "pairs": 59506,
+            "positives": 14260,
+            "precision": {
+              "hi": 0.8466,
+              "lo": 0.8271,
+              "point": 0.8366
+            },
+            "recall": {
+              "hi": 0.9756,
+              "lo": 0.9689,
+              "point": 0.9724
+            }
+          },
+          "cutoff_m": 10,
+          "open_sky": {
+            "bcubed_f1": {
+              "hi": 0.9605,
+              "lo": 0.9565,
+              "point": 0.9586
+            },
+            "best_fixed_m_in_sample": 20,
+            "best_z_in_sample": 2.8,
+            "cost_3_to_1": {
+              "hi": 100.1497,
+              "lo": 90.332,
+              "point": 95.0663
+            },
+            "f05": {
+              "hi": 0.9478,
+              "lo": 0.9365,
+              "point": 0.9426
+            },
+            "f05_best_fixed_in_sample": 0.9472,
+            "f05_best_z_in_sample": 0.9437,
+            "pairs": 59528,
+            "positives": 14260,
+            "precision": {
+              "hi": 0.9443,
+              "lo": 0.9307,
+              "point": 0.9382
+            },
+            "recall": {
+              "hi": 0.9638,
+              "lo": 0.9562,
+              "point": 0.9606
+            }
+          },
+          "value": 150
+        }
+      ]
+    }
+  }
+}

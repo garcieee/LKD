@@ -1,0 +1,1269 @@
+{
+  "meta": {
+    "git_commit": "3dc677f",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T13:04:38+00:00"
+  },
+  "scopes": {
+    "all densities": {
+      "recommended_z": {
+        "cutoff_m": 10,
+        "test_policy": {
+          "auto_merge_precision": {
+            "hi": 0.9061,
+            "lo": 0.8939,
+            "point": 0.9001
+          },
+          "auto_merge_recall": {
+            "hi": 0.4483,
+            "lo": 0.4401,
+            "point": 0.4442
+          },
+          "shipped_precision_without_cutoff": {
+            "hi": 0.8419,
+            "lo": 0.8276,
+            "point": 0.8344
+          },
+          "shipped_recall_without_cutoff": {
+            "hi": 0.8451,
+            "lo": 0.8368,
+            "point": 0.841
+          },
+          "true_pairs_left_to_suggestions": {
+            "hi": 0.464,
+            "lo": 0.4558,
+            "point": 0.4599
+          },
+          "withheld_merges_that_were_right": {
+            "hi": 0.7808,
+            "lo": 0.7627,
+            "point": 0.7714
+          },
+          "withheld_share_of_merges": {
+            "hi": 0.5146,
+            "lo": 0.5061,
+            "point": 0.5104
+          }
+        },
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 15868,
+            "precision": 0.9331,
+            "precision_ci": {
+              "hi": 0.9393,
+              "lo": 0.9266,
+              "point": 0.9331
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 32735,
+            "precision": 0.8942,
+            "precision_ci": {
+              "hi": 0.9008,
+              "lo": 0.888,
+              "point": 0.8942
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 24469,
+            "precision": 0.8348,
+            "precision_ci": {
+              "hi": 0.8431,
+              "lo": 0.8258,
+              "point": 0.8348
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 11431,
+            "precision": 0.8022,
+            "precision_ci": {
+              "hi": 0.8136,
+              "lo": 0.7908,
+              "point": 0.8022
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 6397,
+            "precision": 0.7474,
+            "precision_ci": {
+              "hi": 0.764,
+              "lo": 0.7304,
+              "point": 0.7474
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 2982,
+            "precision": 0.6559,
+            "precision_ci": {
+              "hi": 0.682,
+              "lo": 0.6314,
+              "point": 0.6559
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 3966,
+            "precision": 0.6288,
+            "precision_ci": {
+              "hi": 0.6528,
+              "lo": 0.6039,
+              "point": 0.6288
+            }
+          }
+        ],
+        "validation_trade_off": [
+          {
+            "cutoff_m": 5,
+            "precision": 0.9331,
+            "recall": 0.1498
+          },
+          {
+            "cutoff_m": 10,
+            "precision": 0.9069,
+            "recall": 0.446
+          },
+          {
+            "cutoff_m": 15,
+            "precision": 0.8828,
+            "recall": 0.6526
+          },
+          {
+            "cutoff_m": 20,
+            "precision": 0.8719,
+            "recall": 0.7454
+          },
+          {
+            "cutoff_m": 30,
+            "precision": 0.8631,
+            "recall": 0.7938
+          },
+          {
+            "cutoff_m": 40,
+            "precision": 0.8565,
+            "recall": 0.8136
+          },
+          {
+            "cutoff_m": null,
+            "precision": 0.8473,
+            "recall": 0.8388
+          }
+        ]
+      },
+      "shipped_z": {
+        "cutoff_m": 5,
+        "test_policy": {
+          "auto_merge_precision": {
+            "hi": 0.9099,
+            "lo": 0.8957,
+            "point": 0.9026
+          },
+          "auto_merge_recall": {
+            "hi": 0.1668,
+            "lo": 0.1612,
+            "point": 0.1641
+          },
+          "shipped_precision_without_cutoff": {
+            "hi": 0.7828,
+            "lo": 0.7661,
+            "point": 0.774
+          },
+          "shipped_recall_without_cutoff": {
+            "hi": 0.9603,
+            "lo": 0.956,
+            "point": 0.9582
+          },
+          "true_pairs_left_to_suggestions": {
+            "hi": 0.8289,
+            "lo": 0.823,
+            "point": 0.8259
+          },
+          "withheld_merges_that_were_right": {
+            "hi": 0.7613,
+            "lo": 0.7436,
+            "point": 0.7519
+          },
+          "withheld_share_of_merges": {
+            "hi": 0.8559,
+            "lo": 0.8505,
+            "point": 0.8532
+          }
+        },
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 18084,
+            "precision": 0.908,
+            "precision_ci": {
+              "hi": 0.915,
+              "lo": 0.9005,
+              "point": 0.908
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 41619,
+            "precision": 0.8388,
+            "precision_ci": {
+              "hi": 0.8464,
+              "lo": 0.8312,
+              "point": 0.8388
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 31239,
+            "precision": 0.7547,
+            "precision_ci": {
+              "hi": 0.7644,
+              "lo": 0.7446,
+              "point": 0.7547
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 14083,
+            "precision": 0.7076,
+            "precision_ci": {
+              "hi": 0.7208,
+              "lo": 0.6944,
+              "point": 0.7076
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 7994,
+            "precision": 0.6531,
+            "precision_ci": {
+              "hi": 0.6707,
+              "lo": 0.6348,
+              "point": 0.6531
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 3398,
+            "precision": 0.6248,
+            "precision_ci": {
+              "hi": 0.6496,
+              "lo": 0.6013,
+              "point": 0.6248
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 3981,
+            "precision": 0.6285,
+            "precision_ci": {
+              "hi": 0.6525,
+              "lo": 0.6033,
+              "point": 0.6285
+            }
+          }
+        ],
+        "validation_trade_off": [
+          {
+            "cutoff_m": 5,
+            "precision": 0.908,
+            "recall": 0.1661
+          },
+          {
+            "cutoff_m": 10,
+            "precision": 0.8597,
+            "recall": 0.5193
+          },
+          {
+            "cutoff_m": 15,
+            "precision": 0.8236,
+            "recall": 0.7578
+          },
+          {
+            "cutoff_m": 20,
+            "precision": 0.8081,
+            "recall": 0.8587
+          },
+          {
+            "cutoff_m": 30,
+            "precision": 0.7971,
+            "recall": 0.9115
+          },
+          {
+            "cutoff_m": 40,
+            "precision": 0.7921,
+            "recall": 0.933
+          },
+          {
+            "cutoff_m": null,
+            "precision": 0.7867,
+            "recall": 0.9583
+          }
+        ]
+      }
+    },
+    "density 150": {
+      "recommended_z": {
+        "cutoff_m": 10,
+        "test_policy": {
+          "auto_merge_precision": {
+            "hi": 0.8784,
+            "lo": 0.8543,
+            "point": 0.8665
+          },
+          "auto_merge_recall": {
+            "hi": 0.4477,
+            "lo": 0.4334,
+            "point": 0.4406
+          },
+          "shipped_precision_without_cutoff": {
+            "hi": 0.7948,
+            "lo": 0.7683,
+            "point": 0.7814
+          },
+          "shipped_recall_without_cutoff": {
+            "hi": 0.8484,
+            "lo": 0.8347,
+            "point": 0.8418
+          },
+          "true_pairs_left_to_suggestions": {
+            "hi": 0.4703,
+            "lo": 0.4559,
+            "point": 0.4632
+          },
+          "withheld_merges_that_were_right": {
+            "hi": 0.7213,
+            "lo": 0.6896,
+            "point": 0.7053
+          },
+          "withheld_share_of_merges": {
+            "hi": 0.5349,
+            "lo": 0.5207,
+            "point": 0.528
+          }
+        },
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 5275,
+            "precision": 0.9139,
+            "precision_ci": {
+              "hi": 0.9256,
+              "lo": 0.9023,
+              "point": 0.9139
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 11012,
+            "precision": 0.8683,
+            "precision_ci": {
+              "hi": 0.8792,
+              "lo": 0.8569,
+              "point": 0.8683
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 8355,
+            "precision": 0.7877,
+            "precision_ci": {
+              "hi": 0.8026,
+              "lo": 0.7707,
+              "point": 0.7877
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 4025,
+            "precision": 0.7503,
+            "precision_ci": {
+              "hi": 0.7707,
+              "lo": 0.7301,
+              "point": 0.7503
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 2283,
+            "precision": 0.7043,
+            "precision_ci": {
+              "hi": 0.7293,
+              "lo": 0.6761,
+              "point": 0.7043
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 1161,
+            "precision": 0.5857,
+            "precision_ci": {
+              "hi": 0.6301,
+              "lo": 0.5462,
+              "point": 0.5857
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 1531,
+            "precision": 0.5323,
+            "precision_ci": {
+              "hi": 0.5739,
+              "lo": 0.4913,
+              "point": 0.5323
+            }
+          }
+        ],
+        "validation_trade_off": [
+          {
+            "cutoff_m": 5,
+            "precision": 0.9139,
+            "recall": 0.1489
+          },
+          {
+            "cutoff_m": 10,
+            "precision": 0.8831,
+            "recall": 0.4442
+          },
+          {
+            "cutoff_m": 15,
+            "precision": 0.8507,
+            "recall": 0.6475
+          },
+          {
+            "cutoff_m": 20,
+            "precision": 0.8366,
+            "recall": 0.7407
+          },
+          {
+            "cutoff_m": 30,
+            "precision": 0.8269,
+            "recall": 0.7904
+          },
+          {
+            "cutoff_m": 40,
+            "precision": 0.8182,
+            "recall": 0.8114
+          },
+          {
+            "cutoff_m": null,
+            "precision": 0.8052,
+            "recall": 0.8366
+          }
+        ]
+      },
+      "shipped_z": {
+        "cutoff_m": 5,
+        "test_policy": {
+          "auto_merge_precision": {
+            "hi": 0.8885,
+            "lo": 0.8618,
+            "point": 0.8748
+          },
+          "auto_merge_recall": {
+            "hi": 0.168,
+            "lo": 0.1579,
+            "point": 0.1627
+          },
+          "shipped_precision_without_cutoff": {
+            "hi": 0.7215,
+            "lo": 0.6926,
+            "point": 0.7076
+          },
+          "shipped_recall_without_cutoff": {
+            "hi": 0.9629,
+            "lo": 0.9562,
+            "point": 0.9596
+          },
+          "true_pairs_left_to_suggestions": {
+            "hi": 0.8326,
+            "lo": 0.8219,
+            "point": 0.8276
+          },
+          "withheld_merges_that_were_right": {
+            "hi": 0.6953,
+            "lo": 0.6653,
+            "point": 0.6811
+          },
+          "withheld_share_of_merges": {
+            "hi": 0.8672,
+            "lo": 0.8582,
+            "point": 0.8629
+          }
+        },
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 6032,
+            "precision": 0.8868,
+            "precision_ci": {
+              "hi": 0.8996,
+              "lo": 0.8741,
+              "point": 0.8868
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 14352,
+            "precision": 0.7994,
+            "precision_ci": {
+              "hi": 0.8123,
+              "lo": 0.787,
+              "point": 0.7994
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 11012,
+            "precision": 0.6926,
+            "precision_ci": {
+              "hi": 0.7094,
+              "lo": 0.6735,
+              "point": 0.6926
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 5134,
+            "precision": 0.6375,
+            "precision_ci": {
+              "hi": 0.6599,
+              "lo": 0.617,
+              "point": 0.6375
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 3008,
+            "precision": 0.5871,
+            "precision_ci": {
+              "hi": 0.613,
+              "lo": 0.5588,
+              "point": 0.5871
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 1340,
+            "precision": 0.5463,
+            "precision_ci": {
+              "hi": 0.5881,
+              "lo": 0.5094,
+              "point": 0.5463
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 1537,
+            "precision": 0.5316,
+            "precision_ci": {
+              "hi": 0.5746,
+              "lo": 0.4899,
+              "point": 0.5316
+            }
+          }
+        ],
+        "validation_trade_off": [
+          {
+            "cutoff_m": 5,
+            "precision": 0.8868,
+            "recall": 0.1652
+          },
+          {
+            "cutoff_m": 10,
+            "precision": 0.8253,
+            "recall": 0.5195
+          },
+          {
+            "cutoff_m": 15,
+            "precision": 0.7787,
+            "recall": 0.7551
+          },
+          {
+            "cutoff_m": 20,
+            "precision": 0.7589,
+            "recall": 0.8562
+          },
+          {
+            "cutoff_m": 30,
+            "precision": 0.7458,
+            "recall": 0.9107
+          },
+          {
+            "cutoff_m": 40,
+            "precision": 0.7393,
+            "recall": 0.9333
+          },
+          {
+            "cutoff_m": null,
+            "precision": 0.7317,
+            "recall": 0.9586
+          }
+        ]
+      }
+    },
+    "density 20": {
+      "recommended_z": {
+        "cutoff_m": 15,
+        "test_policy": {
+          "auto_merge_precision": {
+            "hi": 0.9174,
+            "lo": 0.8978,
+            "point": 0.9071
+          },
+          "auto_merge_recall": {
+            "hi": 0.6616,
+            "lo": 0.6457,
+            "point": 0.6534
+          },
+          "shipped_precision_without_cutoff": {
+            "hi": 0.8926,
+            "lo": 0.8712,
+            "point": 0.8821
+          },
+          "shipped_recall_without_cutoff": {
+            "hi": 0.8508,
+            "lo": 0.8353,
+            "point": 0.8429
+          },
+          "true_pairs_left_to_suggestions": {
+            "hi": 0.2217,
+            "lo": 0.2097,
+            "point": 0.2159
+          },
+          "withheld_merges_that_were_right": {
+            "hi": 0.822,
+            "lo": 0.7867,
+            "point": 0.8053
+          },
+          "withheld_share_of_merges": {
+            "hi": 0.2531,
+            "lo": 0.2391,
+            "point": 0.2462
+          }
+        },
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 5127,
+            "precision": 0.9526,
+            "precision_ci": {
+              "hi": 0.961,
+              "lo": 0.944,
+              "point": 0.9526
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 10380,
+            "precision": 0.9179,
+            "precision_ci": {
+              "hi": 0.9279,
+              "lo": 0.9082,
+              "point": 0.9179
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 7733,
+            "precision": 0.874,
+            "precision_ci": {
+              "hi": 0.8872,
+              "lo": 0.8596,
+              "point": 0.874
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 3505,
+            "precision": 0.8422,
+            "precision_ci": {
+              "hi": 0.8598,
+              "lo": 0.8247,
+              "point": 0.8422
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 1988,
+            "precision": 0.7827,
+            "precision_ci": {
+              "hi": 0.8118,
+              "lo": 0.7514,
+              "point": 0.7827
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 877,
+            "precision": 0.7218,
+            "precision_ci": {
+              "hi": 0.7647,
+              "lo": 0.6738,
+              "point": 0.7218
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 1137,
+            "precision": 0.7256,
+            "precision_ci": {
+              "hi": 0.7636,
+              "lo": 0.6889,
+              "point": 0.7256
+            }
+          }
+        ],
+        "validation_trade_off": [
+          {
+            "cutoff_m": 5,
+            "precision": 0.9526,
+            "recall": 0.1513
+          },
+          {
+            "cutoff_m": 10,
+            "precision": 0.9294,
+            "recall": 0.4466
+          },
+          {
+            "cutoff_m": 15,
+            "precision": 0.911,
+            "recall": 0.656
+          },
+          {
+            "cutoff_m": 20,
+            "precision": 0.902,
+            "recall": 0.7475
+          },
+          {
+            "cutoff_m": 30,
+            "precision": 0.8937,
+            "recall": 0.7957
+          },
+          {
+            "cutoff_m": 40,
+            "precision": 0.8886,
+            "recall": 0.8153
+          },
+          {
+            "cutoff_m": null,
+            "precision": 0.8826,
+            "recall": 0.8409
+          }
+        ]
+      },
+      "shipped_z": {
+        "cutoff_m": 10,
+        "test_policy": {
+          "auto_merge_precision": {
+            "hi": 0.9009,
+            "lo": 0.8797,
+            "point": 0.8902
+          },
+          "auto_merge_recall": {
+            "hi": 0.5237,
+            "lo": 0.5106,
+            "point": 0.517
+          },
+          "shipped_precision_without_cutoff": {
+            "hi": 0.8484,
+            "lo": 0.8231,
+            "point": 0.8362
+          },
+          "shipped_recall_without_cutoff": {
+            "hi": 0.9614,
+            "lo": 0.9534,
+            "point": 0.9575
+          },
+          "true_pairs_left_to_suggestions": {
+            "hi": 0.4657,
+            "lo": 0.4515,
+            "point": 0.4591
+          },
+          "withheld_merges_that_were_right": {
+            "hi": 0.7961,
+            "lo": 0.7639,
+            "point": 0.7806
+          },
+          "withheld_share_of_merges": {
+            "hi": 0.4997,
+            "lo": 0.4852,
+            "point": 0.4928
+          }
+        },
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 5797,
+            "precision": 0.9294,
+            "precision_ci": {
+              "hi": 0.94,
+              "lo": 0.919,
+              "point": 0.9294
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 12986,
+            "precision": 0.87,
+            "precision_ci": {
+              "hi": 0.8821,
+              "lo": 0.8583,
+              "point": 0.87
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 9634,
+            "precision": 0.8069,
+            "precision_ci": {
+              "hi": 0.8217,
+              "lo": 0.7912,
+              "point": 0.8069
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 4211,
+            "precision": 0.7599,
+            "precision_ci": {
+              "hi": 0.7818,
+              "lo": 0.7394,
+              "point": 0.7599
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 2374,
+            "precision": 0.7119,
+            "precision_ci": {
+              "hi": 0.7419,
+              "lo": 0.6811,
+              "point": 0.7119
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 999,
+            "precision": 0.7067,
+            "precision_ci": {
+              "hi": 0.7476,
+              "lo": 0.6613,
+              "point": 0.7067
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 1139,
+            "precision": 0.7252,
+            "precision_ci": {
+              "hi": 0.7637,
+              "lo": 0.6891,
+              "point": 0.7252
+            }
+          }
+        ],
+        "validation_trade_off": [
+          {
+            "cutoff_m": 5,
+            "precision": 0.9294,
+            "recall": 0.167
+          },
+          {
+            "cutoff_m": 10,
+            "precision": 0.8884,
+            "recall": 0.5171
+          },
+          {
+            "cutoff_m": 15,
+            "precision": 0.8608,
+            "recall": 0.758
+          },
+          {
+            "cutoff_m": 20,
+            "precision": 0.8477,
+            "recall": 0.8571
+          },
+          {
+            "cutoff_m": 30,
+            "precision": 0.8385,
+            "recall": 0.9095
+          },
+          {
+            "cutoff_m": 40,
+            "precision": 0.8349,
+            "recall": 0.9314
+          },
+          {
+            "cutoff_m": null,
+            "precision": 0.8315,
+            "recall": 0.957
+          }
+        ]
+      }
+    },
+    "density 60": {
+      "recommended_z": {
+        "cutoff_m": 10,
+        "test_policy": {
+          "auto_merge_precision": {
+            "hi": 0.9191,
+            "lo": 0.8968,
+            "point": 0.9076
+          },
+          "auto_merge_recall": {
+            "hi": 0.451,
+            "lo": 0.4362,
+            "point": 0.4437
+          },
+          "shipped_precision_without_cutoff": {
+            "hi": 0.857,
+            "lo": 0.8314,
+            "point": 0.8441
+          },
+          "shipped_recall_without_cutoff": {
+            "hi": 0.8462,
+            "lo": 0.8308,
+            "point": 0.8384
+          },
+          "true_pairs_left_to_suggestions": {
+            "hi": 0.4646,
+            "lo": 0.45,
+            "point": 0.4574
+          },
+          "withheld_merges_that_were_right": {
+            "hi": 0.7981,
+            "lo": 0.7668,
+            "point": 0.7826
+          },
+          "withheld_share_of_merges": {
+            "hi": 0.5149,
+            "lo": 0.5005,
+            "point": 0.5078
+          }
+        },
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 5466,
+            "precision": 0.9334,
+            "precision_ci": {
+              "hi": 0.9435,
+              "lo": 0.9222,
+              "point": 0.9334
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 11343,
+            "precision": 0.8976,
+            "precision_ci": {
+              "hi": 0.9081,
+              "lo": 0.8877,
+              "point": 0.8976
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 8381,
+            "precision": 0.8456,
+            "precision_ci": {
+              "hi": 0.8598,
+              "lo": 0.8324,
+              "point": 0.8456
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 3901,
+            "precision": 0.8198,
+            "precision_ci": {
+              "hi": 0.8371,
+              "lo": 0.8022,
+              "point": 0.8198
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 2126,
+            "precision": 0.7606,
+            "precision_ci": {
+              "hi": 0.7865,
+              "lo": 0.7329,
+              "point": 0.7606
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 944,
+            "precision": 0.6811,
+            "precision_ci": {
+              "hi": 0.722,
+              "lo": 0.6409,
+              "point": 0.6811
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 1298,
+            "precision": 0.6579,
+            "precision_ci": {
+              "hi": 0.6949,
+              "lo": 0.6201,
+              "point": 0.6579
+            }
+          }
+        ],
+        "validation_trade_off": [
+          {
+            "cutoff_m": 5,
+            "precision": 0.9334,
+            "recall": 0.1492
+          },
+          {
+            "cutoff_m": 10,
+            "precision": 0.9092,
+            "recall": 0.447
+          },
+          {
+            "cutoff_m": 15,
+            "precision": 0.8881,
+            "recall": 0.6543
+          },
+          {
+            "cutoff_m": 20,
+            "precision": 0.8789,
+            "recall": 0.7479
+          },
+          {
+            "cutoff_m": 30,
+            "precision": 0.8708,
+            "recall": 0.7952
+          },
+          {
+            "cutoff_m": 40,
+            "precision": 0.8653,
+            "recall": 0.814
+          },
+          {
+            "cutoff_m": null,
+            "precision": 0.8572,
+            "recall": 0.8389
+          }
+        ]
+      },
+      "shipped_z": {
+        "cutoff_m": 5,
+        "test_policy": {
+          "auto_merge_precision": {
+            "hi": 0.9212,
+            "lo": 0.8959,
+            "point": 0.9082
+          },
+          "auto_merge_recall": {
+            "hi": 0.169,
+            "lo": 0.1591,
+            "point": 0.164
+          },
+          "shipped_precision_without_cutoff": {
+            "hi": 0.8013,
+            "lo": 0.7726,
+            "point": 0.787
+          },
+          "shipped_recall_without_cutoff": {
+            "hi": 0.9615,
+            "lo": 0.9535,
+            "point": 0.9575
+          },
+          "true_pairs_left_to_suggestions": {
+            "hi": 0.83,
+            "lo": 0.8205,
+            "point": 0.8253
+          },
+          "withheld_merges_that_were_right": {
+            "hi": 0.7809,
+            "lo": 0.7507,
+            "point": 0.7659
+          },
+          "withheld_share_of_merges": {
+            "hi": 0.8556,
+            "lo": 0.8472,
+            "point": 0.8516
+          }
+        },
+        "validation_bins": [
+          {
+            "high_m": 5,
+            "low_m": 0,
+            "merges": 6255,
+            "precision": 0.9086,
+            "precision_ci": {
+              "hi": 0.9205,
+              "lo": 0.896,
+              "point": 0.9086
+            }
+          },
+          {
+            "high_m": 10,
+            "low_m": 5,
+            "merges": 14281,
+            "precision": 0.8499,
+            "precision_ci": {
+              "hi": 0.8621,
+              "lo": 0.8382,
+              "point": 0.8499
+            }
+          },
+          {
+            "high_m": 15,
+            "low_m": 10,
+            "merges": 10593,
+            "precision": 0.7717,
+            "precision_ci": {
+              "hi": 0.787,
+              "lo": 0.7557,
+              "point": 0.7717
+            }
+          },
+          {
+            "high_m": 20,
+            "low_m": 15,
+            "merges": 4738,
+            "precision": 0.737,
+            "precision_ci": {
+              "hi": 0.7572,
+              "lo": 0.7158,
+              "point": 0.737
+            }
+          },
+          {
+            "high_m": 30,
+            "low_m": 20,
+            "merges": 2612,
+            "precision": 0.6757,
+            "precision_ci": {
+              "hi": 0.7029,
+              "lo": 0.6461,
+              "point": 0.6757
+            }
+          },
+          {
+            "high_m": 40,
+            "low_m": 30,
+            "merges": 1059,
+            "precision": 0.6468,
+            "precision_ci": {
+              "hi": 0.6886,
+              "lo": 0.6086,
+              "point": 0.6468
+            }
+          },
+          {
+            "high_m": null,
+            "low_m": 40,
+            "merges": 1305,
+            "precision": 0.6582,
+            "precision_ci": {
+              "hi": 0.6952,
+              "lo": 0.6195,
+              "point": 0.6582
+            }
+          }
+        ],
+        "validation_trade_off": [
+          {
+            "cutoff_m": 5,
+            "precision": 0.9086,
+            "recall": 0.1662
+          },
+          {
+            "cutoff_m": 10,
+            "precision": 0.8677,
+            "recall": 0.5212
+          },
+          {
+            "cutoff_m": 15,
+            "precision": 0.8351,
+            "recall": 0.7604
+          },
+          {
+            "cutoff_m": 20,
+            "precision": 0.8221,
+            "recall": 0.8625
+          },
+          {
+            "cutoff_m": 30,
+            "precision": 0.8122,
+            "recall": 0.9141
+          },
+          {
+            "cutoff_m": 40,
+            "precision": 0.8078,
+            "recall": 0.9342
+          },
+          {
+            "cutoff_m": null,
+            "precision": 0.803,
+            "recall": 0.9593
+          }
+        ]
+      }
+    }
+  },
+  "shipped_z": 3.03,
+  "z": 2.0
+}
