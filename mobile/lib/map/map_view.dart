@@ -261,7 +261,10 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
       debugPrint('hubs: $e');
       return;
     }
-    if (mounted) _apply(); // draws them
+    if (mounted) {
+      setState(() {}); // the layer sheet's colour key
+      _apply(); // draws them
+    }
   }
 
   void _openHub(String id) {
@@ -447,7 +450,9 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                           ListenableBuilder(
                             listenable: _trip,
                             builder: (context, _) =>
-                                _trip.destination == null ? LayerSheet(layers: _layers) : RouteCard(trip: _trip),
+                                _trip.destination == null
+                                ? LayerSheet(layers: _layers, legend: hubLegend(_hubs))
+                                : RouteCard(trip: _trip),
                           ),
                         ],
                       ),
