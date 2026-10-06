@@ -1,6 +1,6 @@
 # Lakad
 
-Walking navigation and crowd reporting for Makati. Commuters pick a destination, get suggested ways to commute (walk, ride one PUV or train, walk) and walking routes that steer around reported hazards, and photograph new problems in an AR camera view. The city sees those reports as a ranked ticket queue.
+Walking navigation and crowd reporting for Makati. Commuters pick a destination, compare walking routes that steer around reported hazards, pick a way to commute (walk, ride one PUV or train, walk), start the trip and are tracked along it, and photograph new problems in an AR camera view. The city sees those reports as a ranked ticket queue.
 
 Smart Urban Living Hackathon · iACADEMY MPH · Oct 6–7, 2026 · Team **Lakad Kinetic Development**
 Project documentation: [Google Doc](https://docs.google.com/document/d/1-KtQXQGzGgUjQvdE_HK4or0s5GL7DViF/)
@@ -9,7 +9,7 @@ Project documentation: [Google Doc](https://docs.google.com/document/d/1-KtQXQGz
 
 | Folder | What it does | Stack |
 |---|---|---|
-| `mobile/` | Map of Makati with TomTom traffic, your location, destination search, suggested commute routes (walk, ride, walk, with arrival time and the quickest marked) drawn leg by leg, Fastest / Walkable / Accessible walking routes with hazard counts, transit hubs (PUV terminals, MRT-3, LRT-1), report pins, an AR camera for geotagged photo reports, and a hold-to-record SOS on the camera button | Flutter, mapbox_maps_flutter, camera, geolocator, sensors_plus |
+| `mobile/` | Map of Makati with TomTom traffic, your location, destination search, a guided trip (compare Fastest / Walkable / Accessible walking routes with hazard counts, then suggested commute routes with arrival time and the quickest marked, drawn leg by leg, then Start for live tracking with a navigation bar and a map that turns with the phone's heading, plus a compass chip), transit hubs (PUV terminals, MRT-3, LRT-1), report pins, an AR camera for geotagged photo reports, and a hold-to-record SOS on the camera button | Flutter, mapbox_maps_flutter, camera, geolocator, sensors_plus |
 | `dashboard/` | Ticket queue with status workflow (open → verified → assigned → fixed), photo detail, SOS tickets that top the queue and blink on the map, insights panel, traffic layer, predicted foot-traffic layer with a past and forecast view | React, Vite, TypeScript, mapbox-gl |
 | `server/` | `/reports` CRUD and photos, `POST /sos` (video), `/geocode`, `/route/walk`, `/route/commute`, `/transit/hubs`, `/footfall` and `/footfall/series` (predicted foot traffic), `/health`. JSON file store in `db/` | FastAPI, OpenRouteService |
 | `models/` | Ticketing rules: same-place matching, priority score, light note classification, with tests and an evaluation ([models/tickets/EVALUATION.md](models/tickets/EVALUATION.md)). **Not connected to the server yet** | Python standard library; the evaluation also uses numpy, scipy, scikit-learn |
@@ -43,9 +43,18 @@ A new ticket shows a review card at the top of its detail view. **Confirm** move
 
 ## Commute routes are estimated
 
-`GET /route/commute` offers up to three options: walk to a nearby hub, ride to another hub that serves the same mode, walk to the destination. The walks are real street routes from OpenRouteService (an estimate stands in if it fails). The ride is not real: the study has no stop order, route lines, timetables or fares, so a ride is the straight line between two hubs, stretched 30% for streets and timed at an assumed speed and wait per mode (`server/data/transit/ride_modes.json`, our judgement, not from a source). Arrival time counts from the moment the list is shown. The app says "Ride times are estimates."
+`GET /route/commute` offers up to three options: walk to a nearby hub, ride to another hub that serves the same mode, walk to the destination. The walks are real street routes from OpenRouteService (an estimate stands in if it fails). The ride is not real: the study has no stop order, route lines, timetables or fares, so a ride is the straight line between two hubs, stretched 30% for streets and timed at an assumed speed and wait per mode (`server/data/transit/ride_modes.json`, our judgement, not from a source). The walking legs use the walking mode picked in the first step (Accessible uses OpenRouteService's wheelchair profile, Walkable steers around hazard reports). Arrival time counts from the moment the list is shown. The app says "Ride times are estimates."
 
 **Known limits.** One ride per trip, no transfers. A hub is a PUV terminal or stop, or a train station, so a route can pair two hubs that no single PUV route links; the study's route list is not checked against the pair. No fares, no schedules, no live positions. Tests: `server/tests/test_commute.py`, `server/tests/test_commute_route.py`, `mobile/test/commute_list_test.dart`.
+
+## The trip: walk first, then commute, then Start
+
+1. **Walk.** After a destination is picked the card compares the three walking routes (time, distance, hazards). The one picked decides how the commute's walking legs are routed.
+2. **Commute.** **Next: ride options** lists up to three walk-ride-walk options, quickest marked. Pick one, or go back to change the walking mode. If no ride is found, **Start walking** takes the picked walking route alone.
+3. **Start.** The card becomes a navigation bar: the current leg, distance left on it, time left, arrival time, the leg after it, and **End trip**. Each GPS fix moves the user along the legs. A leg is done within 25 m of its end, past 100 m from the path the bar says **Off route**, and within 25 m of the end of the last leg it says **You've arrived**.
+4. **Live view.** The camera follows the user and turns with the phone's heading (the Mapbox location puck, which reads the phone's sensors), and the screen stays awake from Start until arrival or End (`wakelock_plus`). The compass chip shows the arrow to north and the direction at the top of the map; tap it to follow or go back to north-up. Dragging or rotating the map lets go of it, and the locate button takes it back.
+
+**Known limits.** Foreground only: with the app closed or the phone locked tracking stops (no background location service). No re-planning when the user leaves the path. No turn-by-turn steps or voice. The ride leg is a straight line, so on a ride the bar tracks progress along that line, not the road. **Not run on a physical phone**: the progress maths, the bar and the compass chip are unit and widget tested, but the camera follow, the heading rotation and the screen-on behaviour need a device or emulator test (Extended controls: Location routes and Virtual sensors). Tests: `mobile/test/trip_progress_test.dart`, `mobile/test/trip_state_test.dart`, `mobile/test/nav_bar_test.dart`, `mobile/test/compass_chip_test.dart`.
 
 ## Foot traffic is predicted, not measured
 
@@ -92,7 +101,7 @@ See [SETUP.md](SETUP.md).
 
 | Part | Used | Disclose as |
 |---|---|---|
-| Mobile | Flutter, mapbox_maps_flutter, http, camera, geolocator, sensors_plus | Open source. Mapbox free tier |
+| Mobile | Flutter, mapbox_maps_flutter, http, camera, geolocator, sensors_plus, wakelock_plus (keeps the screen on during a trip) | Open source. Mapbox free tier |
 | Dashboard | React, Vite, TypeScript, mapbox-gl | Open source. Mapbox free tier |
 | Server | FastAPI, JSON file store | Open source |
 | Traffic | TomTom Traffic flow tiles | Third-party API, free-tier key |
