@@ -1,0 +1,108 @@
+"""storage/db.py: the SQLite file the tickets live in. Its tables must match the rows the engine writes."""
+import sqlite3
+from concurrent.futures import ThreadPoolExecutor
+
+import pytest
+
+from models.tickets import engine
+from models.tickets.storage.db import MIGRATIONS, Db
+
+AT = "2026-10-07T12:00:00+00:00"
+LATER = "2026-10-07T13:00:00+00:00"
+
+
+def columns(db: Db, table: str) -> list[str]:
+    return [r["name"] for r in db._conn.execute(f"pragma table_info({table})")]
+
+
+def ticket(tid="t", **fields) -> dict:
+    return {"id": tid, "category": "pothole", "district_id": 1, "lat": 14.55, "lng": 121.02, "priority": 40.0,
+            "band": "Medium", "breakdown": {"why": "test"}, "reporters": 1, "note": "", "photo_url": "", "video_url": None,
+            "created_at": AT, **fields}
+
+
+def sighting(sid="t", tid="t") -> dict:
+    return {"id": sid, "ticket_id": tid, "lat": 14.55, "lng": 121.02, "accuracy_m": None, "note": "", "photo_url": "",
+            "video_url": None, "created_at": AT}
+
+
+def events(db: Db) -> list[tuple]:
+    return [tuple(r) for r in db._conn.execute("select ticket_id, actor, from_status, to_status, at from ticket_events order by id")]
+
+
+@pytest.fixture
+def db(tmp_path):
+    return Db(tmp_path / "lakad.db")
+
+
+def test_the_tables_have_exactly_the_columns_the_engine_writes(db):
+    assert columns(db, "tickets") == list(engine.TICKET_COLUMNS)
+    assert columns(db, "sightings") == list(engine.SIGHTING_COLUMNS)
+    assert columns(db, "ticket_events") == ["id", "ticket_id", "actor", "from_status", "to_status", "at"]
+
+
+def test_opening_again_keeps_the_rows_and_runs_no_migration_twice(tmp_path):
+    Db(tmp_path / "lakad.db").save(ticket(status="open"), sighting(), AT)
+    again = Db(tmp_path / "lakad.db")
+    assert again._conn.execute("pragma user_version").fetchone()[0] == len(MIGRATIONS)
+    assert again._conn.execute("pragma journal_mode").fetchone()[0] == "wal"
+    assert [t["id"] for t in again.tickets()] == ["t"] and again.tickets()[0]["breakdown"] == {"why": "test"}
+
+
+def test_a_save_without_a_status_keeps_the_one_an_analyst_set(db):
+    db.save(ticket(status="open"), sighting(), AT)
+    db.set_status("t", "assigned", "analyst-1", AT, allowed=lambda t: True)
+    db.save(ticket(reporters=2, priority=55.0, band="High"), sighting("s2"), LATER)
+    row = db.tickets()[0]
+    assert (row["status"], row["reporters"], row["band"], row["updated_at"]) == ("assigned", 2, "High", LATER)
+    assert events(db) == [("t", "analyst-1", "open", "assigned", AT)]
+
+
+def test_a_save_that_reopens_clears_fixed_at_and_is_logged_without_an_actor(db):
+    db.save(ticket(status="open"), sighting(), AT)
+    assert db.set_status("t", "fixed", "analyst-1", AT, allowed=lambda t: True)["fixed_at"] == AT
+    db.save(ticket(status="open"), sighting("s2"), LATER)
+    assert db.tickets()[0]["fixed_at"] is None
+    assert events(db)[-1] == ("t", None, "fixed", "open", LATER)
+
+
+def test_a_change_that_is_not_allowed_changes_nothing(db):
+    db.save(ticket(status="open"), sighting(), AT)
+    seen = []
+    assert db.set_status("t", "fixed", "a", LATER, allowed=lambda t: seen.append(t["district_id"]) or False) is None
+    assert seen == [1] and db.tickets()[0]["status"] == "open" and events(db) == []
+    assert db.set_status("missing", "fixed", "a", LATER, allowed=lambda t: True) is None
+
+
+def test_the_same_status_again_is_not_a_change(db):
+    db.save(ticket(status="open"), sighting(), AT)
+    assert db.set_status("t", "open", "a", LATER, allowed=lambda t: True)["updated_at"] == AT and events(db) == []
+
+
+def test_bad_values_never_reach_the_table(db):
+    with pytest.raises(sqlite3.IntegrityError):
+        db.save(ticket(status="done"), sighting(), AT)
+    with pytest.raises(sqlite3.IntegrityError):
+        db.save(ticket(category="ufo"), sighting(), AT)
+    with pytest.raises(sqlite3.IntegrityError):  # a sighting needs its ticket; the failed save leaves no ticket either
+        db.save(ticket(), sighting(tid="nowhere"), AT)
+    assert db.tickets() == []
+
+
+def test_closed_before_finds_long_closed_tickets_only(db):
+    for tid in ("open", "fixed", "rejected", "fixed-late"):
+        db.save(ticket(tid, status="open"), sighting(tid, tid), AT)
+    db.set_status("fixed", "fixed", "a", AT, allowed=lambda t: True)
+    db.set_status("rejected", "rejected", "a", AT, allowed=lambda t: True)
+    db.set_status("fixed-late", "fixed", "a", LATER, allowed=lambda t: True)
+    assert db.closed_before(LATER) == {"fixed", "rejected"}
+
+
+def test_threads_can_write_at_once(db):
+    def write(i):
+        db.save(ticket(f"t{i}", status="open"), sighting(f"t{i}", f"t{i}"), AT)
+        db.set_status(f"t{i}", "verified", "a", LATER, allowed=lambda t: True)
+
+    with ThreadPoolExecutor(max_workers=16) as pool:
+        list(pool.map(write, range(200)))
+    assert len(db.tickets()) == 200 and {t["status"] for t in db.tickets()} == {"verified"} and len(events(db)) == 200

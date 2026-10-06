@@ -1,2 +1,0 @@
--- tickets, reports (one per sighting), votes (still there / gone), events (history), plus an R*Tree on ticket spots.
--- Stub: planned, no logic yet.

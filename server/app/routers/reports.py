@@ -8,6 +8,7 @@ from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
 
 from app.config import in_city
 from app.db.models import Category, Report, StatusUpdate
+from app.services import auth
 from app.services.priority import severity
 
 router = APIRouter()
@@ -123,7 +124,10 @@ def list_reports(request: Request, include_sos: bool = False, include_rejected: 
 
     ponytail: the API has no accounts yet, so this only keeps SOS out of the app's own lists; anyone who knows
     the query can still ask. Put the dashboard behind a login before anyone real depends on SOS.
+    With analyst sign-in configured, that login exists (/tickets), so both flags are ignored here.
     """
+    if auth.configured():
+        include_sos = include_rejected = False
     # Stored in arrival order, so reversed is newest first.
     return [
         _out(r)
@@ -142,6 +146,8 @@ def get_report(report_id: str, request: Request):
 
 @router.patch("/reports/{report_id}", response_model=Report)
 def update_status(report_id: str, body: StatusUpdate, request: Request):
+    if auth.configured():  # analysts sign in and change the ticket: PATCH /tickets/{id}
+        raise HTTPException(403, "Status changes go through the analyst dashboard.")
     report = request.app.state.store.update(report_id, status=body.status, updated_at=_now())
     if report is None:
         raise HTTPException(404, "No such report.")

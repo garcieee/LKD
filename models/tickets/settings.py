@@ -70,3 +70,8 @@ HINT_MIN_SCORE = 1.0  # the top category needs at least this much matched eviden
 HINT_MIN_MARGIN = 0.5  # ... and this much more than the runner-up
 DANGER_MIN_SCORE = 1.0  # un-negated danger evidence needed to flag a note
 NEGATION_WINDOW = 3  # a negator this many words or fewer before a danger word cancels it
+
+# ---- the server's loop (engine.sync_once, see ATTACH.md) ---------------------------------------
+SYNC_EVERY_S = 5  # seconds between turns: a new report gets its ticket, district and priority within this
+SYNC_MAX_TRIES = 3  # a report that fails this many turns keeps its sync_error and is skipped (/health counts it)
+CACHE_KEEP_DAYS = 30  # a report whose ticket was fixed or rejected this long ago leaves reports.json (lakad.db keeps it)
