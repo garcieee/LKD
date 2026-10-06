@@ -25,6 +25,10 @@ export default function Legend() {
             {STATUS_LABEL[s]}
           </li>
         ))}
+        <li>
+          <i className="dot" data-level="sos" />
+          SOS
+        </li>
       </ul>
     </div>
   );

@@ -8,6 +8,7 @@ export const CATEGORY_LABEL: Record<Category, string> = {
   broken_streetlight: "Broken streetlight",
   blocked_sidewalk: "Blocked sidewalk",
   other: "Other",
+  sos: "SOS · Crime signal",
 };
 
 export const SEVERITY_LABEL: Record<Report["severity"], string> = { 1: "Low", 2: "Medium", 3: "Urgent" };
@@ -23,12 +24,18 @@ export const STATUS_LABEL: Record<Status, string> = {
 
 export const isUnresolved = (r: Report) => r.status !== "fixed";
 
-// The fix-it order: unresolved first, then most severe, then oldest. Times only have whole seconds,
-// so ties are common; the API lists newest first, and sorting it reversed keeps ties in arrival order.
+// A call for help from the phone's SOS button. While nobody has marked it fixed it tops the queue and blinks on the map.
+export const isSos = (r: Report) => r.category === "sos";
+export const isSosActive = (r: Report) => isSos(r) && isUnresolved(r);
+
+// The fix-it order: unresolved first, SOS before everything else, then most severe, then oldest. Times only
+// have whole seconds, so ties are common; the API lists newest first, and sorting it reversed keeps ties in
+// arrival order.
 export function rank(reports: Report[]): Report[] {
   return reports.toReversed().sort(
     (a, b) =>
       Number(isUnresolved(b)) - Number(isUnresolved(a)) ||
+      Number(isSosActive(b)) - Number(isSosActive(a)) ||
       b.severity - a.severity ||
       Date.parse(a.created_at) - Date.parse(b.created_at),
   );
@@ -60,14 +67,15 @@ export function newReports(known: ReadonlySet<string> | null, reports: Report[])
   return known ? reports.filter((r) => !known.has(r.id)) : [];
 }
 
-// Map pins: one GeoJSON point per report, [lng, lat], flagged when it is the selected ticket.
+// Map pins: one GeoJSON point per report, [lng, lat], flagged when it is the selected ticket, and `alert` when
+// it is an SOS still open (those blink red, layers/reports.ts).
 export function toGeoJSON(reports: Report[], selectedId: string | null) {
   return {
     type: "FeatureCollection" as const,
     features: reports.map((r) => ({
       type: "Feature" as const,
       geometry: { type: "Point" as const, coordinates: [r.lng, r.lat] },
-      properties: { id: r.id, status: r.status, selected: r.id === selectedId },
+      properties: { id: r.id, status: r.status, selected: r.id === selectedId, alert: isSosActive(r) },
     })),
   };
 }

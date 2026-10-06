@@ -1290,3 +1290,109 @@ details[open] > summary.panel-title::after {
     animation: none;
   }
 }
+
+/* SOS: a call for help from the phone's hold-to-record button. Bright red, blinking, above everything else:
+   a blinking pin on the map (layers/reports.ts), the top row of the queue, a banner, and a red Tickets button. */
+.dot[data-level="sos"] {
+  background: var(--sos);
+  animation: sos-blink 1s ease-in-out infinite;
+}
+@keyframes sos-blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+.tickets-btn.sos {
+  border-color: var(--sos);
+  animation: sos-ring 1.4s ease-out infinite;
+}
+.tickets-btn.sos b {
+  color: var(--sos);
+}
+@keyframes sos-ring {
+  from {
+    box-shadow:
+      0 0 0 0 color-mix(in srgb, var(--sos) 45%, transparent),
+      var(--shadow-float);
+  }
+  to {
+    box-shadow:
+      0 0 0 10px transparent,
+      var(--shadow-float);
+  }
+}
+.sos-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 230px; /* the side panels' width */
+  padding: 9px 12px;
+  border: 1px solid var(--sos);
+  border-radius: var(--radius-card);
+  background: var(--sos);
+  color: #fff;
+  box-shadow: var(--shadow-float);
+  font: 500 12px var(--grot);
+  text-align: left;
+  cursor: pointer;
+}
+.sos-banner:hover {
+  filter: brightness(1.08);
+}
+.sos-banner .dot {
+  background: #fff;
+}
+.sos-banner em {
+  margin-left: auto;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #fff;
+  color: var(--sos);
+  font: 700 10px var(--grot);
+  font-style: normal;
+}
+.ticket.sos {
+  background: color-mix(in srgb, var(--sos) 7%, #fff);
+  box-shadow: inset 3px 0 0 var(--sos);
+}
+.ticket.sos:hover {
+  background: color-mix(in srgb, var(--sos) 12%, #fff);
+}
+.sos-thumb {
+  display: grid;
+  grid-row: span 2;
+  place-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius);
+  background: var(--sos);
+  color: #fff;
+  font: 700 12px var(--grot);
+  letter-spacing: 0.5px;
+  animation: sos-blink 1s ease-in-out infinite;
+}
+.sos-video {
+  display: block;
+  width: 100%;
+  max-height: 280px;
+  border: 1px solid var(--sos);
+  border-radius: var(--radius-card);
+  background: #000;
+}
+.badge.sos-tag {
+  background: var(--sos);
+  color: #fff;
+  font-weight: 700;
+}
+.toast > span[data-sos] {
+  border-color: var(--sos);
+  background: var(--sos);
+  color: #fff;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dot[data-level="sos"],
+  .tickets-btn.sos,
+  .sos-thumb {
+    animation: none;
+  }
+}

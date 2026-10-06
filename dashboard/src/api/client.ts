@@ -4,12 +4,13 @@ import type { Day, Footfall, Report, Series, Status } from "../types/api";
 
 const BASE = ENV.apiBaseUrl.replace(/\/+$/, "");
 
-// Report.photo_url is a path on the API, e.g. /photos/<id>.jpg.
+// Report.photo_url is a path on the API, e.g. /photos/<id>.jpg. Report.video_url (an SOS) is the same kind of path.
 export const photoUrl = (path: string) => BASE + path;
+export const videoUrl = photoUrl;
 
-// Newest first.
+// Newest first. include_sos: the public list leaves SOS tickets out; the dashboard is where they are answered.
 export async function listReports(): Promise<Report[]> {
-  const body = await call<unknown>("/reports");
+  const body = await call<unknown>("/reports?include_sos=true");
   if (!Array.isArray(body)) throw new Error("Unexpected /reports response");
   return body as Report[];
 }

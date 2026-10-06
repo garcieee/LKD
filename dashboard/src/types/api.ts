@@ -5,7 +5,8 @@ export type Category =
   | "flooded_drain"
   | "broken_streetlight"
   | "blocked_sidewalk"
-  | "other";
+  | "other"
+  | "sos"; // not picked: the phone's hold-to-record button files it (POST /sos), with a video
 
 export type Status = "open" | "verified" | "assigned" | "fixed";
 
@@ -17,7 +18,8 @@ export type Report = {
   lng: number;
   heading: number | null; // compass heading when the photo was taken
   note: string;
-  photo_url: string; // path on the API, e.g. /photos/<id>.jpg
+  photo_url: string; // path on the API, e.g. /photos/<id>.jpg. Empty for an SOS
+  video_url?: string | null; // SOS only: path on the API, e.g. /videos/<id>.mp4
   status: Status;
   created_at: string; // ISO 8601, UTC
   updated_at: string;

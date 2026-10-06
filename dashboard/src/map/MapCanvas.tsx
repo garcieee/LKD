@@ -7,7 +7,7 @@ import { MAKATI, lockBounds } from "../config/makati";
 import { MAP_STYLES, DEFAULT_MAP_STYLE } from "../config/mapStyles";
 import { addCongestion, removeCongestion } from "../layers/congestion";
 import { removeFootfall, setFootfall } from "../layers/footfall";
-import { bindReportPins, setReportPins } from "../layers/reports";
+import { animateSos, bindReportPins, setReportPins } from "../layers/reports";
 import type { Footfall, Report } from "../types/api";
 
 // Camera commands for the panels. `coveredRight`: px of map hidden under a panel on the right,
@@ -85,6 +85,9 @@ export default function MapCanvas({ congestionOn, stamp, footfall, reports, sele
   }, [loaded, reports, selectedId]);
 
   useEffect(() => (map.current ? bindReportPins(map.current, onSelect) : undefined), [onSelect]);
+
+  // An open SOS blinks: one animation loop for the life of the map, idle when nothing is open.
+  useEffect(() => (loaded && map.current ? animateSos(map.current) : undefined), [loaded]);
 
   useImperativeHandle(
     ref,

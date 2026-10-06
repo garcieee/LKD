@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import type { Map as MapboxMap } from "mapbox-gl";
 import type { Report } from "../types/api.ts";
 import { toGeoJSON } from "../features/queue/tickets.ts";
-import { REPORTS_ID, STATUS_COLOR, bindReportPins, setReportPins } from "./reports.ts";
+import { RIPPLE_MS, REPORTS_ID, SOS_COLOR, SOS_ID, STATUS_COLOR, STILL_FRAME, bindReportPins, paintSos, setReportPins, sosFrame } from "./reports.ts";
 
 type Handler = (e?: unknown) => void;
 type Layer = { id: string; paint: Record<string, unknown[]> };
@@ -21,7 +21,10 @@ function fakeMap() {
       data = d;
     },
   };
+  const paint: string[] = [];
   const map = {
+    getLayer: (id: string) => layers[id],
+    setPaintProperty: (id: string, name: string, value: unknown) => paint.push(`${id} ${name} ${value}`),
     getSource: () => (data === undefined ? undefined : source),
     addSource(id: string, spec: { data: unknown }) {
       log.push(`addSource ${id}`);
@@ -36,7 +39,7 @@ function fakeMap() {
     off: (type: string, id: string, fn: Handler) => handlers.get(`${type} ${id}`) === fn && handlers.delete(`${type} ${id}`),
     getCanvas: () => canvas,
   };
-  return { map: map as unknown as MapboxMap, log, layers, handlers, canvas, data: () => data };
+  return { map: map as unknown as MapboxMap, log, layers, handlers, canvas, paint, data: () => data };
 }
 
 // mapbox's ["match", input, label, value, ..., fallback], evaluated for one label.
@@ -53,7 +56,14 @@ test("setReportPins: source, then the ring under the pins, once; later polls onl
   setReportPins(m.map, [report("a", "open")], null);
   const next = [report("a", "open"), report("b", "fixed")];
   setReportPins(m.map, next, "b");
-  assert.deepEqual(m.log, ["addSource reports", "addLayer reports-selected", "addLayer reports", "setData"]);
+  assert.deepEqual(m.log, [
+    "addSource reports",
+    "addLayer reports-sos-halo", // an open SOS: the ripple under everything,
+    "addLayer reports-selected",
+    "addLayer reports",
+    "addLayer reports-sos", // and its red pin over every other pin
+    "setData",
+  ]);
   assert.deepEqual(m.data(), toGeoJSON(next, "b"));
 });
 
@@ -78,6 +88,55 @@ test("bindReportPins: a click selects the pin's ticket, hover points, unbinding 
   assert.equal(m.canvas.style.cursor, "pointer");
   on("mouseleave")();
   assert.equal(m.canvas.style.cursor, "");
+  unbind();
+  assert.equal(m.handlers.size, 0);
+});
+
+const sosReport = (id: string, status: Report["status"] = "open") => ({ ...report(id, status), category: "sos" }) as Report;
+
+test("an open SOS is drawn by its own red layers, and the ordinary pins leave it out", () => {
+  const m = fakeMap();
+  setReportPins(m.map, [sosReport("s")], null);
+  assert.equal(m.layers[SOS_ID].paint["circle-color"] as unknown, SOS_COLOR);
+  assert.deepEqual((m.layers[SOS_ID] as unknown as { filter: unknown }).filter, ["==", ["get", "alert"], true]);
+  assert.deepEqual((m.layers[REPORTS_ID] as unknown as { filter: unknown }).filter, ["!=", ["get", "alert"], true]);
+});
+
+test("sosFrame: the ripple restarts and fades, the pin fades down and back up, all in range", () => {
+  assert.equal(sosFrame(0).haloRadius, 10);
+  assert.equal(sosFrame(0).haloOpacity, 0.5);
+  assert.ok(sosFrame(RIPPLE_MS / 2).haloRadius > sosFrame(0).haloRadius);
+  assert.ok(sosFrame(RIPPLE_MS / 2).haloOpacity < sosFrame(0).haloOpacity);
+  assert.equal(sosFrame(RIPPLE_MS).haloRadius, 10, "and starts over");
+  assert.equal(sosFrame(0).pinOpacity, 1, "on");
+  assert.ok(Math.abs(sosFrame(500).pinOpacity - 0.3) < 1e-9, "dimmed half a blink later, never fully off");
+  for (let ms = 0; ms < 5000; ms += 37) {
+    const f = sosFrame(ms);
+    assert.ok(f.pinOpacity >= 0.3 - 1e-9 && f.pinOpacity <= 1 + 1e-9);
+    assert.ok(f.haloOpacity >= 0 && f.haloRadius >= 10 && f.haloRadius <= 40);
+  }
+});
+
+test("paintSos moves the ripple and the pin, and does nothing until the layers exist", () => {
+  const m = fakeMap();
+  paintSos(m.map, sosFrame(0));
+  assert.deepEqual(m.paint, [], "no layers yet");
+  setReportPins(m.map, [sosReport("s")], null);
+  paintSos(m.map, STILL_FRAME);
+  assert.deepEqual(m.paint, [
+    "reports-sos-halo circle-radius 24",
+    "reports-sos-halo circle-opacity 0.3",
+    "reports-sos circle-opacity 1",
+    "reports-sos circle-stroke-opacity 1",
+  ]);
+});
+
+test("bindReportPins: an SOS pin is clickable too", () => {
+  const m = fakeMap();
+  const picked: string[] = [];
+  const unbind = bindReportPins(m.map, (id) => picked.push(id));
+  m.handlers.get(`click ${SOS_ID}`)!({ features: [{ properties: { id: "s" } }] });
+  assert.deepEqual(picked, ["s"]);
   unbind();
   assert.equal(m.handlers.size, 0);
 });

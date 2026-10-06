@@ -22,6 +22,7 @@
   --ok: #41755e;
   --warn: #8a6736;
   --danger: #a63722;
+  --sos: #d6001c; /* an SOS from the phone: brighter than --danger so it never reads as an ordinary ticket */
 
   --radius: 6px;
   --radius-card: 10px;

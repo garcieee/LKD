@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { listReports, patchStatus } from "../../api/client";
 import type { Report, Status } from "../../types/api";
-import { CATEGORY_LABEL, newReports } from "./tickets";
+import { CATEGORY_LABEL, isSosActive, newReports } from "./tickets";
 
 export const POLL_MS = 10_000;
 const FRESH_MS = 5_000; // how long the toast and the new-row highlight stay
@@ -12,7 +12,7 @@ export function useTickets() {
   const [online, setOnline] = useState(true);
   const [pending, setPending] = useState<Partial<Record<string, Status>>>({}); // PATCHes in flight
   const [fresh, setFresh] = useState<string[]>([]);
-  const [toast, setToast] = useState<{ id: number; text: string } | null>(null);
+  const [toast, setToast] = useState<{ id: number; text: string; sos?: boolean } | null>(null);
   const known = useRef<Set<string> | null>(null);
 
   useEffect(() => {
@@ -31,9 +31,13 @@ export function useTickets() {
         setOnline(true);
         delay = POLL_MS;
         if (added.length) {
-          const text =
-            added.length === 1 ? `New ticket · ${CATEGORY_LABEL[added[0].category]}` : `${added.length} new tickets`;
-          setToast({ id: Date.now(), text });
+          const sos = added.some(isSosActive);
+          const text = sos
+            ? "SOS · crime signal received"
+            : added.length === 1
+              ? `New ticket · ${CATEGORY_LABEL[added[0].category]}`
+              : `${added.length} new tickets`;
+          setToast({ id: Date.now(), text, sos });
           setFresh(added.map((r) => r.id));
           clearTimeout(hide);
           hide = window.setTimeout(() => {

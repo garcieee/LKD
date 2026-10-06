@@ -1,11 +1,11 @@
-// Ranked fix-it list: unresolved first, then most severe, then oldest. A row opens the ticket
+// Ranked fix-it list: unresolved first, an open SOS above everything, then most severe, then oldest. A row opens the ticket
 // in place (DetailPanel); back returns to the list. Floats over the map, never resizes it.
 import { useEffect, useRef, useState } from "react";
 import { photoUrl } from "../../api/client";
 import { ENV } from "../../config/env";
 import type { Report, Status } from "../../types/api";
 import DetailPanel, { Severity } from "../../panels/DetailPanel";
-import { CATEGORY_LABEL, STATUS_LABEL, isUnresolved, rank, timeAgo } from "./tickets";
+import { CATEGORY_LABEL, STATUS_LABEL, isSos, isSosActive, isUnresolved, rank, timeAgo } from "./tickets";
 
 type Props = {
   reports: Report[] | null; // null until the API first answers
@@ -88,7 +88,7 @@ export default function QueuePanel({
         />
       ) : (
         <div className="queue-list">
-          <div className="src">Ranked: unresolved, most severe, oldest</div>
+          <div className="src">Ranked: SOS first, then most severe, oldest</div>
           <label className="switch">
             <input type="checkbox" checked={showFixed} onChange={(e) => setShowFixed(e.target.checked)} />
             <span>Show fixed</span>
@@ -99,12 +99,18 @@ export default function QueuePanel({
               {rows.map((r) => (
                 <li key={r.id}>
                   <button
-                    className={fresh.includes(r.id) ? "ticket fresh" : "ticket"}
+                    className={`ticket${fresh.includes(r.id) ? " fresh" : ""}${isSosActive(r) ? " sos" : ""}`}
                     data-id={r.id}
                     onClick={() => onSelect(r.id)}
                   >
-                    {/* Decorative: the row's own text names the ticket and its age. */}
-                    <img src={photoUrl(r.photo_url)} alt="" loading="lazy" />
+                    {/* Decorative: the row's own text names the ticket and its age. An SOS has a video, not a photo. */}
+                    {isSos(r) ? (
+                      <span className="sos-thumb" aria-hidden="true">
+                        SOS
+                      </span>
+                    ) : (
+                      <img src={photoUrl(r.photo_url)} alt="" loading="lazy" />
+                    )}
                     <b>{CATEGORY_LABEL[r.category]}</b>
                     <span className="badge" data-status={r.status}>
                       {STATUS_LABEL[r.status]}

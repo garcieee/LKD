@@ -1,9 +1,9 @@
-// One ticket, shown in the Tickets panel: photo, what and where, and the status stepper.
+// One ticket, shown in the Tickets panel: photo (an SOS: its video), what and where, and the status stepper.
 import { useState } from "react";
-import { photoUrl } from "../api/client";
+import { photoUrl, videoUrl } from "../api/client";
 import type { Report, Status } from "../types/api";
 import StatusStepper from "../features/queue/StatusStepper";
-import { CATEGORY_LABEL, SEVERITY_LABEL, STATUS_LABEL, timeAgo } from "../features/queue/tickets";
+import { CATEGORY_LABEL, SEVERITY_LABEL, STATUS_LABEL, isSos, timeAgo } from "../features/queue/tickets";
 
 const when = (iso: string) =>
   new Date(iso).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false });
@@ -33,6 +33,7 @@ export default function DetailPanel({ report: r, now, onStatus, onShowOnMap }: P
   const [error, setError] = useState<string | null>(null);
   const label = CATEGORY_LABEL[r.category];
   const photo = photoUrl(r.photo_url);
+  const sos = isSos(r);
   const change = async (status: Status) => {
     setError(null);
     setError(await onStatus(r.id, status));
@@ -40,12 +41,29 @@ export default function DetailPanel({ report: r, now, onStatus, onShowOnMap }: P
 
   return (
     <div className="detail">
-      <a className="photo" href={photo} target="_blank" rel="noreferrer">
-        <img src={photo} alt={`${label}, reported ${timeAgo(r.created_at, now)}`} />
-        <span className="sr-only"> (full size, opens in a new tab)</span>
-      </a>
+      {sos ? (
+        r.video_url ? (
+          // No sound by design: the app records video only. preload=metadata shows the first frame without the download.
+          <video
+            className="sos-video"
+            src={videoUrl(r.video_url)}
+            controls
+            playsInline
+            preload="metadata"
+            aria-label={`SOS video, sent ${timeAgo(r.created_at, now)}`}
+          />
+        ) : (
+          <p className="empty">This SOS has no video.</p>
+        )
+      ) : (
+        <a className="photo" href={photo} target="_blank" rel="noreferrer">
+          <img src={photo} alt={`${label}, reported ${timeAgo(r.created_at, now)}`} />
+          <span className="sr-only"> (full size, opens in a new tab)</span>
+        </a>
+      )}
 
       <div className="detail-tags">
+        {sos && <span className="badge sos-tag">SOS</span>}
         <span className="badge" data-status={r.status}>
           {STATUS_LABEL[r.status]}
         </span>
@@ -54,7 +72,9 @@ export default function DetailPanel({ report: r, now, onStatus, onShowOnMap }: P
       <h3 className="detail-title" tabIndex={-1}>
         {label}
       </h3>
-      <p className={r.note ? "note" : "note muted"}>{r.note || "No note from the reporter."}</p>
+      <p className={r.note ? "note" : "note muted"}>
+        {r.note || (sos ? "Sent with the app's SOS button: a short video, no sound." : "No note from the reporter.")}
+      </p>
 
       <StatusStepper status={r.status} onChange={change} />
       {error && (

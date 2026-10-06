@@ -7,7 +7,7 @@ import FootfallPanel from "./features/footfall/FootfallPanel";
 import ForecastPanel from "./features/footfall/ForecastPanel";
 import { useFootfall } from "./features/footfall/useFootfall";
 import { useTickets } from "./features/queue/useTickets";
-import { isUnresolved } from "./features/queue/tickets";
+import { isSosActive, isUnresolved } from "./features/queue/tickets";
 import { ENV } from "./config/env";
 import { REFRESH_MS } from "./layers/congestion";
 import { manilaNow } from "./layers/footfall";
@@ -43,7 +43,11 @@ export default function App() {
   const mapView = useRef<MapHandle>(null);
   const unresolved = tickets.reports?.filter(isUnresolved).length ?? 0;
   const urgent = tickets.reports?.some((r) => isUnresolved(r) && r.severity === 3) ?? false;
-  const level = !tickets.reports ? "unknown" : urgent ? "urgent" : unresolved ? "waiting" : "clear";
+  const sosActive = tickets.reports?.some(isSosActive) ?? false;
+  // SOS nobody has opened yet (status still "open"): the banner asks for them until someone verifies one.
+  // Oldest first: the one that has waited longest is the one the banner opens.
+  const sosNew = tickets.reports?.filter((r) => isSosActive(r) && r.status === "open").toReversed() ?? [];
+  const level = !tickets.reports ? "unknown" : sosActive ? "sos" : urgent ? "urgent" : unresolved ? "waiting" : "clear";
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
@@ -80,6 +84,16 @@ export default function App() {
     if (document.getElementById("queue")?.contains(document.activeElement)) toggle.current?.focus();
     setQueueOpen(false);
     if (!keepSelection) setSelectedId(null);
+  }
+
+  // The banner's way in: the oldest SOS still waiting, opened as a ticket and shown on the map.
+  function openSos(r: Report) {
+    setNavOpen(false);
+    closeInsights();
+    closeForecast();
+    setSelectedId(r.id);
+    setQueueOpen(true);
+    showOnMap(r);
   }
 
   function closeInsights() {
@@ -210,7 +224,7 @@ export default function App() {
           <div className="hud-row">
             {/* Always on screen, so tickets are one tap away even with the panel closed. */}
             <button
-              className={`status tickets-btn${tickets.fresh.length ? " fresh" : ""}`}
+              className={`status tickets-btn${tickets.fresh.length ? " fresh" : ""}${sosActive ? " sos" : ""}`}
               aria-expanded={queueOpen}
               aria-controls="queue"
               onClick={() => (queueOpen ? closeQueue() : openView("tickets"))}
@@ -218,7 +232,9 @@ export default function App() {
               <i className="dot" data-level={level} />
               Tickets
               <b>{tickets.reports ? unresolved : "–"}</b>
-              <span className="sr-only">{urgent ? " unresolved, some urgent" : " unresolved"}</span>
+              <span className="sr-only">
+                {sosActive ? " unresolved, including an SOS" : urgent ? " unresolved, some urgent" : " unresolved"}
+              </span>
             </button>
             <div role="status">
               {!tickets.online && (
@@ -234,6 +250,18 @@ export default function App() {
               <span className="refreshed">refreshed {clock(new Date(stamp))}</span>
             </div>
           </div>
+
+          {sosNew.length > 0 && (
+            <div role="alert">
+              <button className="sos-banner" onClick={() => openSos(sosNew[0])}>
+                <i className="dot" data-level="sos" />
+                <span>
+                  <b>SOS</b> · {sosNew.length === 1 ? "1 new crime signal" : `${sosNew.length} new crime signals`}
+                </span>
+                <em>Open</em>
+              </button>
+            </div>
+          )}
 
           <details
             className="panel side"
@@ -304,7 +332,7 @@ export default function App() {
 
         <div className="toast" role="status">
           {tickets.toast && (
-            <span key={tickets.toast.id}>
+            <span key={tickets.toast.id} data-sos={tickets.toast.sos || undefined}>
               <i className="dot" data-status="open" />
               {tickets.toast.text}
             </span>

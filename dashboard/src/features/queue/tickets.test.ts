@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { Report } from "../../types/api.ts";
-import { STATUSES, newReports, rank, steps, timeAgo, toGeoJSON } from "./tickets.ts";
+import { CATEGORY_LABEL, STATUSES, isSos, isSosActive, newReports, rank, steps, timeAgo, toGeoJSON } from "./tickets.ts";
 
 const T0 = Date.parse("2026-10-06T07:00:00Z");
 const at = (min: number) => new Date(T0 + min * 60_000).toISOString();
@@ -97,9 +97,38 @@ test("toGeoJSON: [lng, lat] points with status, only the selected one flagged", 
   assert.deepEqual(
     fc.features.map((f) => f.properties),
     [
-      { id: "a", status: "verified", selected: false },
-      { id: "b", status: "open", selected: true },
+      { id: "a", status: "verified", selected: false, alert: false },
+      { id: "b", status: "open", selected: true, alert: false },
     ],
   );
   assert.deepEqual(toGeoJSON([], null).features, []);
+});
+
+const sos = (id: string, over: Partial<Report> = {}) => report(id, { category: "sos", severity: 3, photo_url: "", video_url: `/videos/${id}.mp4`, ...over });
+
+test("an SOS is labelled, and only one nobody has fixed counts as active", () => {
+  assert.equal(CATEGORY_LABEL.sos, "SOS · Crime signal");
+  assert.ok(isSos(sos("a")) && !isSos(report("b")));
+  assert.ok(isSosActive(sos("a")));
+  for (const status of ["verified", "assigned"] as const) assert.ok(isSosActive(sos("a", { status })), status);
+  assert.ok(!isSosActive(sos("a", { status: "fixed" })), "a fixed SOS stops blinking");
+  assert.ok(!isSosActive(report("b", { severity: 3 })), "an urgent hazard is not an SOS");
+});
+
+test("rank: an open SOS tops the queue, even over an older urgent hazard", () => {
+  const input = [
+    report("urgent-old", { severity: 3, created_at: at(-120) }),
+    sos("sos-new", { created_at: at(-1) }),
+    report("medium", { created_at: at(-60) }),
+    sos("sos-old", { created_at: at(-10), status: "assigned" }),
+    sos("sos-fixed", { status: "fixed", created_at: at(-200) }),
+  ];
+  assert.deepEqual(rank(input).map((r) => r.id), ["sos-old", "sos-new", "urgent-old", "medium", "sos-fixed"]);
+});
+
+test("toGeoJSON: only an unfixed SOS is an alert, which is what makes its pin blink", () => {
+  const props = toGeoJSON([sos("a"), sos("b", { status: "fixed" }), report("c", { severity: 3 })], null).features.map(
+    (f) => f.properties.alert,
+  );
+  assert.deepEqual(props, [true, false, false]);
 });
