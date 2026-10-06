@@ -252,10 +252,12 @@ class ApiClient {
     return WalkRoute.fromJson(body as Map<String, dynamic>);
   }
 
-  /// Ways to get from [from] to [to] by walking and riding one PUV or train.
+  /// Ways to get from [from] to [to] by walking and riding one PUV or train. The walking legs are routed in
+  /// [mode], a key of routeModes.
   Future<List<CommuteOption>> commute({
     required ({double lat, double lng}) from,
     required ({double lat, double lng}) to,
+    required String mode,
   }) async {
     final url = Uri.parse('$base/route/commute').replace(
       queryParameters: {
@@ -263,6 +265,7 @@ class ApiClient {
         'from_lng': '${from.lng}',
         'to_lat': '${to.lat}',
         'to_lng': '${to.lng}',
+        'mode': mode,
       },
     );
     final body = await _send(http.AbortableRequest('GET', url, abortTrigger: _deadline()));

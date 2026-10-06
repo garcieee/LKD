@@ -474,7 +474,7 @@ void main() {
           return jsonResponse([serverOption()], 200);
         }),
       );
-      final options = await api.commute(from: from, to: to);
+      final options = await api.commute(from: from, to: to, mode: 'accessible');
       expect(got.method, 'GET');
       expect(got.url.path, '/route/commute');
       expect(got.url.queryParameters, {
@@ -482,6 +482,7 @@ void main() {
         'from_lng': '121.0244',
         'to_lat': '14.556',
         'to_lng': '121.002',
+        'mode': 'accessible',
       });
       final o = options.single;
       expect(o.totalS, 1320.0, reason: 'a whole number is read as a double');
@@ -494,14 +495,14 @@ void main() {
 
     test('no way to ride is an empty list, not an error', () async {
       final api = apiWith(MockClient((_) async => jsonResponse([], 200)));
-      expect(await api.commute(from: from, to: to), isEmpty);
+      expect(await api.commute(from: from, to: to, mode: 'walkable'), isEmpty);
     });
 
     test("shows the server's message when the trip is outside Makati", () {
       final api = apiWith(
         MockClient((_) async => jsonResponse({'detail': 'Both ends of the trip must be in Makati.'}, 422)),
       );
-      expect(api.commute(from: from, to: to), apiError('Both ends of the trip must be in Makati.'));
+      expect(api.commute(from: from, to: to, mode: 'walkable'), apiError('Both ends of the trip must be in Makati.'));
     });
   });
 

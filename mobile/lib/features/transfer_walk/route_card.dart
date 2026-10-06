@@ -53,10 +53,11 @@ class RouteCard extends StatelessWidget {
                 style: const TextStyle(fontSize: 12, color: muted),
               ),
               const SizedBox(height: 8),
-              if (trip.hasCommute) ...[_KindToggle(trip: trip), const SizedBox(height: 10)],
-              if (trip.kind == 'commute')
-                CommuteList(trip: trip)
-              else ...[
+              if (trip.step == TripStep.commute) ...[
+                _BackToWalk(trip: trip),
+                const SizedBox(height: 6),
+                CommuteList(trip: trip),
+              ] else ...[
                 ModeToggle(trip: trip),
                 const SizedBox(height: 10),
                 if (route != null) ...[
@@ -76,6 +77,14 @@ class RouteCard extends StatelessWidget {
                     trip.planned ? 'Finding the route…' : 'Waiting for your location…',
                     style: const TextStyle(fontSize: 12, color: muted),
                   ),
+                if (trip.hasCommute) ...[
+                  const SizedBox(height: 10),
+                  FilledButton(
+                    onPressed: route == null ? null : trip.toCommute,
+                    style: FilledButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: radiusButton)),
+                    child: const Text('Next: ride options'),
+                  ),
+                ],
               ],
             ],
           ),
@@ -85,30 +94,21 @@ class RouteCard extends StatelessWidget {
   }
 }
 
-/// Commute ⇄ Walk.
-class _KindToggle extends StatelessWidget {
-  const _KindToggle({required this.trip});
+/// The way back to the walking comparison, naming the mode the commute's walking legs use.
+class _BackToWalk extends StatelessWidget {
+  const _BackToWalk({required this.trip});
 
   final TripState trip;
 
   @override
   Widget build(BuildContext context) {
-    return SegmentedButton<String>(
-      showSelectedIcon: false,
-      style: SegmentedButton.styleFrom(
-        visualDensity: VisualDensity.compact,
-        selectedBackgroundColor: navy,
-        selectedForegroundColor: paper,
-        textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-        shape: const RoundedRectangleBorder(borderRadius: radiusButton),
-        side: const BorderSide(color: hairline),
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: TextButton.icon(
+        onPressed: trip.backToWalk,
+        icon: const Icon(Icons.arrow_back, size: 16),
+        label: Text('Walking: ${routeModes[trip.mode]}'),
       ),
-      segments: const [
-        ButtonSegment(value: 'commute', label: Text('Commute'), icon: Icon(Icons.directions_bus, size: 16)),
-        ButtonSegment(value: 'walk', label: Text('Walk'), icon: Icon(Icons.directions_walk, size: 16)),
-      ],
-      selected: {trip.kind},
-      onSelectionChanged: (s) => trip.setKind(s.first),
     );
   }
 }

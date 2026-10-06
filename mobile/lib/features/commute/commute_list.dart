@@ -28,10 +28,10 @@ class CommuteList extends StatelessWidget {
     if (options.isEmpty) {
       final text =
           trip.commuteError ??
-          (trip.planned && !trip.loading
-              ? 'No ride found near both ends of this trip. Try Walk.'
-              : trip.planned
+          (trip.commuteLoading
               ? 'Finding ways to get there…'
+              : trip.commuteMode != null
+              ? 'No ride found near both ends of this trip.'
               : 'Waiting for your location…');
       return Text(text, style: TextStyle(fontSize: 12, color: trip.commuteError == null ? muted : warn));
     }

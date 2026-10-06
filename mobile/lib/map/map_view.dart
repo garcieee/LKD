@@ -45,7 +45,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   final _location = LocationState();
   final _trip = TripState(
     (from, to, mode) => api.route(from: from, to: to, mode: mode),
-    (from, to) => api.commute(from: from, to: to),
+    (from, to, mode) => api.commute(from: from, to: to, mode: mode),
   );
   late final _search = PlaceSearch((text, near) => api.geocode(text, near: near));
   MapboxMap? _map;
@@ -165,13 +165,13 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _queue = _queue.then((_) async {
       final map = _map, place = _trip.destination;
       if (map == null) return;
-      final commute = _trip.hasCommute && _trip.kind == 'commute';
-      final option = commute ? _trip.option : null;
-      final route = commute ? null : _trip.route;
+      // The commute step draws the chosen option; until one lands, or when there is none, the walking route.
+      final option = _trip.step == TripStep.commute ? _trip.option : null;
+      final route = option == null ? _trip.route : null;
       try {
         if (!await map.isStyleLoaded()) return; // _ready() draws it once the style is up
         await showDestination(map, place);
-        if (commute) {
+        if (option != null) {
           await showCommute(map, option);
         } else {
           await showRoute(map, route);
