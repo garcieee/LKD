@@ -1,0 +1,11 @@
+{
+  "note": "ASSUMED values, not from the 2025 PUV study (which has no speeds or headways). speed_kmh is the average in Makati traffic; wait_min is the assumed wait at the stop. Check before demo use.",
+  "modes": {
+    "jeepney":    {"speed_kmh": 12, "wait_min": 4},
+    "uv_express": {"speed_kmh": 20, "wait_min": 8},
+    "city_bus":   {"speed_kmh": 15, "wait_min": 6},
+    "p2p_bus":    {"speed_kmh": 25, "wait_min": 10},
+    "mrt3":       {"speed_kmh": 33, "wait_min": 4},
+    "lrt1":       {"speed_kmh": 30, "wait_min": 4}
+  }
+}
