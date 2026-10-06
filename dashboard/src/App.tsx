@@ -97,7 +97,9 @@ export default function App() {
     closeForecast();
     setSelectedId(r.id);
     setQueueOpen(true);
-    if (!matchMedia(PHONE).matches) showOnMap(r);
+    // Closing a docked panel resizes the map, which re-frames the city and would cancel a flight started now: fly
+    // two frames on, once that has settled (and the Tickets panel is there to measure).
+    if (!matchMedia(PHONE).matches) requestAnimationFrame(() => requestAnimationFrame(() => showOnMap(r)));
   }
 
   function closeInsights() {
