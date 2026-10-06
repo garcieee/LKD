@@ -3,6 +3,7 @@ import { useState } from "react";
 import { photoUrl, videoUrl } from "../api/client";
 import type { Report, Status } from "../types/api";
 import StatusStepper from "../features/queue/StatusStepper";
+import TriageCard from "../features/queue/TriageCard";
 import { CATEGORY_LABEL, SEVERITY_LABEL, STATUS_LABEL, isSos, timeAgo } from "../features/queue/tickets";
 
 const when = (iso: string) =>
@@ -76,7 +77,9 @@ export default function DetailPanel({ report: r, now, onStatus, onShowOnMap }: P
         {r.note || (sos ? "Sent with the app's SOS button: a short video, no sound." : "No note from the reporter.")}
       </p>
 
-      <StatusStepper status={r.status} onChange={change} />
+      {/* A new ticket is reviewed first (Confirm or Reject); only then does it move along the stepper. */}
+      <TriageCard report={r} onChange={change} />
+      {r.status !== "open" && r.status !== "rejected" && <StatusStepper status={r.status} onChange={change} />}
       {error && (
         <p className="error" role="alert">
           Status not changed: {error}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import MapCanvas, { type MapHandle } from "./map/MapCanvas";
 import Legend from "./panels/Legend";
 import QueuePanel from "./features/queue/QueuePanel";
@@ -7,7 +7,7 @@ import FootfallPanel from "./features/footfall/FootfallPanel";
 import ForecastPanel from "./features/footfall/ForecastPanel";
 import { useFootfall } from "./features/footfall/useFootfall";
 import { useTickets } from "./features/queue/useTickets";
-import { isSosActive, isUnresolved } from "./features/queue/tickets";
+import { isRejected, isSosActive, isUnresolved } from "./features/queue/tickets";
 import { ENV } from "./config/env";
 import { REFRESH_MS } from "./layers/congestion";
 import { manilaNow } from "./layers/footfall";
@@ -43,6 +43,8 @@ export default function App() {
   const mapView = useRef<MapHandle>(null);
   const unresolved = tickets.reports?.filter(isUnresolved).length ?? 0;
   const urgent = tickets.reports?.some((r) => isUnresolved(r) && r.severity === 3) ?? false;
+  // Rejected tickets stay off the map: they were judged not real (they are still in the queue's "Show rejected").
+  const mapReports = useMemo(() => tickets.reports?.filter((r) => !isRejected(r)) ?? null, [tickets.reports]);
   const sosActive = tickets.reports?.some(isSosActive) ?? false;
   // SOS nobody has opened yet (status still "open"): the banner asks for them until someone verifies one.
   // Oldest first: the one that has waited longest is the one the banner opens.
@@ -215,7 +217,7 @@ export default function App() {
           congestionOn={congestionOn}
           stamp={stamp}
           footfall={footfallOn ? footfall.data : null}
-          reports={tickets.reports}
+          reports={mapReports}
           selectedId={selectedId}
           onSelect={selectPin}
         />

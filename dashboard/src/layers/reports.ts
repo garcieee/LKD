@@ -27,6 +27,7 @@ export const STATUS_COLOR: Record<Status, string> = {
   verified: "#8a6736",
   assigned: "#212e4a",
   fixed: "#41755e",
+  rejected: "#64605b", // never drawn: App keeps rejected tickets off the map
 };
 
 const isSelected: ExpressionSpecification = ["==", ["get", "selected"], true];

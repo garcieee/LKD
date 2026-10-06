@@ -5,7 +5,7 @@ import { photoUrl } from "../../api/client";
 import { ENV } from "../../config/env";
 import type { Report, Status } from "../../types/api";
 import DetailPanel, { Severity } from "../../panels/DetailPanel";
-import { CATEGORY_LABEL, STATUS_LABEL, isSos, isSosActive, isUnresolved, rank, timeAgo } from "./tickets";
+import { CATEGORY_LABEL, STATUS_LABEL, isRejected, isSos, isSosActive, isUnresolved, needsReview, rank, timeAgo } from "./tickets";
 
 type Props = {
   reports: Report[] | null; // null until the API first answers
@@ -37,12 +37,16 @@ export default function QueuePanel({
   onShowOnMap,
 }: Props) {
   const [showFixed, setShowFixed] = useState(false);
+  const [showRejected, setShowRejected] = useState(false);
   const panel = useRef<HTMLElement>(null);
   const last = useRef<string | null>(null);
   const all = reports ?? [];
   const selected = all.find((r) => r.id === selectedId);
   const open = all.filter(isUnresolved).length;
-  const rows = rank(all).filter((r) => showFixed || isUnresolved(r));
+  const review = all.filter(needsReview).length;
+  const fixed = all.filter((r) => r.status === "fixed").length;
+  const rejected = all.filter(isRejected).length;
+  const rows = rank(all).filter((r) => isUnresolved(r) || (r.status === "fixed" ? showFixed : showRejected));
 
   // Keyboard focus follows the view: into the ticket, then back to its row (or the title).
   useEffect(() => {
@@ -72,7 +76,11 @@ export default function QueuePanel({
         <h2 id="queue-title" className="panel-title" tabIndex={-1}>
           Tickets
         </h2>
-        {reports && <span className="src">{open} unresolved</span>}
+        {reports && (
+          <span className="src">
+            {open} unresolved{review ? ` · ${review} to review` : ""}
+          </span>
+        )}
         <button className="icon-btn close" aria-label="Close tickets" onClick={onClose}>
           <Icon d="m5.5 5.5 9 9m0-9-9 9" />
         </button>
@@ -92,14 +100,19 @@ export default function QueuePanel({
           <label className="switch">
             <input type="checkbox" checked={showFixed} onChange={(e) => setShowFixed(e.target.checked)} />
             <span>Show fixed</span>
-            <span className="chip">{all.length - open}</span>
+            <span className="chip">{fixed}</span>
+          </label>
+          <label className="switch">
+            <input type="checkbox" checked={showRejected} onChange={(e) => setShowRejected(e.target.checked)} />
+            <span>Show rejected</span>
+            <span className="chip">{rejected}</span>
           </label>
           {rows.length ? (
             <ol className="tickets">
               {rows.map((r) => (
                 <li key={r.id}>
                   <button
-                    className={`ticket${fresh.includes(r.id) ? " fresh" : ""}${isSosActive(r) ? " sos" : ""}`}
+                    className={`ticket${fresh.includes(r.id) ? " fresh" : ""}${isSosActive(r) ? " sos" : ""}${isRejected(r) ? " rejected" : ""}`}
                     data-id={r.id}
                     onClick={() => onSelect(r.id)}
                   >
@@ -113,7 +126,7 @@ export default function QueuePanel({
                     )}
                     <b>{CATEGORY_LABEL[r.category]}</b>
                     <span className="badge" data-status={r.status}>
-                      {STATUS_LABEL[r.status]}
+                      {needsReview(r) ? "To review" : STATUS_LABEL[r.status]}
                     </span>
                     <small>
                       <Severity level={r.severity} />·<span>{timeAgo(r.created_at, now)}</span>
