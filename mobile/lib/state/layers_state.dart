@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 class LayersState extends ChangeNotifier {
   bool congestionOn = true; // on by default, as on the dashboard
   bool threeD = true; // tilted map with extruded buildings; off is the flat top-down map
+  bool hubsOn = true; // transit terminals and stops
   DateTime stamp = DateTime.now(); // last refresh; also the tile cache-buster
 
   void setCongestion(bool on) {
@@ -17,6 +18,11 @@ class LayersState extends ChangeNotifier {
 
   void setThreeD(bool on) {
     threeD = on;
+    notifyListeners();
+  }
+
+  void setHubs(bool on) {
+    hubsOn = on;
     notifyListeners();
   }
 

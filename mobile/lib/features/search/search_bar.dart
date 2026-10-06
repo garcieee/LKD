@@ -24,7 +24,32 @@ class _PlaceSearchBarState extends State<PlaceSearchBar> {
   bool _picked = false; // the text is a chosen place, not a query: no suggestions
 
   @override
+  void initState() {
+    super.initState();
+    widget.trip.addListener(_followTrip);
+  }
+
+  // A destination set from elsewhere (a transit hub's "Walk here") shows in the field, and one cleared
+  // from elsewhere empties it.
+  void _followTrip() {
+    final place = widget.trip.destination;
+    if (place == null) {
+      if (_picked) {
+        _picked = false;
+        _text.clear();
+        setState(() {});
+      }
+    } else if (_text.text != place.label) {
+      _picked = true;
+      _text.text = place.label;
+      widget.search.clear();
+      setState(() {});
+    }
+  }
+
+  @override
   void dispose() {
+    widget.trip.removeListener(_followTrip);
     _text.dispose();
     _focus.dispose();
     super.dispose();

@@ -1,0 +1,969 @@
+{
+  "best": {
+    "base": "v1",
+    "flags": {
+      "prefix": true,
+      "squeeze": true,
+      "suffix": true,
+      "typo": true,
+      "typo_min_len": 7,
+      "typo_same_first": true
+    },
+    "name": "repeats+prefix+suffix+typo1_strict"
+  },
+  "meta": {
+    "git_commit": "3e8d6cf",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T13:38:35+00:00"
+  },
+  "rule": "carry forward the variant (on v1) with the largest rise in category macro-F1 + danger PR-AUC, if above zero",
+  "table": [
+    {
+      "accuracy": 0.7394736842105263,
+      "base": "v0",
+      "coverage": 0.49736842105263157,
+      "danger_f2": 0.7980049875311721,
+      "danger_pr_auc": 0.7737299312430761,
+      "danger_precision": 0.8767123287671232,
+      "danger_recall": 0.7804878048780488,
+      "danger_roc_auc": 0.8802995580291373,
+      "hint_precision": 0.9576719576719577,
+      "macro_f1": 0.7451760153528696,
+      "variant": "(none)"
+    },
+    {
+      "accuracy": 0.7394736842105263,
+      "base": "v0",
+      "coverage": 0.49736842105263157,
+      "d_danger_pr_auc": 0.0,
+      "d_macro_f1": 0.0,
+      "danger_f2": 0.7980049875311721,
+      "danger_pr_auc": 0.7737299312430761,
+      "danger_precision": 0.8767123287671232,
+      "danger_recall": 0.7804878048780488,
+      "danger_roc_auc": 0.8802995580291373,
+      "hint_precision": 0.9576719576719577,
+      "macro_f1": 0.7451760153528696,
+      "rewritten_words": 373,
+      "top_rewrites": [
+        [
+          "kalayaan",
+          "kalayan",
+          15
+        ],
+        [
+          "street",
+          "stret",
+          15
+        ],
+        [
+          "magallanes",
+          "magalanes",
+          14
+        ],
+        [
+          "school",
+          "schol",
+          13
+        ],
+        [
+          "still",
+          "stil",
+          11
+        ],
+        [
+          "been",
+          "ben",
+          10
+        ],
+        [
+          "off",
+          "of",
+          9
+        ],
+        [
+          "streetlight",
+          "stretlight",
+          9
+        ]
+      ],
+      "variant": "repeats"
+    },
+    {
+      "accuracy": 0.7526315789473684,
+      "base": "v0",
+      "coverage": 0.5131578947368421,
+      "d_danger_pr_auc": -0.0016182495999437219,
+      "d_macro_f1": 0.011025138172203741,
+      "danger_f2": 0.8044554455445545,
+      "danger_pr_auc": 0.7721116816431324,
+      "danger_precision": 0.8552631578947368,
+      "danger_recall": 0.7926829268292683,
+      "danger_roc_auc": 0.8841872646914389,
+      "hint_precision": 0.9538461538461539,
+      "macro_f1": 0.7562011535250733,
+      "rewritten_words": 39,
+      "top_rewrites": [
+        [
+          "walng",
+          "walang",
+          5
+        ],
+        [
+          "rains",
+          "drains",
+          3
+        ],
+        [
+          "parang",
+          "harang",
+          3
+        ],
+        [
+          "habang",
+          "harang",
+          2
+        ],
+        [
+          "pedestrians",
+          "pedestrian",
+          2
+        ],
+        [
+          "streets",
+          "street",
+          2
+        ],
+        [
+          "marked",
+          "parked",
+          2
+        ],
+        [
+          "through",
+          "though",
+          1
+        ]
+      ],
+      "variant": "typo1"
+    },
+    {
+      "accuracy": 0.75,
+      "base": "v0",
+      "coverage": 0.5052631578947369,
+      "d_danger_pr_auc": -0.005201325615625585,
+      "d_macro_f1": 0.011801922586053504,
+      "danger_f2": 0.7960199004975125,
+      "danger_pr_auc": 0.7685286056274505,
+      "danger_precision": 0.8648648648648649,
+      "danger_recall": 0.7804878048780488,
+      "danger_roc_auc": 0.8791946308724833,
+      "hint_precision": 0.9635416666666666,
+      "macro_f1": 0.7569779379389231,
+      "rewritten_words": 13,
+      "top_rewrites": [
+        [
+          "pedestrians",
+          "pedestrian",
+          2
+        ],
+        [
+          "kumikisap",
+          "kumikislap",
+          1
+        ],
+        [
+          "kumikislp",
+          "kumikislap",
+          1
+        ],
+        [
+          "pothle",
+          "pothole",
+          1
+        ],
+        [
+          "skipped",
+          "slipped",
+          1
+        ],
+        [
+          "floded",
+          "flooded",
+          1
+        ],
+        [
+          "ooverflow",
+          "overflow",
+          1
+        ],
+        [
+          "bumababa",
+          "bumabaha",
+          1
+        ]
+      ],
+      "variant": "typo1_strict"
+    },
+    {
+      "accuracy": 0.7578947368421053,
+      "base": "v0",
+      "coverage": 0.5394736842105263,
+      "d_danger_pr_auc": -0.06389360261663202,
+      "d_macro_f1": 0.010026466806704049,
+      "danger_f2": 0.7919621749408984,
+      "danger_pr_auc": 0.7098363286264441,
+      "danger_precision": 0.7052631578947368,
+      "danger_recall": 0.8170731707317073,
+      "danger_roc_auc": 0.8764936978228842,
+      "hint_precision": 0.926829268292683,
+      "macro_f1": 0.7552024821595736,
+      "rewritten_words": 207,
+      "top_rewrites": [
+        [
+          "lang",
+          "lane",
+          47
+        ],
+        [
+          "night",
+          "light",
+          8
+        ],
+        [
+          "ako",
+          "bako",
+          8
+        ],
+        [
+          "rain",
+          "drain",
+          6
+        ],
+        [
+          "pole",
+          "hole",
+          6
+        ],
+        [
+          "right",
+          "light",
+          5
+        ],
+        [
+          "walng",
+          "walang",
+          5
+        ],
+        [
+          "bahay",
+          "baha",
+          5
+        ]
+      ],
+      "variant": "typo1_naive"
+    },
+    {
+      "accuracy": 0.7394736842105263,
+      "base": "v0",
+      "coverage": 0.49736842105263157,
+      "d_danger_pr_auc": 0.0,
+      "d_macro_f1": 0.0,
+      "danger_f2": 0.7980049875311721,
+      "danger_pr_auc": 0.7737299312430761,
+      "danger_precision": 0.8767123287671232,
+      "danger_recall": 0.7804878048780488,
+      "danger_roc_auc": 0.8802995580291373,
+      "hint_precision": 0.9576719576719577,
+      "macro_f1": 0.7451760153528696,
+      "rewritten_words": 2,
+      "top_rewrites": [
+        [
+          "nasira",
+          "sira",
+          1
+        ],
+        [
+          "nabutas",
+          "butas",
+          1
+        ]
+      ],
+      "variant": "prefix"
+    },
+    {
+      "accuracy": 0.7394736842105263,
+      "base": "v0",
+      "coverage": 0.49736842105263157,
+      "d_danger_pr_auc": 0.0102949794185484,
+      "d_macro_f1": 0.0,
+      "danger_f2": 0.8084577114427862,
+      "danger_pr_auc": 0.7840249106616245,
+      "danger_precision": 0.8783783783783784,
+      "danger_recall": 0.7926829268292683,
+      "danger_roc_auc": 0.8865812735308561,
+      "hint_precision": 0.9576719576719577,
+      "macro_f1": 0.7451760153528696,
+      "rewritten_words": 4,
+      "top_rewrites": [
+        [
+          "batang",
+          "bata",
+          3
+        ],
+        [
+          "kalsadang",
+          "kalsada",
+          1
+        ]
+      ],
+      "variant": "suffix_ng"
+    },
+    {
+      "accuracy": 0.7394736842105263,
+      "base": "v0",
+      "coverage": 0.49736842105263157,
+      "d_danger_pr_auc": 0.0102949794185484,
+      "d_macro_f1": 0.0,
+      "danger_f2": 0.8084577114427862,
+      "danger_pr_auc": 0.7840249106616245,
+      "danger_precision": 0.8783783783783784,
+      "danger_recall": 0.7926829268292683,
+      "danger_roc_auc": 0.8865812735308561,
+      "hint_precision": 0.9576719576719577,
+      "macro_f1": 0.7451760153528696,
+      "rewritten_words": 379,
+      "top_rewrites": [
+        [
+          "kalayaan",
+          "kalayan",
+          15
+        ],
+        [
+          "street",
+          "stret",
+          15
+        ],
+        [
+          "magallanes",
+          "magalanes",
+          14
+        ],
+        [
+          "school",
+          "schol",
+          13
+        ],
+        [
+          "still",
+          "stil",
+          11
+        ],
+        [
+          "been",
+          "ben",
+          10
+        ],
+        [
+          "off",
+          "of",
+          9
+        ],
+        [
+          "streetlight",
+          "stretlight",
+          9
+        ]
+      ],
+      "variant": "repeats+prefix+suffix"
+    },
+    {
+      "accuracy": 0.7526315789473684,
+      "base": "v0",
+      "coverage": 0.5157894736842106,
+      "d_danger_pr_auc": 0.005153252325601709,
+      "d_macro_f1": 0.010187657145693807,
+      "danger_f2": 0.8064516129032259,
+      "danger_pr_auc": 0.7788831835686778,
+      "danger_precision": 0.8666666666666667,
+      "danger_recall": 0.7926829268292683,
+      "danger_roc_auc": 0.8854968079882142,
+      "hint_precision": 0.9489795918367347,
+      "macro_f1": 0.7553636724985634,
+      "rewritten_words": 411,
+      "top_rewrites": [
+        [
+          "kalayaan",
+          "kalayan",
+          15
+        ],
+        [
+          "street",
+          "stret",
+          15
+        ],
+        [
+          "magallanes",
+          "magalanes",
+          14
+        ],
+        [
+          "school",
+          "schol",
+          13
+        ],
+        [
+          "still",
+          "stil",
+          11
+        ],
+        [
+          "been",
+          "ben",
+          10
+        ],
+        [
+          "off",
+          "of",
+          9
+        ],
+        [
+          "streetlight",
+          "stretlight",
+          9
+        ]
+      ],
+      "variant": "repeats+prefix+suffix+typo1"
+    },
+    {
+      "accuracy": 0.75,
+      "base": "v0",
+      "coverage": 0.5052631578947369,
+      "d_danger_pr_auc": 0.0102949794185484,
+      "d_macro_f1": 0.011801922586053504,
+      "danger_f2": 0.8084577114427862,
+      "danger_pr_auc": 0.7840249106616245,
+      "danger_precision": 0.8783783783783784,
+      "danger_recall": 0.7926829268292683,
+      "danger_roc_auc": 0.8865812735308561,
+      "hint_precision": 0.9635416666666666,
+      "macro_f1": 0.7569779379389231,
+      "rewritten_words": 388,
+      "top_rewrites": [
+        [
+          "kalayaan",
+          "kalayan",
+          15
+        ],
+        [
+          "street",
+          "stret",
+          15
+        ],
+        [
+          "magallanes",
+          "magalanes",
+          14
+        ],
+        [
+          "school",
+          "schol",
+          13
+        ],
+        [
+          "still",
+          "stil",
+          11
+        ],
+        [
+          "been",
+          "ben",
+          10
+        ],
+        [
+          "off",
+          "of",
+          9
+        ],
+        [
+          "streetlight",
+          "stretlight",
+          9
+        ]
+      ],
+      "variant": "repeats+prefix+suffix+typo1_strict"
+    },
+    {
+      "accuracy": 0.7921052631578948,
+      "base": "v1",
+      "coverage": 0.5552631578947368,
+      "danger_f2": 0.8780487804878049,
+      "danger_pr_auc": 0.8448761701994427,
+      "danger_precision": 0.8780487804878049,
+      "danger_recall": 0.8780487804878049,
+      "danger_roc_auc": 0.9287935832378458,
+      "hint_precision": 0.95260663507109,
+      "macro_f1": 0.7835697236330826,
+      "variant": "(none)"
+    },
+    {
+      "accuracy": 0.7921052631578948,
+      "base": "v1",
+      "coverage": 0.5552631578947368,
+      "d_danger_pr_auc": 0.0,
+      "d_macro_f1": 0.0,
+      "danger_f2": 0.8780487804878049,
+      "danger_pr_auc": 0.8448761701994427,
+      "danger_precision": 0.8780487804878049,
+      "danger_recall": 0.8780487804878049,
+      "danger_roc_auc": 0.9287935832378458,
+      "hint_precision": 0.95260663507109,
+      "macro_f1": 0.7835697236330826,
+      "rewritten_words": 373,
+      "top_rewrites": [
+        [
+          "kalayaan",
+          "kalayan",
+          15
+        ],
+        [
+          "street",
+          "stret",
+          15
+        ],
+        [
+          "magallanes",
+          "magalanes",
+          14
+        ],
+        [
+          "school",
+          "schol",
+          13
+        ],
+        [
+          "still",
+          "stil",
+          11
+        ],
+        [
+          "been",
+          "ben",
+          10
+        ],
+        [
+          "off",
+          "of",
+          9
+        ],
+        [
+          "streetlight",
+          "stretlight",
+          9
+        ]
+      ],
+      "variant": "repeats"
+    },
+    {
+      "accuracy": 0.8052631578947368,
+      "base": "v1",
+      "coverage": 0.5684210526315789,
+      "d_danger_pr_auc": -0.008455851109033796,
+      "d_macro_f1": 0.012976637540005775,
+      "danger_f2": 0.8737864077669902,
+      "danger_pr_auc": 0.8364203190904089,
+      "danger_precision": 0.8571428571428571,
+      "danger_recall": 0.8780487804878049,
+      "danger_roc_auc": 0.9269929612047799,
+      "hint_precision": 0.9537037037037037,
+      "macro_f1": 0.7965463611730884,
+      "rewritten_words": 39,
+      "top_rewrites": [
+        [
+          "walng",
+          "walang",
+          5
+        ],
+        [
+          "rains",
+          "drains",
+          3
+        ],
+        [
+          "parang",
+          "harang",
+          3
+        ],
+        [
+          "habang",
+          "harang",
+          2
+        ],
+        [
+          "pedestrians",
+          "pedestrian",
+          2
+        ],
+        [
+          "streets",
+          "street",
+          2
+        ],
+        [
+          "marked",
+          "parked",
+          2
+        ],
+        [
+          "through",
+          "though",
+          1
+        ]
+      ],
+      "variant": "typo1"
+    },
+    {
+      "accuracy": 0.8026315789473685,
+      "base": "v1",
+      "coverage": 0.5631578947368421,
+      "d_danger_pr_auc": -0.005160439497430502,
+      "d_macro_f1": 0.011314257556065854,
+      "danger_f2": 0.8759124087591239,
+      "danger_pr_auc": 0.8397157307020122,
+      "danger_precision": 0.8674698795180723,
+      "danger_recall": 0.8780487804878049,
+      "danger_roc_auc": 0.9277705025372401,
+      "hint_precision": 0.9579439252336449,
+      "macro_f1": 0.7948839811891485,
+      "rewritten_words": 13,
+      "top_rewrites": [
+        [
+          "pedestrians",
+          "pedestrian",
+          2
+        ],
+        [
+          "kumikisap",
+          "kumikislap",
+          1
+        ],
+        [
+          "kumikislp",
+          "kumikislap",
+          1
+        ],
+        [
+          "pothle",
+          "pothole",
+          1
+        ],
+        [
+          "skipped",
+          "slipped",
+          1
+        ],
+        [
+          "floded",
+          "flooded",
+          1
+        ],
+        [
+          "ooverflow",
+          "overflow",
+          1
+        ],
+        [
+          "bumababa",
+          "bumabaha",
+          1
+        ]
+      ],
+      "variant": "typo1_strict"
+    },
+    {
+      "accuracy": 0.7894736842105263,
+      "base": "v1",
+      "coverage": 0.5868421052631579,
+      "d_danger_pr_auc": -0.09529584038804739,
+      "d_macro_f1": -0.004851042361714741,
+      "danger_f2": 0.8333333333333334,
+      "danger_pr_auc": 0.7495803298113953,
+      "danger_precision": 0.6923076923076923,
+      "danger_recall": 0.8780487804878049,
+      "danger_roc_auc": 0.9054059584220002,
+      "hint_precision": 0.9192825112107623,
+      "macro_f1": 0.7787186812713679,
+      "rewritten_words": 213,
+      "top_rewrites": [
+        [
+          "lang",
+          "lane",
+          47
+        ],
+        [
+          "night",
+          "light",
+          8
+        ],
+        [
+          "ako",
+          "bako",
+          8
+        ],
+        [
+          "rain",
+          "drain",
+          6
+        ],
+        [
+          "right",
+          "light",
+          5
+        ],
+        [
+          "walng",
+          "walang",
+          5
+        ],
+        [
+          "bahay",
+          "baha",
+          5
+        ],
+        [
+          "dulo",
+          "dugo",
+          4
+        ]
+      ],
+      "variant": "typo1_naive"
+    },
+    {
+      "accuracy": 0.7947368421052632,
+      "base": "v1",
+      "coverage": 0.5578947368421052,
+      "d_danger_pr_auc": 0.0,
+      "d_macro_f1": 0.0023943209872301363,
+      "danger_f2": 0.8780487804878049,
+      "danger_pr_auc": 0.8448761701994427,
+      "danger_precision": 0.8780487804878049,
+      "danger_recall": 0.8780487804878049,
+      "danger_roc_auc": 0.9287935832378458,
+      "hint_precision": 0.9528301886792453,
+      "macro_f1": 0.7859640446203128,
+      "rewritten_words": 2,
+      "top_rewrites": [
+        [
+          "nasira",
+          "sira",
+          1
+        ],
+        [
+          "nabutas",
+          "butas",
+          1
+        ]
+      ],
+      "variant": "prefix"
+    },
+    {
+      "accuracy": 0.7921052631578948,
+      "base": "v1",
+      "coverage": 0.5552631578947368,
+      "d_danger_pr_auc": 0.0,
+      "d_macro_f1": 0.0,
+      "danger_f2": 0.8780487804878049,
+      "danger_pr_auc": 0.8448761701994427,
+      "danger_precision": 0.8780487804878049,
+      "danger_recall": 0.8780487804878049,
+      "danger_roc_auc": 0.9287935832378458,
+      "hint_precision": 0.95260663507109,
+      "macro_f1": 0.7835697236330826,
+      "rewritten_words": 1,
+      "top_rewrites": [
+        [
+          "kalsadang",
+          "kalsada",
+          1
+        ]
+      ],
+      "variant": "suffix_ng"
+    },
+    {
+      "accuracy": 0.7947368421052632,
+      "base": "v1",
+      "coverage": 0.5578947368421052,
+      "d_danger_pr_auc": 0.0,
+      "d_macro_f1": 0.0023943209872301363,
+      "danger_f2": 0.8780487804878049,
+      "danger_pr_auc": 0.8448761701994427,
+      "danger_precision": 0.8780487804878049,
+      "danger_recall": 0.8780487804878049,
+      "danger_roc_auc": 0.9287935832378458,
+      "hint_precision": 0.9528301886792453,
+      "macro_f1": 0.7859640446203128,
+      "rewritten_words": 376,
+      "top_rewrites": [
+        [
+          "kalayaan",
+          "kalayan",
+          15
+        ],
+        [
+          "street",
+          "stret",
+          15
+        ],
+        [
+          "magallanes",
+          "magalanes",
+          14
+        ],
+        [
+          "school",
+          "schol",
+          13
+        ],
+        [
+          "still",
+          "stil",
+          11
+        ],
+        [
+          "been",
+          "ben",
+          10
+        ],
+        [
+          "off",
+          "of",
+          9
+        ],
+        [
+          "streetlight",
+          "stretlight",
+          9
+        ]
+      ],
+      "variant": "repeats+prefix+suffix"
+    },
+    {
+      "accuracy": 0.8078947368421052,
+      "base": "v1",
+      "coverage": 0.5736842105263158,
+      "d_danger_pr_auc": -0.005160439497430502,
+      "d_macro_f1": 0.014534397602133597,
+      "danger_f2": 0.8759124087591239,
+      "danger_pr_auc": 0.8397157307020122,
+      "danger_precision": 0.8674698795180723,
+      "danger_recall": 0.8780487804878049,
+      "danger_roc_auc": 0.9277705025372401,
+      "hint_precision": 0.9495412844036697,
+      "macro_f1": 0.7981041212352162,
+      "rewritten_words": 408,
+      "top_rewrites": [
+        [
+          "kalayaan",
+          "kalayan",
+          15
+        ],
+        [
+          "street",
+          "stret",
+          15
+        ],
+        [
+          "magallanes",
+          "magalanes",
+          14
+        ],
+        [
+          "school",
+          "schol",
+          13
+        ],
+        [
+          "still",
+          "stil",
+          11
+        ],
+        [
+          "been",
+          "ben",
+          10
+        ],
+        [
+          "off",
+          "of",
+          9
+        ],
+        [
+          "streetlight",
+          "stretlight",
+          9
+        ]
+      ],
+      "variant": "repeats+prefix+suffix+typo1"
+    },
+    {
+      "accuracy": 0.8052631578947368,
+      "base": "v1",
+      "coverage": 0.5657894736842105,
+      "d_danger_pr_auc": 0.0,
+      "d_macro_f1": 0.013667003208426731,
+      "danger_f2": 0.8780487804878049,
+      "danger_pr_auc": 0.8448761701994427,
+      "danger_precision": 0.8780487804878049,
+      "danger_recall": 0.8780487804878049,
+      "danger_roc_auc": 0.9287935832378458,
+      "hint_precision": 0.958139534883721,
+      "macro_f1": 0.7972367268415094,
+      "rewritten_words": 385,
+      "top_rewrites": [
+        [
+          "kalayaan",
+          "kalayan",
+          15
+        ],
+        [
+          "street",
+          "stret",
+          15
+        ],
+        [
+          "magallanes",
+          "magalanes",
+          14
+        ],
+        [
+          "school",
+          "schol",
+          13
+        ],
+        [
+          "still",
+          "stil",
+          11
+        ],
+        [
+          "been",
+          "ben",
+          10
+        ],
+        [
+          "off",
+          "of",
+          9
+        ],
+        [
+          "streetlight",
+          "stretlight",
+          9
+        ]
+      ],
+      "variant": "repeats+prefix+suffix+typo1_strict"
+    }
+  ]
+}

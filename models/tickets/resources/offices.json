@@ -1,0 +1,9 @@
+{
+  "_note": "Placeholders, not real office names. Ask the mentor which office handles each category, and who fixes national roads versus city roads.",
+  "pothole": "Roads and engineering (confirm)",
+  "open_manhole": "Engineering and the water or sewer utility (confirm)",
+  "flooded_drain": "Drainage and flood control (confirm)",
+  "broken_streetlight": "Street lighting and electrical (confirm)",
+  "blocked_sidewalk": "Traffic and public order (confirm)",
+  "other": "Unassigned"
+}

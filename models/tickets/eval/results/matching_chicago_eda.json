@@ -1,0 +1,1017 @@
+{
+  "categories": {
+    "blocked_sidewalk": {
+      "addresses": {
+        "inside_four_numbers_share": 0.9921,
+        "numbers_apart_among_same_street": {
+          "50": 0.0,
+          "75": 0.0,
+          "90": 0.0,
+          "95": 0.0
+        },
+        "parsed": 635,
+        "same_street_share": 0.9921
+      },
+      "children_per_parent": {
+        "most": 10,
+        "one_child": 393,
+        "parents_with_children": 489,
+        "three_or_more": 29,
+        "two_children": 67
+      },
+      "duplicate_rate": 0.3023,
+      "duplicate_rate_by_origin": {
+        "Alderman's Office": {
+          "duplicate_rate": 0.2583,
+          "rows": 1258
+        },
+        "Internet": {
+          "duplicate_rate": 0.312,
+          "rows": 2683
+        },
+        "Mobile Device": {
+          "duplicate_rate": 0.3433,
+          "rows": 1905
+        },
+        "Phone Call": {
+          "duplicate_rate": 0.2906,
+          "rows": 1889
+        },
+        "other origins": {
+          "duplicate_rate": 0.1402,
+          "rows": 164
+        }
+      },
+      "duplicates": 2388,
+      "duplicates_with_parent_in_file": 636,
+      "earlier_of_the_pair_open_when_the_later_was_created": 1.0,
+      "located": 7896,
+      "pairs": {
+        "distance_m": {
+          "50": 0.0,
+          "75": 0.0,
+          "90": 0.0,
+          "95": 0.0,
+          "99": 27.1337
+        },
+        "gap_days": {
+          "1": 0.0,
+          "25": 6.0786,
+          "5": 0.0011,
+          "50": 42.0178,
+          "75": 109.8041,
+          "90": 161.9048,
+          "95": 199.2711,
+          "99": 255.9391
+        },
+        "n": 636,
+        "share_abs_gap_at_most_14_days": 0.3192,
+        "share_abs_gap_at_most_30_days": 0.4371,
+        "share_at_distance_0": 0.7767,
+        "share_child_before_parent": 0.0094,
+        "share_inside_m": {
+          "15": 0.9858,
+          "25": 0.9858,
+          "31": 0.9906,
+          "45": 0.9969,
+          "60": 0.9969
+        },
+        "share_inside_shipped_radius": {
+          "accuracy 10 m": 0.9906,
+          "accuracy 20 m": 0.9969,
+          "accuracy 5 m": 0.9858,
+          "no accuracy": 0.9969
+        }
+      },
+      "pairs_by_child_origin": {
+        "Alderman's Office": {
+          "distance_m": {
+            "50": 0.0,
+            "75": 0.0,
+            "90": 0.0,
+            "95": 0.0,
+            "99": 0.0
+          },
+          "gap_days": {
+            "1": 0.0002,
+            "25": 2.2431,
+            "5": 0.0013,
+            "50": 18.5785,
+            "75": 67.0542,
+            "90": 134.6003,
+            "95": 161.9081,
+            "99": 237.5305
+          },
+          "n": 66,
+          "share_abs_gap_at_most_14_days": 0.5,
+          "share_abs_gap_at_most_30_days": 0.5303,
+          "share_at_distance_0": 0.8182,
+          "share_child_before_parent": 0.0,
+          "share_inside_m": {
+            "15": 1.0,
+            "25": 1.0,
+            "31": 1.0,
+            "45": 1.0,
+            "60": 1.0
+          },
+          "share_inside_shipped_radius": {
+            "accuracy 10 m": 1.0,
+            "accuracy 20 m": 1.0,
+            "accuracy 5 m": 1.0,
+            "no accuracy": 1.0
+          }
+        },
+        "Internet": {
+          "distance_m": {
+            "50": 0.0,
+            "75": 0.0,
+            "90": 0.0,
+            "95": 1.4564,
+            "99": 32.7125
+          },
+          "gap_days": {
+            "1": -22.7048,
+            "25": 4.2167,
+            "5": 0.0032,
+            "50": 41.0773,
+            "75": 110.363,
+            "90": 157.629,
+            "95": 198.1167,
+            "99": 255.8526
+          },
+          "n": 183,
+          "share_abs_gap_at_most_14_days": 0.3005,
+          "share_abs_gap_at_most_30_days": 0.4536,
+          "share_at_distance_0": 0.7432,
+          "share_child_before_parent": 0.0109,
+          "share_inside_m": {
+            "15": 0.9781,
+            "25": 0.9781,
+            "31": 0.9836,
+            "45": 0.9945,
+            "60": 0.9945
+          },
+          "share_inside_shipped_radius": {
+            "accuracy 10 m": 0.9836,
+            "accuracy 20 m": 0.9945,
+            "accuracy 5 m": 0.9781,
+            "no accuracy": 0.9945
+          }
+        },
+        "Mobile Device": {
+          "distance_m": {
+            "50": 0.0,
+            "75": 0.0,
+            "90": 0.0,
+            "95": 0.831,
+            "99": 19.8848
+          },
+          "gap_days": {
+            "1": 0.0,
+            "25": 6.3664,
+            "5": 0.0006,
+            "50": 44.8921,
+            "75": 100.4307,
+            "90": 156.7607,
+            "95": 199.38,
+            "99": 248.2992
+          },
+          "n": 225,
+          "share_abs_gap_at_most_14_days": 0.3022,
+          "share_abs_gap_at_most_30_days": 0.4089,
+          "share_at_distance_0": 0.7822,
+          "share_child_before_parent": 0.0044,
+          "share_inside_m": {
+            "15": 0.9867,
+            "25": 0.9867,
+            "31": 0.9911,
+            "45": 0.9956,
+            "60": 0.9956
+          },
+          "share_inside_shipped_radius": {
+            "accuracy 10 m": 0.9911,
+            "accuracy 20 m": 0.9956,
+            "accuracy 5 m": 0.9867,
+            "no accuracy": 0.9956
+          }
+        },
+        "Phone Call": {
+          "distance_m": {
+            "50": 0.0,
+            "75": 0.0,
+            "90": 0.0,
+            "95": 0.0,
+            "99": 13.1446
+          },
+          "gap_days": {
+            "1": -0.0913,
+            "25": 12.7039,
+            "5": 0.0014,
+            "50": 48.4997,
+            "75": 121.6786,
+            "90": 172.7216,
+            "95": 207.3455,
+            "99": 273.6206
+          },
+          "n": 156,
+          "share_abs_gap_at_most_14_days": 0.2756,
+          "share_abs_gap_at_most_30_days": 0.4103,
+          "share_at_distance_0": 0.7821,
+          "share_child_before_parent": 0.0192,
+          "share_inside_m": {
+            "15": 0.9872,
+            "25": 0.9872,
+            "31": 0.9936,
+            "45": 1.0,
+            "60": 1.0
+          },
+          "share_inside_shipped_radius": {
+            "accuracy 10 m": 0.9936,
+            "accuracy 20 m": 1.0,
+            "accuracy 5 m": 0.9872,
+            "no accuracy": 1.0
+          }
+        }
+      },
+      "parent_is_itself_a_duplicate": 0,
+      "rows": 7899,
+      "share_of_duplicates_with_parent_in_file": 0.2663
+    },
+    "broken_streetlight": {
+      "addresses": {
+        "inside_four_numbers_share": 0.7686,
+        "numbers_apart_among_same_street": {
+          "50": 0.0,
+          "75": 3.0,
+          "90": 7.0,
+          "95": 10.0
+        },
+        "parsed": 4045,
+        "same_street_share": 0.9273
+      },
+      "children_per_parent": {
+        "most": 21,
+        "one_child": 2057,
+        "parents_with_children": 2792,
+        "three_or_more": 278,
+        "two_children": 457
+      },
+      "duplicate_rate": 0.1149,
+      "duplicate_rate_by_origin": {
+        "Alderman's Office": {
+          "duplicate_rate": 0.1004,
+          "rows": 1066
+        },
+        "Internet": {
+          "duplicate_rate": 0.1971,
+          "rows": 5191
+        },
+        "Mobile Device": {
+          "duplicate_rate": 0.1502,
+          "rows": 5651
+        },
+        "Phone Call": {
+          "duplicate_rate": 0.0927,
+          "rows": 23066
+        },
+        "other origins": {
+          "duplicate_rate": 0.0124,
+          "rows": 965
+        }
+      },
+      "duplicates": 4129,
+      "duplicates_with_parent_in_file": 4057,
+      "earlier_of_the_pair_open_when_the_later_was_created": 1.0,
+      "located": 35915,
+      "pairs": {
+        "distance_m": {
+          "50": 0.0,
+          "75": 21.3632,
+          "90": 45.1794,
+          "95": 49.4917,
+          "99": 60.8913
+        },
+        "gap_days": {
+          "1": 0.0007,
+          "25": 0.2421,
+          "5": 0.0033,
+          "50": 1.0638,
+          "75": 2.9856,
+          "90": 7.7165,
+          "95": 17.1611,
+          "99": 94.4348
+        },
+        "n": 4057,
+        "share_abs_gap_at_most_14_days": 0.9408,
+        "share_abs_gap_at_most_30_days": 0.9682,
+        "share_at_distance_0": 0.5359,
+        "share_child_before_parent": 0.0,
+        "share_inside_m": {
+          "15": 0.6926,
+          "25": 0.7796,
+          "31": 0.8302,
+          "45": 0.8977,
+          "60": 0.9887
+        },
+        "share_inside_shipped_radius": {
+          "accuracy 10 m": 0.8316,
+          "accuracy 20 m": 0.9857,
+          "accuracy 5 m": 0.735,
+          "no accuracy": 0.8915
+        }
+      },
+      "pairs_by_child_origin": {
+        "Alderman's Office": {
+          "distance_m": {
+            "50": 0.0,
+            "75": 22.3597,
+            "90": 45.9928,
+            "95": 48.0765,
+            "99": 55.3536
+          },
+          "gap_days": {
+            "1": 0.0021,
+            "25": 0.5043,
+            "5": 0.0037,
+            "50": 1.2828,
+            "75": 3.2304,
+            "90": 6.1091,
+            "95": 11.7856,
+            "99": 119.4194
+          },
+          "n": 102,
+          "share_abs_gap_at_most_14_days": 0.951,
+          "share_abs_gap_at_most_30_days": 0.9608,
+          "share_at_distance_0": 0.5588,
+          "share_child_before_parent": 0.0,
+          "share_inside_m": {
+            "15": 0.6765,
+            "25": 0.7647,
+            "31": 0.8235,
+            "45": 0.8922,
+            "60": 0.9902
+          },
+          "share_inside_shipped_radius": {
+            "accuracy 10 m": 0.8235,
+            "accuracy 20 m": 0.9902,
+            "accuracy 5 m": 0.7451,
+            "no accuracy": 0.8824
+          }
+        },
+        "Internet": {
+          "distance_m": {
+            "50": 7.4479,
+            "75": 26.6534,
+            "90": 46.8855,
+            "95": 50.795,
+            "99": 63.3821
+          },
+          "gap_days": {
+            "1": 0.0007,
+            "25": 0.1412,
+            "5": 0.0023,
+            "50": 1.0447,
+            "75": 2.9548,
+            "90": 7.7254,
+            "95": 16.1085,
+            "99": 88.1284
+          },
+          "n": 1007,
+          "share_abs_gap_at_most_14_days": 0.9404,
+          "share_abs_gap_at_most_30_days": 0.9712,
+          "share_at_distance_0": 0.4479,
+          "share_child_before_parent": 0.0,
+          "share_inside_m": {
+            "15": 0.6276,
+            "25": 0.7349,
+            "31": 0.7855,
+            "45": 0.8659,
+            "60": 0.9851
+          },
+          "share_inside_shipped_radius": {
+            "accuracy 10 m": 0.7875,
+            "accuracy 20 m": 0.9821,
+            "accuracy 5 m": 0.6882,
+            "no accuracy": 0.857
+          }
+        },
+        "Mobile Device": {
+          "distance_m": {
+            "50": 8.074,
+            "75": 28.2842,
+            "90": 46.6561,
+            "95": 51.2652,
+            "99": 61.1425
+          },
+          "gap_days": {
+            "1": 0.0006,
+            "25": 0.1037,
+            "5": 0.0017,
+            "50": 1.0533,
+            "75": 3.5229,
+            "90": 11.1369,
+            "95": 28.748,
+            "99": 98.1632
+          },
+          "n": 835,
+          "share_abs_gap_at_most_14_days": 0.9162,
+          "share_abs_gap_at_most_30_days": 0.9533,
+          "share_at_distance_0": 0.4431,
+          "share_child_before_parent": 0.0,
+          "share_inside_m": {
+            "15": 0.6216,
+            "25": 0.7198,
+            "31": 0.7749,
+            "45": 0.8683,
+            "60": 0.9856
+          },
+          "share_inside_shipped_radius": {
+            "accuracy 10 m": 0.7749,
+            "accuracy 20 m": 0.9796,
+            "accuracy 5 m": 0.6659,
+            "no accuracy": 0.8587
+          }
+        },
+        "Phone Call": {
+          "distance_m": {
+            "50": 0.0,
+            "75": 14.4204,
+            "90": 37.9549,
+            "95": 47.3716,
+            "99": 57.5343
+          },
+          "gap_days": {
+            "1": 0.0008,
+            "25": 0.3882,
+            "5": 0.0082,
+            "50": 1.0779,
+            "75": 2.9074,
+            "90": 6.6404,
+            "95": 13.1693,
+            "99": 91.6898
+          },
+          "n": 2101,
+          "share_abs_gap_at_most_14_days": 0.9515,
+          "share_abs_gap_at_most_30_days": 0.9733,
+          "share_at_distance_0": 0.614,
+          "share_child_before_parent": 0.0,
+          "share_inside_m": {
+            "15": 0.7535,
+            "25": 0.8263,
+            "31": 0.8748,
+            "45": 0.9262,
+            "60": 0.9914
+          },
+          "share_inside_shipped_radius": {
+            "accuracy 10 m": 0.8767,
+            "accuracy 20 m": 0.99,
+            "accuracy 5 m": 0.7849,
+            "no accuracy": 0.9229
+          }
+        }
+      },
+      "parent_is_itself_a_duplicate": 0,
+      "rows": 35939,
+      "share_of_duplicates_with_parent_in_file": 0.9826
+    },
+    "flooded_drain": {
+      "addresses": {
+        "inside_four_numbers_share": 0.5662,
+        "numbers_apart_among_same_street": {
+          "50": 2.0,
+          "75": 10.0,
+          "90": 29.3,
+          "95": 48.65
+        },
+        "parsed": 1178,
+        "same_street_share": 0.8896
+      },
+      "children_per_parent": {
+        "most": 8,
+        "one_child": 670,
+        "parents_with_children": 861,
+        "three_or_more": 76,
+        "two_children": 115
+      },
+      "duplicate_rate": 0.2547,
+      "duplicate_rate_by_origin": {
+        "Alderman's Office": {
+          "duplicate_rate": 0.2421,
+          "rows": 508
+        },
+        "Internet": {
+          "duplicate_rate": 0.2609,
+          "rows": 3354
+        },
+        "Mobile Device": {
+          "duplicate_rate": 0.2413,
+          "rows": 3410
+        },
+        "Phone Call": {
+          "duplicate_rate": 0.2836,
+          "rows": 3389
+        },
+        "other origins": {
+          "duplicate_rate": 0.0466,
+          "rows": 322
+        }
+      },
+      "duplicates": 2797,
+      "duplicates_with_parent_in_file": 1181,
+      "earlier_of_the_pair_open_when_the_later_was_created": 1.0,
+      "located": 10977,
+      "pairs": {
+        "distance_m": {
+          "50": 14.1583,
+          "75": 48.3421,
+          "90": 82.0696,
+          "95": 100.0583,
+          "99": 186.0415
+        },
+        "gap_days": {
+          "1": 0.0,
+          "25": 0.0157,
+          "5": 0.0009,
+          "50": 0.2148,
+          "75": 2.9973,
+          "90": 22.8464,
+          "95": 41.2025,
+          "99": 109.5879
+        },
+        "n": 1181,
+        "share_abs_gap_at_most_14_days": 0.8688,
+        "share_abs_gap_at_most_30_days": 0.9187,
+        "share_at_distance_0": 0.3556,
+        "share_child_before_parent": 0.0068,
+        "share_inside_m": {
+          "15": 0.508,
+          "25": 0.591,
+          "31": 0.641,
+          "45": 0.724,
+          "60": 0.8137
+        },
+        "share_inside_shipped_radius": {
+          "accuracy 10 m": 0.641,
+          "accuracy 20 m": 0.8078,
+          "accuracy 5 m": 0.5504,
+          "no accuracy": 0.7214
+        }
+      },
+      "pairs_by_child_origin": {
+        "Alderman's Office": {
+          "distance_m": {
+            "50": 51.0399,
+            "75": 85.6353,
+            "90": 100.2385,
+            "95": 155.6918,
+            "99": 167.0051
+          },
+          "gap_days": {
+            "1": 0.002,
+            "25": 0.0822,
+            "5": 0.0038,
+            "50": 0.8388,
+            "75": 2.8555,
+            "90": 16.7751,
+            "95": 46.4809,
+            "99": 74.5936
+          },
+          "n": 39,
+          "share_abs_gap_at_most_14_days": 0.8974,
+          "share_abs_gap_at_most_30_days": 0.9231,
+          "share_at_distance_0": 0.1282,
+          "share_child_before_parent": 0.0,
+          "share_inside_m": {
+            "15": 0.3077,
+            "25": 0.3077,
+            "31": 0.3333,
+            "45": 0.3846,
+            "60": 0.6154
+          },
+          "share_inside_shipped_radius": {
+            "accuracy 10 m": 0.3333,
+            "accuracy 20 m": 0.6154,
+            "accuracy 5 m": 0.3077,
+            "no accuracy": 0.3846
+          }
+        },
+        "Internet": {
+          "distance_m": {
+            "50": 9.0377,
+            "75": 29.8762,
+            "90": 64.211,
+            "95": 79.5071,
+            "99": 127.9605
+          },
+          "gap_days": {
+            "1": 0.0,
+            "25": 0.0056,
+            "5": 0.0008,
+            "50": 0.1112,
+            "75": 2.5501,
+            "90": 22.1633,
+            "95": 38.3269,
+            "99": 110.3311
+          },
+          "n": 415,
+          "share_abs_gap_at_most_14_days": 0.8795,
+          "share_abs_gap_at_most_30_days": 0.9181,
+          "share_at_distance_0": 0.412,
+          "share_child_before_parent": 0.0072,
+          "share_inside_m": {
+            "15": 0.5904,
+            "25": 0.6867,
+            "31": 0.759,
+            "45": 0.8313,
+            "60": 0.8843
+          },
+          "share_inside_shipped_radius": {
+            "accuracy 10 m": 0.759,
+            "accuracy 20 m": 0.8819,
+            "accuracy 5 m": 0.6434,
+            "no accuracy": 0.8265
+          }
+        },
+        "Mobile Device": {
+          "distance_m": {
+            "50": 10.4103,
+            "75": 45.1574,
+            "90": 73.1379,
+            "95": 85.0316,
+            "99": 150.7247
+          },
+          "gap_days": {
+            "1": 0.0,
+            "25": 0.0182,
+            "5": 0.0006,
+            "50": 0.2901,
+            "75": 4.6678,
+            "90": 25.1162,
+            "95": 48.6026,
+            "99": 89.6816
+          },
+          "n": 383,
+          "share_abs_gap_at_most_14_days": 0.846,
+          "share_abs_gap_at_most_30_days": 0.9034,
+          "share_at_distance_0": 0.4047,
+          "share_child_before_parent": 0.0,
+          "share_inside_m": {
+            "15": 0.5457,
+            "25": 0.6084,
+            "31": 0.658,
+            "45": 0.7467,
+            "60": 0.8564
+          },
+          "share_inside_shipped_radius": {
+            "accuracy 10 m": 0.658,
+            "accuracy 20 m": 0.8512,
+            "accuracy 5 m": 0.577,
+            "no accuracy": 0.7467
+          }
+        },
+        "Phone Call": {
+          "distance_m": {
+            "50": 28.2748,
+            "75": 70.741,
+            "90": 103.4954,
+            "95": 141.7371,
+            "99": 204.4503
+          },
+          "gap_days": {
+            "1": 0.0,
+            "25": 0.0356,
+            "5": 0.0011,
+            "50": 0.2394,
+            "75": 2.5825,
+            "90": 19.9572,
+            "95": 37.3015,
+            "99": 112.3496
+          },
+          "n": 337,
+          "share_abs_gap_at_most_14_days": 0.8783,
+          "share_abs_gap_at_most_30_days": 0.9347,
+          "share_at_distance_0": 0.2641,
+          "share_child_before_parent": 0.0119,
+          "share_inside_m": {
+            "15": 0.3917,
+            "25": 0.4866,
+            "31": 0.5134,
+            "45": 0.6083,
+            "60": 0.7033
+          },
+          "share_inside_shipped_radius": {
+            "accuracy 10 m": 0.5134,
+            "accuracy 20 m": 0.6914,
+            "accuracy 5 m": 0.4362,
+            "no accuracy": 0.6053
+          }
+        }
+      },
+      "parent_is_itself_a_duplicate": 0,
+      "rows": 10983,
+      "share_of_duplicates_with_parent_in_file": 0.4222
+    },
+    "pothole": {
+      "addresses": {
+        "inside_four_numbers_share": 0.4515,
+        "numbers_apart_among_same_street": {
+          "50": 6.0,
+          "75": 23.0,
+          "90": 42.0,
+          "95": 54.0
+        },
+        "parsed": 27447,
+        "same_street_share": 0.9714
+      },
+      "children_per_parent": {
+        "most": 59,
+        "one_child": 5740,
+        "parents_with_children": 10938,
+        "three_or_more": 3092,
+        "two_children": 2106
+      },
+      "duplicate_rate": 0.3225,
+      "duplicate_rate_by_origin": {
+        "Alderman's Office": {
+          "duplicate_rate": 0.3743,
+          "rows": 9593
+        },
+        "Internet": {
+          "duplicate_rate": 0.4233,
+          "rows": 19245
+        },
+        "Mobile Device": {
+          "duplicate_rate": 0.3851,
+          "rows": 26452
+        },
+        "Phone Call": {
+          "duplicate_rate": 0.255,
+          "rows": 31685
+        },
+        "other origins": {
+          "duplicate_rate": 0.1049,
+          "rows": 8997
+        }
+      },
+      "duplicates": 30950,
+      "duplicates_with_parent_in_file": 27508,
+      "earlier_of_the_pair_open_when_the_later_was_created": 1.0,
+      "located": 95799,
+      "pairs": {
+        "distance_m": {
+          "50": 37.0749,
+          "75": 82.9499,
+          "90": 148.6624,
+          "95": 191.1696,
+          "99": 7400.7145
+        },
+        "gap_days": {
+          "1": -60.8274,
+          "25": 1.7493,
+          "5": -0.1229,
+          "50": 16.6642,
+          "75": 52.4051,
+          "90": 96.1727,
+          "95": 127.5537,
+          "99": 193.7276
+        },
+        "n": 27504,
+        "share_abs_gap_at_most_14_days": 0.444,
+        "share_abs_gap_at_most_30_days": 0.5993,
+        "share_at_distance_0": 0.2551,
+        "share_child_before_parent": 0.0862,
+        "share_inside_m": {
+          "15": 0.3438,
+          "25": 0.408,
+          "31": 0.4574,
+          "45": 0.5514,
+          "60": 0.654
+        },
+        "share_inside_shipped_radius": {
+          "accuracy 10 m": 0.4591,
+          "accuracy 20 m": 0.6434,
+          "accuracy 5 m": 0.3739,
+          "no accuracy": 0.5484
+        }
+      },
+      "pairs_by_child_origin": {
+        "Alderman's Office": {
+          "distance_m": {
+            "50": 52.1785,
+            "75": 95.9759,
+            "90": 143.9189,
+            "95": 175.0369,
+            "99": 1287.3179
+          },
+          "gap_days": {
+            "1": -62.1508,
+            "25": 0.0027,
+            "5": -0.0175,
+            "50": 14.9076,
+            "75": 54.7777,
+            "90": 99.0492,
+            "95": 126.5672,
+            "99": 185.5
+          },
+          "n": 3197,
+          "share_abs_gap_at_most_14_days": 0.4642,
+          "share_abs_gap_at_most_30_days": 0.5877,
+          "share_at_distance_0": 0.1358,
+          "share_child_before_parent": 0.1329,
+          "share_inside_m": {
+            "15": 0.2168,
+            "25": 0.2834,
+            "31": 0.3366,
+            "45": 0.4382,
+            "60": 0.5662
+          },
+          "share_inside_shipped_radius": {
+            "accuracy 10 m": 0.3394,
+            "accuracy 20 m": 0.5458,
+            "accuracy 5 m": 0.2484,
+            "no accuracy": 0.4335
+          }
+        },
+        "Internet": {
+          "distance_m": {
+            "50": 34.0317,
+            "75": 79.1003,
+            "90": 146.1808,
+            "95": 188.4629,
+            "99": 7389.4863
+          },
+          "gap_days": {
+            "1": -66.8492,
+            "25": 2.0135,
+            "5": -0.0079,
+            "50": 18.6512,
+            "75": 55.1923,
+            "90": 98.1819,
+            "95": 131.1212,
+            "99": 197.0681
+          },
+          "n": 7267,
+          "share_abs_gap_at_most_14_days": 0.426,
+          "share_abs_gap_at_most_30_days": 0.5766,
+          "share_at_distance_0": 0.2656,
+          "share_child_before_parent": 0.0722,
+          "share_inside_m": {
+            "15": 0.3568,
+            "25": 0.4275,
+            "31": 0.475,
+            "45": 0.5686,
+            "60": 0.6725
+          },
+          "share_inside_shipped_radius": {
+            "accuracy 10 m": 0.4754,
+            "accuracy 20 m": 0.6629,
+            "accuracy 5 m": 0.3894,
+            "no accuracy": 0.5665
+          }
+        },
+        "Mobile Device": {
+          "distance_m": {
+            "50": 33.5189,
+            "75": 76.0464,
+            "90": 139.8203,
+            "95": 185.4183,
+            "99": 5434.3567
+          },
+          "gap_days": {
+            "1": -45.3272,
+            "25": 2.3473,
+            "5": -0.0014,
+            "50": 16.1577,
+            "75": 52.2017,
+            "90": 95.0065,
+            "95": 126.0445,
+            "99": 190.2133
+          },
+          "n": 9254,
+          "share_abs_gap_at_most_14_days": 0.4506,
+          "share_abs_gap_at_most_30_days": 0.6125,
+          "share_at_distance_0": 0.2644,
+          "share_child_before_parent": 0.0657,
+          "share_inside_m": {
+            "15": 0.3625,
+            "25": 0.427,
+            "31": 0.4794,
+            "45": 0.575,
+            "60": 0.6806
+          },
+          "share_inside_shipped_radius": {
+            "accuracy 10 m": 0.4811,
+            "accuracy 20 m": 0.6716,
+            "accuracy 5 m": 0.3931,
+            "no accuracy": 0.5719
+          }
+        },
+        "Phone Call": {
+          "distance_m": {
+            "50": 35.7959,
+            "75": 89.8307,
+            "90": 163.1019,
+            "95": 202.9914,
+            "99": 9769.1582
+          },
+          "gap_days": {
+            "1": -61.9741,
+            "25": 2.9503,
+            "5": -1.2549,
+            "50": 18.7689,
+            "75": 52.3584,
+            "90": 96.5431,
+            "95": 130.2802,
+            "99": 199.5535
+          },
+          "n": 6903,
+          "share_abs_gap_at_most_14_days": 0.4124,
+          "share_abs_gap_at_most_30_days": 0.5832,
+          "share_at_distance_0": 0.2877,
+          "share_child_before_parent": 0.0795,
+          "share_inside_m": {
+            "15": 0.3658,
+            "25": 0.4211,
+            "31": 0.4695,
+            "45": 0.558,
+            "60": 0.6426
+          },
+          "share_inside_shipped_radius": {
+            "accuracy 10 m": 0.4714,
+            "accuracy 20 m": 0.6336,
+            "accuracy 5 m": 0.3907,
+            "no accuracy": 0.5548
+          }
+        }
+      },
+      "parent_is_itself_a_duplicate": 0,
+      "rows": 95972,
+      "share_of_duplicates_with_parent_in_file": 0.8888
+    }
+  },
+  "label_vs_address_under_60_m": {
+    "all": {
+      "median_distance_m": {
+        "near_negatives": 36.0773,
+        "positives": 8.4209
+      },
+      "pairs": 48216,
+      "positives": 21431,
+      "roc_auc_minus_distance": 0.7403,
+      "roc_auc_minus_street_number_gap": 0.8663
+    },
+    "blocked_sidewalk": {
+      "median_distance_m": {
+        "near_negatives": 36.0349,
+        "positives": 0.0
+      },
+      "pairs": 1585,
+      "positives": 357,
+      "roc_auc_minus_distance": 0.9872,
+      "roc_auc_minus_street_number_gap": 0.9921
+    },
+    "broken_streetlight": {
+      "median_distance_m": {
+        "near_negatives": 40.0929,
+        "positives": 0.0
+      },
+      "pairs": 10860,
+      "positives": 3929,
+      "roc_auc_minus_distance": 0.8354,
+      "roc_auc_minus_street_number_gap": 0.8229
+    },
+    "flooded_drain": {
+      "median_distance_m": {
+        "near_negatives": 20.4052,
+        "positives": 8.0147
+      },
+      "pairs": 1523,
+      "positives": 903,
+      "roc_auc_minus_distance": 0.6254,
+      "roc_auc_minus_street_number_gap": 0.6689
+    },
+    "pothole": {
+      "median_distance_m": {
+        "near_negatives": 34.6501,
+        "positives": 11.5586
+      },
+      "pairs": 34248,
+      "positives": 16242,
+      "roc_auc_minus_distance": 0.7082,
+      "roc_auc_minus_street_number_gap": 0.8981
+    }
+  },
+  "meta": {
+    "git_commit": "21b8f4e",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T13:02:37+00:00"
+  },
+  "shipped_radius_m": {
+    "accuracy 10 m": 31.1539,
+    "accuracy 20 m": 58.1935,
+    "accuracy 5 m": 19.1464,
+    "no accuracy": 44.4657
+  }
+}

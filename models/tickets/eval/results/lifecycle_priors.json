@@ -1,0 +1,624 @@
+{
+  "bootstrap_resamples": 1000,
+  "meta": {
+    "git_commit": "feb001e",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T12:47:17+00:00"
+  },
+  "notes": [
+    "k votes = k taps after the first report, which counts as one yes",
+    "truth = the hazard is there at the moment of the vote",
+    "intervals: 95% percentile bootstrap over whole tickets",
+    "a target is met only when the whole interval passes"
+  ],
+  "priors": {
+    "beats_shipped": {
+      "(1,0.5)": true,
+      "(1,1)": true,
+      "(2,1)": true,
+      "(5,2)": false,
+      "fitted on train (0.10,0.79)": true
+    },
+    "by_share_gone_before_votes": [
+      {
+        "best_point": "(1,0.5)",
+        "gone_before_votes": 0.0,
+        "prevalence": 0.65064,
+        "rows": {
+          "(1,0.5)": {
+            "brier_minus_shipped": {
+              "hi": -0.0202,
+              "lo": -0.02122,
+              "point": -0.02071
+            }
+          },
+          "(1,1)": {
+            "brier_minus_shipped": {
+              "hi": -0.01687,
+              "lo": -0.01855,
+              "point": -0.01773
+            }
+          },
+          "(2,1)": {
+            "brier_minus_shipped": {
+              "hi": -0.00978,
+              "lo": -0.01052,
+              "point": -0.01016
+            }
+          },
+          "(5,2)": {
+            "brier_minus_shipped": {
+              "hi": 0.01047,
+              "lo": 0.01012,
+              "point": 0.0103
+            }
+          }
+        }
+      },
+      {
+        "best_point": "(1,1)",
+        "gone_before_votes": 0.1,
+        "prevalence": 0.58444,
+        "rows": {
+          "(1,0.5)": {
+            "brier_minus_shipped": {
+              "hi": -0.02772,
+              "lo": -0.02888,
+              "point": -0.02832
+            }
+          },
+          "(1,1)": {
+            "brier_minus_shipped": {
+              "hi": -0.02948,
+              "lo": -0.03139,
+              "point": -0.03049
+            }
+          },
+          "(2,1)": {
+            "brier_minus_shipped": {
+              "hi": -0.01531,
+              "lo": -0.01616,
+              "point": -0.01576
+            }
+          },
+          "(5,2)": {
+            "brier_minus_shipped": {
+              "hi": 0.01141,
+              "lo": 0.011,
+              "point": 0.0112
+            }
+          }
+        }
+      },
+      {
+        "best_point": "(1,1)",
+        "gone_before_votes": 0.3,
+        "prevalence": 0.45469,
+        "rows": {
+          "(1,0.5)": {
+            "brier_minus_shipped": {
+              "hi": -0.04251,
+              "lo": -0.04376,
+              "point": -0.04311
+            }
+          },
+          "(1,1)": {
+            "brier_minus_shipped": {
+              "hi": -0.05448,
+              "lo": -0.05644,
+              "point": -0.05543
+            }
+          },
+          "(2,1)": {
+            "brier_minus_shipped": {
+              "hi": -0.02627,
+              "lo": -0.02715,
+              "point": -0.0267
+            }
+          },
+          "(5,2)": {
+            "brier_minus_shipped": {
+              "hi": 0.01316,
+              "lo": 0.01269,
+              "point": 0.01291
+            }
+          }
+        }
+      },
+      {
+        "best_point": "(1,1)",
+        "gone_before_votes": 0.5,
+        "prevalence": 0.3302,
+        "rows": {
+          "(1,0.5)": {
+            "brier_minus_shipped": {
+              "hi": -0.05662,
+              "lo": -0.0579,
+              "point": -0.05725
+            }
+          },
+          "(1,1)": {
+            "brier_minus_shipped": {
+              "hi": -0.07836,
+              "lo": -0.08037,
+              "point": -0.07934
+            }
+          },
+          "(2,1)": {
+            "brier_minus_shipped": {
+              "hi": -0.03675,
+              "lo": -0.03764,
+              "point": -0.03718
+            }
+          },
+          "(5,2)": {
+            "brier_minus_shipped": {
+              "hi": 0.01474,
+              "lo": 0.01422,
+              "point": 0.01447
+            }
+          }
+        }
+      }
+    ],
+    "chosen_beats_shipped": true,
+    "chosen_on_validation": "(1,1)",
+    "decision": "(1,1)",
+    "fitted_on_train": [
+      0.1,
+      0.78727
+    ],
+    "rows": {
+      "(1,0.5)": {
+        "brier": {
+          "hi": 0.18159,
+          "lo": 0.17855,
+          "point": 0.18013
+        },
+        "brier_minus_shipped": {
+          "hi": -0.04251,
+          "lo": -0.04376,
+          "point": -0.04311
+        },
+        "by_votes_brier_minus_shipped": {
+          "1": {
+            "hi": -0.03842,
+            "lo": -0.0398,
+            "point": -0.0391
+          },
+          "2": {
+            "hi": -0.04747,
+            "lo": -0.04919,
+            "point": -0.04833
+          },
+          "3": {
+            "hi": -0.04813,
+            "lo": -0.05001,
+            "point": -0.04903
+          },
+          "5": {
+            "hi": -0.04275,
+            "lo": -0.04479,
+            "point": -0.04375
+          },
+          "8": {
+            "hi": -0.03473,
+            "lo": -0.03716,
+            "point": -0.03593
+          }
+        },
+        "ece_by_votes": {
+          "1": {
+            "hi": 0.192,
+            "lo": 0.18345,
+            "point": 0.18782
+          },
+          "2": {
+            "hi": 0.2259,
+            "lo": 0.21636,
+            "point": 0.22064
+          },
+          "3": {
+            "hi": 0.22493,
+            "lo": 0.21376,
+            "point": 0.21935
+          },
+          "5": {
+            "hi": 0.22909,
+            "lo": 0.21428,
+            "point": 0.22213
+          },
+          "8": {
+            "hi": 0.24366,
+            "lo": 0.21941,
+            "point": 0.23087
+          }
+        },
+        "prior": [
+          1,
+          0.5
+        ],
+        "validation_brier": 0.18014
+      },
+      "(1,1)": {
+        "brier": {
+          "hi": 0.16896,
+          "lo": 0.16653,
+          "point": 0.16781
+        },
+        "brier_minus_shipped": {
+          "hi": -0.05448,
+          "lo": -0.05644,
+          "point": -0.05543
+        },
+        "by_votes_brier_minus_shipped": {
+          "1": {
+            "hi": -0.05274,
+            "lo": -0.05537,
+            "point": -0.05404
+          },
+          "2": {
+            "hi": -0.06052,
+            "lo": -0.06322,
+            "point": -0.06182
+          },
+          "3": {
+            "hi": -0.05961,
+            "lo": -0.06242,
+            "point": -0.06094
+          },
+          "5": {
+            "hi": -0.05247,
+            "lo": -0.05533,
+            "point": -0.05392
+          },
+          "8": {
+            "hi": -0.04221,
+            "lo": -0.04553,
+            "point": -0.04383
+          }
+        },
+        "ece_by_votes": {
+          "1": {
+            "hi": 0.21127,
+            "lo": 0.20323,
+            "point": 0.20728
+          },
+          "2": {
+            "hi": 0.21918,
+            "lo": 0.20991,
+            "point": 0.21409
+          },
+          "3": {
+            "hi": 0.20991,
+            "lo": 0.19906,
+            "point": 0.20453
+          },
+          "5": {
+            "hi": 0.21632,
+            "lo": 0.20238,
+            "point": 0.20916
+          },
+          "8": {
+            "hi": 0.23488,
+            "lo": 0.21128,
+            "point": 0.22244
+          }
+        },
+        "prior": [
+          1,
+          1
+        ],
+        "validation_brier": 0.16797
+      },
+      "(2,1)": {
+        "brier": {
+          "hi": 0.19801,
+          "lo": 0.19504,
+          "point": 0.19654
+        },
+        "brier_minus_shipped": {
+          "hi": -0.02627,
+          "lo": -0.02715,
+          "point": -0.0267
+        },
+        "by_votes_brier_minus_shipped": {
+          "1": {
+            "hi": -0.02519,
+            "lo": -0.02629,
+            "point": -0.02574
+          },
+          "2": {
+            "hi": -0.02889,
+            "lo": -0.03007,
+            "point": -0.02947
+          },
+          "3": {
+            "hi": -0.02875,
+            "lo": -0.03002,
+            "point": -0.02935
+          },
+          "5": {
+            "hi": -0.02573,
+            "lo": -0.02705,
+            "point": -0.0264
+          },
+          "8": {
+            "hi": -0.02096,
+            "lo": -0.02255,
+            "point": -0.02175
+          }
+        },
+        "ece_by_votes": {
+          "1": {
+            "hi": 0.23507,
+            "lo": 0.22664,
+            "point": 0.23093
+          },
+          "2": {
+            "hi": 0.26336,
+            "lo": 0.25381,
+            "point": 0.25815
+          },
+          "3": {
+            "hi": 0.25825,
+            "lo": 0.24676,
+            "point": 0.25247
+          },
+          "5": {
+            "hi": 0.25515,
+            "lo": 0.24084,
+            "point": 0.24794
+          },
+          "8": {
+            "hi": 0.2695,
+            "lo": 0.24509,
+            "point": 0.25695
+          }
+        },
+        "prior": [
+          2,
+          1
+        ],
+        "validation_brier": 0.19658
+      },
+      "(3,1) shipped": {
+        "brier": {
+          "hi": 0.22503,
+          "lo": 0.22139,
+          "point": 0.22324
+        },
+        "ece_by_votes": {
+          "1": {
+            "hi": 0.25114,
+            "lo": 0.24209,
+            "point": 0.2467
+          },
+          "2": {
+            "hi": 0.29502,
+            "lo": 0.28504,
+            "point": 0.28963
+          },
+          "3": {
+            "hi": 0.29441,
+            "lo": 0.28246,
+            "point": 0.28843
+          },
+          "5": {
+            "hi": 0.29168,
+            "lo": 0.27607,
+            "point": 0.2843
+          },
+          "8": {
+            "hi": 0.29891,
+            "lo": 0.27384,
+            "point": 0.28616
+          }
+        },
+        "prior": [
+          3,
+          1
+        ],
+        "validation_brier": 0.22318
+      },
+      "(5,2)": {
+        "brier": {
+          "hi": 0.23787,
+          "lo": 0.23434,
+          "point": 0.23615
+        },
+        "brier_minus_shipped": {
+          "hi": 0.01316,
+          "lo": 0.01269,
+          "point": 0.01291
+        },
+        "by_votes_brier_minus_shipped": {
+          "1": {
+            "hi": 0.0043,
+            "lo": 0.00374,
+            "point": 0.00402
+          },
+          "2": {
+            "hi": 0.01258,
+            "lo": 0.01191,
+            "point": 0.01226
+          },
+          "3": {
+            "hi": 0.01736,
+            "lo": 0.01656,
+            "point": 0.01695
+          },
+          "5": {
+            "hi": 0.02044,
+            "lo": 0.01933,
+            "point": 0.01989
+          },
+          "8": {
+            "hi": 0.02088,
+            "lo": 0.01926,
+            "point": 0.02007
+          }
+        },
+        "ece_by_votes": {
+          "1": {
+            "hi": 0.27919,
+            "lo": 0.27055,
+            "point": 0.27498
+          },
+          "2": {
+            "hi": 0.31938,
+            "lo": 0.30934,
+            "point": 0.31395
+          },
+          "3": {
+            "hi": 0.31788,
+            "lo": 0.30583,
+            "point": 0.31174
+          },
+          "5": {
+            "hi": 0.31429,
+            "lo": 0.29967,
+            "point": 0.30569
+          },
+          "8": {
+            "hi": 0.32808,
+            "lo": 0.30228,
+            "point": 0.31491
+          }
+        },
+        "prior": [
+          5,
+          2
+        ],
+        "validation_brier": 0.23605
+      },
+      "fitted on train (0.10,0.79)": {
+        "brier": {
+          "hi": 0.14513,
+          "lo": 0.14278,
+          "point": 0.144
+        },
+        "brier_minus_shipped": {
+          "hi": -0.07783,
+          "lo": -0.08072,
+          "point": -0.07924
+        },
+        "by_votes_brier_minus_shipped": {
+          "1": {
+            "hi": -0.07586,
+            "lo": -0.07999,
+            "point": -0.0779
+          },
+          "2": {
+            "hi": -0.08754,
+            "lo": -0.09164,
+            "point": -0.0895
+          },
+          "3": {
+            "hi": -0.08542,
+            "lo": -0.08946,
+            "point": -0.08733
+          },
+          "5": {
+            "hi": -0.07381,
+            "lo": -0.07781,
+            "point": -0.07582
+          },
+          "8": {
+            "hi": -0.0586,
+            "lo": -0.06319,
+            "point": -0.06086
+          }
+        },
+        "ece_by_votes": {
+          "1": {
+            "hi": 0.16421,
+            "lo": 0.15633,
+            "point": 0.16038
+          },
+          "2": {
+            "hi": 0.16101,
+            "lo": 0.15199,
+            "point": 0.1561
+          },
+          "3": {
+            "hi": 0.15876,
+            "lo": 0.14944,
+            "point": 0.15309
+          },
+          "5": {
+            "hi": 0.17549,
+            "lo": 0.16118,
+            "point": 0.16853
+          },
+          "8": {
+            "hi": 0.2008,
+            "lo": 0.17787,
+            "point": 0.18855
+          }
+        },
+        "prior": [
+          0.1,
+          0.78727
+        ],
+        "validation_brier": 0.14419
+      }
+    }
+  },
+  "seeds": [
+    3000,
+    3001,
+    3002,
+    3003,
+    3004
+  ],
+  "settings": {
+    "BELIEF_PRIOR": [
+      3,
+      1
+    ],
+    "GATE_LOW": 0.3,
+    "GATE_MIN": 0.25,
+    "GATE_SPAN": 0.5,
+    "LIKELY_GONE_BELOW": 0.45
+  },
+  "sim_config": {
+    "gone_before_votes": 0.3,
+    "gone_tap_rate": 1.0,
+    "lifetime_means": [
+      5.0,
+      15.0,
+      60.0
+    ],
+    "max_votes": 16,
+    "no_votes": 0.35,
+    "noise": 0.1,
+    "sensitivity": 0.85,
+    "specificity": 0.9,
+    "staff_days": [
+      2.0,
+      45.0
+    ],
+    "staff_share": 0.25,
+    "tickets": 10000,
+    "vote_delay_days": 10.0,
+    "votes_geometric_p": 0.3
+  },
+  "split": "test",
+  "train_seeds": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1004
+  ],
+  "validation_seeds": [
+    2000,
+    2001,
+    2002,
+    2003,
+    2004
+  ]
+}

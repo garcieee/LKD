@@ -779,3 +779,564 @@ details[open] > summary.panel-title::after {
     bottom: calc(var(--foot) + var(--legend-clear));
   }
 }
+
+/* Insights: docked on the right. With it open the map keeps 70% of the screen and this takes 30%
+   (never under 340px). Phones: a full sheet over the map instead of a split. */
+.shell {
+  --insights-w: max(30vw, 340px);
+}
+.insights {
+  position: absolute;
+  z-index: 6;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: var(--insights-w);
+  border-left: 1px solid var(--line);
+  background: var(--bg);
+  font-size: 14px;
+  animation: rise 180ms ease-out;
+}
+/* The map never gives up the last 30%: past that the panel grows over it instead of squeezing it to nothing. */
+.shell.split .stage {
+  right: min(var(--insights-w), 70vw);
+}
+.grip {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 56px;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg);
+  color: var(--muted);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+  cursor: col-resize;
+  touch-action: none;
+}
+.grip svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+.grip:hover,
+.grip:active,
+.grip:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.insights[data-full] .grip {
+  transform: translate(0, -50%);
+  border-left: 0;
+  border-radius: 0 14px 14px 0;
+}
+.shell[data-anim] .insights {
+  transition: width 240ms ease;
+}
+.insights .queue-list {
+  padding: 12px 14px 16px;
+}
+.insights .src {
+  font-size: 12px;
+}
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0 0 10px;
+}
+.tiles div {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--paper-deep);
+}
+.tiles div[data-alert] {
+  border-color: color-mix(in srgb, var(--danger) 40%, #fff);
+  background: color-mix(in srgb, var(--danger) 7%, #fff);
+}
+.tiles dt {
+  font: 600 11px var(--grot);
+  color: var(--muted);
+}
+.tiles dd {
+  margin: 2px 0 0;
+  font: 500 30px/1.1 var(--serif);
+  color: var(--accent);
+}
+.tiles div[data-alert] dd,
+.tiles div[data-alert] small {
+  color: var(--danger);
+}
+.tiles small {
+  font: 600 11px var(--grot);
+  color: var(--muted);
+}
+.cards {
+  display: grid;
+  gap: 10px;
+}
+.card {
+  padding: 12px 14px 14px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-card);
+  background: var(--panel);
+}
+.sec {
+  margin: 0;
+  font: 600 15px var(--grot);
+  color: var(--accent);
+}
+.bars {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.bars li {
+  display: grid;
+  grid-template-columns: 112px 1fr 28px;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  --c: var(--accent);
+  font: 13px var(--grot);
+}
+.bars i {
+  height: 14px;
+  min-width: 3px;
+  border-radius: 3px;
+  background: var(--c);
+}
+.bars b {
+  text-align: right;
+  font: 600 15px var(--grot);
+}
+.key,
+.days i {
+  --c: var(--accent);
+}
+.key[data-key="fixed"],
+.days i[data-key="fixed"] {
+  --c: var(--ok);
+}
+.key {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 0 4px 0 0;
+  border-radius: 2px;
+  background: var(--c);
+}
+.key[data-key="fixed"] {
+  margin-left: 10px;
+}
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.days li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.days .pair {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  width: 100%;
+  height: 110px;
+  padding-top: 16px; /* room for the count above the tallest bar */
+  border-bottom: 1px solid var(--line);
+}
+.days i {
+  position: relative;
+  flex: 1;
+  min-height: 2px;
+  border-radius: 3px 3px 0 0;
+  background: var(--c);
+}
+.days em {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  font: 600 11px/1.3 var(--grot);
+  font-style: normal;
+  color: var(--text);
+}
+.days small {
+  font: 600 11px var(--grot);
+  color: var(--muted);
+}
+.spots {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.spots li {
+  border-top: 1px solid var(--line-soft);
+}
+.spot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 4px;
+  border: 0;
+  background: none;
+  font: 13px var(--grot);
+  text-align: left;
+  cursor: pointer;
+}
+.spot small {
+  margin-left: auto;
+  font: 600 11px var(--grot);
+  color: var(--accent);
+  white-space: nowrap;
+}
+@media (hover: hover) {
+  .spot:hover {
+    background: var(--selected);
+  }
+}
+.card.pending {
+  border-style: dashed;
+  background: none;
+}
+.pending ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font: 13px/1.6 var(--grot);
+}
+.spots b {
+  min-width: 32px;
+  font: 500 24px/1 var(--serif);
+  color: var(--accent);
+}
+@media (max-width: 700px) {
+  .insights {
+    width: auto;
+    left: 0;
+  }
+  .grip {
+    display: none;
+  }
+  .shell.split .stage {
+    right: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .insights {
+    animation: none;
+  }
+}
+
+/* Foot traffic panel: day and hour pickers, then the busiest districts for that moment. */
+.footfall {
+  min-height: 0; /* the HUD column ends above Reset to Makati: shrink and scroll instead of running into it */
+  overflow-y: auto;
+}
+.ff-hour {
+  width: 100%;
+  accent-color: var(--accent);
+}
+.ff-list {
+  margin: 10px 0 0;
+  padding: 9px 0 0;
+  border-top: 1px solid var(--line-soft);
+  list-style: none;
+}
+.ff-list button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 5px 4px;
+  border: 0;
+  border-radius: var(--radius);
+  background: none;
+  font: 12px var(--grot);
+  text-align: left;
+  cursor: pointer;
+}
+.ff-list button:hover {
+  background: var(--paper-deep);
+}
+.ff-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ff-list b {
+  font: 600 11px var(--grot);
+  font-variant-numeric: tabular-nums;
+}
+.ff-tier {
+  display: grid;
+  place-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font: 600 9px var(--grot);
+}
+.ff-tier[data-tier="2"] {
+  background: #4f5f86;
+}
+.ff-tier[data-tier="3"] {
+  background: #8a93ab;
+}
+
+/* Live state of the foot-traffic layer, and its link to the forecast. */
+.ff-state {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 8px 0;
+  padding: 7px 9px;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--ok) 8%, #fff);
+  color: var(--ok);
+  font: 500 11px var(--grot);
+}
+.ff-state[data-pinned] {
+  background: color-mix(in srgb, #6d5cd6 10%, #fff);
+  color: #4b3fa8;
+}
+.ff-pulse {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: ff-pulse 1.8s ease-out infinite;
+}
+@keyframes ff-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 45%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 7px transparent;
+  }
+}
+.fc-live {
+  padding: 3px 8px;
+  border: 1px solid currentColor;
+  border-radius: var(--radius);
+  background: #fff;
+  color: inherit;
+  font: 600 10px var(--grot);
+  cursor: pointer;
+}
+.ff-open {
+  margin-top: 10px;
+}
+
+/* Text and controls in the Forecast body grow with the dock: --k (set by ForecastPanel) is the zoom, 1 at the
+   narrowest width. The chart is not stretched by it; it is redrawn at the width it is given. */
+.forecast .queue-list {
+  zoom: var(--k, 1);
+}
+/* Forecast: zone and range pickers, three tiles, the chart with a readout above it, then the key and the disclosure. */
+.fc-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.fc-zone {
+  flex: 1;
+  min-width: 150px;
+}
+.fc-zone select {
+  width: 100%;
+  min-height: 32px;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  font: 500 12px var(--grot);
+}
+.seg {
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.seg button {
+  min-height: 32px;
+  padding: 5px 11px;
+  border: 0;
+  border-left: 1px solid var(--line);
+  background: var(--panel);
+  font: 500 11px var(--grot);
+  cursor: pointer;
+}
+.seg button:first-child {
+  border-left: 0;
+}
+.seg button[aria-pressed="true"] {
+  background: var(--accent);
+  color: #fff;
+}
+.fc-read {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-height: 30px;
+  margin: 2px 0 4px;
+  font: 13px var(--grot);
+}
+.fc-val {
+  margin-left: auto;
+  font: 500 22px/1 var(--serif);
+  color: var(--accent);
+}
+.fc-val small {
+  font: 500 11px var(--grot);
+  color: var(--muted);
+}
+.fc-kind {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--paper-deep);
+  color: var(--muted);
+  font: 600 10px var(--grot);
+}
+.fc-kind[data-kind="live"] {
+  background: color-mix(in srgb, var(--ok) 10%, #fff);
+  color: var(--ok);
+}
+.fc-kind[data-kind="forecast"] {
+  background: color-mix(in srgb, #6d5cd6 12%, #fff);
+  color: #4b3fa8;
+}
+.fc-read .fc-live {
+  color: #4b3fa8;
+}
+.fc-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: pan-y;
+  cursor: crosshair;
+  user-select: none;
+}
+.fc-chart:focus-visible {
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+.fc-grid {
+  stroke: var(--line-soft);
+}
+.fc-day {
+  stroke: var(--line);
+  stroke-dasharray: 2 3;
+}
+.fc-axis {
+  fill: var(--muted);
+  font: 10px var(--grot);
+}
+.fc-area {
+  fill: color-mix(in srgb, var(--accent) 9%, transparent);
+}
+.fc-band {
+  fill: color-mix(in srgb, #6d5cd6 16%, transparent);
+}
+.fc-line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.fc-line.history {
+  stroke: var(--accent);
+}
+.fc-line.forecast {
+  stroke: #6d5cd6;
+  stroke-dasharray: 5 4;
+}
+.fc-now {
+  stroke: var(--ok);
+  stroke-width: 1.2;
+}
+.fc-now-label {
+  fill: var(--ok);
+  font: 600 10px var(--grot);
+}
+.fc-cursor {
+  stroke: var(--text);
+  stroke-width: 1;
+  stroke-opacity: 0.55;
+}
+.fc-dot {
+  fill: var(--accent);
+  stroke: #fff;
+  stroke-width: 2;
+}
+.fc-dot[data-kind="forecast"] {
+  fill: #6d5cd6;
+}
+.fc-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font: 500 11px var(--grot);
+}
+.fc-key li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.fc-key i {
+  display: inline-block;
+  width: 18px;
+  height: 0;
+  border-top: 2px solid var(--accent);
+}
+.fc-key i[data-k="forecast"] {
+  border-top: 2px dashed #6d5cd6;
+}
+.fc-key i[data-k="band"] {
+  height: 8px;
+  border: 0;
+  background: color-mix(in srgb, #6d5cd6 22%, transparent);
+}
+.fc-note {
+  margin: 4px 0 0;
+  padding: 9px 10px;
+  border-left: 3px solid var(--warn);
+  background: var(--paper-deep);
+  color: var(--text);
+  font-size: 12px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ff-pulse {
+    animation: none;
+  }
+}

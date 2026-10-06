@@ -1,0 +1,489 @@
+{
+  "box": [
+    14.5296,
+    120.9987,
+    14.5796,
+    121.0501
+  ],
+  "busiest_spots": [
+    {
+      "foot_traffic": 0.9923242954994422,
+      "lat": 14.550261157024833,
+      "lng": 121.02839904137899,
+      "nearest": [
+        {
+          "kind": "bus",
+          "m": 11,
+          "name": "One Ayala"
+        },
+        {
+          "kind": "bus",
+          "m": 18,
+          "name": ""
+        },
+        {
+          "kind": "bus",
+          "m": 20,
+          "name": "One Ayala"
+        }
+      ]
+    },
+    {
+      "foot_traffic": 0.9877009165016181,
+      "lat": 14.538583111749928,
+      "lng": 121.00055619008619,
+      "nearest": [
+        {
+          "kind": "rail",
+          "m": 29,
+          "name": "EDSA"
+        },
+        {
+          "kind": "bus",
+          "m": 30,
+          "name": "LRT EDSA Station"
+        },
+        {
+          "kind": "rail",
+          "m": 41,
+          "name": "EDSA"
+        }
+      ]
+    },
+    {
+      "foot_traffic": 0.9866131452147698,
+      "lat": 14.5543035573123,
+      "lng": 121.04464070463312,
+      "nearest": [
+        {
+          "kind": "mall",
+          "m": 10,
+          "name": "Kabayan"
+        },
+        {
+          "kind": "health",
+          "m": 45,
+          "name": "Le Clinique"
+        },
+        {
+          "kind": "health",
+          "m": 65,
+          "name": "Maxicare Primary Care Clinic"
+        }
+      ]
+    },
+    {
+      "foot_traffic": 0.9850110692601332,
+      "lat": 14.558795113187264,
+      "lng": 121.01494166325413,
+      "nearest": [
+        {
+          "kind": "health",
+          "m": 27,
+          "name": "Philippine Orthopedic Institute"
+        },
+        {
+          "kind": "health",
+          "m": 40,
+          "name": "MediCard Clinic"
+        },
+        {
+          "kind": "doctor",
+          "m": 42,
+          "name": "Elizabeth Rondain"
+        }
+      ]
+    },
+    {
+      "foot_traffic": 0.9831828916482555,
+      "lat": 14.541727200862402,
+      "lng": 121.01911809094806,
+      "nearest": [
+        {
+          "kind": "rail",
+          "m": 7,
+          "name": "Magallanes"
+        },
+        {
+          "kind": "rail",
+          "m": 38,
+          "name": "Magallanes"
+        },
+        {
+          "kind": "mall",
+          "m": 74,
+          "name": "Robinsons Easymart"
+        }
+      ]
+    },
+    {
+      "foot_traffic": 0.9780567277362016,
+      "lat": 14.558795113187264,
+      "lng": 121.04556879967622,
+      "nearest": [
+        {
+          "kind": "doctor",
+          "m": 15,
+          "name": "Sta. Filomena Medical Clinic"
+        },
+        {
+          "kind": "health",
+          "m": 32,
+          "name": "Leonardo Medical and Diagnistic Clinic"
+        },
+        {
+          "kind": "health",
+          "m": 37,
+          "name": "ALEBIN Medical Clinic"
+        }
+      ]
+    },
+    {
+      "foot_traffic": 0.9756667304283752,
+      "lat": 14.573168091987148,
+      "lng": 120.9996280950431,
+      "nearest": [
+        {
+          "kind": "rail",
+          "m": 8,
+          "name": "San Andres"
+        },
+        {
+          "kind": "rail",
+          "m": 9,
+          "name": "San Andres"
+        },
+        {
+          "kind": "rail",
+          "m": 10,
+          "name": "San Andres"
+        }
+      ]
+    },
+    {
+      "foot_traffic": 0.9726311936154893,
+      "lat": 14.563735824649724,
+      "lng": 121.04510475215467,
+      "nearest": [
+        {
+          "kind": "health",
+          "m": 8,
+          "name": "Guadahealth"
+        },
+        {
+          "kind": "school",
+          "m": 10,
+          "name": "AMA"
+        },
+        {
+          "kind": "doctor",
+          "m": 61,
+          "name": "Saint Michael's Medical Center"
+        }
+      ]
+    },
+    {
+      "foot_traffic": 0.9723498900111444,
+      "lat": 14.548464534674848,
+      "lng": 121.00009214256464,
+      "nearest": [
+        {
+          "kind": "school",
+          "m": 8,
+          "name": "St. Mary's Academy"
+        },
+        {
+          "kind": "bus",
+          "m": 56,
+          "name": "St. Mary's Academy Pasay"
+        },
+        {
+          "kind": "bus",
+          "m": 56,
+          "name": "Security Bank Libertad"
+        }
+      ]
+    },
+    {
+      "foot_traffic": 0.9703300695416809,
+      "lat": 14.5790071146246,
+      "lng": 120.99916404752155,
+      "nearest": [
+        {
+          "kind": "rail",
+          "m": 3,
+          "name": "Paco"
+        },
+        {
+          "kind": "rail",
+          "m": 4,
+          "name": "Paco"
+        },
+        {
+          "kind": "rail",
+          "m": 5,
+          "name": "Paco"
+        }
+      ]
+    }
+  ],
+  "grid_m": 50,
+  "grid_points": 12432,
+  "meta": {
+    "git_commit": "de82e47",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T14:10:20+00:00"
+  },
+  "points": 500,
+  "scales": {
+    "shipped": 1.0,
+    "x0.5": 0.5,
+    "x2": 2.0
+  },
+  "seed": 2026,
+  "share_at_floor": {
+    "shipped": 0.202,
+    "x0.5": 0.15,
+    "x2": 0.3
+  },
+  "shipped_median": 0.41703553620696665,
+  "shipped_p90": 0.8087225290599211,
+  "spearman_rho": {
+    "x0.5 vs shipped": 0.9975551618386814,
+    "x0.5 vs x2": 0.9880766755540124,
+    "x2 vs shipped": 0.9904982835563715
+  },
+  "target_rho": 0.95,
+  "what_if_dedupe": {
+    "busiest_spots": [
+      {
+        "foot_traffic": 0.9798620055972348,
+        "lat": 14.54936284584984,
+        "lng": 121.02793499385744,
+        "nearest": [
+          {
+            "kind": "rail",
+            "m": 19,
+            "name": "Ayala"
+          },
+          {
+            "kind": "bus",
+            "m": 51,
+            "name": "Ayala"
+          },
+          {
+            "kind": "rail",
+            "m": 56,
+            "name": "Ayala"
+          }
+        ]
+      },
+      {
+        "foot_traffic": 0.9793855646840994,
+        "lat": 14.5543035573123,
+        "lng": 121.04464070463312,
+        "nearest": [
+          {
+            "kind": "mall",
+            "m": 10,
+            "name": "Kabayan"
+          },
+          {
+            "kind": "health",
+            "m": 45,
+            "name": "Le Clinique"
+          },
+          {
+            "kind": "health",
+            "m": 65,
+            "name": "Maxicare Primary Care Clinic"
+          }
+        ]
+      },
+      {
+        "foot_traffic": 0.9784248419220907,
+        "lat": 14.558795113187264,
+        "lng": 121.01494166325413,
+        "nearest": [
+          {
+            "kind": "health",
+            "m": 27,
+            "name": "Philippine Orthopedic Institute"
+          },
+          {
+            "kind": "health",
+            "m": 40,
+            "name": "MediCard Clinic"
+          },
+          {
+            "kind": "doctor",
+            "m": 42,
+            "name": "Elizabeth Rondain"
+          }
+        ]
+      },
+      {
+        "foot_traffic": 0.9751743422317242,
+        "lat": 14.558795113187264,
+        "lng": 121.04556879967622,
+        "nearest": [
+          {
+            "kind": "doctor",
+            "m": 15,
+            "name": "Sta. Filomena Medical Clinic"
+          },
+          {
+            "kind": "health",
+            "m": 32,
+            "name": "Leonardo Medical and Diagnistic Clinic"
+          },
+          {
+            "kind": "health",
+            "m": 37,
+            "name": "ALEBIN Medical Clinic"
+          }
+        ]
+      },
+      {
+        "foot_traffic": 0.9714603980882847,
+        "lat": 14.563735824649724,
+        "lng": 121.04510475215467,
+        "nearest": [
+          {
+            "kind": "health",
+            "m": 8,
+            "name": "Guadahealth"
+          },
+          {
+            "kind": "school",
+            "m": 10,
+            "name": "AMA"
+          },
+          {
+            "kind": "doctor",
+            "m": 61,
+            "name": "Saint Michael's Medical Center"
+          }
+        ]
+      },
+      {
+        "foot_traffic": 0.9690981973743353,
+        "lat": 14.541727200862402,
+        "lng": 121.01911809094806,
+        "nearest": [
+          {
+            "kind": "rail",
+            "m": 7,
+            "name": "Magallanes"
+          },
+          {
+            "kind": "rail",
+            "m": 38,
+            "name": "Magallanes"
+          },
+          {
+            "kind": "mall",
+            "m": 74,
+            "name": "Robinsons Easymart"
+          }
+        ]
+      },
+      {
+        "foot_traffic": 0.9639593568711236,
+        "lat": 14.57406640316214,
+        "lng": 121.0483530848055,
+        "nearest": [
+          {
+            "kind": "rail",
+            "m": 37,
+            "name": "Boni"
+          },
+          {
+            "kind": "health",
+            "m": 61,
+            "name": "The Medical City"
+          },
+          {
+            "kind": "rail",
+            "m": 70,
+            "name": "Boni"
+          }
+        ]
+      },
+      {
+        "foot_traffic": 0.9589949676973563,
+        "lat": 14.548464534674848,
+        "lng": 121.00009214256464,
+        "nearest": [
+          {
+            "kind": "school",
+            "m": 8,
+            "name": "St. Mary's Academy"
+          },
+          {
+            "kind": "bus",
+            "m": 56,
+            "name": "St. Mary's Academy Pasay"
+          },
+          {
+            "kind": "bus",
+            "m": 62,
+            "name": "BDO Libertad"
+          }
+        ]
+      },
+      {
+        "foot_traffic": 0.9521887662654309,
+        "lat": 14.56059173553725,
+        "lng": 121.02329451864198,
+        "nearest": [
+          {
+            "kind": "school",
+            "m": 20,
+            "name": "Playworks School"
+          },
+          {
+            "kind": "health",
+            "m": 24,
+            "name": "Barangay Bel-Air Health Office"
+          },
+          {
+            "kind": "market",
+            "m": 74,
+            "name": "Salcedo Saturday Market"
+          }
+        ]
+      },
+      {
+        "foot_traffic": 0.9463569340898732,
+        "lat": 14.567329069349695,
+        "lng": 121.04556879967622,
+        "nearest": [
+          {
+            "kind": "rail",
+            "m": 25,
+            "name": "Guadalupe"
+          },
+          {
+            "kind": "rail",
+            "m": 39,
+            "name": "Guadalupe"
+          },
+          {
+            "kind": "rail",
+            "m": 69,
+            "name": "Guadalupe"
+          }
+        ]
+      }
+    ],
+    "median": 0.39058168628032586,
+    "p90": 0.763984022550046,
+    "places_after": 629,
+    "places_before": 719,
+    "spearman_rho_vs_shipped": 0.9887908543190094,
+    "within_m": 30
+  }
+}
