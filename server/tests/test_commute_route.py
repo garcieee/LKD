@@ -7,8 +7,8 @@ from fastapi.testclient import TestClient
 from app.main import create_app
 from app.services import ors
 
-AYALA = (14.5547, 121.0244)
-GIL_PUYAT = (14.5560, 121.0020)  # 2.4 km west: too far to walk, so a ride is the answer
+AYALA = (14.5500, 121.0280)  # by Ayala MRT station
+GIL_PUYAT = (14.5545, 120.9975)  # by Gil Puyat LRT station, 3 km west: too far to walk, and the Ayala-Gil Puyat bus runs it
 PARAMS = {"from_lat": AYALA[0], "from_lng": AYALA[1], "to_lat": GIL_PUYAT[0], "to_lng": GIL_PUYAT[1]}
 STREET = [[121.0244, 14.5547, 12.0], [121.0240, 14.5550, 12.0]]  # a 100 m, 80 s street walk
 
@@ -164,3 +164,21 @@ def test_a_ride_whose_street_route_fails_keeps_its_straight_line(tmp_path):
     options = [{"id": "x", "total_s": 1.0, "walk_s": 0.0, "tags": [], "legs": [_ride("city_bus")]}]
     _refine(options, "walkable", [], httpx.Client(transport=httpx.MockTransport(lambda req: httpx.Response(500))), {"city_bus": {"speed_kmh": 15, "wait_min": 6}})
     assert len(options[0]["legs"][0]["geometry"]) == 2 and options[0]["total_s"] == 1.0
+
+
+def _rides_between(tmp_path, a_id, b_id):
+    c = make_client(tmp_path, ors_walk)
+    by_id = {h["id"]: h for h in c.app.state.hubs}
+    a, b = by_id[a_id], by_id[b_id]
+    r = c.get("/route/commute", params={"from_lat": a["lat"], "from_lng": a["lng"], "to_lat": b["lat"], "to_lng": b["lng"]})
+    assert r.status_code == 200
+    return [(leg["kind"], leg["label"]) for o in r.json() for leg in o["legs"] if leg["kind"] != "walk"]
+
+
+def test_a_jeepney_ride_is_only_offered_on_a_route_the_study_lists(tmp_path):
+    assert ("jeepney", "One Ayala to Washington Terminal") in _rides_between(tmp_path, "one-ayala", "washington-terminal")
+    # Both are jeepney terminals, but no listed route joins them: the old straight-line guess invented that ride.
+    # Washington Terminal reaches Landmark's end of town only by the real Ayala-Washington route, alighting at One Ayala.
+    rides = _rides_between(tmp_path, "washington-terminal", "landmark-terminal")
+    assert ("jeepney", "Washington Terminal to Landmark Terminal") not in rides
+    assert ("jeepney", "Washington Terminal to One Ayala") in rides

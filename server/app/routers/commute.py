@@ -98,6 +98,6 @@ def route_commute(
     hubs = state.hubs
     if mode == "accessible":  # a missing ramp or a broken elevator at a station closes it to a wheelchair
         hubs = [h for h in hubs if not hazards.barred((h["lat"], h["lng"]), reports)]
-    options = commute.plan(hubs, state.rides, (from_lat, from_lng), (to_lat, to_lng))
+    options = commute.plan(hubs, state.rides, state.links, (from_lat, from_lng), (to_lat, to_lng))
     _refine(options, mode, reports, getattr(state, "ors_client", None), state.rides)
     return commute.rank(options)  # street distances can reorder them
