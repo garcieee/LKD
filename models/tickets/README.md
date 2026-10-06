@@ -32,4 +32,8 @@ Edit `settings.py`, run the tests. The weights are judgment calls: show a few pe
 
 ## Status
 
-Stubs, plus `settings.py` (the numbers from `sim/`) and the layout test. No ticketing logic yet.
+**Built and tested:** `matching/`, `ranking/`, `classification/` and `resources/` (standard library only, 108 tests), with every number in `settings.py`.
+
+**Evaluated:** see the Results section of `EVALUATION.md` for what met its targets, what missed, and the decisions waiting for the team. Nothing in the rules or `settings.py` was changed because of it.
+
+**Not built:** `engine.py` and `storage/` are still stubs, so the server does not call any of this yet and `/reports` behaves as before.
