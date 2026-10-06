@@ -1691,3 +1691,70 @@ details[open] > summary.panel-title::after {
   font-size: 14px;
   letter-spacing: 0;
 }
+
+/* Filtering the queue: ID search, status chips with counts, a category dropdown. */
+.filters {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0 10px;
+}
+.filters input[type="search"],
+.filter-cat {
+  width: 100%;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--text);
+  font: 12px var(--grot);
+}
+.fchips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.fchip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  font: 500 11px var(--grot);
+  cursor: pointer;
+}
+.fchip b {
+  color: var(--muted);
+  font: 600 10px var(--grot);
+  font-variant-numeric: tabular-nums;
+}
+.fchip:hover {
+  background: var(--paper-deep);
+}
+.fchip[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+.fchip[aria-pressed="true"] b {
+  color: rgba(255, 255, 255, 0.8);
+}
+.filter-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.linklike {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: 600 11px var(--grot);
+  text-decoration: underline;
+  cursor: pointer;
+}

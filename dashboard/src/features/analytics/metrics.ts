@@ -1,6 +1,6 @@
 // Dashboard analytics from the polled report list. No React or mapbox-gl, so `node --test` runs it (metrics.test.ts).
 import type { Category, Report, SosKind, Status } from "../../types/api.ts";
-import { CATEGORY_LABEL, SOS_KINDS, SOS_KIND_LABEL, STATUSES, isRejected, isSosActive, isUnresolved } from "../queue/tickets.ts";
+import { CATEGORY_LABEL, SOS_KINDS, SOS_KIND_LABEL, STATUSES, isRejected, isSosActive, isUnresolved, isUrgent } from "../queue/tickets.ts";
 
 const DAY = 24 * 60 * 60_000;
 const ms = (iso: string) => Date.parse(iso);
@@ -132,7 +132,7 @@ export function summarize(all: Report[], now: number) {
   return {
     total: reports.length,
     unresolved: reports.filter(isUnresolved).length,
-    urgent: reports.filter((r) => isUnresolved(r) && r.severity === 3).length,
+    urgent: reports.filter(isUrgent).length,
     funnel: funnel(reports),
     byCategory: byCategory(reports),
     aging: aging(reports, now),

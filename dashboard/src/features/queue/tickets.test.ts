@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { Report } from "../../types/api.ts";
-import { CATEGORY_LABEL, SOS_KINDS, SOS_KIND_HINT, SOS_KIND_LABEL, STATUSES, STATUS_LABEL, bandOf, isRejected, isSos, isSosActive, isUnresolved, needsReview, needsSorting, newReports, rank, sightings, sightingsLabel, steps, ticketCode, ticketLabel, timeAgo, toGeoJSON } from "./tickets.ts";
+import { CATEGORY_LABEL, SOS_KINDS, SOS_KIND_HINT, SOS_KIND_LABEL, STATUSES, STATUS_LABEL, bandOf, isRejected, isSos, isSosActive, isUnresolved, needsReview, needsSorting, newReports, rank, sightings, sightingsLabel, isUrgent, steps, ticketCode, ticketLabel, timeAgo, toGeoJSON } from "./tickets.ts";
 
 const T0 = Date.parse("2026-10-06T07:00:00Z");
 const at = (min: number) => new Date(T0 + min * 60_000).toISOString();
@@ -282,4 +282,18 @@ test("sightings: reports that share a ticket_id are counted, and only a ticket w
   assert.equal(sightingsLabel(input[2], count), "", "one report is not worth a label");
   assert.equal(sightingsLabel(input[3], count), "", "no ticket yet");
   assert.equal(sightingsLabel(input[4], count), "");
+});
+
+test("urgent is said once: Critical or High on the engine's band, and severity only until the ticket is scored", () => {
+  assert.ok(isUrgent(report("a", { band: "Critical", severity: 3 })));
+  assert.ok(isUrgent(report("a", { band: "High", severity: 3 })));
+  assert.ok(!isUrgent(report("a", { band: "Medium", severity: 2 })));
+  assert.ok(!isUrgent(report("a", { band: "Low", severity: 1 })));
+  assert.ok(isUrgent(report("a", { severity: 3 })), "not scored yet: the category's severity stands in");
+  assert.ok(!isUrgent(report("a", { severity: 2 })));
+  assert.ok(!isUrgent(report("a", { band: "Medium", severity: 3 })), "once scored, the band decides");
+});
+
+test("a resolved or rejected ticket is never urgent", () => {
+  for (const status of ["fixed", "rejected"] as const) assert.ok(!isUrgent(report("a", { band: "Critical", severity: 3, status })), status);
 });

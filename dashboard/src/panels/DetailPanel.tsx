@@ -33,6 +33,12 @@ export function BandChip({ report }: { report: Report }) {
   return band && <span className="badge" data-band={band}>{band}</span>;
 }
 
+// How urgent a ticket is, said once: the engine's band (the score the queue is ranked by), or, until the loop has
+// scored the report, the category's severity. Showing both put two urgency labels on every ticket.
+export function Urgency({ report }: { report: Report }) {
+  return bandOf(report) ? <BandChip report={report} /> : <Severity level={report.severity} />;
+}
+
 type Props = {
   report: Report;
   sightings?: ReadonlyMap<string, number>; // reports per ticket_id, to say "3 reports" on a ticket several people filed
@@ -101,8 +107,7 @@ export default function DetailPanel({ report: r, sightings, now, onStatus, onKin
         <span className="badge" data-status={r.status}>
           {STATUS_LABEL[r.status]}
         </span>
-        <Severity level={r.severity} />
-        <BandChip report={r} />
+        <Urgency report={r} />
         {sightings && sightingsLabel(r, sightings)}
       </div>
       <h3 ref={title} className="detail-title" tabIndex={-1}>

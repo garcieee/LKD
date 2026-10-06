@@ -189,3 +189,17 @@ test("summarize: carries the workload and SOS sections, and skips rejected ticke
   assert.equal(s.workload.handlers[0].open, 1);
   assert.equal(s.sos.active, 0);
 });
+
+test("summarize counts urgent tickets by the same rule as the queue's badge", () => {
+  const s = summarize(
+    [
+      report("critical", { band: "Critical", severity: 3 }),
+      report("high", { band: "High", severity: 3 }),
+      report("medium", { band: "Medium", severity: 2 }),
+      report("unscored", { severity: 3 }),
+      report("done", { band: "Critical", severity: 3, status: "fixed" }),
+    ],
+    NOW,
+  );
+  assert.equal(s.urgent, 3, "Critical, High, and the unscored severity-3 one");
+});

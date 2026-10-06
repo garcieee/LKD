@@ -73,6 +73,11 @@ export const hasPriority = (r: Report): r is Report & { priority: number } => Nu
 export const BANDS: Band[] = ["Critical", "High", "Medium", "Low"];
 export const bandOf = (r: Report): Band | null => BANDS.find((b) => b === r.band) ?? null;
 
+// An unresolved ticket that needs doing first: Critical or High on the engine's band, or, until the loop has scored it,
+// Urgent on the category's severity. One definition for the badge, the HUD dot and the Insights count, so they agree
+// (severity and band say the same thing in two scales: every severity-3 ticket is Critical or High).
+export const isUrgent = (r: Report) => isUnresolved(r) && (bandOf(r) ? bandOf(r) === "Critical" || bandOf(r) === "High" : r.severity === 3);
+
 // How many reports each ticket has, by ticket_id (reports of one hazard share it). Not-yet-ticketed reports are left out.
 export function sightings(reports: Report[]): Map<string, number> {
   const count = new Map<string, number>();

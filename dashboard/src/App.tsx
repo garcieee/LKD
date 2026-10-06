@@ -7,7 +7,7 @@ import FootfallPanel from "./features/footfall/FootfallPanel";
 import ForecastPanel from "./features/footfall/ForecastPanel";
 import { useFootfall } from "./features/footfall/useFootfall";
 import { useTickets } from "./features/queue/useTickets";
-import { isRejected, isSosActive, isUnresolved } from "./features/queue/tickets";
+import { isRejected, isSosActive, isUnresolved, isUrgent } from "./features/queue/tickets";
 import { ENV } from "./config/env";
 import { REFRESH_MS } from "./layers/congestion";
 import { manilaNow } from "./layers/footfall";
@@ -42,7 +42,7 @@ export default function App() {
   const toggle = useRef<HTMLButtonElement>(null);
   const mapView = useRef<MapHandle>(null);
   const unresolved = tickets.reports?.filter(isUnresolved).length ?? 0;
-  const urgent = tickets.reports?.some((r) => isUnresolved(r) && r.severity === 3) ?? false;
+  const urgent = tickets.reports?.some(isUrgent) ?? false;
   // Rejected tickets stay off the map: they were judged not real (they are still in the queue's "Show rejected").
   const mapReports = useMemo(() => tickets.reports?.filter((r) => !isRejected(r)) ?? null, [tickets.reports]);
   const sosActive = tickets.reports?.some(isSosActive) ?? false;

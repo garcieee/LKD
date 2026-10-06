@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { photoUrl } from "../../api/client";
 import { ENV } from "../../config/env";
-import type { Report, SosKind, Status } from "../../types/api";
-import DetailPanel, { BandChip, Severity } from "../../panels/DetailPanel";
-import { STATUS_LABEL, isRejected, isSos, isSosActive, isUnresolved, needsReview, rank, sightings, sightingsLabel, ticketCode, ticketLabel, timeAgo } from "./tickets";
+import type { Category, Report, SosKind, Status } from "../../types/api";
+import DetailPanel, { Urgency } from "../../panels/DetailPanel";
+import { CATEGORY_LABEL, STATUS_LABEL, isRejected, isSos, isSosActive, isUnresolved, needsReview, rank, sightings, sightingsLabel, ticketCode, ticketLabel, timeAgo } from "./tickets";
+import { DEFAULT_FILTERS, STATUS_FILTERS, applyFilters, isFiltered, isSearching, statusCounts, type Filters } from "./filters";
 
 type Props = {
   reports: Report[] | null; // null until the API first answers
@@ -40,18 +41,18 @@ export default function QueuePanel({
   onAssign,
   onShowOnMap,
 }: Props) {
-  const [showFixed, setShowFixed] = useState(false);
-  const [showRejected, setShowRejected] = useState(false);
+  // What the list shows: by status, by category, or a search by ticket ID. Kept while a ticket is open and back.
+  const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const panel = useRef<HTMLElement>(null);
   const last = useRef<string | null>(null);
   const all = reports ?? [];
   const selected = all.find((r) => r.id === selectedId);
   const open = all.filter(isUnresolved).length;
   const review = all.filter(needsReview).length;
-  const fixed = all.filter((r) => r.status === "fixed").length;
-  const rejected = all.filter(isRejected).length;
   const count = sightings(all);
-  const rows = rank(all).filter((r) => isUnresolved(r) || (r.status === "fixed" ? showFixed : showRejected));
+  const rows = applyFilters(rank(all), filters);
+  const counts = statusCounts(all, filters.category);
+  const searching = isSearching(filters);
 
   // Keyboard focus follows the view: into the ticket, then back to its row (or the title).
   useEffect(() => {
@@ -67,7 +68,11 @@ export default function QueuePanel({
         ? "Loading tickets…"
         : `Can't reach the Lakad API at ${ENV.apiBaseUrl}. Retrying.`
       : all.length
-        ? "Nothing left to fix."
+        ? isFiltered(filters)
+          ? searching
+            ? "No ticket has an ID starting with that."
+            : "No tickets match these filters."
+          : "Nothing left to fix."
         : "No tickets yet. Hazards snapped in the Lakad app show up here within 10 seconds.";
 
   return (
@@ -105,16 +110,57 @@ export default function QueuePanel({
       ) : (
         <div className="queue-list">
           <div className="src">Ranked: SOS first (unsorted on top), then by priority, severity, oldest</div>
-          <label className="switch">
-            <input type="checkbox" checked={showFixed} onChange={(e) => setShowFixed(e.target.checked)} />
-            <span>Show fixed</span>
-            <span className="chip">{fixed}</span>
-          </label>
-          <label className="switch">
-            <input type="checkbox" checked={showRejected} onChange={(e) => setShowRejected(e.target.checked)} />
-            <span>Show rejected</span>
-            <span className="chip">{rejected}</span>
-          </label>
+          <div className="filters">
+            <input
+              type="search"
+              aria-label="Search tickets by ID"
+              placeholder="Search by ticket ID, e.g. LKD-3F2A9C"
+              value={filters.query}
+              maxLength={40}
+              spellCheck={false}
+              autoComplete="off"
+              onChange={(e) => setFilters({ ...filters, query: e.target.value })}
+            />
+            {/* A search looks at every ticket, so while one is typed no status chip is pressed. Picking a chip or a
+                category leaves the search. */}
+            <div className="fchips" role="group" aria-label="Show tickets">
+              {STATUS_FILTERS.map((f) => (
+                <button
+                  key={f.id}
+                  className="fchip"
+                  title={f.hint}
+                  aria-pressed={!searching && filters.status === f.id}
+                  onClick={() => setFilters({ ...filters, status: f.id, query: "" })}
+                >
+                  {f.label}
+                  <b>{counts[f.id]}</b>
+                </button>
+              ))}
+            </div>
+            <select
+              className="filter-cat"
+              aria-label="Category"
+              value={filters.category}
+              onChange={(e) => setFilters({ ...filters, category: e.target.value as Category | "all", query: "" })}
+            >
+              <option value="all">All categories</option>
+              {(Object.keys(CATEGORY_LABEL) as Category[]).map((c) => (
+                <option key={c} value={c}>
+                  {CATEGORY_LABEL[c]}
+                </option>
+              ))}
+            </select>
+            <div className="filter-status" role="status">
+              <span>
+                {searching ? `Searching all tickets: ${rows.length} found` : `Showing ${rows.length} of ${all.length} tickets`}
+              </span>
+              {isFiltered(filters) && (
+                <button className="linklike" onClick={() => setFilters(DEFAULT_FILTERS)}>
+                  Clear filters
+                </button>
+              )}
+            </div>
+          </div>
           {rows.length ? (
             <ol className="tickets">
               {rows.map((r) => (
@@ -140,8 +186,7 @@ export default function QueuePanel({
                       {needsReview(r) ? "To review" : STATUS_LABEL[r.status]}
                     </span>
                     <small>
-                      <span className="tid">{ticketCode(r)}</span>·<Severity level={r.severity} />
-                      <BandChip report={r} />
+                      <span className="tid">{ticketCode(r)}</span>·<Urgency report={r} />
                       {sightingsLabel(r, count)}
                       {r.handler && (r.status === "assigned" || r.status === "fixed") && (
                         <>
