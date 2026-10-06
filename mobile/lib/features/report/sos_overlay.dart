@@ -379,13 +379,15 @@ class SosBanner extends StatelessWidget {
                     children: [
                       Icon(cancelling ? Icons.close : Icons.fiber_manual_record, size: 12, color: Colors.white),
                       const SizedBox(width: 6),
-                      Text(
-                        cancelling ? 'CANCEL' : 'SOS MODE',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.8,
+                      Flexible(
+                        child: Text(
+                          cancelling ? 'CANCEL' : 'SOS MODE',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.8,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 10),
