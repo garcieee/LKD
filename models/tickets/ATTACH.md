@@ -1,6 +1,6 @@
 # Attaching the models to the ticketing, the database and district logins
 
-**Status: plan, 2026-10-07.** Revised the same night: tickets live in SQLite on the Lakad server, and Supabase holds only sign-in and district roles. The Supabase part was written and tested first (`supabase/`), so the two branches at the end can be built at the same time.
+**Status: built, 2026-10-07.** Tickets live in SQLite on the Lakad server, and Supabase holds only sign-in and district roles. The Supabase part was written and tested first (`supabase/`); then the two branches at the end were built at the same time against it and the API contract, and merged into `main` together. An end-to-end run against a local stand-in for Supabase passed 19 of 19 checks across every role.
 
 ## Short answers
 
