@@ -1,5 +1,6 @@
 // The server's API at Env.apiBaseUrl: reports (server/app/routers/reports.py), place search
-// (server/app/routers/geocode.py) and walking routes (server/app/routers/routes.py).
+// (server/app/routers/geocode.py), walking routes (server/app/routers/routes.py) and transit hubs
+// (server/app/routers/transit.py).
 // Report mirrors server/app/db/models.py, minus severity and updated_at, which the app never shows.
 import 'dart:convert';
 import 'dart:math' as math;
@@ -73,14 +74,52 @@ class WalkRoute {
 
 /// A place the search found: GET /geocode answers a list of these.
 class Place {
+  const Place({required this.label, required this.lat, required this.lng});
+
   Place.fromJson(Map<String, dynamic> json)
-    : label = json['label'] as String,
-      lat = (json['lat'] as num).toDouble(),
-      lng = (json['lng'] as num).toDouble();
+    : this(
+        label: json['label'] as String,
+        lat: (json['lat'] as num).toDouble(),
+        lng: (json['lng'] as num).toDouble(),
+      );
 
   final String label; // e.g. "Ayala Triangle Gardens, Makati, Philippines"
   final double lat;
   final double lng;
+}
+
+/// The kinds of PUV a hub is served by, with their labels (the study's four modes).
+const hubModeLabels = {
+  'jeepney': 'Jeepney',
+  'uv_express': 'UV Express',
+  'city_bus': 'City bus',
+  'p2p_bus': 'P2P bus',
+};
+
+/// A terminal or bus stop from the 2025 Makati PUV study: GET /transit/hubs answers a list of these.
+/// The position is an estimate, [errorM] metres of doubt around it.
+class Hub {
+  Hub.fromJson(Map<String, dynamic> json)
+    : id = json['id'] as String,
+      name = json['name'] as String,
+      isTerminal = json['kind'] == 'terminal',
+      modes = [for (final m in json['modes'] as List) m as String],
+      lat = (json['lat'] as num).toDouble(),
+      lng = (json['lng'] as num).toDouble(),
+      errorM = (json['error_m'] as num).round();
+
+  final String id;
+  final String name; // as printed on the study's map, e.g. "Washington Terminal"
+  final bool isTerminal; // false: a bus stop
+  final List<String> modes; // keys of hubModeLabels
+  final double lat;
+  final double lng;
+  final int errorM;
+
+  /// "Jeepney · UV Express".
+  String get modesLabel => [for (final m in modes) hubModeLabels[m] ?? m].join(' · ');
+
+  Place get place => Place(label: name, lat: lat, lng: lng);
 }
 
 /// A failed call, with a message fit to show the user.
@@ -117,6 +156,16 @@ class ApiClient {
     );
     final body = await _send(http.AbortableRequest('GET', url, abortTrigger: _deadline()));
     return [for (final p in body as List) Place.fromJson(p as Map<String, dynamic>)];
+  }
+
+  /// Makati's PUV terminals and bus stops, optionally only one [kind] ('terminal' or 'stop') or [mode]. Not sorted:
+  /// the app sorts by the user's position as it moves.
+  Future<List<Hub>> hubs({String? kind, String? mode, int limit = 50}) async {
+    final url = Uri.parse('$base/transit/hubs').replace(
+      queryParameters: {'limit': '$limit', 'kind': ?kind, 'mode': ?mode},
+    );
+    final body = await _send(http.AbortableRequest('GET', url, abortTrigger: _deadline()));
+    return [for (final h in body as List) Hub.fromJson(h as Map<String, dynamic>)];
   }
 
   /// A walking route between two points in Makati. A 404 ("No walking route found…") is an ApiException.
