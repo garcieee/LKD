@@ -13,7 +13,8 @@ Everything that decides **what a report is**, **whether it is the same place as 
 | `storage/` | The memory: the JSON inbox and the SQLite database (code). The only folder that touches disk; it reads and writes the top-level `db/` |
 | `resources/` | Static inputs: word lists, nearby places, offices |
 | `sim/` | The experiments behind the numbers in `settings.py` |
-| `tests/` | `server/.venv/bin/pytest models` from the repo root |
+| `eval/` | Datasets, metrics, splits and the evaluations of every model here. See `EVALUATION.md` |
+| `tests/` | `server/.venv/bin/pytest models/tickets/tests` from the repo root (standard library only) |
 
 ## Rules that keep it in one place
 

@@ -6,4 +6,7 @@ Decision models for Lakad, one folder per job. Each folder is self-contained: it
 |---|---|---|
 | `tickets/` | Merges reports of the same place, ranks what to fix first, classifies | Layout, settings and tests. See `tickets/README.md` |
 
-Run every test from the repo root: `server/.venv/bin/pytest models`
+Run the tests from the repo root:
+
+- the ticketing rules (standard library only): `server/.venv/bin/pytest models/tickets/tests`
+- everything, including the evaluation code (needs `models/.venv`, see `requirements-eval.txt`): `models/.venv/bin/pytest models`
