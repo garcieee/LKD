@@ -1,6 +1,6 @@
 // Insights: backlog funnel, what is breaking, aging, throughput, hotspots, from the polled reports.
 // Docked on the right: the map keeps the other 70% of the screen (phones: a full sheet over the map).
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { Report } from "../../types/api";
 import { CATEGORY_LABEL, STATUS_LABEL, timeAgo } from "../queue/tickets";
 import { duration, summarize } from "./metrics";
@@ -45,14 +45,79 @@ function Bars({ rows, unit }: { rows: Row[]; unit?: string }) {
   );
 }
 
+const MIN_W = 340;
+const FULL_AT = 0.7; // dragging the panel past this share of the window snaps it to full screen
+
 export default function AnalyticsPanel({ reports, online, now, onClose, onShow }: Props) {
   // Re-derived on each poll and each minute, not each second of the HUD clock.
   const minute = Math.floor(now / 60_000);
   const s = useMemo(() => reports && summarize(reports, minute * 60_000), [reports, minute]);
+  const panel = useRef<HTMLElement>(null);
+
+  // The map's stage reads the same --insights-w from the shell, so set it there.
+  const shell = () => panel.current?.closest<HTMLElement>(".shell");
+  useEffect(() => {
+    const el = shell(); // captured now: the ref is already null when the cleanup runs
+    return () => el?.style.removeProperty("--insights-w");
+  }, []);
+
+  // Past FULL_AT the panel snaps to full screen. Just under it is the widest free size.
+  function setWidth(w: number, allowFull = true) {
+    const full = allowFull && w >= innerWidth * FULL_AT;
+    if (full !== panel.current?.hasAttribute("data-full")) {
+      // Animate only the snap in or out of full screen; a free drag has to track the pointer.
+      const el = shell();
+      el?.setAttribute("data-anim", "");
+      setTimeout(() => el?.removeAttribute("data-anim"), 260);
+    }
+    const px = full ? innerWidth : Math.min(Math.max(MIN_W, w), innerWidth * FULL_AT - 1);
+    shell()?.style.setProperty("--insights-w", `${px}px`);
+    panel.current?.toggleAttribute("data-full", full);
+  }
+  // Leaving full screen: the pointer is still in the snap zone, so hold the free size until it leaves.
+  const left = useRef(false);
+  // Window listeners rather than pointer capture: they keep working when the pointer leaves the button,
+  // crosses the map or the sidebar, or the browser starts a text selection.
+  const startDrag = (e: React.PointerEvent) => {
+    e.preventDefault();
+    left.current = false;
+    let snapX = 0; // where the pointer was when the panel went full screen
+    const move = (ev: PointerEvent) => {
+      const wasFull = !!panel.current?.hasAttribute("data-full");
+      if (wasFull && ev.clientX > snapX + 48) left.current = true; // dragged back out: drop to the free size
+      if (ev.clientX > innerWidth * (1 - FULL_AT)) left.current = false;
+      setWidth(innerWidth - ev.clientX, !left.current);
+      if (!wasFull && panel.current?.hasAttribute("data-full")) snapX = ev.clientX;
+    };
+    const stop = () => {
+      removeEventListener("pointermove", move);
+      removeEventListener("pointerup", stop);
+      removeEventListener("pointercancel", stop);
+      document.body.style.userSelect = "";
+    };
+    document.body.style.userSelect = "none";
+    addEventListener("pointermove", move);
+    addEventListener("pointerup", stop);
+    addEventListener("pointercancel", stop);
+  };
+  const nudge = (e: React.KeyboardEvent) => {
+    const w = panel.current?.offsetWidth ?? 0;
+    if (e.key === "ArrowLeft") setWidth(w + 40);
+    else if (e.key === "ArrowRight") setWidth(w - 40, false); // from full screen this steps down to the widest free size
+  };
   const peak = s ? Math.max(1, ...s.throughput.map((d) => Math.max(d.created, d.fixed))) : 1;
 
   return (
-    <section id="insights" className="insights" aria-labelledby="insights-title">
+    <section id="insights" className="insights" aria-labelledby="insights-title" ref={panel}>
+      <button
+        type="button"
+        className="grip"
+        aria-label="Resize insights (drag, or use the left and right arrow keys)"
+        onPointerDown={startDrag}
+        onKeyDown={nudge}
+      >
+        <Icon d="M8 5v10M12 5v10" />
+      </button>
       <header className="queue-head">
         <h2 id="insights-title" className="panel-title" tabIndex={-1}>
           Insights
