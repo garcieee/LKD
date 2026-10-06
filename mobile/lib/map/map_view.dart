@@ -4,15 +4,19 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Size; // Flutter's Size here
 
+import '../api/api_client.dart';
 import '../config/env.dart';
 import '../config/makati.dart';
 import '../config/map_styles.dart';
+import '../features/report/report_screen.dart';
 import '../layers/congestion_layer.dart';
+import '../layers/reports_layer.dart';
 import '../state/layers_state.dart';
 import '../theme.dart';
 import '../widgets/layer_sheet.dart';
+import 'pin_chip.dart';
 
 // Strip at the bottom kept free of chips for the Mapbox logo and the attribution button.
 const _ornamentBand = 40.0;
@@ -28,6 +32,8 @@ class _MapViewState extends State<MapView> {
   final _layers = LayersState();
   MapboxMap? _map;
   Timer? _timer;
+  Timer? _reportsTimer;
+  List<Report> _reports = const []; // the pins on the map, for the card a tap opens
   Future<void> _queue = Future.value(); // style edits one at a time: a toggle can land mid-refresh
   bool _framed = false;
 
@@ -63,13 +69,49 @@ class _MapViewState extends State<MapView> {
     _timer = Timer.periodic(congestionRefresh, (_) {
       if (_layers.congestionOn) _layers.refresh();
     });
+    _reportsTimer = Timer.periodic(reportsRefresh, (_) => _loadReports());
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _reportsTimer?.cancel();
     _layers.dispose();
     super.dispose();
+  }
+
+  // Fetches the reports, then redraws the pins. A failed fetch keeps the pins already drawn.
+  Future<void> _loadReports() async {
+    try {
+      _reports = await api.reports();
+    } catch (e) {
+      debugPrint('reports: $e'); // offline, or an odd answer: try again next round
+      return;
+    }
+    if (!mounted) return;
+    _queue = _queue.then((_) async {
+      final map = _map;
+      try {
+        if (map != null && await map.isStyleLoaded()) await showReports(map, _reports);
+      } catch (e) {
+        debugPrint('reports layer: $e'); // a failed redraw must not take the app down
+      }
+    });
+  }
+
+  void _openReport(String id) {
+    final report = _reports.where((r) => r.id == id).firstOrNull;
+    if (report != null && mounted) showReportSheet(context, report);
+  }
+
+  Future<void> _report() async {
+    final sent = await Navigator.push<Report>(
+      context,
+      MaterialPageRoute(builder: (_) => const ReportScreen()),
+    );
+    if (sent == null || !mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Report sent. Thanks!')));
+    _loadReports(); // the new pin
   }
 
   // Re-applies the congestion layer after any state change or refresh.
@@ -95,6 +137,7 @@ class _MapViewState extends State<MapView> {
 
   Future<void> _onMapCreated(MapboxMap map) async {
     _map = map;
+    onReportTap(map, _openReport);
     // Edge to edge: the map runs under the gesture bar. Lift the Mapbox logo and the attribution
     // button above it, into the strip the chips leave free. Margins are logical pixels.
     final lift = MediaQuery.paddingOf(context).bottom + 8;
@@ -112,6 +155,7 @@ class _MapViewState extends State<MapView> {
     final map = _map;
     if (map == null || !await map.isStyleLoaded()) return;
     _apply();
+    _loadReports();
     try {
       // Mercator, whatever the style asks for: the lock below is worked out for it.
       await map.setProjection(StyleProjection(name: StyleProjectionName.mercator));
@@ -189,7 +233,15 @@ class _MapViewState extends State<MapView> {
                     padding: const EdgeInsets.only(bottom: _ornamentBand),
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 420),
-                      child: LayerSheet(layers: _layers),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          _ReportButton(onPressed: _report),
+                          const SizedBox(height: 10),
+                          LayerSheet(layers: _layers),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -241,6 +293,35 @@ class _ResetChip extends StatelessWidget {
     return ChipCard(
       padding: EdgeInsets.zero,
       child: TextButton(onPressed: onPressed, child: const Text('Reset to Makati')),
+    );
+  }
+}
+
+// The primary action: navy, with the floating chips' shadow. It sits in the chips' SafeArea, so it
+// stays above the gesture bar.
+class _ReportButton extends StatelessWidget {
+  const _ReportButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        borderRadius: radiusChip,
+        boxShadow: [BoxShadow(color: Color(0x2959534E), blurRadius: 18, offset: Offset(0, 4))],
+      ),
+      child: FilledButton.icon(
+        onPressed: onPressed,
+        icon: const Icon(Icons.photo_camera_outlined, size: 20),
+        label: const Text('Report'),
+        style: FilledButton.styleFrom(
+          minimumSize: const Size(0, 48),
+          padding: const EdgeInsets.symmetric(horizontal: 18),
+          shape: const RoundedRectangleBorder(borderRadius: radiusChip),
+          textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+        ),
+      ),
     );
   }
 }

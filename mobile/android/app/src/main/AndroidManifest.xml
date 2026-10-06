@@ -1,9 +1,12 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <!-- Map and API over the network; photo reports need the camera and GPS. -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!-- The camera plugin asks for the microphone; reports are photos only (enableAudio: false). -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove"/>
     <!-- usesCleartextTraffic: the API runs as plain HTTP on the laptop's hotspot IP.
          enableOnBackInvokedCallback: Android 15 predictive back. -->
     <application
