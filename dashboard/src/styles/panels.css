@@ -174,10 +174,15 @@
   flex: 1;
   min-width: 0;
 }
-.map-wrap,
-.map-canvas {
+.map-wrap {
   position: absolute;
   inset: 0;
+}
+/* Sized, not positioned: mapbox-gl.css loads last and forces
+   .mapboxgl-map to position:relative, which collapsed the height. */
+.map-canvas {
+  width: 100%;
+  height: 100%;
 }
 
 .map-reset {

@@ -14,7 +14,10 @@ export default function MapCanvas({ congestionOn, stamp }: Props) {
   const map = useRef<mapboxgl.Map | null>(null);
 
   useEffect(() => {
-    if (!container.current || !ENV.mapboxToken) return;
+    // Built once and kept for the life of the page. StrictMode mounts twice,
+    // and removing a mapbox-gl map mid-init loses the WebGL context, which
+    // leaves a blank canvas behind.
+    if (map.current || !container.current || !ENV.mapboxToken) return;
     mapboxgl.accessToken = ENV.mapboxToken;
     map.current = new mapboxgl.Map({
       container: container.current,
@@ -26,10 +29,6 @@ export default function MapCanvas({ congestionOn, stamp }: Props) {
       attributionControl: false,
     });
     map.current.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
-    return () => {
-      map.current?.remove();
-      map.current = null;
-    };
   }, []);
 
   useEffect(() => {
