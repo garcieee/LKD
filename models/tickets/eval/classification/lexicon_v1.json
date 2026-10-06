@@ -1,0 +1,52 @@
+{
+  "_note": "Version 1: lexicon v0 edited by eval/classification/tune_lexicon.py from the training notes only (a term needs 5 notes, 3 families and precision 0.9 to be added). See LEXICON_CHANGES.md. Matching is on whole words after lowercasing and removing accents and punctuation.",
+  "categories": {
+    "pothole": [
+      "pothole", "potholes", "lubak", "lubak lubak", "lubakan", "bako bako", "butas sa kalsada", "butas sa daan",
+      "butas ang kalsada", "sirang kalsada", "sira ang kalsada", "sira ang daan", "basag na kalsada",
+      "hole in the road", "road hole", "uneven road", "cracked road", "damaged road", "road damage",
+      "sira ang aspalto", "aspalto", "asphalt", "hukay", "sinkhole", "hole", "butas", "lumalaki", "laki"
+    ],
+    "open_manhole": [
+      "manhole", "manholes", "manhole cover", "open manhole", "bukas na manhole", "nakabukas na manhole",
+      "walang takip", "nawawalang takip", "missing cover", "takip ng manhole", "takip ng imburnal", "sewer cover",
+      "bukas na imburnal", "uncovered manhole", "no cover", "takip"
+    ],
+    "flooded_drain": [
+      "baha", "bumabaha", "binabaha", "nabaha", "baha baha", "flood", "flooded", "flooding", "barado", "baradong",
+      "bara", "clogged", "clog", "blocked drain", "drain", "drains", "drainage", "kanal", "imburnal", "estero",
+      "umaapaw", "overflow", "overflowing", "standing water", "stagnant water", "lubog", "lumubog", "tubig sa kalsada",
+      "water on the street", "water on the road", "linisin"
+    ],
+    "broken_streetlight": [
+      "streetlight", "streetlights", "street light", "street lights", "streetlamp", "street lamp", "lamp post",
+      "lamppost", "poste ng ilaw", "ilaw sa kalsada", "ilaw sa daan", "walang ilaw", "patay ang ilaw", "patay na ilaw",
+      "sirang ilaw", "sira ang ilaw", "madilim", "dark", "no light", "no lights", "light is out", "lights out",
+      "bombilya", "poste", "kumikislap", "flickering", "patay", "lamp", "dead", "meralco", "bulb", "umiilaw",
+      "light pole"
+    ],
+    "blocked_sidewalk": [
+      "sidewalk", "sidewalks", "bangketa", "nakaharang", "harang", "nakaharang sa bangketa", "obstruction",
+      "obstructed", "blocked sidewalk", "nakaparada", "parked on the sidewalk", "illegal parking", "vendor", "vendors",
+      "paninda", "tindera", "tindahan", "walkway", "footpath", "pedestrian lane", "walang madaanan", "daanan",
+      "parked", "kotse", "madaanan", "materials", "nakaparadang", "space"
+    ],
+    "other": [
+      "puno", "tree", "fallen tree", "natumbang puno", "wire", "wires", "kable", "hanging wires", "nakalawit na kable",
+      "stray dog", "stray dogs", "aso", "garbage", "trash", "signage", "karatula", "traffic light", "stoplight",
+      "fire hydrant", "hydrant", "graffiti"
+    ]
+  },
+  "danger": [
+      "bata", "mga bata", "kids", "kid", "child", "children", "toddler", "baby", "sanggol", "matanda", "lolo", "lola",
+      "elderly", "senior", "senior citizen", "pwd", "wheelchair", "buntis", "pregnant", "aksidente", "accident",
+      "naaksidente", "muntik", "muntik na", "nearly", "almost", "nahulog", "mahulog", "fell", "nadapa", "natumba",
+      "nadulas", "slipped", "nasugatan", "sugatan", "injured", "hurt", "dugo", "bleeding", "namatay", "died",
+      "ambulance", "kuryente", "nakuryente", "electrocuted", "electric shock", "sunog", "fire", "sparks", "spark",
+      "delikado", "dangerous", "danger", "mapanganib", "madulas", "slippery", "malunod", "drown", "drowning",
+      "tumilapon", "nag skid", "skid", "skidded", "bumangga", "bangga", "crash", "crashed", "emergency", "baka",
+      "could", "batang", "walking", "bka", "pauwi", "will", "aso", "scary"
+  ],
+  "negators": ["walang", "wala", "hindi", "di", "no", "not", "without", "never", "wag", "huwag", "dont", "isnt", "wasnt"],
+  "boundaries": ["pero", "but", "kaso", "ngunit", "subalit", "however", "although", "though"]
+}

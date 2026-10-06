@@ -1,0 +1,69 @@
+{
+  "config": {
+    "bootstrap_resamples": 300,
+    "districts_in_the_last_sample": 138,
+    "pairs_in_the_last_sample": 4879,
+    "patches_per_sample": 20,
+    "samples": 60,
+    "simulator": {
+      "accuracy_scale": 1.0,
+      "accuracy_spread": 0.35,
+      "category_weights": [
+        0.35,
+        0.1,
+        0.15,
+        0.25,
+        0.15
+      ],
+      "cluster_mean": 3.0,
+      "cluster_sd_m": 25.0,
+      "cluster_share": 0.5,
+      "days": 30.0,
+      "density": 60,
+      "heavy_alpha": 1.95,
+      "heavy_max": 50,
+      "heavy_tail": false,
+      "mean_delay_days": 2.0,
+      "mean_reports": 1.6,
+      "patch_m": 3000.0,
+      "profile": "city",
+      "standoff_m": [
+        1.0,
+        10.0
+      ],
+      "wrong_category": 0.06
+    },
+    "truth_patches": 400
+  },
+  "mean_interval_width": {
+    "precision": {
+      "district": 0.0669,
+      "pair": 0.0329
+    },
+    "recall": {
+      "district": 0.0174,
+      "pair": 0.0152
+    }
+  },
+  "meta": {
+    "git_commit": "3dc677f",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T13:12:09+00:00"
+  },
+  "share_of_intervals_holding_the_truth": {
+    "precision": {
+      "district": 0.95,
+      "pair": 0.5167
+    },
+    "recall": {
+      "district": 0.9333,
+      "pair": 0.9333
+    }
+  },
+  "truth": {
+    "precision": 0.7954,
+    "recall": 0.971
+  }
+}

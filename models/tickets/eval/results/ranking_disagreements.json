@@ -1,0 +1,767 @@
+{
+  "cap_check": {
+    "test": {
+      "n": 5,
+      "panel_picks_longer_open": {
+        "hi": 1.0,
+        "lo": 1.0,
+        "point": 1.0
+      },
+      "score_picks_longer_open": {
+        "hi": 1.0,
+        "lo": 1.0,
+        "point": 1.0
+      }
+    },
+    "train_validation": {
+      "n": 48,
+      "panel_picks_longer_open": {
+        "hi": 0.6875,
+        "lo": 0.3958333333333333,
+        "point": 0.5416666666666666
+      },
+      "score_picks_longer_open": {
+        "hi": 0.6458333333333334,
+        "lo": 0.3953125,
+        "point": 0.5208333333333334
+      }
+    }
+  },
+  "config": {
+    "bootstrap": 1000,
+    "seed": 0,
+    "targets": {
+      "accuracy": 0.8,
+      "ceiling_ratio": 0.9,
+      "ndcg_at_10": 0.85,
+      "tau_b": 0.6
+    }
+  },
+  "lean_panel": {
+    "test": {
+      "has 'gone' votes": {
+        "gap": {
+          "hi": 0.0,
+          "lo": -0.5555555555555556,
+          "point": -0.22222222222222227
+        },
+        "labeller_picks_it": 0.3333333333333333,
+        "n": 9,
+        "score_picks_it": 0.5555555555555556
+      },
+      "has a danger note": {
+        "gap": {
+          "hi": 0.33333333333333337,
+          "lo": -0.16666666666666674,
+          "point": 0.08333333333333337
+        },
+        "labeller_picks_it": 0.75,
+        "n": 12,
+        "score_picks_it": 0.6666666666666666
+      },
+      "has a named place nearby": {
+        "gap": {
+          "hi": 0.28125,
+          "lo": 0.0625,
+          "point": 0.15625
+        },
+        "labeller_picks_it": 0.71875,
+        "n": 32,
+        "score_picks_it": 0.5625
+      },
+      "is a blocked_sidewalk": {
+        "gap": {
+          "hi": 0.3846153846153846,
+          "lo": 0.0,
+          "point": 0.15384615384615385
+        },
+        "labeller_picks_it": 0.38461538461538464,
+        "n": 13,
+        "score_picks_it": 0.23076923076923078
+      },
+      "is a broken_streetlight": {
+        "gap": {
+          "hi": 0.13333333333333336,
+          "lo": -0.3333333333333333,
+          "point": -0.06666666666666668
+        },
+        "labeller_picks_it": 0.13333333333333333,
+        "n": 15,
+        "score_picks_it": 0.2
+      },
+      "is a flooded_drain": {
+        "gap": {
+          "hi": -0.14285714285714285,
+          "lo": -0.6428571428571428,
+          "point": -0.3571428571428572
+        },
+        "labeller_picks_it": 0.2857142857142857,
+        "n": 14,
+        "score_picks_it": 0.6428571428571429
+      },
+      "is a open_manhole": {
+        "gap": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "point": 0.0
+        },
+        "labeller_picks_it": 1.0,
+        "n": 7,
+        "score_picks_it": 1.0
+      },
+      "is a other": {
+        "gap": {
+          "hi": 0.5,
+          "lo": 0.0714285714285714,
+          "point": 0.28571428571428575
+        },
+        "labeller_picks_it": 0.7142857142857143,
+        "n": 14,
+        "score_picks_it": 0.42857142857142855
+      },
+      "is a pothole": {
+        "gap": {
+          "hi": 0.17391304347826086,
+          "lo": -0.17391304347826086,
+          "point": 0.0
+        },
+        "labeller_picks_it": 0.6521739130434783,
+        "n": 23,
+        "score_picks_it": 0.6521739130434783
+      },
+      "labelled a very busy area": {
+        "gap": {
+          "hi": 0.1578947368421053,
+          "lo": -0.26315789473684215,
+          "point": -0.052631578947368474
+        },
+        "labeller_picks_it": 0.7368421052631579,
+        "n": 19,
+        "score_picks_it": 0.7894736842105263
+      },
+      "open past the waiting cap": {
+        "gap": {
+          "hi": 0.1785714285714286,
+          "lo": -0.25,
+          "point": -0.0357142857142857
+        },
+        "labeller_picks_it": 0.5,
+        "n": 28,
+        "score_picks_it": 0.5357142857142857
+      }
+    },
+    "train_validation": {
+      "has 'gone' votes": {
+        "gap": {
+          "hi": 0.06944444444444445,
+          "lo": -0.08333333333333331,
+          "point": 0.0
+        },
+        "labeller_picks_it": 0.1527777777777778,
+        "n": 72,
+        "score_picks_it": 0.1527777777777778
+      },
+      "has a danger note": {
+        "gap": {
+          "hi": 0.2459016393442623,
+          "lo": 0.016393442622950838,
+          "point": 0.13114754098360648
+        },
+        "labeller_picks_it": 0.6557377049180327,
+        "n": 61,
+        "score_picks_it": 0.5245901639344263
+      },
+      "has a named place nearby": {
+        "gap": {
+          "hi": 0.20192307692307687,
+          "lo": 0.009615384615384581,
+          "point": 0.10576923076923073
+        },
+        "labeller_picks_it": 0.6538461538461539,
+        "n": 104,
+        "score_picks_it": 0.5480769230769231
+      },
+      "is a blocked_sidewalk": {
+        "gap": {
+          "hi": 0.2830188679245283,
+          "lo": 0.05660377358490565,
+          "point": 0.16981132075471694
+        },
+        "labeller_picks_it": 0.6037735849056604,
+        "n": 53,
+        "score_picks_it": 0.4339622641509434
+      },
+      "is a broken_streetlight": {
+        "gap": {
+          "hi": 0.2115384615384615,
+          "lo": -0.05769230769230771,
+          "point": 0.07692307692307693
+        },
+        "labeller_picks_it": 0.46153846153846156,
+        "n": 52,
+        "score_picks_it": 0.38461538461538464
+      },
+      "is a flooded_drain": {
+        "gap": {
+          "hi": -0.21666666666666667,
+          "lo": -0.48333333333333334,
+          "point": -0.35000000000000003
+        },
+        "labeller_picks_it": 0.26666666666666666,
+        "n": 60,
+        "score_picks_it": 0.6166666666666667
+      },
+      "is a open_manhole": {
+        "gap": {
+          "hi": 0.18181818181818188,
+          "lo": -0.030303030303030276,
+          "point": 0.0757575757575758
+        },
+        "labeller_picks_it": 0.7272727272727273,
+        "n": 66,
+        "score_picks_it": 0.6515151515151515
+      },
+      "is a other": {
+        "gap": {
+          "hi": 0.20833333333333331,
+          "lo": 0.0,
+          "point": 0.10416666666666669
+        },
+        "labeller_picks_it": 0.5,
+        "n": 48,
+        "score_picks_it": 0.3958333333333333
+      },
+      "is a pothole": {
+        "gap": {
+          "hi": 0.10526315789473684,
+          "lo": -0.1578947368421053,
+          "point": -0.03508771929824561
+        },
+        "labeller_picks_it": 0.42105263157894735,
+        "n": 57,
+        "score_picks_it": 0.45614035087719296
+      },
+      "labelled a very busy area": {
+        "gap": {
+          "hi": 0.15384615384615385,
+          "lo": -0.05128205128205132,
+          "point": 0.05128205128205132
+        },
+        "labeller_picks_it": 0.6153846153846154,
+        "n": 78,
+        "score_picks_it": 0.5641025641025641
+      },
+      "open past the waiting cap": {
+        "gap": {
+          "hi": 0.05999999999999994,
+          "lo": -0.12,
+          "point": -0.030000000000000027
+        },
+        "labeller_picks_it": 0.58,
+        "n": 100,
+        "score_picks_it": 0.61
+      }
+    }
+  },
+  "meta": {
+    "git_commit": "3e8d6cf",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T13:34:44+00:00"
+  },
+  "splits": {
+    "test": {
+      "by_stratum": {
+        "clear": 1,
+        "close": 7,
+        "trade_off": 2
+      },
+      "labelled_pairs": 46,
+      "listed": 10,
+      "pairs": [
+        {
+          "pair": "p012",
+          "raters_chose": {
+            "category": "pothole",
+            "danger_note": false,
+            "days_open": 4,
+            "description": "Pothole. Near Ateneo Professional Schools, a moderately busy street. 7 people reported it. Open for 4 days. Everyone agrees it is still there.",
+            "foot_traffic": 0.5969320939462296,
+            "gone_votes": 0,
+            "named_place": true,
+            "reporters": 7,
+            "score": 65.38904859998759,
+            "ticket": "t056"
+          },
+          "score_chose": {
+            "category": "flooded_drain",
+            "danger_note": false,
+            "days_open": 20,
+            "description": "Flooded drain. Next to San Carlos Seminary, a very busy area. 1 person reported it. Open for 20 days. Everyone agrees it is still there.",
+            "foot_traffic": 0.8602886764193213,
+            "gone_votes": 0,
+            "named_place": true,
+            "reporters": 1,
+            "score": 69.98519617554778,
+            "ticket": "t069"
+          },
+          "score_gap": 4.596147575560195,
+          "stratum": "close",
+          "votes": [
+            5,
+            0,
+            0
+          ],
+          "votes_for_raters_pick": 5
+        },
+        {
+          "pair": "p215",
+          "raters_chose": {
+            "category": "other",
+            "danger_note": true,
+            "days_open": 24,
+            "description": "Other issue (type not given). Near Haven Montessori, a very busy area. 2 people reported it. Open for 24 days. Everyone agrees it is still there. A reporter wrote: \"Broken glass all over where children play.\"",
+            "foot_traffic": 0.9330610805497184,
+            "gone_votes": 0,
+            "named_place": true,
+            "reporters": 2,
+            "score": 57.96176611656159,
+            "ticket": "t141"
+          },
+          "score_chose": {
+            "category": "flooded_drain",
+            "danger_note": false,
+            "days_open": 2,
+            "description": "Flooded drain. On a quiet side street. 5 people reported it. Open for 2 days. Everyone agrees it is still there.",
+            "foot_traffic": 0.15044462362786926,
+            "gone_votes": 0,
+            "named_place": false,
+            "reporters": 5,
+            "score": 62.401809572169775,
+            "ticket": "t159"
+          },
+          "score_gap": 4.440043455608183,
+          "stratum": "close",
+          "votes": [
+            5,
+            0,
+            0
+          ],
+          "votes_for_raters_pick": 5
+        },
+        {
+          "pair": "p236",
+          "raters_chose": {
+            "category": "pothole",
+            "danger_note": false,
+            "days_open": 12,
+            "description": "Pothole. On a quiet side street. 5 people reported it. Open for 12 days. Everyone agrees it is still there.",
+            "foot_traffic": 0.1,
+            "gone_votes": 0,
+            "named_place": false,
+            "reporters": 5,
+            "score": 60.0652349182967,
+            "ticket": "t070"
+          },
+          "score_chose": {
+            "category": "flooded_drain",
+            "danger_note": false,
+            "days_open": 25,
+            "description": "Flooded drain. On a quiet side street. 2 people reported it. Open for 25 days. Everyone agrees it is still there.",
+            "foot_traffic": 0.1,
+            "gone_votes": 0,
+            "named_place": false,
+            "reporters": 2,
+            "score": 62.96666666666666,
+            "ticket": "t199"
+          },
+          "score_gap": 2.9014317483699585,
+          "stratum": "close",
+          "votes": [
+            5,
+            0,
+            0
+          ],
+          "votes_for_raters_pick": 5
+        },
+        {
+          "pair": "p075",
+          "raters_chose": {
+            "category": "other",
+            "danger_note": true,
+            "days_open": 24,
+            "description": "Other issue (type not given). Near Haven Montessori, a very busy area. 2 people reported it. Open for 24 days. Everyone agrees it is still there. A reporter wrote: \"Broken glass all over where children play.\"",
+            "foot_traffic": 0.9330610805497184,
+            "gone_votes": 0,
+            "named_place": true,
+            "reporters": 2,
+            "score": 57.96176611656159,
+            "ticket": "t141"
+          },
+          "score_chose": {
+            "category": "pothole",
+            "danger_note": false,
+            "days_open": 12,
+            "description": "Pothole. On a quiet side street. 5 people reported it. Open for 12 days. Everyone agrees it is still there.",
+            "foot_traffic": 0.1,
+            "gone_votes": 0,
+            "named_place": false,
+            "reporters": 5,
+            "score": 60.0652349182967,
+            "ticket": "t070"
+          },
+          "score_gap": 2.1034688017351115,
+          "stratum": "close",
+          "votes": [
+            5,
+            0,
+            0
+          ],
+          "votes_for_raters_pick": 5
+        },
+        {
+          "pair": "p185",
+          "raters_chose": {
+            "category": "other",
+            "danger_note": false,
+            "days_open": 12,
+            "description": "Other issue (type not given). Near Hercules bus stop, a moderately busy street. 2 people reported it. Open for 12 days. Everyone agrees it is still there.",
+            "foot_traffic": 0.5549401488488754,
+            "gone_votes": 0,
+            "named_place": true,
+            "reporters": 2,
+            "score": 39.44130363166071,
+            "ticket": "t189"
+          },
+          "score_chose": {
+            "category": "broken_streetlight",
+            "danger_note": false,
+            "days_open": 11,
+            "description": "Broken streetlight. On a quiet side street. 1 person reported it. Open for 11 days. Everyone agrees it is still there.",
+            "foot_traffic": 0.24920019939710214,
+            "gone_votes": 0,
+            "named_place": false,
+            "reporters": 1,
+            "score": 41.414175017719266,
+            "ticket": "t193"
+          },
+          "score_gap": 1.9728713860585572,
+          "stratum": "close",
+          "votes": [
+            0,
+            5,
+            0
+          ],
+          "votes_for_raters_pick": 5
+        },
+        {
+          "pair": "p010",
+          "raters_chose": {
+            "category": "pothole",
+            "danger_note": false,
+            "days_open": 4,
+            "description": "Pothole. Near Ateneo Professional Schools, a moderately busy street. 7 people reported it. Open for 4 days. Everyone agrees it is still there.",
+            "foot_traffic": 0.5969320939462296,
+            "gone_votes": 0,
+            "named_place": true,
+            "reporters": 7,
+            "score": 65.38904859998759,
+            "ticket": "t056"
+          },
+          "score_chose": {
+            "category": "pothole",
+            "danger_note": false,
+            "days_open": 16,
+            "description": "Pothole. On a quiet side street. 7 people reported it. Open for 16 days. 1 person says it is gone.",
+            "foot_traffic": 0.15619078352938376,
+            "gone_votes": 1,
+            "named_place": false,
+            "reporters": 7,
+            "score": 66.02713358391293,
+            "ticket": "t099"
+          },
+          "score_gap": 0.6380849839253386,
+          "stratum": "close",
+          "votes": [
+            0,
+            5,
+            0
+          ],
+          "votes_for_raters_pick": 5
+        },
+        {
+          "pair": "p088",
+          "raters_chose": {
+            "category": "broken_streetlight",
+            "danger_note": false,
+            "days_open": 4,
+            "description": "Broken streetlight. Near Asia Pacific Medical and Diagnostic Services Inc., a moderately busy street. 3 people reported it. Open for 4 days. Everyone agrees it is still there.",
+            "foot_traffic": 0.47495843238767066,
+            "gone_votes": 0,
+            "named_place": true,
+            "reporters": 3,
+            "score": 50.04423988302388,
+            "ticket": "t083"
+          },
+          "score_chose": {
+            "category": "flooded_drain",
+            "danger_note": true,
+            "days_open": 25,
+            "description": "Flooded drain. Near St. Therese Private School, a moderately busy street. 1 person reported it. Open for 25 days. 1 person says it is gone. A reporter wrote: \"Cars stall in the flood every time it rains.\"",
+            "foot_traffic": 0.37105405171877237,
+            "gone_votes": 1,
+            "named_place": true,
+            "reporters": 1,
+            "score": 54.86458014935446,
+            "ticket": "t134"
+          },
+          "score_gap": 4.820340266330582,
+          "stratum": "trade_off",
+          "votes": [
+            1,
+            4,
+            0
+          ],
+          "votes_for_raters_pick": 4
+        },
+        {
+          "pair": "p137",
+          "raters_chose": {
+            "category": "blocked_sidewalk",
+            "danger_note": false,
+            "days_open": 15,
+            "description": "Blocked sidewalk. Near Nicanor C. Garcia, Sr. Elementary School, a moderately busy street. 1 person reported it. Open for 15 days. Everyone agrees it is still there.",
+            "foot_traffic": 0.6389230459323942,
+            "gone_votes": 0,
+            "named_place": true,
+            "reporters": 1,
+            "score": 48.50061482678309,
+            "ticket": "t094"
+          },
+          "score_chose": {
+            "category": "broken_streetlight",
+            "danger_note": false,
+            "days_open": 4,
+            "description": "Broken streetlight. On a moderately busy street. 3 people reported it. Open for 4 days. Everyone agrees it is still there.",
+            "foot_traffic": 0.43852292931593617,
+            "gone_votes": 0,
+            "named_place": false,
+            "reporters": 3,
+            "score": 49.38840082773266,
+            "ticket": "t137"
+          },
+          "score_gap": 0.8877860009495677,
+          "stratum": "close",
+          "votes": [
+            4,
+            1,
+            0
+          ],
+          "votes_for_raters_pick": 4
+        },
+        {
+          "pair": "p267",
+          "raters_chose": {
+            "category": "blocked_sidewalk",
+            "danger_note": false,
+            "days_open": 10,
+            "description": "Blocked sidewalk. Near The Shops Ayala Triangle Gardens, a moderately busy street. 1 person reported it. Open for 10 days. Everyone agrees it is still there.",
+            "foot_traffic": 0.5056051615861494,
+            "gone_votes": 0,
+            "named_place": true,
+            "reporters": 1,
+            "score": 42.67232147997926,
+            "ticket": "t089"
+          },
+          "score_chose": {
+            "category": "flooded_drain",
+            "danger_note": false,
+            "days_open": 20,
+            "description": "Flooded drain. Next to San Carlos Seminary, a very busy area. 1 person reported it. Open for 20 days. Everyone agrees it is still there.",
+            "foot_traffic": 0.8602886764193213,
+            "gone_votes": 0,
+            "named_place": true,
+            "reporters": 1,
+            "score": 69.98519617554778,
+            "ticket": "t069"
+          },
+          "score_gap": 27.312874695568524,
+          "stratum": "clear",
+          "votes": [
+            2,
+            3,
+            0
+          ],
+          "votes_for_raters_pick": 3
+        },
+        {
+          "pair": "p065",
+          "raters_chose": {
+            "category": "other",
+            "danger_note": false,
+            "days_open": 22,
+            "description": "Other issue (type not given). Near Ponte bus stop, a moderately busy street. 12 people reported it. Open for 22 days. Everyone agrees it is still there.",
+            "foot_traffic": 0.5952354606417843,
+            "gone_votes": 0,
+            "named_place": true,
+            "reporters": 12,
+            "score": 55.21423829155212,
+            "ticket": "t157"
+          },
+          "score_chose": {
+            "category": "pothole",
+            "danger_note": false,
+            "days_open": 11,
+            "description": "Pothole. Near Salcedo Village bus stop, a very busy area. 2 people reported it. Open for 11 days. Everyone agrees it is still there.",
+            "foot_traffic": 0.932536098442648,
+            "gone_votes": 0,
+            "named_place": true,
+            "reporters": 2,
+            "score": 65.38088786720576,
+            "ticket": "t057"
+          },
+          "score_gap": 10.166649575653636,
+          "stratum": "trade_off",
+          "votes": [
+            3,
+            2,
+            0
+          ],
+          "votes_for_raters_pick": 3
+        }
+      ],
+      "pattern": {
+        "danger_note": {
+          "raters_chose": 2,
+          "score_chose": 1
+        },
+        "gone_votes": {
+          "raters_chose": 0,
+          "score_chose": 2
+        },
+        "n": 10,
+        "no_named_place": {
+          "raters_chose": 1,
+          "score_chose": 6
+        },
+        "open_past_cap": {
+          "raters_chose": 4,
+          "score_chose": 5
+        },
+        "raters_chose_category": {
+          "blocked_sidewalk": 2,
+          "broken_streetlight": 1,
+          "flooded_drain": 0,
+          "open_manhole": 0,
+          "other": 4,
+          "pothole": 3
+        },
+        "score_chose_category": {
+          "blocked_sidewalk": 0,
+          "broken_streetlight": 2,
+          "flooded_drain": 5,
+          "open_manhole": 0,
+          "other": 0,
+          "pothole": 3
+        }
+      },
+      "split": "test",
+      "total": 10
+    },
+    "train": {
+      "by_stratum": {
+        "clear": 2,
+        "close": 20,
+        "trade_off": 12
+      },
+      "labelled_pairs": 141,
+      "listed": 0,
+      "pairs": [],
+      "pattern": {
+        "danger_note": {
+          "raters_chose": 13,
+          "score_chose": 5
+        },
+        "gone_votes": {
+          "raters_chose": 6,
+          "score_chose": 5
+        },
+        "n": 34,
+        "no_named_place": {
+          "raters_chose": 8,
+          "score_chose": 16
+        },
+        "open_past_cap": {
+          "raters_chose": 17,
+          "score_chose": 16
+        },
+        "raters_chose_category": {
+          "blocked_sidewalk": 7,
+          "broken_streetlight": 7,
+          "flooded_drain": 2,
+          "open_manhole": 9,
+          "other": 4,
+          "pothole": 5
+        },
+        "score_chose_category": {
+          "blocked_sidewalk": 1,
+          "broken_streetlight": 4,
+          "flooded_drain": 17,
+          "open_manhole": 3,
+          "other": 1,
+          "pothole": 8
+        }
+      },
+      "split": "train",
+      "total": 34
+    },
+    "validation": {
+      "by_stratum": {
+        "clear": 1,
+        "close": 6,
+        "trade_off": 3
+      },
+      "labelled_pairs": 48,
+      "listed": 0,
+      "pairs": [],
+      "pattern": {
+        "danger_note": {
+          "raters_chose": 1,
+          "score_chose": 1
+        },
+        "gone_votes": {
+          "raters_chose": 1,
+          "score_chose": 2
+        },
+        "n": 10,
+        "no_named_place": {
+          "raters_chose": 4,
+          "score_chose": 7
+        },
+        "open_past_cap": {
+          "raters_chose": 5,
+          "score_chose": 9
+        },
+        "raters_chose_category": {
+          "blocked_sidewalk": 4,
+          "broken_streetlight": 1,
+          "flooded_drain": 1,
+          "open_manhole": 1,
+          "other": 2,
+          "pothole": 1
+        },
+        "score_chose_category": {
+          "blocked_sidewalk": 1,
+          "broken_streetlight": 0,
+          "flooded_drain": 7,
+          "open_manhole": 2,
+          "other": 0,
+          "pothole": 0
+        }
+      },
+      "split": "validation",
+      "total": 10
+    }
+  }
+}

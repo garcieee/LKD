@@ -1,0 +1,987 @@
+{
+  "bootstrap_resamples": 1000,
+  "meta": {
+    "git_commit": "feb001e",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T12:47:17+00:00"
+  },
+  "notes": [
+    "k votes = k taps after the first report, which counts as one yes",
+    "truth = the hazard is there at the moment of the vote",
+    "intervals: 95% percentile bootstrap over whole tickets",
+    "a target is met only when the whole interval passes"
+  ],
+  "seeds": [
+    3000,
+    3001,
+    3002,
+    3003,
+    3004
+  ],
+  "settings": {
+    "BELIEF_PRIOR": [
+      3,
+      1
+    ],
+    "GATE_LOW": 0.3,
+    "GATE_MIN": 0.25,
+    "GATE_SPAN": 0.5,
+    "LIKELY_GONE_BELOW": 0.45
+  },
+  "sim_config": {
+    "gone_before_votes": 0.3,
+    "gone_tap_rate": 1.0,
+    "lifetime_means": [
+      5.0,
+      15.0,
+      60.0
+    ],
+    "max_votes": 16,
+    "no_votes": 0.35,
+    "noise": 0.1,
+    "sensitivity": 0.85,
+    "specificity": 0.9,
+    "staff_days": [
+      2.0,
+      45.0
+    ],
+    "staff_share": 0.25,
+    "tickets": 10000,
+    "vote_delay_days": 10.0,
+    "votes_geometric_p": 0.3
+  },
+  "split": "test",
+  "targets": {
+    "by_votes": {
+      "1": {
+        "always_0.8": {
+          "brier": {
+            "hi": 0.31407,
+            "lo": 0.30749,
+            "point": 0.31068
+          },
+          "ece": {
+            "hi": 0.25679,
+            "lo": 0.24581,
+            "point": 0.25113
+          },
+          "pr_auc": {
+            "hi": 0.55419,
+            "lo": 0.54321,
+            "point": 0.54887
+          },
+          "roc_auc": {
+            "hi": 0.5,
+            "lo": 0.5,
+            "point": 0.5
+          }
+        },
+        "belief": {
+          "brier": {
+            "hi": 0.24253,
+            "lo": 0.23765,
+            "point": 0.24
+          },
+          "ece": {
+            "hi": 0.25114,
+            "lo": 0.24209,
+            "point": 0.2467
+          },
+          "pr_auc": {
+            "hi": 0.82034,
+            "lo": 0.8101,
+            "point": 0.81531
+          },
+          "roc_auc": {
+            "hi": 0.84085,
+            "lo": 0.83283,
+            "point": 0.83686
+          }
+        },
+        "brier_belief_minus_always_0.8": {
+          "hi": -0.06956,
+          "lo": -0.07173,
+          "point": -0.07067
+        },
+        "brier_belief_minus_majority": {
+          "hi": 0.05593,
+          "lo": 0.05292,
+          "point": 0.05446
+        },
+        "majority": {
+          "brier": {
+            "hi": 0.18819,
+            "lo": 0.183,
+            "point": 0.18555
+          },
+          "ece": {
+            "hi": 0.20973,
+            "lo": 0.2016,
+            "point": 0.20562
+          },
+          "pr_auc": {
+            "hi": 0.82034,
+            "lo": 0.8101,
+            "point": 0.81531
+          },
+          "roc_auc": {
+            "hi": 0.84085,
+            "lo": 0.83283,
+            "point": 0.83686
+          }
+        },
+        "n": 32361,
+        "prevalence": {
+          "hi": 0.55419,
+          "lo": 0.54321,
+          "point": 0.54887
+        },
+        "reliability": [
+          {
+            "high": 0.7,
+            "low": 0.6,
+            "mean_p": 0.66667,
+            "n": 15890,
+            "observed": 0.20913
+          },
+          {
+            "high": 0.9,
+            "low": 0.8,
+            "mean_p": 0.83333,
+            "n": 16471,
+            "observed": 0.87663
+          }
+        ],
+        "roc_auc_belief_minus_majority": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "point": 0.0
+        }
+      },
+      "2": {
+        "always_0.8": {
+          "brier": {
+            "hi": 0.35642,
+            "lo": 0.34844,
+            "point": 0.35227
+          },
+          "ece": {
+            "hi": 0.32737,
+            "lo": 0.31407,
+            "point": 0.32046
+          },
+          "pr_auc": {
+            "hi": 0.48593,
+            "lo": 0.47263,
+            "point": 0.47954
+          },
+          "roc_auc": {
+            "hi": 0.5,
+            "lo": 0.5,
+            "point": 0.5
+          }
+        },
+        "belief": {
+          "brier": {
+            "hi": 0.2352,
+            "lo": 0.22986,
+            "point": 0.23248
+          },
+          "ece": {
+            "hi": 0.29502,
+            "lo": 0.28504,
+            "point": 0.28963
+          },
+          "pr_auc": {
+            "hi": 0.85628,
+            "lo": 0.84418,
+            "point": 0.85041
+          },
+          "roc_auc": {
+            "hi": 0.90343,
+            "lo": 0.89583,
+            "point": 0.89982
+          }
+        },
+        "brier_belief_minus_always_0.8": {
+          "hi": -0.11784,
+          "lo": -0.12175,
+          "point": -0.11979
+        },
+        "brier_belief_minus_majority": {
+          "hi": 0.0217,
+          "lo": 0.01398,
+          "point": 0.0182
+        },
+        "majority": {
+          "brier": {
+            "hi": 0.21965,
+            "lo": 0.20891,
+            "point": 0.21428
+          },
+          "ece": {
+            "hi": 0.21965,
+            "lo": 0.20891,
+            "point": 0.21428
+          },
+          "pr_auc": {
+            "hi": 0.7004,
+            "lo": 0.6852,
+            "point": 0.69295
+          },
+          "roc_auc": {
+            "hi": 0.79719,
+            "lo": 0.78795,
+            "point": 0.79288
+          }
+        },
+        "n": 22732,
+        "prevalence": {
+          "hi": 0.48593,
+          "lo": 0.47263,
+          "point": 0.47954
+        },
+        "reliability": [
+          {
+            "high": 0.6,
+            "low": 0.5,
+            "mean_p": 0.57143,
+            "n": 7658,
+            "observed": 0.04557
+          },
+          {
+            "high": 0.8,
+            "low": 0.7,
+            "mean_p": 0.71429,
+            "n": 7384,
+            "observed": 0.45219
+          },
+          {
+            "high": 0.9,
+            "low": 0.8,
+            "mean_p": 0.85714,
+            "n": 7690,
+            "observed": 0.93797
+          }
+        ],
+        "roc_auc_belief_minus_majority": {
+          "hi": 0.11061,
+          "lo": 0.10381,
+          "point": 0.10694
+        }
+      },
+      "3": {
+        "always_0.8": {
+          "brier": {
+            "hi": 0.38274,
+            "lo": 0.3736,
+            "point": 0.37791
+          },
+          "ece": {
+            "hi": 0.37123,
+            "lo": 0.35601,
+            "point": 0.36318
+          },
+          "pr_auc": {
+            "hi": 0.44399,
+            "lo": 0.42877,
+            "point": 0.43682
+          },
+          "roc_auc": {
+            "hi": 0.5,
+            "lo": 0.5,
+            "point": 0.5
+          }
+        },
+        "belief": {
+          "brier": {
+            "hi": 0.22482,
+            "lo": 0.21897,
+            "point": 0.22185
+          },
+          "ece": {
+            "hi": 0.29441,
+            "lo": 0.28246,
+            "point": 0.28843
+          },
+          "pr_auc": {
+            "hi": 0.87179,
+            "lo": 0.85817,
+            "point": 0.8649
+          },
+          "roc_auc": {
+            "hi": 0.92888,
+            "lo": 0.92176,
+            "point": 0.92519
+          }
+        },
+        "brier_belief_minus_always_0.8": {
+          "hi": -0.15337,
+          "lo": -0.15889,
+          "point": -0.15606
+        },
+        "brier_belief_minus_majority": {
+          "hi": 0.0633,
+          "lo": 0.05726,
+          "point": 0.06014
+        },
+        "majority": {
+          "brier": {
+            "hi": 0.16632,
+            "lo": 0.15685,
+            "point": 0.1617
+          },
+          "ece": {
+            "hi": 0.19038,
+            "lo": 0.17893,
+            "point": 0.18464
+          },
+          "pr_auc": {
+            "hi": 0.78849,
+            "lo": 0.77026,
+            "point": 0.77928
+          },
+          "roc_auc": {
+            "hi": 0.89013,
+            "lo": 0.88105,
+            "point": 0.88529
+          }
+        },
+        "n": 16034,
+        "prevalence": {
+          "hi": 0.44399,
+          "lo": 0.42877,
+          "point": 0.43682
+        },
+        "reliability": [
+          {
+            "high": 0.6,
+            "low": 0.5,
+            "mean_p": 0.5,
+            "n": 4270,
+            "observed": 0.00796
+          },
+          {
+            "high": 0.7,
+            "low": 0.6,
+            "mean_p": 0.625,
+            "n": 3735,
+            "observed": 0.15154
+          },
+          {
+            "high": 0.8,
+            "low": 0.7,
+            "mean_p": 0.75,
+            "n": 4009,
+            "observed": 0.64081
+          },
+          {
+            "high": 0.9,
+            "low": 0.8,
+            "mean_p": 0.875,
+            "n": 4020,
+            "observed": 0.95398
+          }
+        ],
+        "roc_auc_belief_minus_majority": {
+          "hi": 0.04224,
+          "lo": 0.03719,
+          "point": 0.0399
+        }
+      },
+      "5": {
+        "always_0.8": {
+          "brier": {
+            "hi": 0.41887,
+            "lo": 0.40594,
+            "point": 0.41248
+          },
+          "ece": {
+            "hi": 0.43144,
+            "lo": 0.4099,
+            "point": 0.4208
+          },
+          "pr_auc": {
+            "hi": 0.3901,
+            "lo": 0.36856,
+            "point": 0.3792
+          },
+          "roc_auc": {
+            "hi": 0.5,
+            "lo": 0.5,
+            "point": 0.5
+          }
+        },
+        "belief": {
+          "brier": {
+            "hi": 0.21197,
+            "lo": 0.20443,
+            "point": 0.2083
+          },
+          "ece": {
+            "hi": 0.29168,
+            "lo": 0.27607,
+            "point": 0.2843
+          },
+          "pr_auc": {
+            "hi": 0.87393,
+            "lo": 0.85266,
+            "point": 0.86321
+          },
+          "roc_auc": {
+            "hi": 0.94394,
+            "lo": 0.93475,
+            "point": 0.93937
+          }
+        },
+        "brier_belief_minus_always_0.8": {
+          "hi": -0.19957,
+          "lo": -0.20883,
+          "point": -0.20418
+        },
+        "brier_belief_minus_majority": {
+          "hi": 0.04464,
+          "lo": 0.03528,
+          "point": 0.04025
+        },
+        "majority": {
+          "brier": {
+            "hi": 0.17521,
+            "lo": 0.16081,
+            "point": 0.16806
+          },
+          "ece": {
+            "hi": 0.19332,
+            "lo": 0.17819,
+            "point": 0.18556
+          },
+          "pr_auc": {
+            "hi": 0.73812,
+            "lo": 0.71111,
+            "point": 0.72401
+          },
+          "roc_auc": {
+            "hi": 0.88807,
+            "lo": 0.87559,
+            "point": 0.88185
+          }
+        },
+        "n": 7798,
+        "prevalence": {
+          "hi": 0.3901,
+          "lo": 0.36856,
+          "point": 0.3792
+        },
+        "reliability": [
+          {
+            "high": 0.5,
+            "low": 0.4,
+            "mean_p": 0.4,
+            "n": 1438,
+            "observed": 0.0007
+          },
+          {
+            "high": 0.6,
+            "low": 0.5,
+            "mean_p": 0.5,
+            "n": 1463,
+            "observed": 0.00752
+          },
+          {
+            "high": 0.7,
+            "low": 0.6,
+            "mean_p": 0.6,
+            "n": 1034,
+            "observed": 0.11799
+          },
+          {
+            "high": 0.8,
+            "low": 0.7,
+            "mean_p": 0.7,
+            "n": 1180,
+            "observed": 0.45085
+          },
+          {
+            "high": 0.9,
+            "low": 0.8,
+            "mean_p": 0.8,
+            "n": 1528,
+            "observed": 0.76702
+          },
+          {
+            "high": 1.0,
+            "low": 0.9,
+            "mean_p": 0.9,
+            "n": 1155,
+            "observed": 0.96883
+          }
+        ],
+        "roc_auc_belief_minus_majority": {
+          "hi": 0.06131,
+          "lo": 0.05352,
+          "point": 0.05751
+        }
+      },
+      "8": {
+        "always_0.8": {
+          "brier": {
+            "hi": 0.45269,
+            "lo": 0.43132,
+            "point": 0.442
+          },
+          "ece": {
+            "hi": 0.48781,
+            "lo": 0.45221,
+            "point": 0.47
+          },
+          "pr_auc": {
+            "hi": 0.34779,
+            "lo": 0.31219,
+            "point": 0.33
+          },
+          "roc_auc": {
+            "hi": 0.5,
+            "lo": 0.5,
+            "point": 0.5
+          }
+        },
+        "belief": {
+          "brier": {
+            "hi": 0.19715,
+            "lo": 0.184,
+            "point": 0.19061
+          },
+          "ece": {
+            "hi": 0.29891,
+            "lo": 0.27384,
+            "point": 0.28616
+          },
+          "pr_auc": {
+            "hi": 0.89191,
+            "lo": 0.85271,
+            "point": 0.87264
+          },
+          "roc_auc": {
+            "hi": 0.96136,
+            "lo": 0.94783,
+            "point": 0.95481
+          }
+        },
+        "brier_belief_minus_always_0.8": {
+          "hi": -0.24318,
+          "lo": -0.25985,
+          "point": -0.25139
+        },
+        "brier_belief_minus_majority": {
+          "hi": 0.00797,
+          "lo": -0.01175,
+          "point": -0.00183
+        },
+        "majority": {
+          "brier": {
+            "hi": 0.20691,
+            "lo": 0.1776,
+            "point": 0.19244
+          },
+          "ece": {
+            "hi": 0.20691,
+            "lo": 0.1776,
+            "point": 0.19244
+          },
+          "pr_auc": {
+            "hi": 0.65693,
+            "lo": 0.60565,
+            "point": 0.63074
+          },
+          "roc_auc": {
+            "hi": 0.86523,
+            "lo": 0.84395,
+            "point": 0.85468
+          }
+        },
+        "n": 2697,
+        "prevalence": {
+          "hi": 0.34779,
+          "lo": 0.31219,
+          "point": 0.33
+        },
+        "reliability": [
+          {
+            "high": 0.4,
+            "low": 0.3,
+            "mean_p": 0.35162,
+            "n": 746,
+            "observed": 0.0
+          },
+          {
+            "high": 0.5,
+            "low": 0.4,
+            "mean_p": 0.46154,
+            "n": 330,
+            "observed": 0.0
+          },
+          {
+            "high": 0.6,
+            "low": 0.5,
+            "mean_p": 0.53846,
+            "n": 224,
+            "observed": 0.02679
+          },
+          {
+            "high": 0.7,
+            "low": 0.6,
+            "mean_p": 0.65875,
+            "n": 486,
+            "observed": 0.27572
+          },
+          {
+            "high": 0.8,
+            "low": 0.7,
+            "mean_p": 0.76923,
+            "n": 360,
+            "observed": 0.67778
+          },
+          {
+            "high": 0.9,
+            "low": 0.8,
+            "mean_p": 0.84615,
+            "n": 339,
+            "observed": 0.88201
+          },
+          {
+            "high": 1.0,
+            "low": 0.9,
+            "mean_p": 0.92308,
+            "n": 212,
+            "observed": 0.97642
+          }
+        ],
+        "roc_auc_belief_minus_majority": {
+          "hi": 0.10975,
+          "lo": 0.09121,
+          "point": 0.10013
+        }
+      }
+    },
+    "forecast_by_votes": {
+      "1": {
+        "always_0.8": {
+          "brier": {
+            "hi": 0.35642,
+            "lo": 0.34844,
+            "point": 0.35227
+          },
+          "ece": {
+            "hi": 0.32737,
+            "lo": 0.31407,
+            "point": 0.32046
+          },
+          "roc_auc": {
+            "hi": 0.5,
+            "lo": 0.5,
+            "point": 0.5
+          }
+        },
+        "belief": {
+          "brier": {
+            "hi": 0.29162,
+            "lo": 0.28502,
+            "point": 0.28836
+          },
+          "ece": {
+            "hi": 0.28288,
+            "lo": 0.27083,
+            "point": 0.27673
+          },
+          "roc_auc": {
+            "hi": 0.77408,
+            "lo": 0.763,
+            "point": 0.76871
+          }
+        },
+        "brier_belief_minus_always_0.8": {
+          "hi": -0.06254,
+          "lo": -0.0653,
+          "point": -0.06392
+        },
+        "n": 22732,
+        "prevalence": {
+          "hi": 0.48593,
+          "lo": 0.47263,
+          "point": 0.47954
+        }
+      },
+      "2": {
+        "always_0.8": {
+          "brier": {
+            "hi": 0.38274,
+            "lo": 0.3736,
+            "point": 0.37791
+          },
+          "ece": {
+            "hi": 0.37123,
+            "lo": 0.35601,
+            "point": 0.36318
+          },
+          "roc_auc": {
+            "hi": 0.5,
+            "lo": 0.5,
+            "point": 0.5
+          }
+        },
+        "belief": {
+          "brier": {
+            "hi": 0.27143,
+            "lo": 0.26421,
+            "point": 0.26774
+          },
+          "ece": {
+            "hi": 0.29103,
+            "lo": 0.27746,
+            "point": 0.28413
+          },
+          "roc_auc": {
+            "hi": 0.84739,
+            "lo": 0.83627,
+            "point": 0.84175
+          }
+        },
+        "brier_belief_minus_always_0.8": {
+          "hi": -0.10787,
+          "lo": -0.11263,
+          "point": -0.11016
+        },
+        "n": 16034,
+        "prevalence": {
+          "hi": 0.44399,
+          "lo": 0.42877,
+          "point": 0.43682
+        }
+      },
+      "3": {
+        "always_0.8": {
+          "brier": {
+            "hi": 0.40298,
+            "lo": 0.39209,
+            "point": 0.39778
+          },
+          "ece": {
+            "hi": 0.40497,
+            "lo": 0.38682,
+            "point": 0.3963
+          },
+          "roc_auc": {
+            "hi": 0.5,
+            "lo": 0.5,
+            "point": 0.5
+          }
+        },
+        "belief": {
+          "brier": {
+            "hi": 0.25574,
+            "lo": 0.24792,
+            "point": 0.25202
+          },
+          "ece": {
+            "hi": 0.29646,
+            "lo": 0.28135,
+            "point": 0.28913
+          },
+          "roc_auc": {
+            "hi": 0.88188,
+            "lo": 0.86967,
+            "point": 0.87564
+          }
+        },
+        "brier_belief_minus_always_0.8": {
+          "hi": -0.14262,
+          "lo": -0.14933,
+          "point": -0.14576
+        },
+        "n": 11184,
+        "prevalence": {
+          "hi": 0.41318,
+          "lo": 0.39503,
+          "point": 0.4037
+        }
+      },
+      "5": {
+        "always_0.8": {
+          "brier": {
+            "hi": 0.43437,
+            "lo": 0.41904,
+            "point": 0.42676
+          },
+          "ece": {
+            "hi": 0.45729,
+            "lo": 0.43173,
+            "point": 0.4446
+          },
+          "roc_auc": {
+            "hi": 0.5,
+            "lo": 0.5,
+            "point": 0.5
+          }
+        },
+        "belief": {
+          "brier": {
+            "hi": 0.23871,
+            "lo": 0.22829,
+            "point": 0.23347
+          },
+          "ece": {
+            "hi": 0.30495,
+            "lo": 0.28516,
+            "point": 0.29505
+          },
+          "roc_auc": {
+            "hi": 0.90639,
+            "lo": 0.89104,
+            "point": 0.89875
+          }
+        },
+        "brier_belief_minus_always_0.8": {
+          "hi": -0.18807,
+          "lo": -0.19886,
+          "point": -0.1933
+        },
+        "n": 5439,
+        "prevalence": {
+          "hi": 0.36827,
+          "lo": 0.34271,
+          "point": 0.3554
+        }
+      },
+      "8": {
+        "always_0.8": {
+          "brier": {
+            "hi": 0.45863,
+            "lo": 0.43308,
+            "point": 0.44617
+          },
+          "ece": {
+            "hi": 0.49771,
+            "lo": 0.45514,
+            "point": 0.47696
+          },
+          "roc_auc": {
+            "hi": 0.5,
+            "lo": 0.5,
+            "point": 0.5
+          }
+        },
+        "belief": {
+          "brier": {
+            "hi": 0.21944,
+            "lo": 0.20115,
+            "point": 0.20978
+          },
+          "ece": {
+            "hi": 0.30389,
+            "lo": 0.27167,
+            "point": 0.288
+          },
+          "roc_auc": {
+            "hi": 0.93655,
+            "lo": 0.91389,
+            "point": 0.92578
+          }
+        },
+        "brier_belief_minus_always_0.8": {
+          "hi": -0.22611,
+          "lo": -0.24618,
+          "point": -0.23639
+        },
+        "n": 1879,
+        "prevalence": {
+          "hi": 0.34486,
+          "lo": 0.30229,
+          "point": 0.32304
+        }
+      }
+    },
+    "overall": {
+      "brier_below_always_0.8": true,
+      "ece_at_most_0.05": false,
+      "roc_auc_at_least_0.75": true
+    },
+    "per_seed": [
+      {
+        "brier": 0.22084,
+        "ece": 0.28571,
+        "n": 3238,
+        "roc_auc": 0.92533,
+        "seed": 3000
+      },
+      {
+        "brier": 0.22281,
+        "ece": 0.29343,
+        "n": 3123,
+        "roc_auc": 0.92883,
+        "seed": 3001
+      },
+      {
+        "brier": 0.22204,
+        "ece": 0.29168,
+        "n": 3230,
+        "roc_auc": 0.92496,
+        "seed": 3002
+      },
+      {
+        "brier": 0.22728,
+        "ece": 0.29036,
+        "n": 3243,
+        "roc_auc": 0.91879,
+        "seed": 3003
+      },
+      {
+        "brier": 0.21623,
+        "ece": 0.28105,
+        "n": 3200,
+        "roc_auc": 0.92813,
+        "seed": 3004
+      }
+    ],
+    "verdicts": {
+      "1": {
+        "brier_below_always_0.8": true,
+        "ece_at_most_0.05": false
+      },
+      "2": {
+        "brier_below_always_0.8": true,
+        "ece_at_most_0.05": false
+      },
+      "3": {
+        "brier_below_always_0.8": true,
+        "ece_at_most_0.05": false,
+        "roc_auc_at_least_0.75": true
+      },
+      "5": {
+        "brier_below_always_0.8": true,
+        "ece_at_most_0.05": false,
+        "roc_auc_at_least_0.75": true
+      },
+      "8": {
+        "brier_below_always_0.8": true,
+        "ece_at_most_0.05": false,
+        "roc_auc_at_least_0.75": true
+      }
+    }
+  },
+  "train_seeds": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1004
+  ],
+  "validation_seeds": [
+    2000,
+    2001,
+    2002,
+    2003,
+    2004
+  ]
+}

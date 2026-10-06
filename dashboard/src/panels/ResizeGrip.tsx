@@ -12,7 +12,9 @@ export default function ResizeGrip() {
   const shell = () => panel()?.closest<HTMLElement>(".shell");
   useEffect(() => {
     const el = shell(); // captured now: the ref is already null when the cleanup runs
-    return () => el?.style.removeProperty("--insights-w");
+    return () => {
+      el?.style.removeProperty("--insights-w"); // a cleanup must return nothing, and removeProperty returns a string
+    };
   }, []);
 
   // Past FULL_AT the panel snaps to full screen. Just under it is the widest free size.

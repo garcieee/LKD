@@ -1,0 +1,7765 @@
+{
+  "clean": {
+    "chosen": {
+      "best_f05_radius_m": 60.0,
+      "best_f1_radius_m": 60.0,
+      "cost_radius_m": {
+        "1:1": 60.0,
+        "3:1": 60.0,
+        "5:1": 60.0
+      },
+      "logistic_f1_threshold": {
+        "+ time": 0.9849,
+        "+ time + type": 0.7904,
+        "+ time + type + origin": 0.7603,
+        "+ type": 0.7951,
+        "distance only": 0.9863
+      },
+      "per_type_f1_radius_m": {
+        "blocked_sidewalk": 3.0,
+        "broken_streetlight": 60.0,
+        "flooded_drain": 58.0,
+        "pothole": 60.0
+      }
+    },
+    "counts": {
+      "test": {
+        "by_kind": {
+          "far": 6047,
+          "near": 0,
+          "positive": 6771
+        },
+        "pairs": 12818,
+        "positives": 6771,
+        "positives_by_category": {
+          "blocked_sidewalk": 145,
+          "broken_streetlight": 797,
+          "flooded_drain": 255,
+          "pothole": 5574
+        },
+        "prevalence": 0.5282
+      },
+      "train": {
+        "by_kind": {
+          "far": 16984,
+          "near": 0,
+          "positive": 18915
+        },
+        "pairs": 35899,
+        "positives": 18915,
+        "positives_by_category": {
+          "blocked_sidewalk": 351,
+          "broken_streetlight": 2445,
+          "flooded_drain": 703,
+          "pothole": 15416
+        },
+        "prevalence": 0.5269
+      },
+      "validation": {
+        "by_kind": {
+          "far": 6232,
+          "near": 0,
+          "positive": 6896
+        },
+        "pairs": 13128,
+        "positives": 6896,
+        "positives_by_category": {
+          "blocked_sidewalk": 138,
+          "broken_streetlight": 809,
+          "flooded_drain": 208,
+          "pothole": 5741
+        },
+        "prevalence": 0.5253
+      }
+    },
+    "logistic_coefficients_standardised": {
+      "+ time": {
+        "d": 9.282,
+        "dt": -0.033,
+        "log1p d": -14.1554,
+        "log1p dt": 0.0964
+      },
+      "+ time + type": {
+        "blocked_sidewalk": -0.5019,
+        "broken_streetlight": -0.6276,
+        "d": 9.8547,
+        "dt": 0.0925,
+        "flooded_drain": 0.177,
+        "log1p d": -14.9538,
+        "log1p dt": -0.1842,
+        "pothole": 0.6385
+      },
+      "+ time + type + origin": {
+        "Alderman's Office": -0.0314,
+        "Internet": -0.1285,
+        "Mobile Device": -0.1988,
+        "Phone Call": -0.0535,
+        "blocked_sidewalk": -0.509,
+        "broken_streetlight": -0.6263,
+        "d": 9.8752,
+        "dt": 0.0796,
+        "flooded_drain": 0.1806,
+        "log1p d": -14.9731,
+        "log1p dt": -0.1676,
+        "pothole": 0.6383
+      },
+      "+ type": {
+        "blocked_sidewalk": -0.5093,
+        "broken_streetlight": -0.6041,
+        "d": 9.8526,
+        "flooded_drain": 0.1844,
+        "log1p d": -14.9989,
+        "pothole": 0.6175
+      },
+      "distance only": {
+        "d": 9.2508,
+        "log1p d": -14.0915
+      }
+    },
+    "test": {
+      "paired_against_best_fixed_radius": [
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.038,
+              "lo": -0.044,
+              "point": -0.0408
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0341,
+              "lo": -0.048,
+              "point": -0.0408
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.0741,
+              "lo": -0.0852,
+              "point": -0.0793
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0677,
+              "lo": -0.0917,
+              "point": -0.0793
+            }
+          },
+          "name": "shipped no accuracy: 44.5 m",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.1286,
+              "lo": -0.1421,
+              "point": -0.1349
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1137,
+              "lo": -0.1536,
+              "point": -0.1349
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": -0.0886,
+              "lo": -0.1003,
+              "point": -0.0941
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0772,
+              "lo": -0.11,
+              "point": -0.0941
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.2246,
+              "lo": -0.2442,
+              "point": -0.2338
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.2058,
+              "lo": -0.2572,
+              "point": -0.2338
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": -0.1462,
+              "lo": -0.1633,
+              "point": -0.1545
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.133,
+              "lo": -0.175,
+              "point": -0.1545
+            }
+          },
+          "name": "shipped accuracy 5 m: 19.1 m",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0762,
+              "lo": -0.0854,
+              "point": -0.0806
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0681,
+              "lo": -0.0921,
+              "point": -0.0806
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": -0.0365,
+              "lo": -0.0433,
+              "point": -0.0398
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0315,
+              "lo": -0.0485,
+              "point": -0.0398
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.1419,
+              "lo": -0.1568,
+              "point": -0.149
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1302,
+              "lo": -0.166,
+              "point": -0.149
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": -0.0642,
+              "lo": -0.0754,
+              "point": -0.0697
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.057,
+              "lo": -0.0828,
+              "point": -0.0697
+            }
+          },
+          "name": "shipped accuracy 10 m: 31.2 m",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0029,
+              "lo": -0.0044,
+              "point": -0.0036
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0026,
+              "lo": -0.0048,
+              "point": -0.0036
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": 0.0403,
+              "lo": 0.0345,
+              "point": 0.0372
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0437,
+              "lo": 0.0309,
+              "point": 0.0372
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.0059,
+              "lo": -0.009,
+              "point": -0.0074
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0053,
+              "lo": -0.0097,
+              "point": -0.0074
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": 0.0774,
+              "lo": 0.0669,
+              "point": 0.0719
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0832,
+              "lo": 0.0611,
+              "point": 0.0719
+            }
+          },
+          "name": "shipped accuracy 20 m: 58.2 m",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": -0.0003,
+              "point": -0.0001
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": -0.0003,
+              "point": -0.0001
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": -0.0007,
+              "point": -0.0003
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": -0.0006,
+              "point": -0.0003
+            }
+          },
+          "name": "per-type best F1 radius",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0003,
+              "lo": -0.0001,
+              "point": 0.0001
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0003,
+              "lo": -0.0,
+              "point": 0.0001
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.1995,
+              "lo": -0.2176,
+              "point": -0.2083
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1695,
+              "lo": -0.2453,
+              "point": -0.2083
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": -0.1593,
+              "lo": -0.1761,
+              "point": -0.1675
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1315,
+              "lo": -0.2018,
+              "point": -0.1675
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.322,
+              "lo": -0.344,
+              "point": -0.3328
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.2867,
+              "lo": -0.3736,
+              "point": -0.3328
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": -0.2433,
+              "lo": -0.2645,
+              "point": -0.2535
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.2122,
+              "lo": -0.2904,
+              "point": -0.2535
+            }
+          },
+          "name": "shipped radius + dt <= 14 d",
+          "pr_auc": {
+            "pairs": {
+              "hi": -0.143,
+              "lo": -0.1563,
+              "point": -0.1497
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1311,
+              "lo": -0.1643,
+              "point": -0.1497
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.1379,
+              "lo": -0.1516,
+              "point": -0.1445
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1166,
+              "lo": -0.1706,
+              "point": -0.1445
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": -0.098,
+              "lo": -0.1097,
+              "point": -0.1037
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0793,
+              "lo": -0.1278,
+              "point": -0.1037
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.2381,
+              "lo": -0.2576,
+              "point": -0.2476
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.2096,
+              "lo": -0.2826,
+              "point": -0.2476
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": -0.1598,
+              "lo": -0.1764,
+              "point": -0.1684
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1352,
+              "lo": -0.1985,
+              "point": -0.1684
+            }
+          },
+          "name": "shipped radius + dt <= 30 d",
+          "pr_auc": {
+            "pairs": {
+              "hi": -0.121,
+              "lo": -0.1325,
+              "point": -0.1265
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1062,
+              "lo": -0.1428,
+              "point": -0.1265
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": -0.0002,
+              "point": -0.0001
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": -0.0002,
+              "point": -0.0001
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": -0.0005,
+              "point": -0.0002
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": -0.0005,
+              "point": -0.0002
+            }
+          },
+          "name": "logistic distance only",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0011,
+              "lo": 0.0004,
+              "point": 0.0007
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0011,
+              "lo": 0.0003,
+              "point": 0.0007
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": -0.0002,
+              "point": -0.0001
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": -0.0003,
+              "point": -0.0001
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": -0.0005,
+              "point": -0.0002
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": -0.0005,
+              "point": -0.0002
+            }
+          },
+          "name": "logistic + time",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0012,
+              "lo": 0.0005,
+              "point": 0.0008
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0013,
+              "lo": 0.0004,
+              "point": 0.0008
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "name": "logistic + type",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0033,
+              "lo": 0.0023,
+              "point": 0.0028
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0038,
+              "lo": 0.002,
+              "point": 0.0028
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "name": "logistic + time + type",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0033,
+              "lo": 0.0023,
+              "point": 0.0028
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0037,
+              "lo": 0.002,
+              "point": 0.0028
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "name": "logistic + time + type + origin",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0032,
+              "lo": 0.0022,
+              "point": 0.0027
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0037,
+              "lo": 0.0018,
+              "point": 0.0027
+            }
+          }
+        }
+      ],
+      "table": [
+        {
+          "f05": {
+            "hi": 0.7557,
+            "lo": 0.7378,
+            "point": 0.7469
+          },
+          "f1": {
+            "hi": 0.553,
+            "lo": 0.5295,
+            "point": 0.5414
+          },
+          "family": "fixed",
+          "fn": 4258,
+          "fp": 0,
+          "name": "fixed 10 m",
+          "pr_auc": {
+            "hi": 0.989,
+            "lo": 0.9864,
+            "point": 0.9878
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.3821,
+            "lo": 0.3601,
+            "point": 0.3711
+          },
+          "roc_auc": {
+            "hi": 0.9846,
+            "lo": 0.9804,
+            "point": 0.9826
+          },
+          "tn": 6047,
+          "tp": 2513
+        },
+        {
+          "f05": {
+            "hi": 0.7821,
+            "lo": 0.7648,
+            "point": 0.7734
+          },
+          "f1": {
+            "hi": 0.5894,
+            "lo": 0.5653,
+            "point": 0.5772
+          },
+          "family": "fixed",
+          "fn": 4024,
+          "fp": 0,
+          "name": "fixed 15 m",
+          "pr_auc": {
+            "hi": 0.989,
+            "lo": 0.9864,
+            "point": 0.9878
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.4178,
+            "lo": 0.394,
+            "point": 0.4057
+          },
+          "roc_auc": {
+            "hi": 0.9846,
+            "lo": 0.9804,
+            "point": 0.9826
+          },
+          "tn": 6047,
+          "tp": 2747
+        },
+        {
+          "f05": {
+            "hi": 0.8276,
+            "lo": 0.8133,
+            "point": 0.8206
+          },
+          "f1": {
+            "hi": 0.6575,
+            "lo": 0.6354,
+            "point": 0.6466
+          },
+          "family": "fixed",
+          "fn": 3536,
+          "fp": 0,
+          "name": "fixed 25 m",
+          "pr_auc": {
+            "hi": 0.989,
+            "lo": 0.9864,
+            "point": 0.9878
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.4898,
+            "lo": 0.4656,
+            "point": 0.4778
+          },
+          "roc_auc": {
+            "hi": 0.9846,
+            "lo": 0.9804,
+            "point": 0.9826
+          },
+          "tn": 6047,
+          "tp": 3235
+        },
+        {
+          "f05": {
+            "hi": 0.8824,
+            "lo": 0.8719,
+            "point": 0.8775
+          },
+          "f1": {
+            "hi": 0.7501,
+            "lo": 0.7315,
+            "point": 0.7412
+          },
+          "family": "fixed",
+          "fn": 2784,
+          "fp": 0,
+          "name": "fixed 40 m",
+          "pr_auc": {
+            "hi": 0.989,
+            "lo": 0.9864,
+            "point": 0.9878
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.6001,
+            "lo": 0.5766,
+            "point": 0.5888
+          },
+          "roc_auc": {
+            "hi": 0.9846,
+            "lo": 0.9804,
+            "point": 0.9826
+          },
+          "tn": 6047,
+          "tp": 3987
+        },
+        {
+          "f05": {
+            "hi": 0.9339,
+            "lo": 0.9268,
+            "point": 0.9305
+          },
+          "f1": {
+            "hi": 0.8497,
+            "lo": 0.8352,
+            "point": 0.8426
+          },
+          "family": "fixed",
+          "fn": 1842,
+          "fp": 0,
+          "name": "fixed 60 m",
+          "pr_auc": {
+            "hi": 0.989,
+            "lo": 0.9864,
+            "point": 0.9878
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7388,
+            "lo": 0.717,
+            "point": 0.728
+          },
+          "roc_auc": {
+            "hi": 0.9846,
+            "lo": 0.9804,
+            "point": 0.9826
+          },
+          "tn": 6047,
+          "tp": 4929
+        },
+        {
+          "f05": {
+            "hi": 0.8942,
+            "lo": 0.8847,
+            "point": 0.8896
+          },
+          "f1": {
+            "hi": 0.7718,
+            "lo": 0.7542,
+            "point": 0.7633
+          },
+          "family": "shipped",
+          "fn": 2592,
+          "fp": 0,
+          "name": "shipped no accuracy: 44.5 m",
+          "pr_auc": {
+            "hi": 0.989,
+            "lo": 0.9864,
+            "point": 0.9878
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.6284,
+            "lo": 0.6054,
+            "point": 0.6172
+          },
+          "roc_auc": {
+            "hi": 0.9846,
+            "lo": 0.9804,
+            "point": 0.9826
+          },
+          "tn": 6047,
+          "tp": 4179
+        },
+        {
+          "f05": {
+            "hi": 0.8031,
+            "lo": 0.7872,
+            "point": 0.7955
+          },
+          "f1": {
+            "hi": 0.62,
+            "lo": 0.5968,
+            "point": 0.6088
+          },
+          "family": "shipped",
+          "fn": 3808,
+          "fp": 0,
+          "name": "shipped accuracy 5 m: 19.1 m",
+          "pr_auc": {
+            "hi": 0.989,
+            "lo": 0.9864,
+            "point": 0.9878
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.4493,
+            "lo": 0.4253,
+            "point": 0.4376
+          },
+          "roc_auc": {
+            "hi": 0.9846,
+            "lo": 0.9804,
+            "point": 0.9826
+          },
+          "tn": 6047,
+          "tp": 2963
+        },
+        {
+          "f05": {
+            "hi": 0.8557,
+            "lo": 0.8437,
+            "point": 0.8498
+          },
+          "f1": {
+            "hi": 0.7034,
+            "lo": 0.6834,
+            "point": 0.6936
+          },
+          "family": "shipped",
+          "fn": 3176,
+          "fp": 0,
+          "name": "shipped accuracy 10 m: 31.2 m",
+          "pr_auc": {
+            "hi": 0.989,
+            "lo": 0.9864,
+            "point": 0.9878
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.5424,
+            "lo": 0.5191,
+            "point": 0.5309
+          },
+          "roc_auc": {
+            "hi": 0.9846,
+            "lo": 0.9804,
+            "point": 0.9826
+          },
+          "tn": 6047,
+          "tp": 3595
+        },
+        {
+          "f05": {
+            "hi": 0.9304,
+            "lo": 0.9231,
+            "point": 0.9268
+          },
+          "f1": {
+            "hi": 0.8424,
+            "lo": 0.8276,
+            "point": 0.8352
+          },
+          "family": "shipped",
+          "fn": 1916,
+          "fp": 0,
+          "name": "shipped accuracy 20 m: 58.2 m",
+          "pr_auc": {
+            "hi": 0.989,
+            "lo": 0.9864,
+            "point": 0.9878
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7277,
+            "lo": 0.706,
+            "point": 0.717
+          },
+          "roc_auc": {
+            "hi": 0.9846,
+            "lo": 0.9804,
+            "point": 0.9826
+          },
+          "tn": 6047,
+          "tp": 4855
+        },
+        {
+          "f05": {
+            "hi": 0.9339,
+            "lo": 0.9268,
+            "point": 0.9305
+          },
+          "f1": {
+            "hi": 0.8497,
+            "lo": 0.8352,
+            "point": 0.8426
+          },
+          "family": "best on validation",
+          "fn": 1842,
+          "fp": 0,
+          "name": "best F1 radius",
+          "pr_auc": {
+            "hi": 0.989,
+            "lo": 0.9864,
+            "point": 0.9878
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7388,
+            "lo": 0.717,
+            "point": 0.728
+          },
+          "roc_auc": {
+            "hi": 0.9846,
+            "lo": 0.9804,
+            "point": 0.9826
+          },
+          "tn": 6047,
+          "tp": 4929
+        },
+        {
+          "f05": {
+            "hi": 0.9339,
+            "lo": 0.9268,
+            "point": 0.9305
+          },
+          "f1": {
+            "hi": 0.8497,
+            "lo": 0.8352,
+            "point": 0.8426
+          },
+          "family": "best on validation",
+          "fn": 1842,
+          "fp": 0,
+          "name": "best F0.5 radius",
+          "pr_auc": {
+            "hi": 0.989,
+            "lo": 0.9864,
+            "point": 0.9878
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7388,
+            "lo": 0.717,
+            "point": 0.728
+          },
+          "roc_auc": {
+            "hi": 0.9846,
+            "lo": 0.9804,
+            "point": 0.9826
+          },
+          "tn": 6047,
+          "tp": 4929
+        },
+        {
+          "f05": {
+            "hi": 0.9339,
+            "lo": 0.9268,
+            "point": 0.9305
+          },
+          "f1": {
+            "hi": 0.8497,
+            "lo": 0.8352,
+            "point": 0.8426
+          },
+          "family": "cost on validation",
+          "fn": 1842,
+          "fp": 0,
+          "name": "cost 1:1 radius",
+          "pr_auc": {
+            "hi": 0.989,
+            "lo": 0.9864,
+            "point": 0.9878
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7388,
+            "lo": 0.717,
+            "point": 0.728
+          },
+          "roc_auc": {
+            "hi": 0.9846,
+            "lo": 0.9804,
+            "point": 0.9826
+          },
+          "tn": 6047,
+          "tp": 4929
+        },
+        {
+          "f05": {
+            "hi": 0.9339,
+            "lo": 0.9268,
+            "point": 0.9305
+          },
+          "f1": {
+            "hi": 0.8497,
+            "lo": 0.8352,
+            "point": 0.8426
+          },
+          "family": "cost on validation",
+          "fn": 1842,
+          "fp": 0,
+          "name": "cost 3:1 radius",
+          "pr_auc": {
+            "hi": 0.989,
+            "lo": 0.9864,
+            "point": 0.9878
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7388,
+            "lo": 0.717,
+            "point": 0.728
+          },
+          "roc_auc": {
+            "hi": 0.9846,
+            "lo": 0.9804,
+            "point": 0.9826
+          },
+          "tn": 6047,
+          "tp": 4929
+        },
+        {
+          "f05": {
+            "hi": 0.9339,
+            "lo": 0.9268,
+            "point": 0.9305
+          },
+          "f1": {
+            "hi": 0.8497,
+            "lo": 0.8352,
+            "point": 0.8426
+          },
+          "family": "cost on validation",
+          "fn": 1842,
+          "fp": 0,
+          "name": "cost 5:1 radius",
+          "pr_auc": {
+            "hi": 0.989,
+            "lo": 0.9864,
+            "point": 0.9878
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7388,
+            "lo": 0.717,
+            "point": 0.728
+          },
+          "roc_auc": {
+            "hi": 0.9846,
+            "lo": 0.9804,
+            "point": 0.9826
+          },
+          "tn": 6047,
+          "tp": 4929
+        },
+        {
+          "f05": {
+            "hi": 0.9338,
+            "lo": 0.9266,
+            "point": 0.9303
+          },
+          "f1": {
+            "hi": 0.8495,
+            "lo": 0.8346,
+            "point": 0.8423
+          },
+          "family": "per type",
+          "fn": 1845,
+          "fp": 0,
+          "name": "per-type best F1 radius",
+          "pr_auc": {
+            "hi": 0.9891,
+            "lo": 0.9865,
+            "point": 0.9879
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7383,
+            "lo": 0.7162,
+            "point": 0.7275
+          },
+          "roc_auc": {
+            "hi": 0.9847,
+            "lo": 0.9807,
+            "point": 0.9829
+          },
+          "tn": 6047,
+          "tp": 4926
+        },
+        {
+          "f05": {
+            "hi": 0.7313,
+            "lo": 0.712,
+            "point": 0.7222
+          },
+          "f1": {
+            "hi": 0.5213,
+            "lo": 0.4973,
+            "point": 0.5097
+          },
+          "family": "time window",
+          "fn": 4455,
+          "fp": 0,
+          "name": "shipped radius + dt <= 14 d",
+          "pr_auc": {
+            "hi": 0.8449,
+            "lo": 0.8307,
+            "point": 0.8381
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.3525,
+            "lo": 0.3309,
+            "point": 0.342
+          },
+          "roc_auc": {
+            "hi": 0.804,
+            "lo": 0.7887,
+            "point": 0.7964
+          },
+          "tn": 6047,
+          "tp": 2316
+        },
+        {
+          "f05": {
+            "hi": 0.7937,
+            "lo": 0.7777,
+            "point": 0.786
+          },
+          "f1": {
+            "hi": 0.6062,
+            "lo": 0.5832,
+            "point": 0.5949
+          },
+          "family": "time window",
+          "fn": 3904,
+          "fp": 0,
+          "name": "shipped radius + dt <= 30 d",
+          "pr_auc": {
+            "hi": 0.8672,
+            "lo": 0.855,
+            "point": 0.8613
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.4349,
+            "lo": 0.4117,
+            "point": 0.4234
+          },
+          "roc_auc": {
+            "hi": 0.8036,
+            "lo": 0.7884,
+            "point": 0.7961
+          },
+          "tn": 6047,
+          "tp": 2867
+        },
+        {
+          "f05": {
+            "hi": 0.9339,
+            "lo": 0.9267,
+            "point": 0.9304
+          },
+          "f1": {
+            "hi": 0.8497,
+            "lo": 0.8348,
+            "point": 0.8424
+          },
+          "family": "logistic",
+          "fn": 1844,
+          "fp": 0,
+          "name": "logistic distance only",
+          "pr_auc": {
+            "hi": 0.9896,
+            "lo": 0.9872,
+            "point": 0.9885
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7386,
+            "lo": 0.7165,
+            "point": 0.7277
+          },
+          "roc_auc": {
+            "hi": 0.9861,
+            "lo": 0.9828,
+            "point": 0.9845
+          },
+          "tn": 6047,
+          "tp": 4927
+        },
+        {
+          "f05": {
+            "hi": 0.9339,
+            "lo": 0.9267,
+            "point": 0.9304
+          },
+          "f1": {
+            "hi": 0.8496,
+            "lo": 0.835,
+            "point": 0.8424
+          },
+          "family": "logistic",
+          "fn": 1844,
+          "fp": 0,
+          "name": "logistic + time",
+          "pr_auc": {
+            "hi": 0.9897,
+            "lo": 0.9873,
+            "point": 0.9886
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7386,
+            "lo": 0.7167,
+            "point": 0.7277
+          },
+          "roc_auc": {
+            "hi": 0.9863,
+            "lo": 0.9829,
+            "point": 0.9847
+          },
+          "tn": 6047,
+          "tp": 4927
+        },
+        {
+          "f05": {
+            "hi": 0.9339,
+            "lo": 0.9268,
+            "point": 0.9305
+          },
+          "f1": {
+            "hi": 0.8497,
+            "lo": 0.8352,
+            "point": 0.8426
+          },
+          "family": "logistic",
+          "fn": 1842,
+          "fp": 0,
+          "name": "logistic + type",
+          "pr_auc": {
+            "hi": 0.9915,
+            "lo": 0.9895,
+            "point": 0.9906
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7388,
+            "lo": 0.717,
+            "point": 0.728
+          },
+          "roc_auc": {
+            "hi": 0.9889,
+            "lo": 0.9859,
+            "point": 0.9875
+          },
+          "tn": 6047,
+          "tp": 4929
+        },
+        {
+          "f05": {
+            "hi": 0.9339,
+            "lo": 0.9268,
+            "point": 0.9305
+          },
+          "f1": {
+            "hi": 0.8497,
+            "lo": 0.8352,
+            "point": 0.8426
+          },
+          "family": "logistic",
+          "fn": 1842,
+          "fp": 0,
+          "name": "logistic + time + type",
+          "pr_auc": {
+            "hi": 0.9915,
+            "lo": 0.9894,
+            "point": 0.9906
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7388,
+            "lo": 0.717,
+            "point": 0.728
+          },
+          "roc_auc": {
+            "hi": 0.9889,
+            "lo": 0.9858,
+            "point": 0.9874
+          },
+          "tn": 6047,
+          "tp": 4929
+        },
+        {
+          "f05": {
+            "hi": 0.9339,
+            "lo": 0.9268,
+            "point": 0.9305
+          },
+          "f1": {
+            "hi": 0.8497,
+            "lo": 0.8352,
+            "point": 0.8426
+          },
+          "family": "logistic",
+          "fn": 1842,
+          "fp": 0,
+          "name": "logistic + time + type + origin",
+          "pr_auc": {
+            "hi": 0.9914,
+            "lo": 0.9893,
+            "point": 0.9905
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7388,
+            "lo": 0.717,
+            "point": 0.728
+          },
+          "roc_auc": {
+            "hi": 0.9887,
+            "lo": 0.9855,
+            "point": 0.9872
+          },
+          "tn": 6047,
+          "tp": 4929
+        }
+      ]
+    },
+    "validation": {
+      "paired_against_best_fixed_radius": [
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0358,
+              "lo": -0.0416,
+              "point": -0.0385
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.033,
+              "lo": -0.0436,
+              "point": -0.0385
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.0696,
+              "lo": -0.0803,
+              "point": -0.0748
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0646,
+              "lo": -0.0838,
+              "point": -0.0748
+            }
+          },
+          "name": "shipped no accuracy: 44.5 m",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.1232,
+              "lo": -0.1365,
+              "point": -0.1295
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.11,
+              "lo": -0.1491,
+              "point": -0.1295
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": -0.0858,
+              "lo": -0.0969,
+              "point": -0.091
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0748,
+              "lo": -0.1077,
+              "point": -0.091
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.2156,
+              "lo": -0.2351,
+              "point": -0.2251
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1959,
+              "lo": -0.2525,
+              "point": -0.2251
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": -0.1428,
+              "lo": -0.159,
+              "point": -0.1503
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1262,
+              "lo": -0.1736,
+              "point": -0.1503
+            }
+          },
+          "name": "shipped accuracy 5 m: 19.1 m",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0735,
+              "lo": -0.0826,
+              "point": -0.078
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.068,
+              "lo": -0.0869,
+              "point": -0.078
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": -0.0363,
+              "lo": -0.0426,
+              "point": -0.0394
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0315,
+              "lo": -0.0469,
+              "point": -0.0394
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.1367,
+              "lo": -0.1518,
+              "point": -0.144
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1278,
+              "lo": -0.159,
+              "point": -0.144
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": -0.0641,
+              "lo": -0.0746,
+              "point": -0.0692
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.056,
+              "lo": -0.0809,
+              "point": -0.0692
+            }
+          },
+          "name": "shipped accuracy 10 m: 31.2 m",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0026,
+              "lo": -0.0042,
+              "point": -0.0034
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0025,
+              "lo": -0.0042,
+              "point": -0.0034
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": 0.0381,
+              "lo": 0.0325,
+              "point": 0.0351
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0399,
+              "lo": 0.0302,
+              "point": 0.0351
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.0054,
+              "lo": -0.0085,
+              "point": -0.0069
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0051,
+              "lo": -0.0086,
+              "point": -0.0069
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": 0.0732,
+              "lo": 0.063,
+              "point": 0.0679
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0765,
+              "lo": 0.0589,
+              "point": 0.0679
+            }
+          },
+          "name": "shipped accuracy 20 m: 58.2 m",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "name": "per-type best F1 radius",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0003,
+              "lo": 0.0001,
+              "point": 0.0002
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0004,
+              "lo": 0.0001,
+              "point": 0.0002
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.2093,
+              "lo": -0.2277,
+              "point": -0.2183
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1734,
+              "lo": -0.2607,
+              "point": -0.2183
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": -0.1719,
+              "lo": -0.1883,
+              "point": -0.1798
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1376,
+              "lo": -0.2201,
+              "point": -0.1798
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.3326,
+              "lo": -0.3553,
+              "point": -0.3441
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.2889,
+              "lo": -0.3932,
+              "point": -0.3441
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": -0.2593,
+              "lo": -0.2794,
+              "point": -0.2694
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.219,
+              "lo": -0.3147,
+              "point": -0.2694
+            }
+          },
+          "name": "shipped radius + dt <= 14 d",
+          "pr_auc": {
+            "pairs": {
+              "hi": -0.1466,
+              "lo": -0.1601,
+              "point": -0.1534
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.136,
+              "lo": -0.1663,
+              "point": -0.1534
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.1431,
+              "lo": -0.1572,
+              "point": -0.1499
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1187,
+              "lo": -0.1804,
+              "point": -0.1499
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": -0.1052,
+              "lo": -0.1178,
+              "point": -0.1114
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.082,
+              "lo": -0.1395,
+              "point": -0.1114
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.2445,
+              "lo": -0.2647,
+              "point": -0.2545
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.2092,
+              "lo": -0.2949,
+              "point": -0.2545
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": -0.1714,
+              "lo": -0.1891,
+              "point": -0.1797
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1391,
+              "lo": -0.2172,
+              "point": -0.1797
+            }
+          },
+          "name": "shipped radius + dt <= 30 d",
+          "pr_auc": {
+            "pairs": {
+              "hi": -0.1294,
+              "lo": -0.1417,
+              "point": -0.1357
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1124,
+              "lo": -0.1546,
+              "point": -0.1357
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "name": "logistic distance only",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0057,
+              "lo": 0.0036,
+              "point": 0.0046
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0067,
+              "lo": 0.0026,
+              "point": 0.0046
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "name": "logistic + time",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0057,
+              "lo": 0.0036,
+              "point": 0.0046
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0067,
+              "lo": 0.0026,
+              "point": 0.0046
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "name": "logistic + type",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0082,
+              "lo": 0.006,
+              "point": 0.0071
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0095,
+              "lo": 0.0049,
+              "point": 0.0071
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "name": "logistic + time + type",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0083,
+              "lo": 0.0061,
+              "point": 0.0072
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0096,
+              "lo": 0.005,
+              "point": 0.0072
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          },
+          "name": "logistic + time + type + origin",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0084,
+              "lo": 0.0061,
+              "point": 0.0072
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0096,
+              "lo": 0.005,
+              "point": 0.0072
+            }
+          }
+        }
+      ],
+      "table": [
+        {
+          "f05": {
+            "hi": 0.7664,
+            "lo": 0.7488,
+            "point": 0.7579
+          },
+          "f1": {
+            "hi": 0.5676,
+            "lo": 0.5439,
+            "point": 0.556
+          },
+          "family": "fixed",
+          "fn": 4241,
+          "fp": 0,
+          "name": "fixed 10 m",
+          "pr_auc": {
+            "hi": 0.9832,
+            "lo": 0.9797,
+            "point": 0.9815
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.3963,
+            "lo": 0.3735,
+            "point": 0.385
+          },
+          "roc_auc": {
+            "hi": 0.9747,
+            "lo": 0.9689,
+            "point": 0.9718
+          },
+          "tn": 6232,
+          "tp": 2655
+        },
+        {
+          "f05": {
+            "hi": 0.7903,
+            "lo": 0.7739,
+            "point": 0.7824
+          },
+          "f1": {
+            "hi": 0.6012,
+            "lo": 0.578,
+            "point": 0.5899
+          },
+          "family": "fixed",
+          "fn": 4011,
+          "fp": 0,
+          "name": "fixed 15 m",
+          "pr_auc": {
+            "hi": 0.9832,
+            "lo": 0.9797,
+            "point": 0.9815
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.4298,
+            "lo": 0.4064,
+            "point": 0.4184
+          },
+          "roc_auc": {
+            "hi": 0.9747,
+            "lo": 0.9689,
+            "point": 0.9718
+          },
+          "tn": 6232,
+          "tp": 2885
+        },
+        {
+          "f05": {
+            "hi": 0.8288,
+            "lo": 0.8146,
+            "point": 0.8222
+          },
+          "f1": {
+            "hi": 0.6595,
+            "lo": 0.6374,
+            "point": 0.649
+          },
+          "family": "fixed",
+          "fn": 3583,
+          "fp": 0,
+          "name": "fixed 25 m",
+          "pr_auc": {
+            "hi": 0.9832,
+            "lo": 0.9797,
+            "point": 0.9815
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.4919,
+            "lo": 0.4678,
+            "point": 0.4804
+          },
+          "roc_auc": {
+            "hi": 0.9747,
+            "lo": 0.9689,
+            "point": 0.9718
+          },
+          "tn": 6232,
+          "tp": 3313
+        },
+        {
+          "f05": {
+            "hi": 0.8806,
+            "lo": 0.8697,
+            "point": 0.8755
+          },
+          "f1": {
+            "hi": 0.7468,
+            "lo": 0.7276,
+            "point": 0.7378
+          },
+          "family": "fixed",
+          "fn": 2865,
+          "fp": 0,
+          "name": "fixed 40 m",
+          "pr_auc": {
+            "hi": 0.9832,
+            "lo": 0.9797,
+            "point": 0.9815
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.5959,
+            "lo": 0.5718,
+            "point": 0.5845
+          },
+          "roc_auc": {
+            "hi": 0.9747,
+            "lo": 0.9689,
+            "point": 0.9718
+          },
+          "tn": 6232,
+          "tp": 4031
+        },
+        {
+          "f05": {
+            "hi": 0.9325,
+            "lo": 0.9254,
+            "point": 0.9292
+          },
+          "f1": {
+            "hi": 0.8467,
+            "lo": 0.8323,
+            "point": 0.8399
+          },
+          "family": "fixed",
+          "fn": 1903,
+          "fp": 0,
+          "name": "fixed 60 m",
+          "pr_auc": {
+            "hi": 0.9832,
+            "lo": 0.9797,
+            "point": 0.9815
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7342,
+            "lo": 0.7128,
+            "point": 0.724
+          },
+          "roc_auc": {
+            "hi": 0.9747,
+            "lo": 0.9689,
+            "point": 0.9718
+          },
+          "tn": 6232,
+          "tp": 4993
+        },
+        {
+          "f05": {
+            "hi": 0.8951,
+            "lo": 0.8853,
+            "point": 0.8907
+          },
+          "f1": {
+            "hi": 0.7734,
+            "lo": 0.7553,
+            "point": 0.7652
+          },
+          "family": "shipped",
+          "fn": 2623,
+          "fp": 0,
+          "name": "shipped no accuracy: 44.5 m",
+          "pr_auc": {
+            "hi": 0.9832,
+            "lo": 0.9797,
+            "point": 0.9815
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.6306,
+            "lo": 0.6069,
+            "point": 0.6196
+          },
+          "roc_auc": {
+            "hi": 0.9747,
+            "lo": 0.9689,
+            "point": 0.9718
+          },
+          "tn": 6232,
+          "tp": 4273
+        },
+        {
+          "f05": {
+            "hi": 0.807,
+            "lo": 0.7912,
+            "point": 0.7996
+          },
+          "f1": {
+            "hi": 0.6258,
+            "lo": 0.6026,
+            "point": 0.6148
+          },
+          "family": "shipped",
+          "fn": 3835,
+          "fp": 0,
+          "name": "shipped accuracy 5 m: 19.1 m",
+          "pr_auc": {
+            "hi": 0.9832,
+            "lo": 0.9797,
+            "point": 0.9815
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.4554,
+            "lo": 0.4312,
+            "point": 0.4439
+          },
+          "roc_auc": {
+            "hi": 0.9747,
+            "lo": 0.9689,
+            "point": 0.9718
+          },
+          "tn": 6232,
+          "tp": 3061
+        },
+        {
+          "f05": {
+            "hi": 0.8571,
+            "lo": 0.8449,
+            "point": 0.8512
+          },
+          "f1": {
+            "hi": 0.7058,
+            "lo": 0.6855,
+            "point": 0.6959
+          },
+          "family": "shipped",
+          "fn": 3216,
+          "fp": 0,
+          "name": "shipped accuracy 10 m: 31.2 m",
+          "pr_auc": {
+            "hi": 0.9832,
+            "lo": 0.9797,
+            "point": 0.9815
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.5453,
+            "lo": 0.5215,
+            "point": 0.5336
+          },
+          "roc_auc": {
+            "hi": 0.9747,
+            "lo": 0.9689,
+            "point": 0.9718
+          },
+          "tn": 6232,
+          "tp": 3680
+        },
+        {
+          "f05": {
+            "hi": 0.9293,
+            "lo": 0.9219,
+            "point": 0.9258
+          },
+          "f1": {
+            "hi": 0.8401,
+            "lo": 0.8252,
+            "point": 0.8331
+          },
+          "family": "shipped",
+          "fn": 1973,
+          "fp": 0,
+          "name": "shipped accuracy 20 m: 58.2 m",
+          "pr_auc": {
+            "hi": 0.9832,
+            "lo": 0.9797,
+            "point": 0.9815
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7244,
+            "lo": 0.7024,
+            "point": 0.7139
+          },
+          "roc_auc": {
+            "hi": 0.9747,
+            "lo": 0.9689,
+            "point": 0.9718
+          },
+          "tn": 6232,
+          "tp": 4923
+        },
+        {
+          "f05": {
+            "hi": 0.9325,
+            "lo": 0.9254,
+            "point": 0.9292
+          },
+          "f1": {
+            "hi": 0.8467,
+            "lo": 0.8323,
+            "point": 0.8399
+          },
+          "family": "best on validation",
+          "fn": 1903,
+          "fp": 0,
+          "name": "best F1 radius",
+          "pr_auc": {
+            "hi": 0.9832,
+            "lo": 0.9797,
+            "point": 0.9815
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7342,
+            "lo": 0.7128,
+            "point": 0.724
+          },
+          "roc_auc": {
+            "hi": 0.9747,
+            "lo": 0.9689,
+            "point": 0.9718
+          },
+          "tn": 6232,
+          "tp": 4993
+        },
+        {
+          "f05": {
+            "hi": 0.9325,
+            "lo": 0.9254,
+            "point": 0.9292
+          },
+          "f1": {
+            "hi": 0.8467,
+            "lo": 0.8323,
+            "point": 0.8399
+          },
+          "family": "best on validation",
+          "fn": 1903,
+          "fp": 0,
+          "name": "best F0.5 radius",
+          "pr_auc": {
+            "hi": 0.9832,
+            "lo": 0.9797,
+            "point": 0.9815
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7342,
+            "lo": 0.7128,
+            "point": 0.724
+          },
+          "roc_auc": {
+            "hi": 0.9747,
+            "lo": 0.9689,
+            "point": 0.9718
+          },
+          "tn": 6232,
+          "tp": 4993
+        },
+        {
+          "f05": {
+            "hi": 0.9325,
+            "lo": 0.9254,
+            "point": 0.9292
+          },
+          "f1": {
+            "hi": 0.8467,
+            "lo": 0.8323,
+            "point": 0.8399
+          },
+          "family": "cost on validation",
+          "fn": 1903,
+          "fp": 0,
+          "name": "cost 1:1 radius",
+          "pr_auc": {
+            "hi": 0.9832,
+            "lo": 0.9797,
+            "point": 0.9815
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7342,
+            "lo": 0.7128,
+            "point": 0.724
+          },
+          "roc_auc": {
+            "hi": 0.9747,
+            "lo": 0.9689,
+            "point": 0.9718
+          },
+          "tn": 6232,
+          "tp": 4993
+        },
+        {
+          "f05": {
+            "hi": 0.9325,
+            "lo": 0.9254,
+            "point": 0.9292
+          },
+          "f1": {
+            "hi": 0.8467,
+            "lo": 0.8323,
+            "point": 0.8399
+          },
+          "family": "cost on validation",
+          "fn": 1903,
+          "fp": 0,
+          "name": "cost 3:1 radius",
+          "pr_auc": {
+            "hi": 0.9832,
+            "lo": 0.9797,
+            "point": 0.9815
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7342,
+            "lo": 0.7128,
+            "point": 0.724
+          },
+          "roc_auc": {
+            "hi": 0.9747,
+            "lo": 0.9689,
+            "point": 0.9718
+          },
+          "tn": 6232,
+          "tp": 4993
+        },
+        {
+          "f05": {
+            "hi": 0.9325,
+            "lo": 0.9254,
+            "point": 0.9292
+          },
+          "f1": {
+            "hi": 0.8467,
+            "lo": 0.8323,
+            "point": 0.8399
+          },
+          "family": "cost on validation",
+          "fn": 1903,
+          "fp": 0,
+          "name": "cost 5:1 radius",
+          "pr_auc": {
+            "hi": 0.9832,
+            "lo": 0.9797,
+            "point": 0.9815
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7342,
+            "lo": 0.7128,
+            "point": 0.724
+          },
+          "roc_auc": {
+            "hi": 0.9747,
+            "lo": 0.9689,
+            "point": 0.9718
+          },
+          "tn": 6232,
+          "tp": 4993
+        },
+        {
+          "f05": {
+            "hi": 0.9325,
+            "lo": 0.9254,
+            "point": 0.9292
+          },
+          "f1": {
+            "hi": 0.8467,
+            "lo": 0.8323,
+            "point": 0.8399
+          },
+          "family": "per type",
+          "fn": 1903,
+          "fp": 0,
+          "name": "per-type best F1 radius",
+          "pr_auc": {
+            "hi": 0.9833,
+            "lo": 0.9799,
+            "point": 0.9817
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7342,
+            "lo": 0.7128,
+            "point": 0.724
+          },
+          "roc_auc": {
+            "hi": 0.9751,
+            "lo": 0.9694,
+            "point": 0.9722
+          },
+          "tn": 6232,
+          "tp": 4993
+        },
+        {
+          "f05": {
+            "hi": 0.7201,
+            "lo": 0.7003,
+            "point": 0.7108
+          },
+          "f1": {
+            "hi": 0.5071,
+            "lo": 0.4831,
+            "point": 0.4958
+          },
+          "family": "time window",
+          "fn": 4623,
+          "fp": 0,
+          "name": "shipped radius + dt <= 14 d",
+          "pr_auc": {
+            "hi": 0.8353,
+            "lo": 0.821,
+            "point": 0.8281
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.3397,
+            "lo": 0.3185,
+            "point": 0.3296
+          },
+          "roc_auc": {
+            "hi": 0.8024,
+            "lo": 0.7865,
+            "point": 0.7945
+          },
+          "tn": 6232,
+          "tp": 2273
+        },
+        {
+          "f05": {
+            "hi": 0.7873,
+            "lo": 0.7711,
+            "point": 0.7793
+          },
+          "f1": {
+            "hi": 0.5968,
+            "lo": 0.574,
+            "point": 0.5854
+          },
+          "family": "time window",
+          "fn": 4042,
+          "fp": 0,
+          "name": "shipped radius + dt <= 30 d",
+          "pr_auc": {
+            "hi": 0.8525,
+            "lo": 0.8395,
+            "point": 0.8458
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.4253,
+            "lo": 0.4025,
+            "point": 0.4139
+          },
+          "roc_auc": {
+            "hi": 0.7891,
+            "lo": 0.7736,
+            "point": 0.7811
+          },
+          "tn": 6232,
+          "tp": 2854
+        },
+        {
+          "f05": {
+            "hi": 0.9325,
+            "lo": 0.9254,
+            "point": 0.9292
+          },
+          "f1": {
+            "hi": 0.8467,
+            "lo": 0.8323,
+            "point": 0.8399
+          },
+          "family": "logistic",
+          "fn": 1903,
+          "fp": 0,
+          "name": "logistic distance only",
+          "pr_auc": {
+            "hi": 0.9873,
+            "lo": 0.9848,
+            "point": 0.9861
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7342,
+            "lo": 0.7128,
+            "point": 0.724
+          },
+          "roc_auc": {
+            "hi": 0.9833,
+            "lo": 0.9799,
+            "point": 0.9817
+          },
+          "tn": 6232,
+          "tp": 4993
+        },
+        {
+          "f05": {
+            "hi": 0.9325,
+            "lo": 0.9254,
+            "point": 0.9292
+          },
+          "f1": {
+            "hi": 0.8467,
+            "lo": 0.8323,
+            "point": 0.8399
+          },
+          "family": "logistic",
+          "fn": 1903,
+          "fp": 0,
+          "name": "logistic + time",
+          "pr_auc": {
+            "hi": 0.9873,
+            "lo": 0.9848,
+            "point": 0.9861
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7342,
+            "lo": 0.7128,
+            "point": 0.724
+          },
+          "roc_auc": {
+            "hi": 0.9832,
+            "lo": 0.9796,
+            "point": 0.9816
+          },
+          "tn": 6232,
+          "tp": 4993
+        },
+        {
+          "f05": {
+            "hi": 0.9325,
+            "lo": 0.9254,
+            "point": 0.9292
+          },
+          "f1": {
+            "hi": 0.8467,
+            "lo": 0.8323,
+            "point": 0.8399
+          },
+          "family": "logistic",
+          "fn": 1903,
+          "fp": 0,
+          "name": "logistic + type",
+          "pr_auc": {
+            "hi": 0.9896,
+            "lo": 0.9874,
+            "point": 0.9886
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7342,
+            "lo": 0.7128,
+            "point": 0.724
+          },
+          "roc_auc": {
+            "hi": 0.9866,
+            "lo": 0.9836,
+            "point": 0.9852
+          },
+          "tn": 6232,
+          "tp": 4993
+        },
+        {
+          "f05": {
+            "hi": 0.9325,
+            "lo": 0.9254,
+            "point": 0.9292
+          },
+          "f1": {
+            "hi": 0.8467,
+            "lo": 0.8323,
+            "point": 0.8399
+          },
+          "family": "logistic",
+          "fn": 1903,
+          "fp": 0,
+          "name": "logistic + time + type",
+          "pr_auc": {
+            "hi": 0.9897,
+            "lo": 0.9875,
+            "point": 0.9887
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7342,
+            "lo": 0.7128,
+            "point": 0.724
+          },
+          "roc_auc": {
+            "hi": 0.9868,
+            "lo": 0.9839,
+            "point": 0.9854
+          },
+          "tn": 6232,
+          "tp": 4993
+        },
+        {
+          "f05": {
+            "hi": 0.9325,
+            "lo": 0.9254,
+            "point": 0.9292
+          },
+          "f1": {
+            "hi": 0.8467,
+            "lo": 0.8323,
+            "point": 0.8399
+          },
+          "family": "logistic",
+          "fn": 1903,
+          "fp": 0,
+          "name": "logistic + time + type + origin",
+          "pr_auc": {
+            "hi": 0.9897,
+            "lo": 0.9876,
+            "point": 0.9887
+          },
+          "precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "recall": {
+            "hi": 0.7342,
+            "lo": 0.7128,
+            "point": 0.724
+          },
+          "roc_auc": {
+            "hi": 0.9868,
+            "lo": 0.9839,
+            "point": 0.9854
+          },
+          "tn": 6232,
+          "tp": 4993
+        }
+      ]
+    },
+    "validation_f_by_radius": {
+      "f05": [
+        0.7188,
+        0.7197,
+        0.7213,
+        0.7221,
+        0.7243,
+        0.7272,
+        0.7306,
+        0.7395,
+        0.7477,
+        0.7579,
+        0.7632,
+        0.7689,
+        0.7746,
+        0.7773,
+        0.7824,
+        0.7869,
+        0.7893,
+        0.7925,
+        0.7986,
+        0.802,
+        0.806,
+        0.8092,
+        0.8134,
+        0.8173,
+        0.8222,
+        0.827,
+        0.8321,
+        0.8368,
+        0.8422,
+        0.8461,
+        0.8504,
+        0.8542,
+        0.8578,
+        0.8609,
+        0.8633,
+        0.8665,
+        0.8682,
+        0.8711,
+        0.8727,
+        0.8755,
+        0.8784,
+        0.8822,
+        0.8861,
+        0.8891,
+        0.8916,
+        0.8956,
+        0.9001,
+        0.9042,
+        0.9073,
+        0.9101,
+        0.9129,
+        0.9147,
+        0.9167,
+        0.9188,
+        0.9199,
+        0.9219,
+        0.9236,
+        0.9254,
+        0.927,
+        0.9292
+      ],
+      "f1": [
+        0.5056,
+        0.5067,
+        0.5087,
+        0.5096,
+        0.5124,
+        0.516,
+        0.5203,
+        0.5317,
+        0.5424,
+        0.556,
+        0.5632,
+        0.5709,
+        0.5789,
+        0.5827,
+        0.5899,
+        0.5962,
+        0.5998,
+        0.6043,
+        0.6133,
+        0.6183,
+        0.6244,
+        0.6292,
+        0.6355,
+        0.6414,
+        0.649,
+        0.6565,
+        0.6647,
+        0.6723,
+        0.6811,
+        0.6874,
+        0.6946,
+        0.701,
+        0.7069,
+        0.7122,
+        0.7164,
+        0.7219,
+        0.725,
+        0.73,
+        0.7328,
+        0.7378,
+        0.743,
+        0.7497,
+        0.7568,
+        0.7623,
+        0.7668,
+        0.7743,
+        0.7828,
+        0.7906,
+        0.7966,
+        0.8019,
+        0.8073,
+        0.811,
+        0.8149,
+        0.819,
+        0.8213,
+        0.8253,
+        0.8287,
+        0.8322,
+        0.8354,
+        0.8399
+      ],
+      "radius_m": [
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        5.0,
+        6.0,
+        7.0,
+        8.0,
+        9.0,
+        10.0,
+        11.0,
+        12.0,
+        13.0,
+        14.0,
+        15.0,
+        16.0,
+        17.0,
+        18.0,
+        19.0,
+        20.0,
+        21.0,
+        22.0,
+        23.0,
+        24.0,
+        25.0,
+        26.0,
+        27.0,
+        28.0,
+        29.0,
+        30.0,
+        31.0,
+        32.0,
+        33.0,
+        34.0,
+        35.0,
+        36.0,
+        37.0,
+        38.0,
+        39.0,
+        40.0,
+        41.0,
+        42.0,
+        43.0,
+        44.0,
+        45.0,
+        46.0,
+        47.0,
+        48.0,
+        49.0,
+        50.0,
+        51.0,
+        52.0,
+        53.0,
+        54.0,
+        55.0,
+        56.0,
+        57.0,
+        58.0,
+        59.0,
+        60.0
+      ]
+    }
+  },
+  "config": {
+    "bootstrap_resamples": 1000,
+    "bootstrap_seed": 0,
+    "cost_ratios": [
+      1,
+      3,
+      5
+    ],
+    "far_m": [
+      100.0,
+      500.0
+    ],
+    "geo_fractions": [
+      0.6,
+      0.2,
+      0.2
+    ],
+    "grid_m": [
+      1.0,
+      60.0
+    ],
+    "logistic": "StandardScaler + LogisticRegression(C=1, lbfgs), trained on train only",
+    "near_m": 60.0,
+    "near_negatives_any_open_request": false,
+    "pair_seed": 0,
+    "radii_m": [
+      10,
+      15,
+      25,
+      40,
+      60
+    ],
+    "shipped_radius_m": {
+      "accuracy 10 m": 31.1539,
+      "accuracy 20 m": 58.1935,
+      "accuracy 5 m": 19.1464,
+      "no accuracy": 44.4657
+    },
+    "split": "geo",
+    "test_start": "2025-10-01",
+    "validation_start": "2025-07-01",
+    "windows_days": [
+      14,
+      30
+    ]
+  },
+  "hard": {
+    "chosen": {
+      "best_f05_radius_m": 1.0,
+      "best_f1_radius_m": 49.0,
+      "cost_radius_m": {
+        "1:1": 7.0,
+        "3:1": 1.0,
+        "5:1": 1.0
+      },
+      "logistic_f1_threshold": {
+        "+ time": 0.3111,
+        "+ time + type": 0.2795,
+        "+ time + type + origin": 0.3261,
+        "+ type": 0.2296,
+        "distance only": 0.31
+      },
+      "per_type_f1_radius_m": {
+        "blocked_sidewalk": 3.0,
+        "broken_streetlight": 23.0,
+        "flooded_drain": 49.0,
+        "pothole": 54.0
+      }
+    },
+    "counts": {
+      "test": {
+        "by_kind": {
+          "far": 6047,
+          "near": 6085,
+          "positive": 6771
+        },
+        "pairs": 18903,
+        "positives": 6771,
+        "positives_by_category": {
+          "blocked_sidewalk": 145,
+          "broken_streetlight": 797,
+          "flooded_drain": 255,
+          "pothole": 5574
+        },
+        "prevalence": 0.3582
+      },
+      "train": {
+        "by_kind": {
+          "far": 16984,
+          "near": 17581,
+          "positive": 18915
+        },
+        "pairs": 53480,
+        "positives": 18915,
+        "positives_by_category": {
+          "blocked_sidewalk": 351,
+          "broken_streetlight": 2445,
+          "flooded_drain": 703,
+          "pothole": 15416
+        },
+        "prevalence": 0.3537
+      },
+      "validation": {
+        "by_kind": {
+          "far": 6232,
+          "near": 5992,
+          "positive": 6896
+        },
+        "pairs": 19120,
+        "positives": 6896,
+        "positives_by_category": {
+          "blocked_sidewalk": 138,
+          "broken_streetlight": 809,
+          "flooded_drain": 208,
+          "pothole": 5741
+        },
+        "prevalence": 0.3607
+      }
+    },
+    "logistic_coefficients_standardised": {
+      "+ time": {
+        "d": 0.328,
+        "dt": -0.0281,
+        "log1p d": -1.1301,
+        "log1p dt": 0.0095
+      },
+      "+ time + type": {
+        "blocked_sidewalk": -0.2136,
+        "broken_streetlight": -0.2093,
+        "d": 0.3329,
+        "dt": 0.1008,
+        "flooded_drain": 0.066,
+        "log1p d": -1.2375,
+        "log1p dt": -0.2029,
+        "pothole": 0.251
+      },
+      "+ time + type + origin": {
+        "Alderman's Office": 0.3372,
+        "Internet": 0.4067,
+        "Mobile Device": 0.3921,
+        "Phone Call": 0.2434,
+        "blocked_sidewalk": -0.2349,
+        "broken_streetlight": -0.1893,
+        "d": 0.3445,
+        "dt": 0.0955,
+        "flooded_drain": 0.0605,
+        "log1p d": -1.2716,
+        "log1p dt": -0.2,
+        "pothole": 0.2449
+      },
+      "+ type": {
+        "blocked_sidewalk": -0.2194,
+        "broken_streetlight": -0.1823,
+        "d": 0.3292,
+        "flooded_drain": 0.0718,
+        "log1p d": -1.2409,
+        "pothole": 0.2274
+      },
+      "distance only": {
+        "d": 0.3288,
+        "log1p d": -1.1321
+      }
+    },
+    "test": {
+      "by_category": {
+        "best F1 radius": {
+          "blocked_sidewalk": {
+            "f1": {
+              "hi": 0.4993,
+              "lo": 0.4032,
+              "point": 0.4531
+            },
+            "pairs": 734,
+            "positives": 145,
+            "precision": {
+              "hi": 0.3327,
+              "lo": 0.2525,
+              "point": 0.2929
+            },
+            "recall": {
+              "hi": 1.0,
+              "lo": 1.0,
+              "point": 1.0
+            }
+          },
+          "broken_streetlight": {
+            "f1": {
+              "hi": 0.5949,
+              "lo": 0.5506,
+              "point": 0.5736
+            },
+            "pairs": 2925,
+            "positives": 797,
+            "precision": {
+              "hi": 0.4299,
+              "lo": 0.3867,
+              "point": 0.4088
+            },
+            "recall": {
+              "hi": 0.9733,
+              "lo": 0.9471,
+              "point": 0.9611
+            }
+          },
+          "flooded_drain": {
+            "f1": {
+              "hi": 0.6488,
+              "lo": 0.5646,
+              "point": 0.6092
+            },
+            "pairs": 669,
+            "positives": 255,
+            "precision": {
+              "hi": 0.5356,
+              "lo": 0.4431,
+              "point": 0.4904
+            },
+            "recall": {
+              "hi": 0.8524,
+              "lo": 0.7553,
+              "point": 0.8039
+            }
+          },
+          "pothole": {
+            "f1": {
+              "hi": 0.5709,
+              "lo": 0.5504,
+              "point": 0.5604
+            },
+            "pairs": 14575,
+            "positives": 5574,
+            "precision": {
+              "hi": 0.5406,
+              "lo": 0.5166,
+              "point": 0.5285
+            },
+            "recall": {
+              "hi": 0.6092,
+              "lo": 0.5831,
+              "point": 0.5963
+            }
+          }
+        },
+        "per-type best F1 radius": {
+          "blocked_sidewalk": {
+            "f1": {
+              "hi": 0.9867,
+              "lo": 0.9469,
+              "point": 0.9697
+            },
+            "pairs": 734,
+            "positives": 145,
+            "precision": {
+              "hi": 0.9787,
+              "lo": 0.9071,
+              "point": 0.9474
+            },
+            "recall": {
+              "hi": 1.0,
+              "lo": 0.9776,
+              "point": 0.9931
+            }
+          },
+          "broken_streetlight": {
+            "f1": {
+              "hi": 0.7269,
+              "lo": 0.6785,
+              "point": 0.7032
+            },
+            "pairs": 2925,
+            "positives": 797,
+            "precision": {
+              "hi": 0.665,
+              "lo": 0.6049,
+              "point": 0.635
+            },
+            "recall": {
+              "hi": 0.8164,
+              "lo": 0.7588,
+              "point": 0.788
+            }
+          },
+          "flooded_drain": {
+            "f1": {
+              "hi": 0.6488,
+              "lo": 0.5646,
+              "point": 0.6092
+            },
+            "pairs": 669,
+            "positives": 255,
+            "precision": {
+              "hi": 0.5356,
+              "lo": 0.4431,
+              "point": 0.4904
+            },
+            "recall": {
+              "hi": 0.8524,
+              "lo": 0.7553,
+              "point": 0.8039
+            }
+          },
+          "pothole": {
+            "f1": {
+              "hi": 0.5794,
+              "lo": 0.5595,
+              "point": 0.5695
+            },
+            "pairs": 14575,
+            "positives": 5574,
+            "precision": {
+              "hi": 0.5271,
+              "lo": 0.5048,
+              "point": 0.5156
+            },
+            "recall": {
+              "hi": 0.6483,
+              "lo": 0.6234,
+              "point": 0.636
+            }
+          }
+        },
+        "shipped no accuracy: 44.5 m": {
+          "blocked_sidewalk": {
+            "f1": {
+              "hi": 0.5373,
+              "lo": 0.44,
+              "point": 0.4907
+            },
+            "pairs": 734,
+            "positives": 145,
+            "precision": {
+              "hi": 0.3674,
+              "lo": 0.282,
+              "point": 0.3251
+            },
+            "recall": {
+              "hi": 1.0,
+              "lo": 1.0,
+              "point": 1.0
+            }
+          },
+          "broken_streetlight": {
+            "f1": {
+              "hi": 0.5999,
+              "lo": 0.5557,
+              "point": 0.5779
+            },
+            "pairs": 2925,
+            "positives": 797,
+            "precision": {
+              "hi": 0.4457,
+              "lo": 0.4015,
+              "point": 0.4235
+            },
+            "recall": {
+              "hi": 0.9292,
+              "lo": 0.89,
+              "point": 0.9097
+            }
+          },
+          "flooded_drain": {
+            "f1": {
+              "hi": 0.6542,
+              "lo": 0.5655,
+              "point": 0.6115
+            },
+            "pairs": 669,
+            "positives": 255,
+            "precision": {
+              "hi": 0.5544,
+              "lo": 0.4577,
+              "point": 0.5078
+            },
+            "recall": {
+              "hi": 0.824,
+              "lo": 0.7193,
+              "point": 0.7686
+            }
+          },
+          "pothole": {
+            "f1": {
+              "hi": 0.5591,
+              "lo": 0.538,
+              "point": 0.5485
+            },
+            "pairs": 14575,
+            "positives": 5574,
+            "precision": {
+              "hi": 0.5515,
+              "lo": 0.5266,
+              "point": 0.5389
+            },
+            "recall": {
+              "hi": 0.5718,
+              "lo": 0.5456,
+              "point": 0.5585
+            }
+          }
+        }
+      },
+      "paired_against_best_fixed_radius": [
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.088,
+              "lo": -0.1123,
+              "point": -0.1005
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0697,
+              "lo": -0.134,
+              "point": -0.1005
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.0033,
+              "lo": -0.0101,
+              "point": -0.0065
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0012,
+              "lo": -0.0117,
+              "point": -0.0065
+            }
+          },
+          "name": "shipped no accuracy: 44.5 m",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0025,
+              "lo": -0.0213,
+              "point": -0.0118
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0054,
+              "lo": -0.0321,
+              "point": -0.0118
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": 0.0974,
+              "lo": 0.0795,
+              "point": 0.0886
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.1132,
+              "lo": 0.0667,
+              "point": 0.0886
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.0193,
+              "lo": -0.0379,
+              "point": -0.0287
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0028,
+              "lo": -0.0545,
+              "point": -0.0287
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": -0.0138,
+              "lo": -0.0313,
+              "point": -0.0222
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0076,
+              "lo": -0.0471,
+              "point": -0.0222
+            }
+          },
+          "name": "shipped accuracy 5 m: 19.1 m",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0355,
+              "lo": -0.0578,
+              "point": -0.0467
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0252,
+              "lo": -0.0705,
+              "point": -0.0467
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": 0.0599,
+              "lo": 0.0469,
+              "point": 0.0537
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0713,
+              "lo": 0.0388,
+              "point": 0.0537
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0044,
+              "lo": -0.0095,
+              "point": -0.0024
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0185,
+              "lo": -0.0198,
+              "point": -0.0024
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": 0.0098,
+              "lo": -0.0019,
+              "point": 0.0041
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0227,
+              "lo": -0.0123,
+              "point": 0.0041
+            }
+          },
+          "name": "shipped accuracy 10 m: 31.2 m",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.1185,
+              "lo": -0.1446,
+              "point": -0.132
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0973,
+              "lo": -0.1695,
+              "point": -0.132
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": -0.0267,
+              "lo": -0.0366,
+              "point": -0.0316
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0231,
+              "lo": -0.04,
+              "point": -0.0316
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.0002,
+              "lo": -0.0084,
+              "point": -0.0042
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0023,
+              "lo": -0.0118,
+              "point": -0.0042
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": 0.0074,
+              "lo": -0.003,
+              "point": 0.0023
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.013,
+              "lo": -0.0088,
+              "point": 0.0023
+            }
+          },
+          "name": "shipped accuracy 20 m: 58.2 m",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0506,
+              "lo": -0.0767,
+              "point": -0.064
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.035,
+              "lo": -0.0946,
+              "point": -0.064
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0387,
+              "lo": 0.0301,
+              "point": 0.0344
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0494,
+              "lo": 0.024,
+              "point": 0.0344
+            }
+          },
+          "name": "per-type best F1 radius",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0258,
+              "lo": 0.0219,
+              "point": 0.0239
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0296,
+              "lo": 0.0182,
+              "point": 0.0239
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.1377,
+              "lo": -0.1653,
+              "point": -0.1522
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1294,
+              "lo": -0.1752,
+              "point": -0.1522
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": -0.042,
+              "lo": -0.0608,
+              "point": -0.0517
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0219,
+              "lo": -0.0787,
+              "point": -0.0517
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.1386,
+              "lo": -0.1585,
+              "point": -0.1482
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1087,
+              "lo": -0.1824,
+              "point": -0.1482
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": -0.1322,
+              "lo": -0.1512,
+              "point": -0.1417
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1044,
+              "lo": -0.1735,
+              "point": -0.1417
+            }
+          },
+          "name": "shipped radius + dt <= 14 d",
+          "pr_auc": {
+            "pairs": {
+              "hi": -0.0806,
+              "lo": -0.0965,
+              "point": -0.0893
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.067,
+              "lo": -0.107,
+              "point": -0.0893
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.1134,
+              "lo": -0.139,
+              "point": -0.1269
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1039,
+              "lo": -0.1507,
+              "point": -0.1269
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": -0.019,
+              "lo": -0.0345,
+              "point": -0.0264
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0054,
+              "lo": -0.047,
+              "point": -0.0264
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.0861,
+              "lo": -0.1032,
+              "point": -0.0947
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0643,
+              "lo": -0.1224,
+              "point": -0.0947
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": -0.0804,
+              "lo": -0.0965,
+              "point": -0.0882
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0596,
+              "lo": -0.1155,
+              "point": -0.0882
+            }
+          },
+          "name": "shipped radius + dt <= 30 d",
+          "pr_auc": {
+            "pairs": {
+              "hi": -0.0612,
+              "lo": -0.0757,
+              "point": -0.069
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.048,
+              "lo": -0.0854,
+              "point": -0.069
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0932,
+              "lo": -0.1182,
+              "point": -0.1064
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0751,
+              "lo": -0.1411,
+              "point": -0.1064
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0005,
+              "lo": -0.0011,
+              "point": -0.0002
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0007,
+              "lo": -0.0011,
+              "point": -0.0002
+            }
+          },
+          "name": "logistic distance only",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0013,
+              "lo": 0.0002,
+              "point": 0.0007
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0014,
+              "lo": 0.0002,
+              "point": 0.0007
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0922,
+              "lo": -0.1175,
+              "point": -0.1058
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0739,
+              "lo": -0.1405,
+              "point": -0.1058
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0008,
+              "lo": -0.0018,
+              "point": -0.0005
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0008,
+              "lo": -0.0021,
+              "point": -0.0005
+            }
+          },
+          "name": "logistic + time",
+          "pr_auc": {
+            "pairs": {
+              "hi": -0.0001,
+              "lo": -0.0092,
+              "point": -0.0048
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0023,
+              "lo": -0.0123,
+              "point": -0.0048
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0634,
+              "lo": -0.0896,
+              "point": -0.0771
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.048,
+              "lo": -0.109,
+              "point": -0.0771
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0407,
+              "lo": 0.0303,
+              "point": 0.0355
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0501,
+              "lo": 0.0253,
+              "point": 0.0355
+            }
+          },
+          "name": "logistic + type",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0353,
+              "lo": 0.0278,
+              "point": 0.0314
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0401,
+              "lo": 0.0225,
+              "point": 0.0314
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0611,
+              "lo": -0.0872,
+              "point": -0.0748
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0461,
+              "lo": -0.1056,
+              "point": -0.0748
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0402,
+              "lo": 0.0291,
+              "point": 0.0347
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0484,
+              "lo": 0.0243,
+              "point": 0.0347
+            }
+          },
+          "name": "logistic + time + type",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0371,
+              "lo": 0.0257,
+              "point": 0.0312
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0408,
+              "lo": 0.0218,
+              "point": 0.0312
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0421,
+              "lo": -0.0672,
+              "point": -0.0551
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0249,
+              "lo": -0.0863,
+              "point": -0.0551
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0416,
+              "lo": 0.0298,
+              "point": 0.0359
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0476,
+              "lo": 0.0266,
+              "point": 0.0359
+            }
+          },
+          "name": "logistic + time + type + origin",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0511,
+              "lo": 0.039,
+              "point": 0.0449
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0552,
+              "lo": 0.0353,
+              "point": 0.0449
+            }
+          }
+        }
+      ],
+      "paired_within_category": {
+        "blocked_sidewalk": [
+          {
+            "f05": {
+              "pairs": {
+                "hi": -0.5401,
+                "lo": -0.6359,
+                "point": -0.5881
+              },
+              "verdict": "worse",
+              "wards": {
+                "hi": -0.5172,
+                "lo": -0.6518,
+                "point": -0.5881
+              }
+            },
+            "f1": {
+              "pairs": {
+                "hi": 0.0475,
+                "lo": 0.0269,
+                "point": 0.0376
+              },
+              "verdict": "better",
+              "wards": {
+                "hi": 0.0514,
+                "lo": 0.0257,
+                "point": 0.0376
+              }
+            },
+            "name": "shipped no accuracy: 44.5 m",
+            "pr_auc": {
+              "pairs": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              }
+            }
+          },
+          {
+            "f05": {
+              "pairs": {
+                "hi": 0.0093,
+                "lo": -0.0279,
+                "point": -0.0078
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0093,
+                "lo": -0.0347,
+                "point": -0.0078
+              }
+            },
+            "f1": {
+              "pairs": {
+                "hi": 0.565,
+                "lo": 0.4681,
+                "point": 0.5166
+              },
+              "verdict": "better",
+              "wards": {
+                "hi": 0.588,
+                "lo": 0.4377,
+                "point": 0.5166
+              }
+            },
+            "name": "per-type best F1 radius",
+            "pr_auc": {
+              "pairs": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              }
+            }
+          },
+          {
+            "f05": {
+              "pairs": {
+                "hi": -0.5624,
+                "lo": -0.6546,
+                "point": -0.6087
+              },
+              "verdict": "worse",
+              "wards": {
+                "hi": -0.5373,
+                "lo": -0.6671,
+                "point": -0.6087
+              }
+            },
+            "f1": {
+              "pairs": {
+                "hi": 0.0226,
+                "lo": 0.009,
+                "point": 0.0154
+              },
+              "verdict": "better",
+              "wards": {
+                "hi": 0.0227,
+                "lo": 0.0084,
+                "point": 0.0154
+              }
+            },
+            "name": "logistic + time",
+            "pr_auc": {
+              "pairs": {
+                "hi": 0.0353,
+                "lo": -0.0047,
+                "point": 0.0121
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0326,
+                "lo": -0.0076,
+                "point": 0.0121
+              }
+            }
+          }
+        ],
+        "broken_streetlight": [
+          {
+            "f05": {
+              "pairs": {
+                "hi": -0.171,
+                "lo": -0.2276,
+                "point": -0.2005
+              },
+              "verdict": "worse",
+              "wards": {
+                "hi": -0.1312,
+                "lo": -0.2661,
+                "point": -0.2005
+              }
+            },
+            "f1": {
+              "pairs": {
+                "hi": 0.0126,
+                "lo": -0.0037,
+                "point": 0.0044
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0152,
+                "lo": -0.0079,
+                "point": 0.0044
+              }
+            },
+            "name": "shipped no accuracy: 44.5 m",
+            "pr_auc": {
+              "pairs": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              }
+            }
+          },
+          {
+            "f05": {
+              "pairs": {
+                "hi": 0.0096,
+                "lo": -0.0375,
+                "point": -0.014
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0365,
+                "lo": -0.0673,
+                "point": -0.014
+              }
+            },
+            "f1": {
+              "pairs": {
+                "hi": 0.15,
+                "lo": 0.1079,
+                "point": 0.1297
+              },
+              "verdict": "better",
+              "wards": {
+                "hi": 0.1879,
+                "lo": 0.0738,
+                "point": 0.1297
+              }
+            },
+            "name": "per-type best F1 radius",
+            "pr_auc": {
+              "pairs": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              }
+            }
+          },
+          {
+            "f05": {
+              "pairs": {
+                "hi": -0.1842,
+                "lo": -0.2432,
+                "point": -0.2135
+              },
+              "verdict": "worse",
+              "wards": {
+                "hi": -0.1402,
+                "lo": -0.2837,
+                "point": -0.2135
+              }
+            },
+            "f1": {
+              "pairs": {
+                "hi": 0.001,
+                "lo": -0.0035,
+                "point": -0.0012
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0014,
+                "lo": -0.0041,
+                "point": -0.0012
+              }
+            },
+            "name": "logistic + time",
+            "pr_auc": {
+              "pairs": {
+                "hi": -0.0016,
+                "lo": -0.0397,
+                "point": -0.0218
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.007,
+                "lo": -0.0473,
+                "point": -0.0218
+              }
+            }
+          }
+        ],
+        "flooded_drain": [
+          {
+            "f05": {
+              "pairs": {
+                "hi": 0.037,
+                "lo": -0.0728,
+                "point": -0.0195
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0286,
+                "lo": -0.0784,
+                "point": -0.0195
+              }
+            },
+            "f1": {
+              "pairs": {
+                "hi": 0.0173,
+                "lo": -0.0121,
+                "point": 0.0023
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.018,
+                "lo": -0.0117,
+                "point": 0.0023
+              }
+            },
+            "name": "shipped no accuracy: 44.5 m",
+            "pr_auc": {
+              "pairs": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              }
+            }
+          },
+          {
+            "f05": {
+              "pairs": {
+                "hi": 0.0227,
+                "lo": -0.0866,
+                "point": -0.0323
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0184,
+                "lo": -0.0875,
+                "point": -0.0323
+              }
+            },
+            "f1": {
+              "pairs": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              }
+            },
+            "name": "per-type best F1 radius",
+            "pr_auc": {
+              "pairs": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              }
+            }
+          },
+          {
+            "f05": {
+              "pairs": {
+                "hi": 0.0281,
+                "lo": -0.0826,
+                "point": -0.0268
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0226,
+                "lo": -0.0842,
+                "point": -0.0268
+              }
+            },
+            "f1": {
+              "pairs": {
+                "hi": 0.0089,
+                "lo": 0.0009,
+                "point": 0.0046
+              },
+              "verdict": "better",
+              "wards": {
+                "hi": 0.0096,
+                "lo": 0.0009,
+                "point": 0.0046
+              }
+            },
+            "name": "logistic + time",
+            "pr_auc": {
+              "pairs": {
+                "hi": -0.0215,
+                "lo": -0.0633,
+                "point": -0.046
+              },
+              "verdict": "worse",
+              "wards": {
+                "hi": -0.0195,
+                "lo": -0.0593,
+                "point": -0.046
+              }
+            }
+          }
+        ],
+        "pothole": [
+          {
+            "f05": {
+              "pairs": {
+                "hi": -0.0345,
+                "lo": -0.0634,
+                "point": -0.0499
+              },
+              "verdict": "worse",
+              "wards": {
+                "hi": -0.0166,
+                "lo": -0.088,
+                "point": -0.0499
+              }
+            },
+            "f1": {
+              "pairs": {
+                "hi": -0.0081,
+                "lo": -0.0157,
+                "point": -0.0119
+              },
+              "verdict": "worse",
+              "wards": {
+                "hi": -0.0065,
+                "lo": -0.0176,
+                "point": -0.0119
+              }
+            },
+            "name": "shipped no accuracy: 44.5 m",
+            "pr_auc": {
+              "pairs": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              }
+            }
+          },
+          {
+            "f05": {
+              "pairs": {
+                "hi": -0.0409,
+                "lo": -0.0704,
+                "point": -0.0567
+              },
+              "verdict": "worse",
+              "wards": {
+                "hi": -0.0236,
+                "lo": -0.0958,
+                "point": -0.0567
+              }
+            },
+            "f1": {
+              "pairs": {
+                "hi": 0.0131,
+                "lo": 0.0054,
+                "point": 0.0091
+              },
+              "verdict": "better",
+              "wards": {
+                "hi": 0.0156,
+                "lo": 0.0033,
+                "point": 0.0091
+              }
+            },
+            "name": "per-type best F1 radius",
+            "pr_auc": {
+              "pairs": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0,
+                "lo": 0.0,
+                "point": 0.0
+              }
+            }
+          },
+          {
+            "f05": {
+              "pairs": {
+                "hi": -0.0364,
+                "lo": -0.0658,
+                "point": -0.0517
+              },
+              "verdict": "worse",
+              "wards": {
+                "hi": -0.0176,
+                "lo": -0.0902,
+                "point": -0.0517
+              }
+            },
+            "f1": {
+              "pairs": {
+                "hi": -0.0002,
+                "lo": -0.0032,
+                "point": -0.0016
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0001,
+                "lo": -0.0036,
+                "point": -0.0016
+              }
+            },
+            "name": "logistic + time",
+            "pr_auc": {
+              "pairs": {
+                "hi": 0.0036,
+                "lo": -0.0049,
+                "point": -0.0004
+              },
+              "verdict": "no clear difference",
+              "wards": {
+                "hi": 0.0062,
+                "lo": -0.0072,
+                "point": -0.0004
+              }
+            }
+          }
+        ]
+      },
+      "recall_by_origin": {
+        "best F1 radius": {
+          "Alderman's Office": {
+            "positives": 733,
+            "recall": {
+              "hi": 0.5744,
+              "lo": 0.5048,
+              "point": 0.5389
+            }
+          },
+          "Internet": {
+            "positives": 1739,
+            "recall": {
+              "hi": 0.6803,
+              "lo": 0.6371,
+              "point": 0.6584
+            }
+          },
+          "Mobile Device": {
+            "positives": 2283,
+            "recall": {
+              "hi": 0.654,
+              "lo": 0.6159,
+              "point": 0.6351
+            }
+          },
+          "Phone Call": {
+            "positives": 1775,
+            "recall": {
+              "hi": 0.7352,
+              "lo": 0.6941,
+              "point": 0.7138
+            }
+          }
+        },
+        "per-type best F1 radius": {
+          "Alderman's Office": {
+            "positives": 733,
+            "recall": {
+              "hi": 0.5975,
+              "lo": 0.5266,
+              "point": 0.5607
+            }
+          },
+          "Internet": {
+            "positives": 1739,
+            "recall": {
+              "hi": 0.6981,
+              "lo": 0.6544,
+              "point": 0.6757
+            }
+          },
+          "Mobile Device": {
+            "positives": 2283,
+            "recall": {
+              "hi": 0.6715,
+              "lo": 0.6338,
+              "point": 0.6522
+            }
+          },
+          "Phone Call": {
+            "positives": 1775,
+            "recall": {
+              "hi": 0.729,
+              "lo": 0.6873,
+              "point": 0.7087
+            }
+          }
+        },
+        "shipped no accuracy: 44.5 m": {
+          "Alderman's Office": {
+            "positives": 733,
+            "recall": {
+              "hi": 0.5116,
+              "lo": 0.442,
+              "point": 0.4761
+            }
+          },
+          "Internet": {
+            "positives": 1739,
+            "recall": {
+              "hi": 0.6446,
+              "lo": 0.5998,
+              "point": 0.6228
+            }
+          },
+          "Mobile Device": {
+            "positives": 2283,
+            "recall": {
+              "hi": 0.6106,
+              "lo": 0.5725,
+              "point": 0.5913
+            }
+          },
+          "Phone Call": {
+            "positives": 1775,
+            "recall": {
+              "hi": 0.7082,
+              "lo": 0.6648,
+              "point": 0.6868
+            }
+          }
+        }
+      },
+      "table": [
+        {
+          "f05": {
+            "hi": 0.6333,
+            "lo": 0.61,
+            "point": 0.6224
+          },
+          "f1": {
+            "hi": 0.5074,
+            "lo": 0.4842,
+            "point": 0.4964
+          },
+          "family": "fixed",
+          "fn": 4258,
+          "fp": 841,
+          "name": "fixed 10 m",
+          "pr_auc": {
+            "hi": 0.654,
+            "lo": 0.6318,
+            "point": 0.643
+          },
+          "precision": {
+            "hi": 0.7631,
+            "lo": 0.7341,
+            "point": 0.7493
+          },
+          "recall": {
+            "hi": 0.382,
+            "lo": 0.36,
+            "point": 0.3711
+          },
+          "roc_auc": {
+            "hi": 0.7635,
+            "lo": 0.7501,
+            "point": 0.7567
+          },
+          "tn": 11291,
+          "tp": 2513
+        },
+        {
+          "f05": {
+            "hi": 0.6242,
+            "lo": 0.6012,
+            "point": 0.6132
+          },
+          "f1": {
+            "hi": 0.5253,
+            "lo": 0.503,
+            "point": 0.5145
+          },
+          "family": "fixed",
+          "fn": 4024,
+          "fp": 1160,
+          "name": "fixed 15 m",
+          "pr_auc": {
+            "hi": 0.654,
+            "lo": 0.6318,
+            "point": 0.643
+          },
+          "precision": {
+            "hi": 0.7158,
+            "lo": 0.6889,
+            "point": 0.7031
+          },
+          "recall": {
+            "hi": 0.4167,
+            "lo": 0.3942,
+            "point": 0.4057
+          },
+          "roc_auc": {
+            "hi": 0.7635,
+            "lo": 0.7501,
+            "point": 0.7567
+          },
+          "tn": 10972,
+          "tp": 2747
+        },
+        {
+          "f05": {
+            "hi": 0.6137,
+            "lo": 0.592,
+            "point": 0.6031
+          },
+          "f1": {
+            "hi": 0.559,
+            "lo": 0.5383,
+            "point": 0.5491
+          },
+          "family": "fixed",
+          "fn": 3536,
+          "fp": 1777,
+          "name": "fixed 25 m",
+          "pr_auc": {
+            "hi": 0.654,
+            "lo": 0.6318,
+            "point": 0.643
+          },
+          "precision": {
+            "hi": 0.6582,
+            "lo": 0.6328,
+            "point": 0.6455
+          },
+          "recall": {
+            "hi": 0.489,
+            "lo": 0.4662,
+            "point": 0.4778
+          },
+          "roc_auc": {
+            "hi": 0.7635,
+            "lo": 0.7501,
+            "point": 0.7567
+          },
+          "tn": 10355,
+          "tp": 3235
+        },
+        {
+          "f05": {
+            "hi": 0.5481,
+            "lo": 0.5271,
+            "point": 0.5379
+          },
+          "f1": {
+            "hi": 0.5651,
+            "lo": 0.5462,
+            "point": 0.5559
+          },
+          "family": "fixed",
+          "fn": 2784,
+          "fp": 3586,
+          "name": "fixed 40 m",
+          "pr_auc": {
+            "hi": 0.654,
+            "lo": 0.6318,
+            "point": 0.643
+          },
+          "precision": {
+            "hi": 0.5376,
+            "lo": 0.5149,
+            "point": 0.5265
+          },
+          "recall": {
+            "hi": 0.6,
+            "lo": 0.5775,
+            "point": 0.5888
+          },
+          "roc_auc": {
+            "hi": 0.7635,
+            "lo": 0.7501,
+            "point": 0.7567
+          },
+          "tn": 8546,
+          "tp": 3987
+        },
+        {
+          "f05": {
+            "hi": 0.4939,
+            "lo": 0.476,
+            "point": 0.4849
+          },
+          "f1": {
+            "hi": 0.563,
+            "lo": 0.5453,
+            "point": 0.5543
+          },
+          "family": "fixed",
+          "fn": 1842,
+          "fp": 6085,
+          "name": "fixed 60 m",
+          "pr_auc": {
+            "hi": 0.654,
+            "lo": 0.6318,
+            "point": 0.643
+          },
+          "precision": {
+            "hi": 0.4567,
+            "lo": 0.4387,
+            "point": 0.4475
+          },
+          "recall": {
+            "hi": 0.7382,
+            "lo": 0.7173,
+            "point": 0.728
+          },
+          "roc_auc": {
+            "hi": 0.7635,
+            "lo": 0.7501,
+            "point": 0.7567
+          },
+          "tn": 6047,
+          "tp": 4929
+        },
+        {
+          "f05": {
+            "hi": 0.5318,
+            "lo": 0.5112,
+            "point": 0.5217
+          },
+          "f1": {
+            "hi": 0.5632,
+            "lo": 0.5443,
+            "point": 0.5538
+          },
+          "family": "shipped",
+          "fn": 2592,
+          "fp": 4142,
+          "name": "shipped no accuracy: 44.5 m",
+          "pr_auc": {
+            "hi": 0.654,
+            "lo": 0.6318,
+            "point": 0.643
+          },
+          "precision": {
+            "hi": 0.5128,
+            "lo": 0.4911,
+            "point": 0.5022
+          },
+          "recall": {
+            "hi": 0.6284,
+            "lo": 0.6063,
+            "point": 0.6172
+          },
+          "roc_auc": {
+            "hi": 0.7635,
+            "lo": 0.7501,
+            "point": 0.7567
+          },
+          "tn": 7990,
+          "tp": 4179
+        },
+        {
+          "f05": {
+            "hi": 0.6217,
+            "lo": 0.5982,
+            "point": 0.6103
+          },
+          "f1": {
+            "hi": 0.5425,
+            "lo": 0.52,
+            "point": 0.5316
+          },
+          "family": "shipped",
+          "fn": 3808,
+          "fp": 1413,
+          "name": "shipped accuracy 5 m: 19.1 m",
+          "pr_auc": {
+            "hi": 0.654,
+            "lo": 0.6318,
+            "point": 0.643
+          },
+          "precision": {
+            "hi": 0.6907,
+            "lo": 0.6634,
+            "point": 0.6771
+          },
+          "recall": {
+            "hi": 0.449,
+            "lo": 0.4257,
+            "point": 0.4376
+          },
+          "roc_auc": {
+            "hi": 0.7635,
+            "lo": 0.7501,
+            "point": 0.7567
+          },
+          "tn": 10719,
+          "tp": 2963
+        },
+        {
+          "f05": {
+            "hi": 0.5863,
+            "lo": 0.5639,
+            "point": 0.5754
+          },
+          "f1": {
+            "hi": 0.5679,
+            "lo": 0.5473,
+            "point": 0.5579
+          },
+          "family": "shipped",
+          "fn": 3176,
+          "fp": 2522,
+          "name": "shipped accuracy 10 m: 31.2 m",
+          "pr_auc": {
+            "hi": 0.654,
+            "lo": 0.6318,
+            "point": 0.643
+          },
+          "precision": {
+            "hi": 0.6001,
+            "lo": 0.5747,
+            "point": 0.5877
+          },
+          "recall": {
+            "hi": 0.5426,
+            "lo": 0.5196,
+            "point": 0.5309
+          },
+          "roc_auc": {
+            "hi": 0.7635,
+            "lo": 0.7501,
+            "point": 0.7567
+          },
+          "tn": 9610,
+          "tp": 3595
+        },
+        {
+          "f05": {
+            "hi": 0.4991,
+            "lo": 0.4808,
+            "point": 0.4901
+          },
+          "f1": {
+            "hi": 0.5642,
+            "lo": 0.547,
+            "point": 0.5561
+          },
+          "family": "shipped",
+          "fn": 1916,
+          "fp": 5835,
+          "name": "shipped accuracy 20 m: 58.2 m",
+          "pr_auc": {
+            "hi": 0.654,
+            "lo": 0.6318,
+            "point": 0.643
+          },
+          "precision": {
+            "hi": 0.4631,
+            "lo": 0.4448,
+            "point": 0.4542
+          },
+          "recall": {
+            "hi": 0.7274,
+            "lo": 0.7068,
+            "point": 0.717
+          },
+          "roc_auc": {
+            "hi": 0.7635,
+            "lo": 0.7501,
+            "point": 0.7567
+          },
+          "tn": 6297,
+          "tp": 4855
+        },
+        {
+          "f05": {
+            "hi": 0.5256,
+            "lo": 0.505,
+            "point": 0.5153
+          },
+          "f1": {
+            "hi": 0.5698,
+            "lo": 0.5512,
+            "point": 0.5603
+          },
+          "family": "best on validation",
+          "fn": 2331,
+          "fp": 4637,
+          "name": "best F1 radius",
+          "pr_auc": {
+            "hi": 0.654,
+            "lo": 0.6318,
+            "point": 0.643
+          },
+          "precision": {
+            "hi": 0.4998,
+            "lo": 0.4787,
+            "point": 0.4891
+          },
+          "recall": {
+            "hi": 0.6671,
+            "lo": 0.6452,
+            "point": 0.6557
+          },
+          "roc_auc": {
+            "hi": 0.7635,
+            "lo": 0.7501,
+            "point": 0.7567
+          },
+          "tn": 7495,
+          "tp": 4440
+        },
+        {
+          "f05": {
+            "hi": 0.6337,
+            "lo": 0.6094,
+            "point": 0.6221
+          },
+          "f1": {
+            "hi": 0.4694,
+            "lo": 0.4447,
+            "point": 0.4573
+          },
+          "family": "best on validation",
+          "fn": 4623,
+          "fp": 475,
+          "name": "best F0.5 radius",
+          "pr_auc": {
+            "hi": 0.654,
+            "lo": 0.6318,
+            "point": 0.643
+          },
+          "precision": {
+            "hi": 0.8329,
+            "lo": 0.8041,
+            "point": 0.8189
+          },
+          "recall": {
+            "hi": 0.3279,
+            "lo": 0.3065,
+            "point": 0.3172
+          },
+          "roc_auc": {
+            "hi": 0.7635,
+            "lo": 0.7501,
+            "point": 0.7567
+          },
+          "tn": 11657,
+          "tp": 2148
+        },
+        {
+          "f05": {
+            "hi": 0.6374,
+            "lo": 0.612,
+            "point": 0.6249
+          },
+          "f1": {
+            "hi": 0.4807,
+            "lo": 0.4559,
+            "point": 0.4688
+          },
+          "family": "cost on validation",
+          "fn": 4530,
+          "fp": 549,
+          "name": "cost 1:1 radius",
+          "pr_auc": {
+            "hi": 0.654,
+            "lo": 0.6318,
+            "point": 0.643
+          },
+          "precision": {
+            "hi": 0.8171,
+            "lo": 0.7881,
+            "point": 0.8032
+          },
+          "recall": {
+            "hi": 0.3416,
+            "lo": 0.3198,
+            "point": 0.331
+          },
+          "roc_auc": {
+            "hi": 0.7635,
+            "lo": 0.7501,
+            "point": 0.7567
+          },
+          "tn": 11583,
+          "tp": 2241
+        },
+        {
+          "f05": {
+            "hi": 0.6337,
+            "lo": 0.6094,
+            "point": 0.6221
+          },
+          "f1": {
+            "hi": 0.4694,
+            "lo": 0.4447,
+            "point": 0.4573
+          },
+          "family": "cost on validation",
+          "fn": 4623,
+          "fp": 475,
+          "name": "cost 3:1 radius",
+          "pr_auc": {
+            "hi": 0.654,
+            "lo": 0.6318,
+            "point": 0.643
+          },
+          "precision": {
+            "hi": 0.8329,
+            "lo": 0.8041,
+            "point": 0.8189
+          },
+          "recall": {
+            "hi": 0.3279,
+            "lo": 0.3065,
+            "point": 0.3172
+          },
+          "roc_auc": {
+            "hi": 0.7635,
+            "lo": 0.7501,
+            "point": 0.7567
+          },
+          "tn": 11657,
+          "tp": 2148
+        },
+        {
+          "f05": {
+            "hi": 0.6337,
+            "lo": 0.6094,
+            "point": 0.6221
+          },
+          "f1": {
+            "hi": 0.4694,
+            "lo": 0.4447,
+            "point": 0.4573
+          },
+          "family": "cost on validation",
+          "fn": 4623,
+          "fp": 475,
+          "name": "cost 5:1 radius",
+          "pr_auc": {
+            "hi": 0.654,
+            "lo": 0.6318,
+            "point": 0.643
+          },
+          "precision": {
+            "hi": 0.8329,
+            "lo": 0.8041,
+            "point": 0.8189
+          },
+          "recall": {
+            "hi": 0.3279,
+            "lo": 0.3065,
+            "point": 0.3172
+          },
+          "roc_auc": {
+            "hi": 0.7635,
+            "lo": 0.7501,
+            "point": 0.7567
+          },
+          "tn": 11657,
+          "tp": 2148
+        },
+        {
+          "f05": {
+            "hi": 0.5682,
+            "lo": 0.5477,
+            "point": 0.5581
+          },
+          "f1": {
+            "hi": 0.6039,
+            "lo": 0.5854,
+            "point": 0.5948
+          },
+          "family": "per type",
+          "fn": 2249,
+          "fp": 3913,
+          "name": "per-type best F1 radius",
+          "pr_auc": {
+            "hi": 0.678,
+            "lo": 0.6559,
+            "point": 0.6669
+          },
+          "precision": {
+            "hi": 0.5467,
+            "lo": 0.5252,
+            "point": 0.5361
+          },
+          "recall": {
+            "hi": 0.6786,
+            "lo": 0.657,
+            "point": 0.6678
+          },
+          "roc_auc": {
+            "hi": 0.7989,
+            "lo": 0.787,
+            "point": 0.7932
+          },
+          "tn": 8219,
+          "tp": 4522
+        },
+        {
+          "f05": {
+            "hi": 0.4823,
+            "lo": 0.4573,
+            "point": 0.4699
+          },
+          "f1": {
+            "hi": 0.4234,
+            "lo": 0.4009,
+            "point": 0.4121
+          },
+          "family": "time window",
+          "fn": 4455,
+          "fp": 2152,
+          "name": "shipped radius + dt <= 14 d",
+          "pr_auc": {
+            "hi": 0.565,
+            "lo": 0.5425,
+            "point": 0.5537
+          },
+          "precision": {
+            "hi": 0.533,
+            "lo": 0.5033,
+            "point": 0.5184
+          },
+          "recall": {
+            "hi": 0.3531,
+            "lo": 0.3315,
+            "point": 0.342
+          },
+          "roc_auc": {
+            "hi": 0.6609,
+            "lo": 0.6454,
+            "point": 0.6533
+          },
+          "tn": 9980,
+          "tp": 2316
+        },
+        {
+          "f05": {
+            "hi": 0.5065,
+            "lo": 0.4839,
+            "point": 0.4953
+          },
+          "f1": {
+            "hi": 0.4764,
+            "lo": 0.4549,
+            "point": 0.4656
+          },
+          "family": "time window",
+          "fn": 3904,
+          "fp": 2676,
+          "name": "shipped radius + dt <= 30 d",
+          "pr_auc": {
+            "hi": 0.5849,
+            "lo": 0.5627,
+            "point": 0.574
+          },
+          "precision": {
+            "hi": 0.5295,
+            "lo": 0.5042,
+            "point": 0.5172
+          },
+          "recall": {
+            "hi": 0.4347,
+            "lo": 0.4119,
+            "point": 0.4234
+          },
+          "roc_auc": {
+            "hi": 0.6673,
+            "lo": 0.6508,
+            "point": 0.6588
+          },
+          "tn": 9456,
+          "tp": 2867
+        },
+        {
+          "f05": {
+            "hi": 0.5258,
+            "lo": 0.5055,
+            "point": 0.5157
+          },
+          "f1": {
+            "hi": 0.5696,
+            "lo": 0.5507,
+            "point": 0.5601
+          },
+          "family": "logistic",
+          "fn": 2344,
+          "fp": 4610,
+          "name": "logistic distance only",
+          "pr_auc": {
+            "hi": 0.6546,
+            "lo": 0.6325,
+            "point": 0.6436
+          },
+          "precision": {
+            "hi": 0.5006,
+            "lo": 0.4795,
+            "point": 0.4899
+          },
+          "recall": {
+            "hi": 0.6654,
+            "lo": 0.6432,
+            "point": 0.6538
+          },
+          "roc_auc": {
+            "hi": 0.7641,
+            "lo": 0.7508,
+            "point": 0.7574
+          },
+          "tn": 7522,
+          "tp": 4427
+        },
+        {
+          "f05": {
+            "hi": 0.5264,
+            "lo": 0.5065,
+            "point": 0.5164
+          },
+          "f1": {
+            "hi": 0.569,
+            "lo": 0.5507,
+            "point": 0.5598
+          },
+          "family": "logistic",
+          "fn": 2362,
+          "fp": 4571,
+          "name": "logistic + time",
+          "pr_auc": {
+            "hi": 0.6495,
+            "lo": 0.6253,
+            "point": 0.6382
+          },
+          "precision": {
+            "hi": 0.5015,
+            "lo": 0.4805,
+            "point": 0.491
+          },
+          "recall": {
+            "hi": 0.6625,
+            "lo": 0.6407,
+            "point": 0.6512
+          },
+          "roc_auc": {
+            "hi": 0.7638,
+            "lo": 0.7505,
+            "point": 0.7572
+          },
+          "tn": 7561,
+          "tp": 4409
+        },
+        {
+          "f05": {
+            "hi": 0.5544,
+            "lo": 0.5355,
+            "point": 0.545
+          },
+          "f1": {
+            "hi": 0.6047,
+            "lo": 0.5872,
+            "point": 0.5959
+          },
+          "family": "logistic",
+          "fn": 1994,
+          "fp": 4486,
+          "name": "logistic + type",
+          "pr_auc": {
+            "hi": 0.6858,
+            "lo": 0.6629,
+            "point": 0.6743
+          },
+          "precision": {
+            "hi": 0.5255,
+            "lo": 0.5057,
+            "point": 0.5157
+          },
+          "recall": {
+            "hi": 0.7164,
+            "lo": 0.6947,
+            "point": 0.7055
+          },
+          "roc_auc": {
+            "hi": 0.8085,
+            "lo": 0.7966,
+            "point": 0.8027
+          },
+          "tn": 7646,
+          "tp": 4777
+        },
+        {
+          "f05": {
+            "hi": 0.5567,
+            "lo": 0.5378,
+            "point": 0.5473
+          },
+          "f1": {
+            "hi": 0.6038,
+            "lo": 0.5863,
+            "point": 0.595
+          },
+          "family": "logistic",
+          "fn": 2058,
+          "fp": 4358,
+          "name": "logistic + time + type",
+          "pr_auc": {
+            "hi": 0.686,
+            "lo": 0.6623,
+            "point": 0.6741
+          },
+          "precision": {
+            "hi": 0.5297,
+            "lo": 0.5095,
+            "point": 0.5196
+          },
+          "recall": {
+            "hi": 0.7065,
+            "lo": 0.6849,
+            "point": 0.6961
+          },
+          "roc_auc": {
+            "hi": 0.8095,
+            "lo": 0.7976,
+            "point": 0.8037
+          },
+          "tn": 7774,
+          "tp": 4713
+        },
+        {
+          "f05": {
+            "hi": 0.5766,
+            "lo": 0.5571,
+            "point": 0.567
+          },
+          "f1": {
+            "hi": 0.6049,
+            "lo": 0.5866,
+            "point": 0.5962
+          },
+          "family": "logistic",
+          "fn": 2355,
+          "fp": 3626,
+          "name": "logistic + time + type + origin",
+          "pr_auc": {
+            "hi": 0.6991,
+            "lo": 0.6756,
+            "point": 0.6879
+          },
+          "precision": {
+            "hi": 0.5594,
+            "lo": 0.5387,
+            "point": 0.5491
+          },
+          "recall": {
+            "hi": 0.6629,
+            "lo": 0.6406,
+            "point": 0.6522
+          },
+          "roc_auc": {
+            "hi": 0.8135,
+            "lo": 0.8021,
+            "point": 0.8079
+          },
+          "tn": 8506,
+          "tp": 4416
+        }
+      ]
+    },
+    "validation": {
+      "by_category": {
+        "best F1 radius": {
+          "blocked_sidewalk": {
+            "f1": {
+              "hi": 0.5691,
+              "lo": 0.4681,
+              "point": 0.5208
+            },
+            "pairs": 594,
+            "positives": 138,
+            "precision": {
+              "hi": 0.3978,
+              "lo": 0.3055,
+              "point": 0.352
+            },
+            "recall": {
+              "hi": 1.0,
+              "lo": 1.0,
+              "point": 1.0
+            }
+          },
+          "broken_streetlight": {
+            "f1": {
+              "hi": 0.6128,
+              "lo": 0.5663,
+              "point": 0.591
+            },
+            "pairs": 2850,
+            "positives": 809,
+            "precision": {
+              "hi": 0.4549,
+              "lo": 0.4083,
+              "point": 0.4324
+            },
+            "recall": {
+              "hi": 0.9488,
+              "lo": 0.9146,
+              "point": 0.9333
+            }
+          },
+          "flooded_drain": {
+            "f1": {
+              "hi": 0.7438,
+              "lo": 0.6461,
+              "point": 0.6983
+            },
+            "pairs": 462,
+            "positives": 208,
+            "precision": {
+              "hi": 0.6702,
+              "lo": 0.5494,
+              "point": 0.6123
+            },
+            "recall": {
+              "hi": 0.8674,
+              "lo": 0.7588,
+              "point": 0.8125
+            }
+          },
+          "pothole": {
+            "f1": {
+              "hi": 0.5761,
+              "lo": 0.5557,
+              "point": 0.5657
+            },
+            "pairs": 15214,
+            "positives": 5741,
+            "precision": {
+              "hi": 0.539,
+              "lo": 0.516,
+              "point": 0.5272
+            },
+            "recall": {
+              "hi": 0.6232,
+              "lo": 0.5981,
+              "point": 0.6102
+            }
+          }
+        },
+        "per-type best F1 radius": {
+          "blocked_sidewalk": {
+            "f1": {
+              "hi": 1.0,
+              "lo": 0.9745,
+              "point": 0.9892
+            },
+            "pairs": 594,
+            "positives": 138,
+            "precision": {
+              "hi": 1.0,
+              "lo": 0.9503,
+              "point": 0.9787
+            },
+            "recall": {
+              "hi": 1.0,
+              "lo": 1.0,
+              "point": 1.0
+            }
+          },
+          "broken_streetlight": {
+            "f1": {
+              "hi": 0.7104,
+              "lo": 0.6605,
+              "point": 0.6874
+            },
+            "pairs": 2850,
+            "positives": 809,
+            "precision": {
+              "hi": 0.6743,
+              "lo": 0.6122,
+              "point": 0.6443
+            },
+            "recall": {
+              "hi": 0.765,
+              "lo": 0.7043,
+              "point": 0.7367
+            }
+          },
+          "flooded_drain": {
+            "f1": {
+              "hi": 0.7438,
+              "lo": 0.6461,
+              "point": 0.6983
+            },
+            "pairs": 462,
+            "positives": 208,
+            "precision": {
+              "hi": 0.6702,
+              "lo": 0.5494,
+              "point": 0.6123
+            },
+            "recall": {
+              "hi": 0.8674,
+              "lo": 0.7588,
+              "point": 0.8125
+            }
+          },
+          "pothole": {
+            "f1": {
+              "hi": 0.578,
+              "lo": 0.558,
+              "point": 0.5678
+            },
+            "pairs": 15214,
+            "positives": 5741,
+            "precision": {
+              "hi": 0.5197,
+              "lo": 0.4978,
+              "point": 0.5088
+            },
+            "recall": {
+              "hi": 0.655,
+              "lo": 0.6303,
+              "point": 0.6424
+            }
+          }
+        },
+        "shipped no accuracy: 44.5 m": {
+          "blocked_sidewalk": {
+            "f1": {
+              "hi": 0.596,
+              "lo": 0.4939,
+              "point": 0.5476
+            },
+            "pairs": 594,
+            "positives": 138,
+            "precision": {
+              "hi": 0.4245,
+              "lo": 0.3279,
+              "point": 0.377
+            },
+            "recall": {
+              "hi": 1.0,
+              "lo": 1.0,
+              "point": 1.0
+            }
+          },
+          "broken_streetlight": {
+            "f1": {
+              "hi": 0.6194,
+              "lo": 0.5732,
+              "point": 0.5978
+            },
+            "pairs": 2850,
+            "positives": 809,
+            "precision": {
+              "hi": 0.4774,
+              "lo": 0.4295,
+              "point": 0.4546
+            },
+            "recall": {
+              "hi": 0.8937,
+              "lo": 0.8484,
+              "point": 0.8727
+            }
+          },
+          "flooded_drain": {
+            "f1": {
+              "hi": 0.734,
+              "lo": 0.6302,
+              "point": 0.688
+            },
+            "pairs": 462,
+            "positives": 208,
+            "precision": {
+              "hi": 0.6773,
+              "lo": 0.5526,
+              "point": 0.6192
+            },
+            "recall": {
+              "hi": 0.8291,
+              "lo": 0.7149,
+              "point": 0.774
+            }
+          },
+          "pothole": {
+            "f1": {
+              "hi": 0.5652,
+              "lo": 0.5433,
+              "point": 0.554
+            },
+            "pairs": 15214,
+            "positives": 5741,
+            "precision": {
+              "hi": 0.5518,
+              "lo": 0.5276,
+              "point": 0.5395
+            },
+            "recall": {
+              "hi": 0.5836,
+              "lo": 0.5563,
+              "point": 0.5692
+            }
+          }
+        }
+      },
+      "paired_against_best_fixed_radius": [
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.1033,
+              "lo": -0.1261,
+              "point": -0.1153
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0812,
+              "lo": -0.15,
+              "point": -0.1153
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.004,
+              "lo": -0.0113,
+              "point": -0.0075
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0007,
+              "lo": -0.0148,
+              "point": -0.0075
+            }
+          },
+          "name": "shipped no accuracy: 44.5 m",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0259,
+              "lo": -0.0435,
+              "point": -0.0347
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0121,
+              "lo": -0.0607,
+              "point": -0.0347
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": 0.0894,
+              "lo": 0.0717,
+              "point": 0.0806
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0968,
+              "lo": 0.0647,
+              "point": 0.0806
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.0255,
+              "lo": -0.0434,
+              "point": -0.0341
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0041,
+              "lo": -0.0599,
+              "point": -0.0341
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": -0.0181,
+              "lo": -0.0352,
+              "point": -0.0266
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0019,
+              "lo": -0.0492,
+              "point": -0.0266
+            }
+          },
+          "name": "shipped accuracy 5 m: 19.1 m",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0593,
+              "lo": -0.0797,
+              "point": -0.0697
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0385,
+              "lo": -0.1014,
+              "point": -0.0697
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": 0.0512,
+              "lo": 0.0392,
+              "point": 0.0456
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0555,
+              "lo": 0.0365,
+              "point": 0.0456
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.0031,
+              "lo": -0.0166,
+              "point": -0.0095
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0057,
+              "lo": -0.0227,
+              "point": -0.0095
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": 0.0033,
+              "lo": -0.0082,
+              "point": -0.002
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0108,
+              "lo": -0.0129,
+              "point": -0.002
+            }
+          },
+          "name": "shipped accuracy 10 m: 31.2 m",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.1429,
+              "lo": -0.166,
+              "point": -0.155
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1163,
+              "lo": -0.1936,
+              "point": -0.155
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": -0.0346,
+              "lo": -0.0443,
+              "point": -0.0398
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0295,
+              "lo": -0.0499,
+              "point": -0.0398
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.0077,
+              "lo": -0.0157,
+              "point": -0.0118
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0062,
+              "lo": -0.0177,
+              "point": -0.0118
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": 0.0012,
+              "lo": -0.0091,
+              "point": -0.0042
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0071,
+              "lo": -0.0153,
+              "point": -0.0042
+            }
+          },
+          "name": "shipped accuracy 20 m: 58.2 m",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0,
+              "lo": 0.0,
+              "point": 0.0
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0832,
+              "lo": -0.1056,
+              "point": -0.0952
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0631,
+              "lo": -0.1302,
+              "point": -0.0952
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0249,
+              "lo": 0.0165,
+              "point": 0.0206
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.028,
+              "lo": 0.0137,
+              "point": 0.0206
+            }
+          },
+          "name": "per-type best F1 radius",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0202,
+              "lo": 0.0167,
+              "point": 0.0185
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0228,
+              "lo": 0.0142,
+              "point": 0.0185
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.173,
+              "lo": -0.2008,
+              "point": -0.1869
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1698,
+              "lo": -0.2078,
+              "point": -0.1869
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": -0.0616,
+              "lo": -0.0812,
+              "point": -0.0716
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0413,
+              "lo": -0.1009,
+              "point": -0.0716
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.1597,
+              "lo": -0.18,
+              "point": -0.1695
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1217,
+              "lo": -0.2135,
+              "point": -0.1695
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": -0.1519,
+              "lo": -0.1717,
+              "point": -0.162
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1188,
+              "lo": -0.201,
+              "point": -0.162
+            }
+          },
+          "name": "shipped radius + dt <= 14 d",
+          "pr_auc": {
+            "pairs": {
+              "hi": -0.0931,
+              "lo": -0.1097,
+              "point": -0.1015
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0786,
+              "lo": -0.1181,
+              "point": -0.1015
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.1432,
+              "lo": -0.1683,
+              "point": -0.1563
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.1361,
+              "lo": -0.181,
+              "point": -0.1563
+            }
+          },
+          "f05_vs_shipped": {
+            "pairs": {
+              "hi": -0.0333,
+              "lo": -0.0485,
+              "point": -0.041
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0204,
+              "lo": -0.0607,
+              "point": -0.041
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": -0.102,
+              "lo": -0.1194,
+              "point": -0.111
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0743,
+              "lo": -0.1458,
+              "point": -0.111
+            }
+          },
+          "f1_vs_shipped": {
+            "pairs": {
+              "hi": -0.0954,
+              "lo": -0.1114,
+              "point": -0.1035
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0712,
+              "lo": -0.1341,
+              "point": -0.1035
+            }
+          },
+          "name": "shipped radius + dt <= 30 d",
+          "pr_auc": {
+            "pairs": {
+              "hi": -0.0725,
+              "lo": -0.0868,
+              "point": -0.08
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.059,
+              "lo": -0.0969,
+              "point": -0.08
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.1091,
+              "lo": -0.1319,
+              "point": -0.1209
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0838,
+              "lo": -0.1588,
+              "point": -0.1209
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0012,
+              "lo": -0.0002,
+              "point": 0.0005
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.0014,
+              "lo": -0.0003,
+              "point": 0.0005
+            }
+          },
+          "name": "logistic distance only",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0052,
+              "lo": 0.0026,
+              "point": 0.0039
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0064,
+              "lo": 0.0018,
+              "point": 0.0039
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.1089,
+              "lo": -0.1323,
+              "point": -0.121
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0851,
+              "lo": -0.1573,
+              "point": -0.121
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0004,
+              "lo": -0.0027,
+              "point": -0.0011
+            },
+            "verdict": "no clear difference",
+            "wards": {
+              "hi": 0.002,
+              "lo": -0.0046,
+              "point": -0.0011
+            }
+          },
+          "name": "logistic + time",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0122,
+              "lo": 0.0034,
+              "point": 0.0078
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0135,
+              "lo": 0.0021,
+              "point": 0.0078
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0992,
+              "lo": -0.1227,
+              "point": -0.1116
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0789,
+              "lo": -0.1482,
+              "point": -0.1116
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0224,
+              "lo": 0.0124,
+              "point": 0.0173
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.026,
+              "lo": 0.0096,
+              "point": 0.0173
+            }
+          },
+          "name": "logistic + type",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0295,
+              "lo": 0.0218,
+              "point": 0.0256
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0332,
+              "lo": 0.0171,
+              "point": 0.0256
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0969,
+              "lo": -0.1199,
+              "point": -0.1088
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0753,
+              "lo": -0.1461,
+              "point": -0.1088
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0226,
+              "lo": 0.0126,
+              "point": 0.0173
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0271,
+              "lo": 0.0085,
+              "point": 0.0173
+            }
+          },
+          "name": "logistic + time + type",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0314,
+              "lo": 0.0202,
+              "point": 0.0254
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.038,
+              "lo": 0.0133,
+              "point": 0.0254
+            }
+          }
+        },
+        {
+          "f05": {
+            "pairs": {
+              "hi": -0.0746,
+              "lo": -0.0971,
+              "point": -0.0861
+            },
+            "verdict": "worse",
+            "wards": {
+              "hi": -0.0527,
+              "lo": -0.1224,
+              "point": -0.0861
+            }
+          },
+          "f1": {
+            "pairs": {
+              "hi": 0.0273,
+              "lo": 0.0163,
+              "point": 0.0215
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0304,
+              "lo": 0.0135,
+              "point": 0.0215
+            }
+          },
+          "name": "logistic + time + type + origin",
+          "pr_auc": {
+            "pairs": {
+              "hi": 0.0452,
+              "lo": 0.0335,
+              "point": 0.0395
+            },
+            "verdict": "better",
+            "wards": {
+              "hi": 0.0528,
+              "lo": 0.0265,
+              "point": 0.0395
+            }
+          }
+        }
+      ],
+      "recall_by_origin": {
+        "best F1 radius": {
+          "Alderman's Office": {
+            "positives": 503,
+            "recall": {
+              "hi": 0.5885,
+              "lo": 0.503,
+              "point": 0.5467
+            }
+          },
+          "Internet": {
+            "positives": 1913,
+            "recall": {
+              "hi": 0.6947,
+              "lo": 0.6524,
+              "point": 0.6728
+            }
+          },
+          "Mobile Device": {
+            "positives": 2262,
+            "recall": {
+              "hi": 0.7011,
+              "lo": 0.6636,
+              "point": 0.6821
+            }
+          },
+          "Phone Call": {
+            "positives": 2078,
+            "recall": {
+              "hi": 0.693,
+              "lo": 0.6545,
+              "point": 0.6737
+            }
+          }
+        },
+        "per-type best F1 radius": {
+          "Alderman's Office": {
+            "positives": 503,
+            "recall": {
+              "hi": 0.6083,
+              "lo": 0.5229,
+              "point": 0.5666
+            }
+          },
+          "Internet": {
+            "positives": 1913,
+            "recall": {
+              "hi": 0.7052,
+              "lo": 0.6618,
+              "point": 0.6827
+            }
+          },
+          "Mobile Device": {
+            "positives": 2262,
+            "recall": {
+              "hi": 0.7157,
+              "lo": 0.6768,
+              "point": 0.6963
+            }
+          },
+          "Phone Call": {
+            "positives": 2078,
+            "recall": {
+              "hi": 0.6728,
+              "lo": 0.6333,
+              "point": 0.653
+            }
+          }
+        },
+        "shipped no accuracy: 44.5 m": {
+          "Alderman's Office": {
+            "positives": 503,
+            "recall": {
+              "hi": 0.5427,
+              "lo": 0.4573,
+              "point": 0.501
+            }
+          },
+          "Internet": {
+            "positives": 1913,
+            "recall": {
+              "hi": 0.6571,
+              "lo": 0.6111,
+              "point": 0.633
+            }
+          },
+          "Mobile Device": {
+            "positives": 2262,
+            "recall": {
+              "hi": 0.6503,
+              "lo": 0.6101,
+              "point": 0.6295
+            }
+          },
+          "Phone Call": {
+            "positives": 2078,
+            "recall": {
+              "hi": 0.6588,
+              "lo": 0.6208,
+              "point": 0.6396
+            }
+          }
+        }
+      },
+      "table": [
+        {
+          "f05": {
+            "hi": 0.6537,
+            "lo": 0.6293,
+            "point": 0.6417
+          },
+          "f1": {
+            "hi": 0.5253,
+            "lo": 0.5013,
+            "point": 0.5133
+          },
+          "family": "fixed",
+          "fn": 4241,
+          "fp": 793,
+          "name": "fixed 10 m",
+          "pr_auc": {
+            "hi": 0.6652,
+            "lo": 0.6424,
+            "point": 0.6543
+          },
+          "precision": {
+            "hi": 0.7844,
+            "lo": 0.7551,
+            "point": 0.77
+          },
+          "recall": {
+            "hi": 0.3963,
+            "lo": 0.3732,
+            "point": 0.385
+          },
+          "roc_auc": {
+            "hi": 0.7656,
+            "lo": 0.7517,
+            "point": 0.7586
+          },
+          "tn": 11431,
+          "tp": 2655
+        },
+        {
+          "f05": {
+            "hi": 0.6349,
+            "lo": 0.6117,
+            "point": 0.6237
+          },
+          "f1": {
+            "hi": 0.5379,
+            "lo": 0.5154,
+            "point": 0.5267
+          },
+          "family": "fixed",
+          "fn": 4011,
+          "fp": 1173,
+          "name": "fixed 15 m",
+          "pr_auc": {
+            "hi": 0.6652,
+            "lo": 0.6424,
+            "point": 0.6543
+          },
+          "precision": {
+            "hi": 0.7248,
+            "lo": 0.697,
+            "point": 0.7109
+          },
+          "recall": {
+            "hi": 0.4297,
+            "lo": 0.4067,
+            "point": 0.4184
+          },
+          "roc_auc": {
+            "hi": 0.7656,
+            "lo": 0.7517,
+            "point": 0.7586
+          },
+          "tn": 11051,
+          "tp": 2885
+        },
+        {
+          "f05": {
+            "hi": 0.6142,
+            "lo": 0.5915,
+            "point": 0.6029
+          },
+          "f1": {
+            "hi": 0.5612,
+            "lo": 0.5395,
+            "point": 0.5503
+          },
+          "family": "fixed",
+          "fn": 3583,
+          "fp": 1832,
+          "name": "fixed 25 m",
+          "pr_auc": {
+            "hi": 0.6652,
+            "lo": 0.6424,
+            "point": 0.6543
+          },
+          "precision": {
+            "hi": 0.6565,
+            "lo": 0.6306,
+            "point": 0.6439
+          },
+          "recall": {
+            "hi": 0.4918,
+            "lo": 0.4679,
+            "point": 0.4804
+          },
+          "roc_auc": {
+            "hi": 0.7656,
+            "lo": 0.7517,
+            "point": 0.7586
+          },
+          "tn": 10392,
+          "tp": 3313
+        },
+        {
+          "f05": {
+            "hi": 0.5555,
+            "lo": 0.5349,
+            "point": 0.5455
+          },
+          "f1": {
+            "hi": 0.5688,
+            "lo": 0.5496,
+            "point": 0.5595
+          },
+          "family": "fixed",
+          "fn": 2865,
+          "fp": 3482,
+          "name": "fixed 40 m",
+          "pr_auc": {
+            "hi": 0.6652,
+            "lo": 0.6424,
+            "point": 0.6543
+          },
+          "precision": {
+            "hi": 0.547,
+            "lo": 0.5253,
+            "point": 0.5365
+          },
+          "recall": {
+            "hi": 0.596,
+            "lo": 0.5731,
+            "point": 0.5845
+          },
+          "roc_auc": {
+            "hi": 0.7656,
+            "lo": 0.7517,
+            "point": 0.7586
+          },
+          "tn": 8742,
+          "tp": 4031
+        },
+        {
+          "f05": {
+            "hi": 0.5001,
+            "lo": 0.4816,
+            "point": 0.4911
+          },
+          "f1": {
+            "hi": 0.5669,
+            "lo": 0.5495,
+            "point": 0.5585
+          },
+          "family": "fixed",
+          "fn": 1903,
+          "fp": 5992,
+          "name": "fixed 60 m",
+          "pr_auc": {
+            "hi": 0.6652,
+            "lo": 0.6424,
+            "point": 0.6543
+          },
+          "precision": {
+            "hi": 0.4639,
+            "lo": 0.4448,
+            "point": 0.4545
+          },
+          "recall": {
+            "hi": 0.7345,
+            "lo": 0.7129,
+            "point": 0.724
+          },
+          "roc_auc": {
+            "hi": 0.7656,
+            "lo": 0.7517,
+            "point": 0.7586
+          },
+          "tn": 6232,
+          "tp": 4993
+        },
+        {
+          "f05": {
+            "hi": 0.5463,
+            "lo": 0.5259,
+            "point": 0.5363
+          },
+          "f1": {
+            "hi": 0.5744,
+            "lo": 0.5552,
+            "point": 0.5648
+          },
+          "family": "shipped",
+          "fn": 2623,
+          "fp": 3963,
+          "name": "shipped no accuracy: 44.5 m",
+          "pr_auc": {
+            "hi": 0.6652,
+            "lo": 0.6424,
+            "point": 0.6543
+          },
+          "precision": {
+            "hi": 0.5295,
+            "lo": 0.5074,
+            "point": 0.5188
+          },
+          "recall": {
+            "hi": 0.6311,
+            "lo": 0.6081,
+            "point": 0.6196
+          },
+          "roc_auc": {
+            "hi": 0.7656,
+            "lo": 0.7517,
+            "point": 0.7586
+          },
+          "tn": 8261,
+          "tp": 4273
+        },
+        {
+          "f05": {
+            "hi": 0.6281,
+            "lo": 0.6053,
+            "point": 0.6168
+          },
+          "f1": {
+            "hi": 0.5489,
+            "lo": 0.5272,
+            "point": 0.5382
+          },
+          "family": "shipped",
+          "fn": 3835,
+          "fp": 1418,
+          "name": "shipped accuracy 5 m: 19.1 m",
+          "pr_auc": {
+            "hi": 0.6652,
+            "lo": 0.6424,
+            "point": 0.6543
+          },
+          "precision": {
+            "hi": 0.6969,
+            "lo": 0.669,
+            "point": 0.6834
+          },
+          "recall": {
+            "hi": 0.4552,
+            "lo": 0.4317,
+            "point": 0.4439
+          },
+          "roc_auc": {
+            "hi": 0.7656,
+            "lo": 0.7517,
+            "point": 0.7586
+          },
+          "tn": 10806,
+          "tp": 3061
+        },
+        {
+          "f05": {
+            "hi": 0.5924,
+            "lo": 0.5705,
+            "point": 0.5818
+          },
+          "f1": {
+            "hi": 0.5729,
+            "lo": 0.5524,
+            "point": 0.5628
+          },
+          "family": "shipped",
+          "fn": 3216,
+          "fp": 2502,
+          "name": "shipped accuracy 10 m: 31.2 m",
+          "pr_auc": {
+            "hi": 0.6652,
+            "lo": 0.6424,
+            "point": 0.6543
+          },
+          "precision": {
+            "hi": 0.6071,
+            "lo": 0.5826,
+            "point": 0.5953
+          },
+          "recall": {
+            "hi": 0.5453,
+            "lo": 0.5208,
+            "point": 0.5336
+          },
+          "roc_auc": {
+            "hi": 0.7656,
+            "lo": 0.7517,
+            "point": 0.7586
+          },
+          "tn": 9722,
+          "tp": 3680
+        },
+        {
+          "f05": {
+            "hi": 0.5055,
+            "lo": 0.4868,
+            "point": 0.4965
+          },
+          "f1": {
+            "hi": 0.5689,
+            "lo": 0.5513,
+            "point": 0.5605
+          },
+          "family": "shipped",
+          "fn": 1973,
+          "fp": 5747,
+          "name": "shipped accuracy 20 m: 58.2 m",
+          "pr_auc": {
+            "hi": 0.6652,
+            "lo": 0.6424,
+            "point": 0.6543
+          },
+          "precision": {
+            "hi": 0.4712,
+            "lo": 0.4515,
+            "point": 0.4614
+          },
+          "recall": {
+            "hi": 0.7248,
+            "lo": 0.7029,
+            "point": 0.7139
+          },
+          "roc_auc": {
+            "hi": 0.7656,
+            "lo": 0.7517,
+            "point": 0.7586
+          },
+          "tn": 6477,
+          "tp": 4923
+        },
+        {
+          "f05": {
+            "hi": 0.5388,
+            "lo": 0.5195,
+            "point": 0.5292
+          },
+          "f1": {
+            "hi": 0.5814,
+            "lo": 0.5629,
+            "point": 0.5723
+          },
+          "family": "best on validation",
+          "fn": 2331,
+          "fp": 4493,
+          "name": "best F1 radius",
+          "pr_auc": {
+            "hi": 0.6652,
+            "lo": 0.6424,
+            "point": 0.6543
+          },
+          "precision": {
+            "hi": 0.5143,
+            "lo": 0.4936,
+            "point": 0.504
+          },
+          "recall": {
+            "hi": 0.6733,
+            "lo": 0.6506,
+            "point": 0.662
+          },
+          "roc_auc": {
+            "hi": 0.7656,
+            "lo": 0.7517,
+            "point": 0.7586
+          },
+          "tn": 7731,
+          "tp": 4565
+        },
+        {
+          "f05": {
+            "hi": 0.6629,
+            "lo": 0.6393,
+            "point": 0.6515
+          },
+          "f1": {
+            "hi": 0.4954,
+            "lo": 0.4716,
+            "point": 0.4836
+          },
+          "family": "best on validation",
+          "fn": 4563,
+          "fp": 419,
+          "name": "best F0.5 radius",
+          "pr_auc": {
+            "hi": 0.6652,
+            "lo": 0.6424,
+            "point": 0.6543
+          },
+          "precision": {
+            "hi": 0.8595,
+            "lo": 0.8334,
+            "point": 0.8477
+          },
+          "recall": {
+            "hi": 0.3492,
+            "lo": 0.3269,
+            "point": 0.3383
+          },
+          "roc_auc": {
+            "hi": 0.7656,
+            "lo": 0.7517,
+            "point": 0.7586
+          },
+          "tn": 11805,
+          "tp": 2333
+        },
+        {
+          "f05": {
+            "hi": 0.6624,
+            "lo": 0.639,
+            "point": 0.6513
+          },
+          "f1": {
+            "hi": 0.5049,
+            "lo": 0.4816,
+            "point": 0.4936
+          },
+          "family": "cost on validation",
+          "fn": 4471,
+          "fp": 505,
+          "name": "cost 1:1 radius",
+          "pr_auc": {
+            "hi": 0.6652,
+            "lo": 0.6424,
+            "point": 0.6543
+          },
+          "precision": {
+            "hi": 0.8402,
+            "lo": 0.8134,
+            "point": 0.8276
+          },
+          "recall": {
+            "hi": 0.3622,
+            "lo": 0.3403,
+            "point": 0.3517
+          },
+          "roc_auc": {
+            "hi": 0.7656,
+            "lo": 0.7517,
+            "point": 0.7586
+          },
+          "tn": 11719,
+          "tp": 2425
+        },
+        {
+          "f05": {
+            "hi": 0.6629,
+            "lo": 0.6393,
+            "point": 0.6515
+          },
+          "f1": {
+            "hi": 0.4954,
+            "lo": 0.4716,
+            "point": 0.4836
+          },
+          "family": "cost on validation",
+          "fn": 4563,
+          "fp": 419,
+          "name": "cost 3:1 radius",
+          "pr_auc": {
+            "hi": 0.6652,
+            "lo": 0.6424,
+            "point": 0.6543
+          },
+          "precision": {
+            "hi": 0.8595,
+            "lo": 0.8334,
+            "point": 0.8477
+          },
+          "recall": {
+            "hi": 0.3492,
+            "lo": 0.3269,
+            "point": 0.3383
+          },
+          "roc_auc": {
+            "hi": 0.7656,
+            "lo": 0.7517,
+            "point": 0.7586
+          },
+          "tn": 11805,
+          "tp": 2333
+        },
+        {
+          "f05": {
+            "hi": 0.6629,
+            "lo": 0.6393,
+            "point": 0.6515
+          },
+          "f1": {
+            "hi": 0.4954,
+            "lo": 0.4716,
+            "point": 0.4836
+          },
+          "family": "cost on validation",
+          "fn": 4563,
+          "fp": 419,
+          "name": "cost 5:1 radius",
+          "pr_auc": {
+            "hi": 0.6652,
+            "lo": 0.6424,
+            "point": 0.6543
+          },
+          "precision": {
+            "hi": 0.8595,
+            "lo": 0.8334,
+            "point": 0.8477
+          },
+          "recall": {
+            "hi": 0.3492,
+            "lo": 0.3269,
+            "point": 0.3383
+          },
+          "roc_auc": {
+            "hi": 0.7656,
+            "lo": 0.7517,
+            "point": 0.7586
+          },
+          "tn": 11805,
+          "tp": 2333
+        },
+        {
+          "f05": {
+            "hi": 0.5658,
+            "lo": 0.5458,
+            "point": 0.5563
+          },
+          "f1": {
+            "hi": 0.6017,
+            "lo": 0.5838,
+            "point": 0.5929
+          },
+          "family": "per type",
+          "fn": 2305,
+          "fp": 4000,
+          "name": "per-type best F1 radius",
+          "pr_auc": {
+            "hi": 0.6838,
+            "lo": 0.6613,
+            "point": 0.6728
+          },
+          "precision": {
+            "hi": 0.5443,
+            "lo": 0.5228,
+            "point": 0.5344
+          },
+          "recall": {
+            "hi": 0.677,
+            "lo": 0.6548,
+            "point": 0.6657
+          },
+          "roc_auc": {
+            "hi": 0.7935,
+            "lo": 0.7807,
+            "point": 0.7871
+          },
+          "tn": 8224,
+          "tp": 4591
+        },
+        {
+          "f05": {
+            "hi": 0.4771,
+            "lo": 0.4515,
+            "point": 0.4646
+          },
+          "f1": {
+            "hi": 0.4142,
+            "lo": 0.3911,
+            "point": 0.4028
+          },
+          "family": "time window",
+          "fn": 4623,
+          "fp": 2118,
+          "name": "shipped radius + dt <= 14 d",
+          "pr_auc": {
+            "hi": 0.5647,
+            "lo": 0.5405,
+            "point": 0.5529
+          },
+          "precision": {
+            "hi": 0.5329,
+            "lo": 0.5024,
+            "point": 0.5176
+          },
+          "recall": {
+            "hi": 0.3406,
+            "lo": 0.3186,
+            "point": 0.3296
+          },
+          "roc_auc": {
+            "hi": 0.655,
+            "lo": 0.6393,
+            "point": 0.6471
+          },
+          "tn": 10106,
+          "tp": 2273
+        },
+        {
+          "f05": {
+            "hi": 0.5072,
+            "lo": 0.4827,
+            "point": 0.4953
+          },
+          "f1": {
+            "hi": 0.4728,
+            "lo": 0.4503,
+            "point": 0.4613
+          },
+          "family": "time window",
+          "fn": 4042,
+          "fp": 2625,
+          "name": "shipped radius + dt <= 30 d",
+          "pr_auc": {
+            "hi": 0.586,
+            "lo": 0.5618,
+            "point": 0.5743
+          },
+          "precision": {
+            "hi": 0.5339,
+            "lo": 0.5066,
+            "point": 0.5209
+          },
+          "recall": {
+            "hi": 0.426,
+            "lo": 0.4023,
+            "point": 0.4139
+          },
+          "roc_auc": {
+            "hi": 0.6552,
+            "lo": 0.638,
+            "point": 0.6468
+          },
+          "tn": 9599,
+          "tp": 2854
+        },
+        {
+          "f05": {
+            "hi": 0.5402,
+            "lo": 0.5209,
+            "point": 0.5306
+          },
+          "f1": {
+            "hi": 0.5817,
+            "lo": 0.5633,
+            "point": 0.5728
+          },
+          "family": "logistic",
+          "fn": 2343,
+          "fp": 4449,
+          "name": "logistic distance only",
+          "pr_auc": {
+            "hi": 0.6692,
+            "lo": 0.646,
+            "point": 0.6582
+          },
+          "precision": {
+            "hi": 0.5162,
+            "lo": 0.4955,
+            "point": 0.5058
+          },
+          "recall": {
+            "hi": 0.6715,
+            "lo": 0.6488,
+            "point": 0.6602
+          },
+          "roc_auc": {
+            "hi": 0.7711,
+            "lo": 0.7574,
+            "point": 0.7641
+          },
+          "tn": 7775,
+          "tp": 4553
+        },
+        {
+          "f05": {
+            "hi": 0.5401,
+            "lo": 0.5208,
+            "point": 0.5305
+          },
+          "f1": {
+            "hi": 0.5799,
+            "lo": 0.5619,
+            "point": 0.5712
+          },
+          "family": "logistic",
+          "fn": 2380,
+          "fp": 4401,
+          "name": "logistic + time",
+          "pr_auc": {
+            "hi": 0.6737,
+            "lo": 0.65,
+            "point": 0.6621
+          },
+          "precision": {
+            "hi": 0.5167,
+            "lo": 0.4959,
+            "point": 0.5064
+          },
+          "recall": {
+            "hi": 0.6661,
+            "lo": 0.6435,
+            "point": 0.6549
+          },
+          "roc_auc": {
+            "hi": 0.7706,
+            "lo": 0.757,
+            "point": 0.7637
+          },
+          "tn": 7823,
+          "tp": 4516
+        },
+        {
+          "f05": {
+            "hi": 0.5489,
+            "lo": 0.5298,
+            "point": 0.5399
+          },
+          "f1": {
+            "hi": 0.5982,
+            "lo": 0.5805,
+            "point": 0.5896
+          },
+          "family": "logistic",
+          "fn": 2093,
+          "fp": 4593,
+          "name": "logistic + type",
+          "pr_auc": {
+            "hi": 0.6906,
+            "lo": 0.6678,
+            "point": 0.6799
+          },
+          "precision": {
+            "hi": 0.5208,
+            "lo": 0.5003,
+            "point": 0.5112
+          },
+          "recall": {
+            "hi": 0.7074,
+            "lo": 0.6853,
+            "point": 0.6965
+          },
+          "roc_auc": {
+            "hi": 0.8051,
+            "lo": 0.7927,
+            "point": 0.799
+          },
+          "tn": 7631,
+          "tp": 4803
+        },
+        {
+          "f05": {
+            "hi": 0.5519,
+            "lo": 0.5325,
+            "point": 0.5427
+          },
+          "f1": {
+            "hi": 0.5982,
+            "lo": 0.5803,
+            "point": 0.5896
+          },
+          "family": "logistic",
+          "fn": 2146,
+          "fp": 4467,
+          "name": "logistic + time + type",
+          "pr_auc": {
+            "hi": 0.6911,
+            "lo": 0.6678,
+            "point": 0.6797
+          },
+          "precision": {
+            "hi": 0.5252,
+            "lo": 0.5045,
+            "point": 0.5154
+          },
+          "recall": {
+            "hi": 0.6994,
+            "lo": 0.6775,
+            "point": 0.6888
+          },
+          "roc_auc": {
+            "hi": 0.8052,
+            "lo": 0.7933,
+            "point": 0.7992
+          },
+          "tn": 7757,
+          "tp": 4750
+        },
+        {
+          "f05": {
+            "hi": 0.575,
+            "lo": 0.5556,
+            "point": 0.5654
+          },
+          "f1": {
+            "hi": 0.6029,
+            "lo": 0.5847,
+            "point": 0.5938
+          },
+          "family": "logistic",
+          "fn": 2428,
+          "fp": 3686,
+          "name": "logistic + time + type + origin",
+          "pr_auc": {
+            "hi": 0.705,
+            "lo": 0.6822,
+            "point": 0.6938
+          },
+          "precision": {
+            "hi": 0.5585,
+            "lo": 0.5374,
+            "point": 0.548
+          },
+          "recall": {
+            "hi": 0.659,
+            "lo": 0.6365,
+            "point": 0.6479
+          },
+          "roc_auc": {
+            "hi": 0.8063,
+            "lo": 0.794,
+            "point": 0.8002
+          },
+          "tn": 8538,
+          "tp": 4468
+        }
+      ]
+    },
+    "validation_f_by_radius": {
+      "f05": [
+        0.6515,
+        0.651,
+        0.6496,
+        0.6499,
+        0.6495,
+        0.6513,
+        0.6513,
+        0.649,
+        0.642,
+        0.6417,
+        0.6317,
+        0.6308,
+        0.6296,
+        0.6274,
+        0.6237,
+        0.622,
+        0.6203,
+        0.6181,
+        0.6165,
+        0.6148,
+        0.6139,
+        0.6108,
+        0.6085,
+        0.6049,
+        0.6029,
+        0.6017,
+        0.5988,
+        0.5959,
+        0.5924,
+        0.5877,
+        0.583,
+        0.5788,
+        0.575,
+        0.5707,
+        0.5656,
+        0.5621,
+        0.558,
+        0.5547,
+        0.551,
+        0.5455,
+        0.5409,
+        0.5396,
+        0.539,
+        0.5379,
+        0.5346,
+        0.5326,
+        0.5321,
+        0.5318,
+        0.5292,
+        0.5245,
+        0.5214,
+        0.519,
+        0.5152,
+        0.5127,
+        0.5076,
+        0.5043,
+        0.5005,
+        0.4974,
+        0.4938,
+        0.4911
+      ],
+      "f1": [
+        0.4836,
+        0.4842,
+        0.485,
+        0.4858,
+        0.4875,
+        0.4907,
+        0.4936,
+        0.5004,
+        0.5047,
+        0.5133,
+        0.5138,
+        0.5183,
+        0.5227,
+        0.524,
+        0.5267,
+        0.5298,
+        0.5311,
+        0.5327,
+        0.5372,
+        0.5392,
+        0.5422,
+        0.5434,
+        0.5458,
+        0.5472,
+        0.5503,
+        0.5537,
+        0.5565,
+        0.5589,
+        0.5614,
+        0.5619,
+        0.5628,
+        0.5634,
+        0.5641,
+        0.564,
+        0.5628,
+        0.5631,
+        0.5619,
+        0.5621,
+        0.5609,
+        0.5595,
+        0.5587,
+        0.5606,
+        0.5632,
+        0.5647,
+        0.5642,
+        0.5659,
+        0.5689,
+        0.5718,
+        0.5723,
+        0.5708,
+        0.5705,
+        0.5701,
+        0.5687,
+        0.5682,
+        0.5652,
+        0.564,
+        0.5622,
+        0.561,
+        0.5591,
+        0.5585
+      ],
+      "radius_m": [
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        5.0,
+        6.0,
+        7.0,
+        8.0,
+        9.0,
+        10.0,
+        11.0,
+        12.0,
+        13.0,
+        14.0,
+        15.0,
+        16.0,
+        17.0,
+        18.0,
+        19.0,
+        20.0,
+        21.0,
+        22.0,
+        23.0,
+        24.0,
+        25.0,
+        26.0,
+        27.0,
+        28.0,
+        29.0,
+        30.0,
+        31.0,
+        32.0,
+        33.0,
+        34.0,
+        35.0,
+        36.0,
+        37.0,
+        38.0,
+        39.0,
+        40.0,
+        41.0,
+        42.0,
+        43.0,
+        44.0,
+        45.0,
+        46.0,
+        47.0,
+        48.0,
+        49.0,
+        50.0,
+        51.0,
+        52.0,
+        53.0,
+        54.0,
+        55.0,
+        56.0,
+        57.0,
+        58.0,
+        59.0,
+        60.0
+      ]
+    }
+  },
+  "meta": {
+    "git_commit": "e616f20",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T13:22:15+00:00"
+  }
+}

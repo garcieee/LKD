@@ -1,0 +1,305 @@
+{
+  "config": {
+    "far_m": [
+      100.0,
+      500.0
+    ],
+    "far_per_positive": 1,
+    "geo_fractions": [
+      0.6,
+      0.2,
+      0.2
+    ],
+    "near_m": 60.0,
+    "seed": 0,
+    "split": "time",
+    "test_start": "2025-10-01",
+    "validation_start": "2025-07-01"
+  },
+  "map_blocks": null,
+  "meta": {
+    "git_commit": "21b8f4e",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T13:02:22+00:00"
+  },
+  "summary": {
+    "blocked_sidewalk": {
+      "boundary_loss": {
+        "test": {
+          "children": 170,
+          "dropped": 121,
+          "kept": 49,
+          "median_gap_days_dropped": 128.8317,
+          "median_gap_days_kept": 4.2213,
+          "share_inside_shipped_radius_dropped": 1.0,
+          "share_inside_shipped_radius_kept": 1.0
+        },
+        "train": {
+          "children": 218,
+          "dropped": 1,
+          "kept": 217,
+          "median_gap_days_dropped": 241.7929,
+          "median_gap_days_kept": 15.9219,
+          "share_inside_shipped_radius_dropped": 1.0,
+          "share_inside_shipped_radius_kept": 0.9908
+        },
+        "validation": {
+          "children": 248,
+          "dropped": 155,
+          "kept": 93,
+          "median_gap_days_dropped": 110.0267,
+          "median_gap_days_kept": 7.2491,
+          "share_inside_shipped_radius_dropped": 1.0,
+          "share_inside_shipped_radius_kept": 1.0
+        }
+      },
+      "near_negatives": {
+        "city_buffer": {
+          "inside": 323,
+          "no_number": 11,
+          "outside": 894
+        },
+        "count_if_any_request_could_be_the_other": 1791,
+        "same_geocode_share": 0.0114
+      },
+      "pairs": {
+        "test": {
+          "far": 25,
+          "near": 108,
+          "positive": 49
+        },
+        "train": {
+          "far": 177,
+          "near": 723,
+          "positive": 217
+        },
+        "validation": {
+          "far": 69,
+          "near": 397,
+          "positive": 93
+        }
+      },
+      "positive_funnel": {
+        "crosses_a_boundary": 277,
+        "duplicates": 2388,
+        "kept": 359,
+        "no_location": 0,
+        "parent_not_in_file": 1752
+      },
+      "positives_city_buffer": {
+        "inside": 356,
+        "no_number": 1,
+        "outside": 2
+      }
+    },
+    "broken_streetlight": {
+      "boundary_loss": {
+        "test": {
+          "children": 735,
+          "dropped": 40,
+          "kept": 695,
+          "median_gap_days_dropped": 47.5853,
+          "median_gap_days_kept": 0.9406,
+          "share_inside_shipped_radius_dropped": 0.975,
+          "share_inside_shipped_radius_kept": 0.8619
+        },
+        "train": {
+          "children": 2336,
+          "dropped": 0,
+          "kept": 2336,
+          "median_gap_days_dropped": null,
+          "median_gap_days_kept": 1.1355,
+          "share_inside_shipped_radius_dropped": null,
+          "share_inside_shipped_radius_kept": 0.8913
+        },
+        "validation": {
+          "children": 986,
+          "dropped": 42,
+          "kept": 944,
+          "median_gap_days_dropped": 39.0904,
+          "median_gap_days_kept": 1.011,
+          "share_inside_shipped_radius_dropped": 1.0,
+          "share_inside_shipped_radius_kept": 0.9057
+        }
+      },
+      "near_negatives": {
+        "city_buffer": {
+          "inside": 1331,
+          "no_number": 12,
+          "outside": 5588
+        },
+        "count_if_any_request_could_be_the_other": 9339,
+        "same_geocode_share": 0.0693
+      },
+      "pairs": {
+        "test": {
+          "far": 464,
+          "near": 1296,
+          "positive": 695
+        },
+        "train": {
+          "far": 1790,
+          "near": 4269,
+          "positive": 2336
+        },
+        "validation": {
+          "far": 665,
+          "near": 1366,
+          "positive": 944
+        }
+      },
+      "positive_funnel": {
+        "crosses_a_boundary": 82,
+        "duplicates": 4129,
+        "kept": 3975,
+        "no_location": 0,
+        "parent_not_in_file": 72
+      },
+      "positives_city_buffer": {
+        "inside": 3047,
+        "no_number": 12,
+        "outside": 916
+      }
+    },
+    "flooded_drain": {
+      "boundary_loss": {
+        "test": {
+          "children": 95,
+          "dropped": 14,
+          "kept": 81,
+          "median_gap_days_dropped": 73.4195,
+          "median_gap_days_kept": 0.0807,
+          "share_inside_shipped_radius_dropped": 0.9286,
+          "share_inside_shipped_radius_kept": 0.7531
+        },
+        "train": {
+          "children": 657,
+          "dropped": 0,
+          "kept": 657,
+          "median_gap_days_dropped": null,
+          "median_gap_days_kept": 0.2148,
+          "share_inside_shipped_radius_dropped": null,
+          "share_inside_shipped_radius_kept": 0.7352
+        },
+        "validation": {
+          "children": 429,
+          "dropped": 52,
+          "kept": 377,
+          "median_gap_days_dropped": 38.3351,
+          "median_gap_days_kept": 0.1262,
+          "share_inside_shipped_radius_dropped": 0.8269,
+          "share_inside_shipped_radius_kept": 0.6684
+        }
+      },
+      "near_negatives": {
+        "city_buffer": {
+          "inside": 264,
+          "no_number": 5,
+          "outside": 351
+        },
+        "count_if_any_request_could_be_the_other": 1327,
+        "same_geocode_share": 0.229
+      },
+      "pairs": {
+        "test": {
+          "far": 25,
+          "near": 27,
+          "positive": 81
+        },
+        "train": {
+          "far": 397,
+          "near": 412,
+          "positive": 657
+        },
+        "validation": {
+          "far": 208,
+          "near": 181,
+          "positive": 377
+        }
+      },
+      "positive_funnel": {
+        "crosses_a_boundary": 66,
+        "duplicates": 2797,
+        "kept": 1115,
+        "no_location": 0,
+        "parent_not_in_file": 1616
+      },
+      "positives_city_buffer": {
+        "inside": 625,
+        "no_number": 2,
+        "outside": 488
+      }
+    },
+    "pothole": {
+      "boundary_loss": {
+        "test": {
+          "children": 1078,
+          "dropped": 489,
+          "kept": 589,
+          "median_gap_days_dropped": 78.6865,
+          "median_gap_days_kept": 2.5405,
+          "share_inside_shipped_radius_dropped": 0.5542,
+          "share_inside_shipped_radius_kept": 0.6197
+        },
+        "train": {
+          "children": 22677,
+          "dropped": 95,
+          "kept": 22582,
+          "median_gap_days_dropped": 58.0646,
+          "median_gap_days_kept": 16.0459,
+          "share_inside_shipped_radius_dropped": 0.5789,
+          "share_inside_shipped_radius_kept": 0.5496
+        },
+        "validation": {
+          "children": 3749,
+          "dropped": 2178,
+          "kept": 1571,
+          "median_gap_days_dropped": 78.9797,
+          "median_gap_days_kept": 8.9202,
+          "share_inside_shipped_radius_dropped": 0.5055,
+          "share_inside_shipped_radius_kept": 0.5595
+        }
+      },
+      "near_negatives": {
+        "city_buffer": {
+          "inside": 2288,
+          "no_number": 68,
+          "outside": 15650
+        },
+        "count_if_any_request_could_be_the_other": 42719,
+        "same_geocode_share": 0.069
+      },
+      "pairs": {
+        "test": {
+          "far": 389,
+          "near": 453,
+          "positive": 589
+        },
+        "train": {
+          "far": 21325,
+          "near": 16671,
+          "positive": 22582
+        },
+        "validation": {
+          "far": 1311,
+          "near": 882,
+          "positive": 1571
+        }
+      },
+      "positive_funnel": {
+        "crosses_a_boundary": 2762,
+        "duplicates": 30950,
+        "kept": 24742,
+        "no_location": 4,
+        "parent_not_in_file": 3442
+      },
+      "positives_city_buffer": {
+        "inside": 11229,
+        "no_number": 54,
+        "outside": 13459
+      }
+    }
+  }
+}

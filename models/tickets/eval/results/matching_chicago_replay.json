@@ -1,0 +1,2443 @@
+{
+  "categories": {
+    "blocked_sidewalk": {
+      "final": {
+        "no reopen, accuracy 5": {
+          "accuracy_m": 5,
+          "best_on_validation": true,
+          "reopen": false,
+          "test": {
+            "merges": {
+              "agreeing_merges_inside_the_city_buffer": {
+                "inside": 151,
+                "no_number": 0,
+                "outside": 2
+              },
+              "city_duplicates": 170,
+              "city_duplicates_put_in_their_parents_ticket": 166,
+              "extra_at_distance_0_share": 0.1552,
+              "extra_distance_m": {
+                "50": 9.0145,
+                "75": 13.8309,
+                "90": 17.2179
+              },
+              "extra_inside_the_city_buffer": {
+                "inside": 83,
+                "no_number": 1,
+                "outside": 32
+              },
+              "extra_merges_the_city_did_not_flag": 116,
+              "extra_that_reopen_a_fixed_ticket": 0,
+              "extra_where_the_city_flagged_it_to_another_parent": 16,
+              "items": 1097,
+              "merges_the_city_also_flags": 153,
+              "of_which_reopening_a_fixed_ticket": 0,
+              "our_merges": 269,
+              "reopening_merges_days_after_the_fix": {},
+              "reopening_merges_within_one_day_of_the_fix": null
+            },
+            "scores": {
+              "ari": {
+                "hi": 0.8736,
+                "lo": 0.7021,
+                "point": 0.7933
+              },
+              "bcubed_f1": {
+                "hi": 0.9912,
+                "lo": 0.9801,
+                "point": 0.9861
+              },
+              "bcubed_precision": {
+                "hi": 0.9826,
+                "lo": 0.961,
+                "point": 0.9726
+              },
+              "bcubed_recall": {
+                "hi": 1.0,
+                "lo": 1.0,
+                "point": 1.0
+              },
+              "pairs_f1": {
+                "hi": 0.8736,
+                "lo": 0.7021,
+                "point": 0.7933
+              },
+              "pairs_precision": {
+                "hi": 0.7756,
+                "lo": 0.541,
+                "point": 0.6574
+              },
+              "pairs_recall": {
+                "hi": 1.0,
+                "lo": 1.0,
+                "point": 1.0
+              }
+            }
+          },
+          "validation": {
+            "ari": 0.7946,
+            "bcubed_f1": 0.9799,
+            "bcubed_precision": 0.962,
+            "bcubed_recall": 0.9985,
+            "city_duplicates": 248,
+            "city_duplicates_put_in_their_parents_ticket": 244,
+            "extra_merges": 162,
+            "our_merges": 392,
+            "pairs_f1": 0.7946,
+            "pairs_precision": 0.6667,
+            "pairs_recall": 0.9834
+          }
+        },
+        "no reopen, accuracy None": {
+          "accuracy_m": null,
+          "best_on_validation": false,
+          "reopen": false,
+          "test": {
+            "merges": {
+              "agreeing_merges_inside_the_city_buffer": {
+                "inside": 133,
+                "no_number": 0,
+                "outside": 1
+              },
+              "city_duplicates": 170,
+              "city_duplicates_put_in_their_parents_ticket": 167,
+              "extra_at_distance_0_share": 0.0647,
+              "extra_distance_m": {
+                "50": 21.3321,
+                "75": 33.8234,
+                "90": 39.8447
+              },
+              "extra_inside_the_city_buffer": {
+                "inside": 93,
+                "no_number": 4,
+                "outside": 135
+              },
+              "extra_merges_the_city_did_not_flag": 232,
+              "extra_that_reopen_a_fixed_ticket": 0,
+              "extra_where_the_city_flagged_it_to_another_parent": 35,
+              "items": 1097,
+              "merges_the_city_also_flags": 134,
+              "of_which_reopening_a_fixed_ticket": 0,
+              "our_merges": 366,
+              "reopening_merges_days_after_the_fix": {},
+              "reopening_merges_within_one_day_of_the_fix": null
+            },
+            "scores": {
+              "ari": {
+                "hi": 0.7547,
+                "lo": 0.5599,
+                "point": 0.6635
+              },
+              "bcubed_f1": {
+                "hi": 0.9797,
+                "lo": 0.9643,
+                "point": 0.9725
+              },
+              "bcubed_precision": {
+                "hi": 0.9602,
+                "lo": 0.9311,
+                "point": 0.9465
+              },
+              "bcubed_recall": {
+                "hi": 1.0,
+                "lo": 1.0,
+                "point": 1.0
+              },
+              "pairs_f1": {
+                "hi": 0.7547,
+                "lo": 0.56,
+                "point": 0.6636
+              },
+              "pairs_precision": {
+                "hi": 0.6061,
+                "lo": 0.3889,
+                "point": 0.4965
+              },
+              "pairs_recall": {
+                "hi": 1.0,
+                "lo": 1.0,
+                "point": 1.0
+              }
+            }
+          },
+          "validation": {
+            "ari": 0.63,
+            "bcubed_f1": 0.959,
+            "bcubed_precision": 0.9222,
+            "bcubed_recall": 0.9988,
+            "city_duplicates": 248,
+            "city_duplicates_put_in_their_parents_ticket": 244,
+            "extra_merges": 345,
+            "our_merges": 555,
+            "pairs_f1": 0.6301,
+            "pairs_precision": 0.4635,
+            "pairs_recall": 0.9834
+          }
+        },
+        "reopen, accuracy 5": {
+          "accuracy_m": 5,
+          "best_on_validation": true,
+          "reopen": true,
+          "test": {
+            "merges": {
+              "agreeing_merges_inside_the_city_buffer": {
+                "inside": 151,
+                "no_number": 0,
+                "outside": 2
+              },
+              "city_duplicates": 170,
+              "city_duplicates_put_in_their_parents_ticket": 166,
+              "extra_at_distance_0_share": 0.1803,
+              "extra_distance_m": {
+                "50": 9.0106,
+                "75": 13.9439,
+                "90": 17.5733
+              },
+              "extra_inside_the_city_buffer": {
+                "inside": 87,
+                "no_number": 1,
+                "outside": 34
+              },
+              "extra_merges_the_city_did_not_flag": 122,
+              "extra_that_reopen_a_fixed_ticket": 6,
+              "extra_where_the_city_flagged_it_to_another_parent": 16,
+              "items": 1097,
+              "merges_the_city_also_flags": 153,
+              "of_which_reopening_a_fixed_ticket": 6,
+              "our_merges": 275,
+              "reopening_merges_days_after_the_fix": {
+                "25": 11.7664,
+                "50": 22.5021,
+                "75": 22.9193,
+                "90": 23.5752
+              },
+              "reopening_merges_within_one_day_of_the_fix": 0.1667
+            },
+            "scores": {
+              "ari": {
+                "hi": 0.8736,
+                "lo": 0.7021,
+                "point": 0.7933
+              },
+              "bcubed_f1": {
+                "hi": 0.9912,
+                "lo": 0.9801,
+                "point": 0.9861
+              },
+              "bcubed_precision": {
+                "hi": 0.9826,
+                "lo": 0.961,
+                "point": 0.9726
+              },
+              "bcubed_recall": {
+                "hi": 1.0,
+                "lo": 1.0,
+                "point": 1.0
+              },
+              "pairs_f1": {
+                "hi": 0.8736,
+                "lo": 0.7021,
+                "point": 0.7933
+              },
+              "pairs_precision": {
+                "hi": 0.7756,
+                "lo": 0.541,
+                "point": 0.6574
+              },
+              "pairs_recall": {
+                "hi": 1.0,
+                "lo": 1.0,
+                "point": 1.0
+              }
+            }
+          },
+          "validation": {
+            "ari": 0.7946,
+            "bcubed_f1": 0.9799,
+            "bcubed_precision": 0.962,
+            "bcubed_recall": 0.9985,
+            "city_duplicates": 248,
+            "city_duplicates_put_in_their_parents_ticket": 244,
+            "extra_merges": 169,
+            "our_merges": 398,
+            "pairs_f1": 0.7946,
+            "pairs_precision": 0.6667,
+            "pairs_recall": 0.9834
+          }
+        },
+        "reopen, accuracy None": {
+          "accuracy_m": null,
+          "best_on_validation": false,
+          "reopen": true,
+          "test": {
+            "merges": {
+              "agreeing_merges_inside_the_city_buffer": {
+                "inside": 133,
+                "no_number": 0,
+                "outside": 1
+              },
+              "city_duplicates": 170,
+              "city_duplicates_put_in_their_parents_ticket": 168,
+              "extra_at_distance_0_share": 0.0788,
+              "extra_distance_m": {
+                "50": 21.0555,
+                "75": 33.7647,
+                "90": 39.8496
+              },
+              "extra_inside_the_city_buffer": {
+                "inside": 97,
+                "no_number": 4,
+                "outside": 140
+              },
+              "extra_merges_the_city_did_not_flag": 241,
+              "extra_that_reopen_a_fixed_ticket": 9,
+              "extra_where_the_city_flagged_it_to_another_parent": 36,
+              "items": 1097,
+              "merges_the_city_also_flags": 134,
+              "of_which_reopening_a_fixed_ticket": 9,
+              "our_merges": 375,
+              "reopening_merges_days_after_the_fix": {
+                "25": 8.2608,
+                "50": 22.7208,
+                "75": 24.165,
+                "90": 29.308
+              },
+              "reopening_merges_within_one_day_of_the_fix": 0.1111
+            },
+            "scores": {
+              "ari": {
+                "hi": 0.7547,
+                "lo": 0.5599,
+                "point": 0.6635
+              },
+              "bcubed_f1": {
+                "hi": 0.9797,
+                "lo": 0.9643,
+                "point": 0.9725
+              },
+              "bcubed_precision": {
+                "hi": 0.9602,
+                "lo": 0.9311,
+                "point": 0.9465
+              },
+              "bcubed_recall": {
+                "hi": 1.0,
+                "lo": 1.0,
+                "point": 1.0
+              },
+              "pairs_f1": {
+                "hi": 0.7547,
+                "lo": 0.56,
+                "point": 0.6636
+              },
+              "pairs_precision": {
+                "hi": 0.6061,
+                "lo": 0.3889,
+                "point": 0.4965
+              },
+              "pairs_recall": {
+                "hi": 1.0,
+                "lo": 1.0,
+                "point": 1.0
+              }
+            }
+          },
+          "validation": {
+            "ari": 0.6289,
+            "bcubed_f1": 0.9587,
+            "bcubed_precision": 0.9217,
+            "bcubed_recall": 0.9988,
+            "city_duplicates": 248,
+            "city_duplicates_put_in_their_parents_ticket": 244,
+            "extra_merges": 355,
+            "our_merges": 564,
+            "pairs_f1": 0.629,
+            "pairs_precision": 0.4623,
+            "pairs_recall": 0.9834
+          }
+        }
+      },
+      "left_out_duplicates_with_parent_not_in_file": 1752,
+      "never_merge": {
+        "test": {
+          "ari": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "point": 0.0
+          },
+          "bcubed_f1": {
+            "hi": 0.9783,
+            "lo": 0.9628,
+            "point": 0.9709
+          },
+          "bcubed_precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "bcubed_recall": {
+            "hi": 0.9574,
+            "lo": 0.9283,
+            "point": 0.9435
+          },
+          "pairs_f1": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "point": 0.0
+          },
+          "pairs_precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "pairs_recall": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "point": 0.0
+          }
+        },
+        "validation": {
+          "ari": 0.0,
+          "bcubed_f1": 0.9673,
+          "bcubed_precision": 1.0,
+          "bcubed_recall": 0.9367,
+          "pairs_f1": 0.0,
+          "pairs_precision": 1.0,
+          "pairs_recall": 0.0
+        }
+      },
+      "paired_test": {
+        "reopen off, best accuracy on validation (5) minus shipped": {
+          "ari": {
+            "hi": 0.1882,
+            "lo": 0.0801,
+            "point": 0.1298
+          },
+          "bcubed_f1": {
+            "hi": 0.0189,
+            "lo": 0.0089,
+            "point": 0.0136
+          },
+          "pairs_f1": {
+            "hi": 0.1882,
+            "lo": 0.0801,
+            "point": 0.1297
+          }
+        },
+        "reopen off, shipped minus never merge": {
+          "ari": {
+            "hi": 0.7547,
+            "lo": 0.5599,
+            "point": 0.6635
+          },
+          "bcubed_f1": {
+            "hi": 0.0128,
+            "lo": -0.01,
+            "point": 0.0016
+          },
+          "pairs_f1": {
+            "hi": 0.7547,
+            "lo": 0.56,
+            "point": 0.6636
+          }
+        },
+        "reopen on minus reopen off (shipped accuracy)": {
+          "ari": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "point": 0.0
+          },
+          "bcubed_f1": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "point": 0.0
+          },
+          "pairs_f1": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "point": 0.0
+          }
+        },
+        "reopen on, best accuracy on validation (5) minus shipped": {
+          "ari": {
+            "hi": 0.1882,
+            "lo": 0.0801,
+            "point": 0.1298
+          },
+          "bcubed_f1": {
+            "hi": 0.0189,
+            "lo": 0.0089,
+            "point": 0.0136
+          },
+          "pairs_f1": {
+            "hi": 0.1882,
+            "lo": 0.0801,
+            "point": 0.1297
+          }
+        },
+        "reopen on, shipped minus never merge": {
+          "ari": {
+            "hi": 0.7547,
+            "lo": 0.5599,
+            "point": 0.6635
+          },
+          "bcubed_f1": {
+            "hi": 0.0128,
+            "lo": -0.01,
+            "point": 0.0016
+          },
+          "pairs_f1": {
+            "hi": 0.7547,
+            "lo": 0.56,
+            "point": 0.6636
+          }
+        }
+      },
+      "requests": 7899,
+      "scored_requests": {
+        "test": 1097,
+        "validation": 1958
+      },
+      "validation_sweep": {
+        "no reopen, accuracy 10": {
+          "ari": 0.7015,
+          "bcubed_f1": 0.9698,
+          "bcubed_precision": 0.9414,
+          "bcubed_recall": 1.0,
+          "city_duplicates": 248,
+          "city_duplicates_put_in_their_parents_ticket": 247,
+          "extra_merges": 250,
+          "our_merges": 469,
+          "pairs_f1": 0.7016,
+          "pairs_precision": 0.5403,
+          "pairs_recall": 1.0
+        },
+        "no reopen, accuracy 20": {
+          "ari": 0.5401,
+          "bcubed_f1": 0.9448,
+          "bcubed_precision": 0.8963,
+          "bcubed_recall": 0.9988,
+          "city_duplicates": 248,
+          "city_duplicates_put_in_their_parents_ticket": 244,
+          "extra_merges": 499,
+          "our_merges": 695,
+          "pairs_f1": 0.5402,
+          "pairs_precision": 0.3724,
+          "pairs_recall": 0.9834
+        },
+        "no reopen, accuracy 5": {
+          "ari": 0.7946,
+          "bcubed_f1": 0.9799,
+          "bcubed_precision": 0.962,
+          "bcubed_recall": 0.9985,
+          "city_duplicates": 248,
+          "city_duplicates_put_in_their_parents_ticket": 244,
+          "extra_merges": 162,
+          "our_merges": 392,
+          "pairs_f1": 0.7946,
+          "pairs_precision": 0.6667,
+          "pairs_recall": 0.9834
+        },
+        "no reopen, accuracy None": {
+          "ari": 0.63,
+          "bcubed_f1": 0.959,
+          "bcubed_precision": 0.9222,
+          "bcubed_recall": 0.9988,
+          "city_duplicates": 248,
+          "city_duplicates_put_in_their_parents_ticket": 244,
+          "extra_merges": 345,
+          "our_merges": 555,
+          "pairs_f1": 0.6301,
+          "pairs_precision": 0.4635,
+          "pairs_recall": 0.9834
+        },
+        "reopen, accuracy 10": {
+          "ari": 0.7015,
+          "bcubed_f1": 0.9698,
+          "bcubed_precision": 0.9414,
+          "bcubed_recall": 1.0,
+          "city_duplicates": 248,
+          "city_duplicates_put_in_their_parents_ticket": 247,
+          "extra_merges": 257,
+          "our_merges": 475,
+          "pairs_f1": 0.7016,
+          "pairs_precision": 0.5403,
+          "pairs_recall": 1.0
+        },
+        "reopen, accuracy 20": {
+          "ari": 0.5393,
+          "bcubed_f1": 0.9445,
+          "bcubed_precision": 0.8958,
+          "bcubed_recall": 0.9988,
+          "city_duplicates": 248,
+          "city_duplicates_put_in_their_parents_ticket": 244,
+          "extra_merges": 510,
+          "our_merges": 705,
+          "pairs_f1": 0.5394,
+          "pairs_precision": 0.3716,
+          "pairs_recall": 0.9834
+        },
+        "reopen, accuracy 5": {
+          "ari": 0.7946,
+          "bcubed_f1": 0.9799,
+          "bcubed_precision": 0.962,
+          "bcubed_recall": 0.9985,
+          "city_duplicates": 248,
+          "city_duplicates_put_in_their_parents_ticket": 244,
+          "extra_merges": 169,
+          "our_merges": 398,
+          "pairs_f1": 0.7946,
+          "pairs_precision": 0.6667,
+          "pairs_recall": 0.9834
+        },
+        "reopen, accuracy None": {
+          "ari": 0.6289,
+          "bcubed_f1": 0.9587,
+          "bcubed_precision": 0.9217,
+          "bcubed_recall": 0.9988,
+          "city_duplicates": 248,
+          "city_duplicates_put_in_their_parents_ticket": 244,
+          "extra_merges": 355,
+          "our_merges": 564,
+          "pairs_f1": 0.629,
+          "pairs_precision": 0.4623,
+          "pairs_recall": 0.9834
+        }
+      }
+    },
+    "broken_streetlight": {
+      "final": {
+        "no reopen, accuracy 10": {
+          "accuracy_m": 10,
+          "best_on_validation": true,
+          "reopen": false,
+          "test": {
+            "merges": {
+              "agreeing_merges_inside_the_city_buffer": {
+                "inside": 467,
+                "no_number": 5,
+                "outside": 98
+              },
+              "city_duplicates": 735,
+              "city_duplicates_put_in_their_parents_ticket": 578,
+              "extra_at_distance_0_share": 0.3297,
+              "extra_distance_m": {
+                "50": 11.4599,
+                "75": 23.4572,
+                "90": 28.4077
+              },
+              "extra_inside_the_city_buffer": {
+                "inside": 310,
+                "no_number": 0,
+                "outside": 242
+              },
+              "extra_merges_the_city_did_not_flag": 552,
+              "extra_that_reopen_a_fixed_ticket": 0,
+              "extra_where_the_city_flagged_it_to_another_parent": 52,
+              "items": 8019,
+              "merges_the_city_also_flags": 570,
+              "of_which_reopening_a_fixed_ticket": 0,
+              "our_merges": 1122,
+              "reopening_merges_days_after_the_fix": {},
+              "reopening_merges_within_one_day_of_the_fix": null
+            },
+            "scores": {
+              "ari": {
+                "hi": 0.6959,
+                "lo": 0.6087,
+                "point": 0.6529
+              },
+              "bcubed_f1": {
+                "hi": 0.9666,
+                "lo": 0.9583,
+                "point": 0.9625
+              },
+              "bcubed_precision": {
+                "hi": 0.9504,
+                "lo": 0.9372,
+                "point": 0.9441
+              },
+              "bcubed_recall": {
+                "hi": 0.9856,
+                "lo": 0.9778,
+                "point": 0.9816
+              },
+              "pairs_f1": {
+                "hi": 0.6959,
+                "lo": 0.6087,
+                "point": 0.6529
+              },
+              "pairs_precision": {
+                "hi": 0.6075,
+                "lo": 0.5077,
+                "point": 0.5577
+              },
+              "pairs_recall": {
+                "hi": 0.8382,
+                "lo": 0.7374,
+                "point": 0.7872
+              }
+            }
+          },
+          "validation": {
+            "ari": 0.7638,
+            "bcubed_f1": 0.9716,
+            "bcubed_precision": 0.9609,
+            "bcubed_recall": 0.9825,
+            "city_duplicates": 986,
+            "city_duplicates_put_in_their_parents_ticket": 832,
+            "extra_merges": 436,
+            "our_merges": 1240,
+            "pairs_f1": 0.7638,
+            "pairs_precision": 0.7006,
+            "pairs_recall": 0.8395
+          }
+        },
+        "no reopen, accuracy None": {
+          "accuracy_m": null,
+          "best_on_validation": false,
+          "reopen": false,
+          "test": {
+            "merges": {
+              "agreeing_merges_inside_the_city_buffer": {
+                "inside": 457,
+                "no_number": 5,
+                "outside": 115
+              },
+              "city_duplicates": 735,
+              "city_duplicates_put_in_their_parents_ticket": 612,
+              "extra_at_distance_0_share": 0.2258,
+              "extra_distance_m": {
+                "50": 23.0836,
+                "75": 34.1915,
+                "90": 39.9812
+              },
+              "extra_inside_the_city_buffer": {
+                "inside": 334,
+                "no_number": 1,
+                "outside": 449
+              },
+              "extra_merges_the_city_did_not_flag": 784,
+              "extra_that_reopen_a_fixed_ticket": 0,
+              "extra_where_the_city_flagged_it_to_another_parent": 83,
+              "items": 8019,
+              "merges_the_city_also_flags": 577,
+              "of_which_reopening_a_fixed_ticket": 0,
+              "our_merges": 1361,
+              "reopening_merges_days_after_the_fix": {},
+              "reopening_merges_within_one_day_of_the_fix": null
+            },
+            "scores": {
+              "ari": {
+                "hi": 0.6367,
+                "lo": 0.5603,
+                "point": 0.5978
+              },
+              "bcubed_f1": {
+                "hi": 0.9547,
+                "lo": 0.9456,
+                "point": 0.9502
+              },
+              "bcubed_precision": {
+                "hi": 0.924,
+                "lo": 0.9098,
+                "point": 0.917
+              },
+              "bcubed_recall": {
+                "hi": 0.9891,
+                "lo": 0.9826,
+                "point": 0.986
+              },
+              "pairs_f1": {
+                "hi": 0.6367,
+                "lo": 0.5603,
+                "point": 0.5978
+              },
+              "pairs_precision": {
+                "hi": 0.512,
+                "lo": 0.4254,
+                "point": 0.4676
+              },
+              "pairs_recall": {
+                "hi": 0.8737,
+                "lo": 0.7839,
+                "point": 0.8286
+              }
+            }
+          },
+          "validation": {
+            "ari": 0.7003,
+            "bcubed_f1": 0.9585,
+            "bcubed_precision": 0.9305,
+            "bcubed_recall": 0.9883,
+            "city_duplicates": 986,
+            "city_duplicates_put_in_their_parents_ticket": 883,
+            "extra_merges": 720,
+            "our_merges": 1541,
+            "pairs_f1": 0.7003,
+            "pairs_precision": 0.5772,
+            "pairs_recall": 0.8902
+          }
+        },
+        "reopen, accuracy 5": {
+          "accuracy_m": 5,
+          "best_on_validation": true,
+          "reopen": true,
+          "test": {
+            "merges": {
+              "agreeing_merges_inside_the_city_buffer": {
+                "inside": 412,
+                "no_number": 2,
+                "outside": 44
+              },
+              "city_duplicates": 735,
+              "city_duplicates_put_in_their_parents_ticket": 518,
+              "extra_at_distance_0_share": 0.7036,
+              "extra_distance_m": {
+                "50": 0.0,
+                "75": 6.5327,
+                "90": 13.0608
+              },
+              "extra_inside_the_city_buffer": {
+                "inside": 1180,
+                "no_number": 0,
+                "outside": 173
+              },
+              "extra_merges_the_city_did_not_flag": 1353,
+              "extra_that_reopen_a_fixed_ticket": 911,
+              "extra_where_the_city_flagged_it_to_another_parent": 120,
+              "items": 8019,
+              "merges_the_city_also_flags": 458,
+              "of_which_reopening_a_fixed_ticket": 911,
+              "our_merges": 1811,
+              "reopening_merges_days_after_the_fix": {
+                "25": 2.982,
+                "50": 10.1273,
+                "75": 18.2036,
+                "90": 24.3751
+              },
+              "reopening_merges_within_one_day_of_the_fix": 0.135
+            },
+            "scores": {
+              "ari": {
+                "hi": 0.4745,
+                "lo": 0.3869,
+                "point": 0.4323
+              },
+              "bcubed_f1": {
+                "hi": 0.9238,
+                "lo": 0.9135,
+                "point": 0.9188
+              },
+              "bcubed_precision": {
+                "hi": 0.8772,
+                "lo": 0.8592,
+                "point": 0.8684
+              },
+              "bcubed_recall": {
+                "hi": 0.9797,
+                "lo": 0.9707,
+                "point": 0.9753
+              },
+              "pairs_f1": {
+                "hi": 0.4745,
+                "lo": 0.3869,
+                "point": 0.4323
+              },
+              "pairs_precision": {
+                "hi": 0.3527,
+                "lo": 0.2681,
+                "point": 0.3117
+              },
+              "pairs_recall": {
+                "hi": 0.7587,
+                "lo": 0.6447,
+                "point": 0.7053
+              }
+            }
+          },
+          "validation": {
+            "ari": 0.47,
+            "bcubed_f1": 0.9207,
+            "bcubed_precision": 0.8753,
+            "bcubed_recall": 0.9711,
+            "city_duplicates": 986,
+            "city_duplicates_put_in_their_parents_ticket": 729,
+            "extra_merges": 1414,
+            "our_merges": 2012,
+            "pairs_f1": 0.4701,
+            "pairs_precision": 0.347,
+            "pairs_recall": 0.7282
+          }
+        },
+        "reopen, accuracy None": {
+          "accuracy_m": null,
+          "best_on_validation": false,
+          "reopen": true,
+          "test": {
+            "merges": {
+              "agreeing_merges_inside_the_city_buffer": {
+                "inside": 382,
+                "no_number": 5,
+                "outside": 95
+              },
+              "city_duplicates": 735,
+              "city_duplicates_put_in_their_parents_ticket": 612,
+              "extra_at_distance_0_share": 0.4455,
+              "extra_distance_m": {
+                "50": 8.7914,
+                "75": 28.557,
+                "90": 37.787
+              },
+              "extra_inside_the_city_buffer": {
+                "inside": 1217,
+                "no_number": 5,
+                "outside": 778
+              },
+              "extra_merges_the_city_did_not_flag": 2000,
+              "extra_that_reopen_a_fixed_ticket": 1125,
+              "extra_where_the_city_flagged_it_to_another_parent": 185,
+              "items": 8019,
+              "merges_the_city_also_flags": 482,
+              "of_which_reopening_a_fixed_ticket": 1125,
+              "our_merges": 2482,
+              "reopening_merges_days_after_the_fix": {
+                "25": 2.9186,
+                "50": 10.0405,
+                "75": 18.6691,
+                "90": 24.3861
+              },
+              "reopening_merges_within_one_day_of_the_fix": 0.1529
+            },
+            "scores": {
+              "ari": {
+                "hi": 0.4171,
+                "lo": 0.3413,
+                "point": 0.3805
+              },
+              "bcubed_f1": {
+                "hi": 0.8871,
+                "lo": 0.8729,
+                "point": 0.8803
+              },
+              "bcubed_precision": {
+                "hi": 0.8056,
+                "lo": 0.7834,
+                "point": 0.795
+              },
+              "bcubed_recall": {
+                "hi": 0.9895,
+                "lo": 0.9825,
+                "point": 0.9862
+              },
+              "pairs_f1": {
+                "hi": 0.4172,
+                "lo": 0.3413,
+                "point": 0.3805
+              },
+              "pairs_precision": {
+                "hi": 0.2772,
+                "lo": 0.2155,
+                "point": 0.247
+              },
+              "pairs_recall": {
+                "hi": 0.8754,
+                "lo": 0.7822,
+                "point": 0.8286
+              }
+            }
+          },
+          "validation": {
+            "ari": 0.4151,
+            "bcubed_f1": 0.8816,
+            "bcubed_precision": 0.796,
+            "bcubed_recall": 0.9878,
+            "city_duplicates": 986,
+            "city_duplicates_put_in_their_parents_ticket": 878,
+            "extra_merges": 2230,
+            "our_merges": 2883,
+            "pairs_f1": 0.4152,
+            "pairs_precision": 0.2711,
+            "pairs_recall": 0.8859
+          }
+        }
+      },
+      "left_out_duplicates_with_parent_not_in_file": 72,
+      "never_merge": {
+        "test": {
+          "ari": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "point": 0.0
+          },
+          "bcubed_f1": {
+            "hi": 0.9584,
+            "lo": 0.9494,
+            "point": 0.9538
+          },
+          "bcubed_precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "bcubed_recall": {
+            "hi": 0.9202,
+            "lo": 0.9037,
+            "point": 0.9117
+          },
+          "pairs_f1": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "point": 0.0
+          },
+          "pairs_precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "pairs_recall": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "point": 0.0
+          }
+        },
+        "validation": {
+          "ari": 0.0,
+          "bcubed_f1": 0.9445,
+          "bcubed_precision": 1.0,
+          "bcubed_recall": 0.8949,
+          "pairs_f1": 0.0,
+          "pairs_precision": 1.0,
+          "pairs_recall": 0.0
+        }
+      },
+      "paired_test": {
+        "reopen off, best accuracy on validation (10) minus shipped": {
+          "ari": {
+            "hi": 0.0699,
+            "lo": 0.0398,
+            "point": 0.055
+          },
+          "bcubed_f1": {
+            "hi": 0.0145,
+            "lo": 0.0101,
+            "point": 0.0123
+          },
+          "pairs_f1": {
+            "hi": 0.0699,
+            "lo": 0.0398,
+            "point": 0.055
+          }
+        },
+        "reopen off, shipped minus never merge": {
+          "ari": {
+            "hi": 0.6367,
+            "lo": 0.5603,
+            "point": 0.5978
+          },
+          "bcubed_f1": {
+            "hi": 0.0016,
+            "lo": -0.0089,
+            "point": -0.0036
+          },
+          "pairs_f1": {
+            "hi": 0.6367,
+            "lo": 0.5603,
+            "point": 0.5978
+          }
+        },
+        "reopen on minus reopen off (shipped accuracy)": {
+          "ari": {
+            "hi": -0.1896,
+            "lo": -0.2473,
+            "point": -0.2173
+          },
+          "bcubed_f1": {
+            "hi": -0.0648,
+            "lo": -0.0757,
+            "point": -0.0699
+          },
+          "pairs_f1": {
+            "hi": -0.1896,
+            "lo": -0.2473,
+            "point": -0.2173
+          }
+        },
+        "reopen on, best accuracy on validation (5) minus shipped": {
+          "ari": {
+            "hi": 0.0706,
+            "lo": 0.0325,
+            "point": 0.0518
+          },
+          "bcubed_f1": {
+            "hi": 0.042,
+            "lo": 0.0349,
+            "point": 0.0385
+          },
+          "pairs_f1": {
+            "hi": 0.0706,
+            "lo": 0.0325,
+            "point": 0.0518
+          }
+        },
+        "reopen on, shipped minus never merge": {
+          "ari": {
+            "hi": 0.4171,
+            "lo": 0.3413,
+            "point": 0.3805
+          },
+          "bcubed_f1": {
+            "hi": -0.0661,
+            "lo": -0.0816,
+            "point": -0.0735
+          },
+          "pairs_f1": {
+            "hi": 0.4172,
+            "lo": 0.3413,
+            "point": 0.3805
+          }
+        }
+      },
+      "requests": 35939,
+      "scored_requests": {
+        "test": 8019,
+        "validation": 9067
+      },
+      "validation_sweep": {
+        "no reopen, accuracy 10": {
+          "ari": 0.7638,
+          "bcubed_f1": 0.9716,
+          "bcubed_precision": 0.9609,
+          "bcubed_recall": 0.9825,
+          "city_duplicates": 986,
+          "city_duplicates_put_in_their_parents_ticket": 832,
+          "extra_merges": 436,
+          "our_merges": 1240,
+          "pairs_f1": 0.7638,
+          "pairs_precision": 0.7006,
+          "pairs_recall": 0.8395
+        },
+        "no reopen, accuracy 20": {
+          "ari": 0.6263,
+          "bcubed_f1": 0.9407,
+          "bcubed_precision": 0.8925,
+          "bcubed_recall": 0.9943,
+          "city_duplicates": 986,
+          "city_duplicates_put_in_their_parents_ticket": 927,
+          "extra_merges": 1093,
+          "our_merges": 1921,
+          "pairs_f1": 0.6264,
+          "pairs_precision": 0.4691,
+          "pairs_recall": 0.9422
+        },
+        "no reopen, accuracy 5": {
+          "ari": 0.753,
+          "bcubed_f1": 0.9748,
+          "bcubed_precision": 0.9782,
+          "bcubed_recall": 0.9713,
+          "city_duplicates": 986,
+          "city_duplicates_put_in_their_parents_ticket": 732,
+          "extra_merges": 260,
+          "our_merges": 996,
+          "pairs_f1": 0.753,
+          "pairs_precision": 0.7779,
+          "pairs_recall": 0.7297
+        },
+        "no reopen, accuracy None": {
+          "ari": 0.7003,
+          "bcubed_f1": 0.9585,
+          "bcubed_precision": 0.9305,
+          "bcubed_recall": 0.9883,
+          "city_duplicates": 986,
+          "city_duplicates_put_in_their_parents_ticket": 883,
+          "extra_merges": 720,
+          "our_merges": 1541,
+          "pairs_f1": 0.7003,
+          "pairs_precision": 0.5772,
+          "pairs_recall": 0.8902
+        },
+        "reopen, accuracy 10": {
+          "ari": 0.4667,
+          "bcubed_f1": 0.9076,
+          "bcubed_precision": 0.8431,
+          "bcubed_recall": 0.9828,
+          "city_duplicates": 986,
+          "city_duplicates_put_in_their_parents_ticket": 833,
+          "extra_merges": 1761,
+          "our_merges": 2412,
+          "pairs_f1": 0.4667,
+          "pairs_precision": 0.3227,
+          "pairs_recall": 0.8431
+        },
+        "reopen, accuracy 20": {
+          "ari": 0.3593,
+          "bcubed_f1": 0.8493,
+          "bcubed_precision": 0.7415,
+          "bcubed_recall": 0.9938,
+          "city_duplicates": 986,
+          "city_duplicates_put_in_their_parents_ticket": 923,
+          "extra_merges": 2782,
+          "our_merges": 3412,
+          "pairs_f1": 0.3594,
+          "pairs_precision": 0.2222,
+          "pairs_recall": 0.9387
+        },
+        "reopen, accuracy 5": {
+          "ari": 0.47,
+          "bcubed_f1": 0.9207,
+          "bcubed_precision": 0.8753,
+          "bcubed_recall": 0.9711,
+          "city_duplicates": 986,
+          "city_duplicates_put_in_their_parents_ticket": 729,
+          "extra_merges": 1414,
+          "our_merges": 2012,
+          "pairs_f1": 0.4701,
+          "pairs_precision": 0.347,
+          "pairs_recall": 0.7282
+        },
+        "reopen, accuracy None": {
+          "ari": 0.4151,
+          "bcubed_f1": 0.8816,
+          "bcubed_precision": 0.796,
+          "bcubed_recall": 0.9878,
+          "city_duplicates": 986,
+          "city_duplicates_put_in_their_parents_ticket": 878,
+          "extra_merges": 2230,
+          "our_merges": 2883,
+          "pairs_f1": 0.4152,
+          "pairs_precision": 0.2711,
+          "pairs_recall": 0.8859
+        }
+      }
+    },
+    "flooded_drain": {
+      "final": {
+        "no reopen, accuracy 20": {
+          "accuracy_m": 20,
+          "best_on_validation": true,
+          "reopen": false,
+          "test": {
+            "merges": {
+              "agreeing_merges_inside_the_city_buffer": {
+                "inside": 52,
+                "no_number": 0,
+                "outside": 23
+              },
+              "city_duplicates": 95,
+              "city_duplicates_put_in_their_parents_ticket": 79,
+              "extra_at_distance_0_share": 0.2561,
+              "extra_distance_m": {
+                "50": 23.9254,
+                "75": 40.9103,
+                "90": 48.4122
+              },
+              "extra_inside_the_city_buffer": {
+                "inside": 38,
+                "no_number": 0,
+                "outside": 44
+              },
+              "extra_merges_the_city_did_not_flag": 82,
+              "extra_that_reopen_a_fixed_ticket": 0,
+              "extra_where_the_city_flagged_it_to_another_parent": 6,
+              "items": 1087,
+              "merges_the_city_also_flags": 75,
+              "of_which_reopening_a_fixed_ticket": 0,
+              "our_merges": 157,
+              "reopening_merges_days_after_the_fix": {},
+              "reopening_merges_within_one_day_of_the_fix": null
+            },
+            "scores": {
+              "ari": {
+                "hi": 0.8177,
+                "lo": 0.6602,
+                "point": 0.7437
+              },
+              "bcubed_f1": {
+                "hi": 0.9861,
+                "lo": 0.9731,
+                "point": 0.9802
+              },
+              "bcubed_precision": {
+                "hi": 0.9846,
+                "lo": 0.9626,
+                "point": 0.9745
+              },
+              "bcubed_recall": {
+                "hi": 0.9918,
+                "lo": 0.9787,
+                "point": 0.9859
+              },
+              "pairs_f1": {
+                "hi": 0.8177,
+                "lo": 0.6603,
+                "point": 0.7437
+              },
+              "pairs_precision": {
+                "hi": 0.7875,
+                "lo": 0.5714,
+                "point": 0.6789
+              },
+              "pairs_recall": {
+                "hi": 0.9,
+                "lo": 0.7312,
+                "point": 0.8222
+              }
+            }
+          },
+          "validation": {
+            "ari": 0.6185,
+            "bcubed_f1": 0.9531,
+            "bcubed_precision": 0.9394,
+            "bcubed_recall": 0.9671,
+            "city_duplicates": 429,
+            "city_duplicates_put_in_their_parents_ticket": 326,
+            "extra_merges": 353,
+            "our_merges": 622,
+            "pairs_f1": 0.6186,
+            "pairs_precision": 0.5279,
+            "pairs_recall": 0.7469
+          }
+        },
+        "no reopen, accuracy None": {
+          "accuracy_m": null,
+          "best_on_validation": false,
+          "reopen": false,
+          "test": {
+            "merges": {
+              "agreeing_merges_inside_the_city_buffer": {
+                "inside": 52,
+                "no_number": 0,
+                "outside": 20
+              },
+              "city_duplicates": 95,
+              "city_duplicates_put_in_their_parents_ticket": 72,
+              "extra_at_distance_0_share": 0.3134,
+              "extra_distance_m": {
+                "50": 11.6461,
+                "75": 32.7562,
+                "90": 40.4205
+              },
+              "extra_inside_the_city_buffer": {
+                "inside": 37,
+                "no_number": 0,
+                "outside": 30
+              },
+              "extra_merges_the_city_did_not_flag": 67,
+              "extra_that_reopen_a_fixed_ticket": 0,
+              "extra_where_the_city_flagged_it_to_another_parent": 2,
+              "items": 1087,
+              "merges_the_city_also_flags": 72,
+              "of_which_reopening_a_fixed_ticket": 0,
+              "our_merges": 139,
+              "reopening_merges_days_after_the_fix": {},
+              "reopening_merges_within_one_day_of_the_fix": null
+            },
+            "scores": {
+              "ari": {
+                "hi": 0.8026,
+                "lo": 0.6284,
+                "point": 0.7173
+              },
+              "bcubed_f1": {
+                "hi": 0.9854,
+                "lo": 0.9721,
+                "point": 0.979
+              },
+              "bcubed_precision": {
+                "hi": 0.9869,
+                "lo": 0.9676,
+                "point": 0.9782
+              },
+              "bcubed_recall": {
+                "hi": 0.9879,
+                "lo": 0.9711,
+                "point": 0.9798
+              },
+              "pairs_f1": {
+                "hi": 0.8026,
+                "lo": 0.6285,
+                "point": 0.7174
+              },
+              "pairs_precision": {
+                "hi": 0.8182,
+                "lo": 0.5909,
+                "point": 0.7021
+              },
+              "pairs_recall": {
+                "hi": 0.8256,
+                "lo": 0.6337,
+                "point": 0.7333
+              }
+            }
+          },
+          "validation": {
+            "ari": 0.6074,
+            "bcubed_f1": 0.9544,
+            "bcubed_precision": 0.9513,
+            "bcubed_recall": 0.9575,
+            "city_duplicates": 429,
+            "city_duplicates_put_in_their_parents_ticket": 287,
+            "extra_merges": 287,
+            "our_merges": 542,
+            "pairs_f1": 0.6075,
+            "pairs_precision": 0.5559,
+            "pairs_recall": 0.6697
+          }
+        },
+        "reopen, accuracy 20": {
+          "accuracy_m": 20,
+          "best_on_validation": true,
+          "reopen": true,
+          "test": {
+            "merges": {
+              "agreeing_merges_inside_the_city_buffer": {
+                "inside": 43,
+                "no_number": 0,
+                "outside": 23
+              },
+              "city_duplicates": 95,
+              "city_duplicates_put_in_their_parents_ticket": 79,
+              "extra_at_distance_0_share": 0.3436,
+              "extra_distance_m": {
+                "50": 14.7391,
+                "75": 38.6666,
+                "90": 47.6634
+              },
+              "extra_inside_the_city_buffer": {
+                "inside": 87,
+                "no_number": 0,
+                "outside": 76
+              },
+              "extra_merges_the_city_did_not_flag": 163,
+              "extra_that_reopen_a_fixed_ticket": 74,
+              "extra_where_the_city_flagged_it_to_another_parent": 16,
+              "items": 1087,
+              "merges_the_city_also_flags": 66,
+              "of_which_reopening_a_fixed_ticket": 74,
+              "our_merges": 229,
+              "reopening_merges_days_after_the_fix": {
+                "25": 1.5546,
+                "50": 7.524,
+                "75": 16.0635,
+                "90": 24.1101
+              },
+              "reopening_merges_within_one_day_of_the_fix": 0.1892
+            },
+            "scores": {
+              "ari": {
+                "hi": 0.6131,
+                "lo": 0.4367,
+                "point": 0.5229
+              },
+              "bcubed_f1": {
+                "hi": 0.9658,
+                "lo": 0.9432,
+                "point": 0.9551
+              },
+              "bcubed_precision": {
+                "hi": 0.9446,
+                "lo": 0.9071,
+                "point": 0.9262
+              },
+              "bcubed_recall": {
+                "hi": 0.9925,
+                "lo": 0.9785,
+                "point": 0.9859
+              },
+              "pairs_f1": {
+                "hi": 0.6132,
+                "lo": 0.4369,
+                "point": 0.523
+              },
+              "pairs_precision": {
+                "hi": 0.48,
+                "lo": 0.3053,
+                "point": 0.3834
+              },
+              "pairs_recall": {
+                "hi": 0.9,
+                "lo": 0.7333,
+                "point": 0.8222
+              }
+            }
+          },
+          "validation": {
+            "ari": 0.4401,
+            "bcubed_f1": 0.9022,
+            "bcubed_precision": 0.8444,
+            "bcubed_recall": 0.9685,
+            "city_duplicates": 429,
+            "city_duplicates_put_in_their_parents_ticket": 329,
+            "extra_merges": 782,
+            "our_merges": 981,
+            "pairs_f1": 0.4402,
+            "pairs_precision": 0.3099,
+            "pairs_recall": 0.7594
+          }
+        },
+        "reopen, accuracy None": {
+          "accuracy_m": null,
+          "best_on_validation": false,
+          "reopen": true,
+          "test": {
+            "merges": {
+              "agreeing_merges_inside_the_city_buffer": {
+                "inside": 44,
+                "no_number": 0,
+                "outside": 19
+              },
+              "city_duplicates": 95,
+              "city_duplicates_put_in_their_parents_ticket": 74,
+              "extra_at_distance_0_share": 0.4,
+              "extra_distance_m": {
+                "50": 9.035,
+                "75": 28.1099,
+                "90": 40.4761
+              },
+              "extra_inside_the_city_buffer": {
+                "inside": 85,
+                "no_number": 0,
+                "outside": 60
+              },
+              "extra_merges_the_city_did_not_flag": 145,
+              "extra_that_reopen_a_fixed_ticket": 68,
+              "extra_where_the_city_flagged_it_to_another_parent": 13,
+              "items": 1087,
+              "merges_the_city_also_flags": 63,
+              "of_which_reopening_a_fixed_ticket": 68,
+              "our_merges": 208,
+              "reopening_merges_days_after_the_fix": {
+                "25": 2.0063,
+                "50": 7.524,
+                "75": 15.8597,
+                "90": 23.9051
+              },
+              "reopening_merges_within_one_day_of_the_fix": 0.1765
+            },
+            "scores": {
+              "ari": {
+                "hi": 0.6153,
+                "lo": 0.429,
+                "point": 0.521
+              },
+              "bcubed_f1": {
+                "hi": 0.9676,
+                "lo": 0.9462,
+                "point": 0.9568
+              },
+              "bcubed_precision": {
+                "hi": 0.951,
+                "lo": 0.9156,
+                "point": 0.9338
+              },
+              "bcubed_recall": {
+                "hi": 0.9886,
+                "lo": 0.9732,
+                "point": 0.981
+              },
+              "pairs_f1": {
+                "hi": 0.6154,
+                "lo": 0.4291,
+                "point": 0.5211
+              },
+              "pairs_precision": {
+                "hi": 0.5,
+                "lo": 0.3077,
+                "point": 0.3977
+              },
+              "pairs_recall": {
+                "hi": 0.8445,
+                "lo": 0.6629,
+                "point": 0.7556
+              }
+            }
+          },
+          "validation": {
+            "ari": 0.4367,
+            "bcubed_f1": 0.9106,
+            "bcubed_precision": 0.8678,
+            "bcubed_recall": 0.9578,
+            "city_duplicates": 429,
+            "city_duplicates_put_in_their_parents_ticket": 287,
+            "extra_merges": 665,
+            "our_merges": 860,
+            "pairs_f1": 0.4368,
+            "pairs_precision": 0.3233,
+            "pairs_recall": 0.6732
+          }
+        }
+      },
+      "left_out_duplicates_with_parent_not_in_file": 1616,
+      "never_merge": {
+        "test": {
+          "ari": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "point": 0.0
+          },
+          "bcubed_f1": {
+            "hi": 0.9686,
+            "lo": 0.9516,
+            "point": 0.9598
+          },
+          "bcubed_precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "bcubed_recall": {
+            "hi": 0.9391,
+            "lo": 0.9077,
+            "point": 0.9227
+          },
+          "pairs_f1": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "point": 0.0
+          },
+          "pairs_precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "pairs_recall": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "point": 0.0
+          }
+        },
+        "validation": {
+          "ari": 0.0,
+          "bcubed_f1": 0.9338,
+          "bcubed_precision": 1.0,
+          "bcubed_recall": 0.8758,
+          "pairs_f1": 0.0,
+          "pairs_precision": 1.0,
+          "pairs_recall": 0.0
+        }
+      },
+      "paired_test": {
+        "reopen off, best accuracy on validation (20) minus shipped": {
+          "ari": {
+            "hi": 0.0654,
+            "lo": -0.0051,
+            "point": 0.0263
+          },
+          "bcubed_f1": {
+            "hi": 0.0039,
+            "lo": -0.0014,
+            "point": 0.0012
+          },
+          "pairs_f1": {
+            "hi": 0.0654,
+            "lo": -0.0051,
+            "point": 0.0263
+          }
+        },
+        "reopen off, shipped minus never merge": {
+          "ari": {
+            "hi": 0.8026,
+            "lo": 0.6284,
+            "point": 0.7173
+          },
+          "bcubed_f1": {
+            "hi": 0.028,
+            "lo": 0.0106,
+            "point": 0.0192
+          },
+          "pairs_f1": {
+            "hi": 0.8026,
+            "lo": 0.6285,
+            "point": 0.7174
+          }
+        },
+        "reopen on minus reopen off (shipped accuracy)": {
+          "ari": {
+            "hi": -0.1362,
+            "lo": -0.2647,
+            "point": -0.1964
+          },
+          "bcubed_f1": {
+            "hi": -0.015,
+            "lo": -0.0297,
+            "point": -0.0222
+          },
+          "pairs_f1": {
+            "hi": -0.1361,
+            "lo": -0.2646,
+            "point": -0.1963
+          }
+        },
+        "reopen on, best accuracy on validation (20) minus shipped": {
+          "ari": {
+            "hi": 0.0316,
+            "lo": -0.027,
+            "point": 0.0019
+          },
+          "bcubed_f1": {
+            "hi": 0.0012,
+            "lo": -0.0052,
+            "point": -0.0017
+          },
+          "pairs_f1": {
+            "hi": 0.0316,
+            "lo": -0.027,
+            "point": 0.0019
+          }
+        },
+        "reopen on, shipped minus never merge": {
+          "ari": {
+            "hi": 0.6153,
+            "lo": 0.429,
+            "point": 0.521
+          },
+          "bcubed_f1": {
+            "hi": 0.0088,
+            "lo": -0.0145,
+            "point": -0.003
+          },
+          "pairs_f1": {
+            "hi": 0.6154,
+            "lo": 0.4291,
+            "point": 0.5211
+          }
+        }
+      },
+      "requests": 10983,
+      "scored_requests": {
+        "test": 1087,
+        "validation": 3124
+      },
+      "validation_sweep": {
+        "no reopen, accuracy 10": {
+          "ari": 0.5872,
+          "bcubed_f1": 0.9534,
+          "bcubed_precision": 0.9575,
+          "bcubed_recall": 0.9494,
+          "city_duplicates": 429,
+          "city_duplicates_put_in_their_parents_ticket": 258,
+          "extra_merges": 245,
+          "our_merges": 485,
+          "pairs_f1": 0.5872,
+          "pairs_precision": 0.5657,
+          "pairs_recall": 0.6104
+        },
+        "no reopen, accuracy 20": {
+          "ari": 0.6185,
+          "bcubed_f1": 0.9531,
+          "bcubed_precision": 0.9394,
+          "bcubed_recall": 0.9671,
+          "city_duplicates": 429,
+          "city_duplicates_put_in_their_parents_ticket": 326,
+          "extra_merges": 353,
+          "our_merges": 622,
+          "pairs_f1": 0.6186,
+          "pairs_precision": 0.5279,
+          "pairs_recall": 0.7469
+        },
+        "no reopen, accuracy 5": {
+          "ari": 0.5397,
+          "bcubed_f1": 0.9528,
+          "bcubed_precision": 0.9678,
+          "bcubed_recall": 0.9382,
+          "city_duplicates": 429,
+          "city_duplicates_put_in_their_parents_ticket": 215,
+          "extra_merges": 193,
+          "our_merges": 411,
+          "pairs_f1": 0.5397,
+          "pairs_precision": 0.5952,
+          "pairs_recall": 0.4937
+        },
+        "no reopen, accuracy None": {
+          "ari": 0.6074,
+          "bcubed_f1": 0.9544,
+          "bcubed_precision": 0.9513,
+          "bcubed_recall": 0.9575,
+          "city_duplicates": 429,
+          "city_duplicates_put_in_their_parents_ticket": 287,
+          "extra_merges": 287,
+          "our_merges": 542,
+          "pairs_f1": 0.6075,
+          "pairs_precision": 0.5559,
+          "pairs_recall": 0.6697
+        },
+        "reopen, accuracy 10": {
+          "ari": 0.418,
+          "bcubed_f1": 0.9131,
+          "bcubed_precision": 0.8795,
+          "bcubed_recall": 0.9494,
+          "city_duplicates": 429,
+          "city_duplicates_put_in_their_parents_ticket": 258,
+          "extra_merges": 596,
+          "our_merges": 781,
+          "pairs_f1": 0.4181,
+          "pairs_precision": 0.3194,
+          "pairs_recall": 0.605
+        },
+        "reopen, accuracy 20": {
+          "ari": 0.4401,
+          "bcubed_f1": 0.9022,
+          "bcubed_precision": 0.8444,
+          "bcubed_recall": 0.9685,
+          "city_duplicates": 429,
+          "city_duplicates_put_in_their_parents_ticket": 329,
+          "extra_merges": 782,
+          "our_merges": 981,
+          "pairs_f1": 0.4402,
+          "pairs_precision": 0.3099,
+          "pairs_recall": 0.7594
+        },
+        "reopen, accuracy 5": {
+          "ari": 0.3964,
+          "bcubed_f1": 0.9192,
+          "bcubed_precision": 0.9014,
+          "bcubed_recall": 0.9378,
+          "city_duplicates": 429,
+          "city_duplicates_put_in_their_parents_ticket": 214,
+          "extra_merges": 501,
+          "our_merges": 669,
+          "pairs_f1": 0.3965,
+          "pairs_precision": 0.3354,
+          "pairs_recall": 0.4847
+        },
+        "reopen, accuracy None": {
+          "ari": 0.4367,
+          "bcubed_f1": 0.9106,
+          "bcubed_precision": 0.8678,
+          "bcubed_recall": 0.9578,
+          "city_duplicates": 429,
+          "city_duplicates_put_in_their_parents_ticket": 287,
+          "extra_merges": 665,
+          "our_merges": 860,
+          "pairs_f1": 0.4368,
+          "pairs_precision": 0.3233,
+          "pairs_recall": 0.6732
+        }
+      }
+    },
+    "pothole": {
+      "final": {
+        "no reopen, accuracy 20": {
+          "accuracy_m": 20,
+          "best_on_validation": true,
+          "reopen": false,
+          "test": {
+            "merges": {
+              "agreeing_merges_inside_the_city_buffer": {
+                "inside": 496,
+                "no_number": 0,
+                "outside": 219
+              },
+              "city_duplicates": 1078,
+              "city_duplicates_put_in_their_parents_ticket": 681,
+              "extra_at_distance_0_share": 0.1156,
+              "extra_distance_m": {
+                "50": 30.3263,
+                "75": 44.7735,
+                "90": 53.0501
+              },
+              "extra_inside_the_city_buffer": {
+                "inside": 147,
+                "no_number": 6,
+                "outside": 435
+              },
+              "extra_merges_the_city_did_not_flag": 588,
+              "extra_that_reopen_a_fixed_ticket": 0,
+              "extra_where_the_city_flagged_it_to_another_parent": 134,
+              "items": 5433,
+              "merges_the_city_also_flags": 715,
+              "of_which_reopening_a_fixed_ticket": 0,
+              "our_merges": 1303,
+              "reopening_merges_days_after_the_fix": {},
+              "reopening_merges_within_one_day_of_the_fix": null
+            },
+            "scores": {
+              "ari": {
+                "hi": 0.6557,
+                "lo": 0.5326,
+                "point": 0.5936
+              },
+              "bcubed_f1": {
+                "hi": 0.9428,
+                "lo": 0.93,
+                "point": 0.9367
+              },
+              "bcubed_precision": {
+                "hi": 0.9341,
+                "lo": 0.9161,
+                "point": 0.9256
+              },
+              "bcubed_recall": {
+                "hi": 0.9557,
+                "lo": 0.9391,
+                "point": 0.9481
+              },
+              "pairs_f1": {
+                "hi": 0.6557,
+                "lo": 0.5326,
+                "point": 0.5936
+              },
+              "pairs_precision": {
+                "hi": 0.6483,
+                "lo": 0.5107,
+                "point": 0.5793
+              },
+              "pairs_recall": {
+                "hi": 0.6811,
+                "lo": 0.5349,
+                "point": 0.6087
+              }
+            }
+          },
+          "validation": {
+            "ari": 0.6004,
+            "bcubed_f1": 0.8831,
+            "bcubed_precision": 0.8901,
+            "bcubed_recall": 0.8763,
+            "city_duplicates": 3749,
+            "city_duplicates_put_in_their_parents_ticket": 2149,
+            "extra_merges": 1450,
+            "our_merges": 3873,
+            "pairs_f1": 0.6005,
+            "pairs_precision": 0.6279,
+            "pairs_recall": 0.5754
+          }
+        },
+        "no reopen, accuracy None": {
+          "accuracy_m": null,
+          "best_on_validation": false,
+          "reopen": false,
+          "test": {
+            "merges": {
+              "agreeing_merges_inside_the_city_buffer": {
+                "inside": 511,
+                "no_number": 0,
+                "outside": 169
+              },
+              "city_duplicates": 1078,
+              "city_duplicates_put_in_their_parents_ticket": 601,
+              "extra_at_distance_0_share": 0.1564,
+              "extra_distance_m": {
+                "50": 23.2695,
+                "75": 32.759,
+                "90": 39.1918
+              },
+              "extra_inside_the_city_buffer": {
+                "inside": 136,
+                "no_number": 2,
+                "outside": 316
+              },
+              "extra_merges_the_city_did_not_flag": 454,
+              "extra_that_reopen_a_fixed_ticket": 0,
+              "extra_where_the_city_flagged_it_to_another_parent": 105,
+              "items": 5433,
+              "merges_the_city_also_flags": 680,
+              "of_which_reopening_a_fixed_ticket": 0,
+              "our_merges": 1134,
+              "reopening_merges_days_after_the_fix": {},
+              "reopening_merges_within_one_day_of_the_fix": null
+            },
+            "scores": {
+              "ari": {
+                "hi": 0.6506,
+                "lo": 0.5063,
+                "point": 0.5761
+              },
+              "bcubed_f1": {
+                "hi": 0.9456,
+                "lo": 0.9331,
+                "point": 0.9399
+              },
+              "bcubed_precision": {
+                "hi": 0.9488,
+                "lo": 0.9338,
+                "point": 0.9417
+              },
+              "bcubed_recall": {
+                "hi": 0.9473,
+                "lo": 0.9278,
+                "point": 0.9381
+              },
+              "pairs_f1": {
+                "hi": 0.6506,
+                "lo": 0.5064,
+                "point": 0.5761
+              },
+              "pairs_precision": {
+                "hi": 0.6913,
+                "lo": 0.5421,
+                "point": 0.6164
+              },
+              "pairs_recall": {
+                "hi": 0.6338,
+                "lo": 0.457,
+                "point": 0.5408
+              }
+            }
+          },
+          "validation": {
+            "ari": 0.5537,
+            "bcubed_f1": 0.8801,
+            "bcubed_precision": 0.9167,
+            "bcubed_recall": 0.8463,
+            "city_duplicates": 3749,
+            "city_duplicates_put_in_their_parents_ticket": 1818,
+            "extra_merges": 1115,
+            "our_merges": 3396,
+            "pairs_f1": 0.5538,
+            "pairs_precision": 0.6685,
+            "pairs_recall": 0.4727
+          }
+        },
+        "reopen, accuracy 20": {
+          "accuracy_m": 20,
+          "best_on_validation": true,
+          "reopen": true,
+          "test": {
+            "merges": {
+              "agreeing_merges_inside_the_city_buffer": {
+                "inside": 372,
+                "no_number": 0,
+                "outside": 178
+              },
+              "city_duplicates": 1078,
+              "city_duplicates_put_in_their_parents_ticket": 693,
+              "extra_at_distance_0_share": 0.2037,
+              "extra_distance_m": {
+                "50": 27.7346,
+                "75": 42.9308,
+                "90": 51.4308
+              },
+              "extra_inside_the_city_buffer": {
+                "inside": 560,
+                "no_number": 11,
+                "outside": 941
+              },
+              "extra_merges_the_city_did_not_flag": 1512,
+              "extra_that_reopen_a_fixed_ticket": 751,
+              "extra_where_the_city_flagged_it_to_another_parent": 322,
+              "items": 5433,
+              "merges_the_city_also_flags": 550,
+              "of_which_reopening_a_fixed_ticket": 751,
+              "our_merges": 2062,
+              "reopening_merges_days_after_the_fix": {
+                "25": 2.2119,
+                "50": 10.1254,
+                "75": 19.0499,
+                "90": 25.1629
+              },
+              "reopening_merges_within_one_day_of_the_fix": 0.1744
+            },
+            "scores": {
+              "ari": {
+                "hi": 0.4842,
+                "lo": 0.3572,
+                "point": 0.4174
+              },
+              "bcubed_f1": {
+                "hi": 0.8882,
+                "lo": 0.8703,
+                "point": 0.8797
+              },
+              "bcubed_precision": {
+                "hi": 0.8332,
+                "lo": 0.805,
+                "point": 0.82
+              },
+              "bcubed_recall": {
+                "hi": 0.9568,
+                "lo": 0.9395,
+                "point": 0.9489
+              },
+              "pairs_f1": {
+                "hi": 0.4843,
+                "lo": 0.3573,
+                "point": 0.4175
+              },
+              "pairs_precision": {
+                "hi": 0.3851,
+                "lo": 0.256,
+                "point": 0.3173
+              },
+              "pairs_recall": {
+                "hi": 0.6805,
+                "lo": 0.5426,
+                "point": 0.61
+              }
+            }
+          },
+          "validation": {
+            "ari": 0.5484,
+            "bcubed_f1": 0.8524,
+            "bcubed_precision": 0.8274,
+            "bcubed_recall": 0.879,
+            "city_duplicates": 3749,
+            "city_duplicates_put_in_their_parents_ticket": 2192,
+            "extra_merges": 2649,
+            "our_merges": 4695,
+            "pairs_f1": 0.5485,
+            "pairs_precision": 0.5216,
+            "pairs_recall": 0.5782
+          }
+        },
+        "reopen, accuracy None": {
+          "accuracy_m": null,
+          "best_on_validation": false,
+          "reopen": true,
+          "test": {
+            "merges": {
+              "agreeing_merges_inside_the_city_buffer": {
+                "inside": 385,
+                "no_number": 0,
+                "outside": 146
+              },
+              "city_duplicates": 1078,
+              "city_duplicates_put_in_their_parents_ticket": 617,
+              "extra_at_distance_0_share": 0.2666,
+              "extra_distance_m": {
+                "50": 17.9712,
+                "75": 31.6178,
+                "90": 39.4153
+              },
+              "extra_inside_the_city_buffer": {
+                "inside": 562,
+                "no_number": 6,
+                "outside": 700
+              },
+              "extra_merges_the_city_did_not_flag": 1268,
+              "extra_that_reopen_a_fixed_ticket": 662,
+              "extra_where_the_city_flagged_it_to_another_parent": 286,
+              "items": 5433,
+              "merges_the_city_also_flags": 531,
+              "of_which_reopening_a_fixed_ticket": 662,
+              "our_merges": 1799,
+              "reopening_merges_days_after_the_fix": {
+                "25": 3.0987,
+                "50": 11.2816,
+                "75": 20.1042,
+                "90": 25.9424
+              },
+              "reopening_merges_within_one_day_of_the_fix": 0.1511
+            },
+            "scores": {
+              "ari": {
+                "hi": 0.498,
+                "lo": 0.3516,
+                "point": 0.421
+              },
+              "bcubed_f1": {
+                "hi": 0.9033,
+                "lo": 0.8861,
+                "point": 0.8947
+              },
+              "bcubed_precision": {
+                "hi": 0.8679,
+                "lo": 0.84,
+                "point": 0.8538
+              },
+              "bcubed_recall": {
+                "hi": 0.9484,
+                "lo": 0.9303,
+                "point": 0.9397
+              },
+              "pairs_f1": {
+                "hi": 0.4981,
+                "lo": 0.3517,
+                "point": 0.421
+              },
+              "pairs_precision": {
+                "hi": 0.4278,
+                "lo": 0.2679,
+                "point": 0.3415
+              },
+              "pairs_recall": {
+                "hi": 0.6356,
+                "lo": 0.4704,
+                "point": 0.5487
+              }
+            }
+          },
+          "validation": {
+            "ari": 0.5181,
+            "bcubed_f1": 0.857,
+            "bcubed_precision": 0.8652,
+            "bcubed_recall": 0.8489,
+            "city_duplicates": 3749,
+            "city_duplicates_put_in_their_parents_ticket": 1850,
+            "extra_merges": 2119,
+            "our_merges": 4110,
+            "pairs_f1": 0.5182,
+            "pairs_precision": 0.5647,
+            "pairs_recall": 0.4788
+          }
+        }
+      },
+      "left_out_duplicates_with_parent_not_in_file": 3442,
+      "never_merge": {
+        "test": {
+          "ari": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "point": 0.0
+          },
+          "bcubed_f1": {
+            "hi": 0.93,
+            "lo": 0.9137,
+            "point": 0.9225
+          },
+          "bcubed_precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "bcubed_recall": {
+            "hi": 0.8692,
+            "lo": 0.841,
+            "point": 0.8561
+          },
+          "pairs_f1": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "point": 0.0
+          },
+          "pairs_precision": {
+            "hi": 1.0,
+            "lo": 1.0,
+            "point": 1.0
+          },
+          "pairs_recall": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "point": 0.0
+          }
+        },
+        "validation": {
+          "ari": 0.0,
+          "bcubed_f1": 0.8119,
+          "bcubed_precision": 1.0,
+          "bcubed_recall": 0.6833,
+          "pairs_f1": 0.0,
+          "pairs_precision": 1.0,
+          "pairs_recall": 0.0
+        }
+      },
+      "paired_test": {
+        "reopen off, best accuracy on validation (20) minus shipped": {
+          "ari": {
+            "hi": 0.039,
+            "lo": -0.0016,
+            "point": 0.0175
+          },
+          "bcubed_f1": {
+            "hi": -0.0009,
+            "lo": -0.0056,
+            "point": -0.0032
+          },
+          "pairs_f1": {
+            "hi": 0.039,
+            "lo": -0.0016,
+            "point": 0.0175
+          }
+        },
+        "reopen off, shipped minus never merge": {
+          "ari": {
+            "hi": 0.6506,
+            "lo": 0.5063,
+            "point": 0.5761
+          },
+          "bcubed_f1": {
+            "hi": 0.0245,
+            "lo": 0.0107,
+            "point": 0.0174
+          },
+          "pairs_f1": {
+            "hi": 0.6506,
+            "lo": 0.5064,
+            "point": 0.5761
+          }
+        },
+        "reopen on minus reopen off (shipped accuracy)": {
+          "ari": {
+            "hi": -0.122,
+            "lo": -0.1909,
+            "point": -0.1551
+          },
+          "bcubed_f1": {
+            "hi": -0.0402,
+            "lo": -0.0502,
+            "point": -0.0452
+          },
+          "pairs_f1": {
+            "hi": -0.122,
+            "lo": -0.1909,
+            "point": -0.1551
+          }
+        },
+        "reopen on, best accuracy on validation (20) minus shipped": {
+          "ari": {
+            "hi": 0.0128,
+            "lo": -0.0188,
+            "point": -0.0035
+          },
+          "bcubed_f1": {
+            "hi": -0.0118,
+            "lo": -0.018,
+            "point": -0.015
+          },
+          "pairs_f1": {
+            "hi": 0.0128,
+            "lo": -0.0188,
+            "point": -0.0035
+          }
+        },
+        "reopen on, shipped minus never merge": {
+          "ari": {
+            "hi": 0.498,
+            "lo": 0.3516,
+            "point": 0.421
+          },
+          "bcubed_f1": {
+            "hi": -0.0193,
+            "lo": -0.0362,
+            "point": -0.0277
+          },
+          "pairs_f1": {
+            "hi": 0.4981,
+            "lo": 0.3517,
+            "point": 0.421
+          }
+        }
+      },
+      "requests": 95972,
+      "scored_requests": {
+        "test": 5433,
+        "validation": 8552
+      },
+      "validation_sweep": {
+        "no reopen, accuracy 10": {
+          "ari": 0.5179,
+          "bcubed_f1": 0.8787,
+          "bcubed_precision": 0.9448,
+          "bcubed_recall": 0.8213,
+          "city_duplicates": 3749,
+          "city_duplicates_put_in_their_parents_ticket": 1559,
+          "extra_merges": 769,
+          "our_merges": 2895,
+          "pairs_f1": 0.5179,
+          "pairs_precision": 0.7343,
+          "pairs_recall": 0.4001
+        },
+        "no reopen, accuracy 20": {
+          "ari": 0.6004,
+          "bcubed_f1": 0.8831,
+          "bcubed_precision": 0.8901,
+          "bcubed_recall": 0.8763,
+          "city_duplicates": 3749,
+          "city_duplicates_put_in_their_parents_ticket": 2149,
+          "extra_merges": 1450,
+          "our_merges": 3873,
+          "pairs_f1": 0.6005,
+          "pairs_precision": 0.6279,
+          "pairs_recall": 0.5754
+        },
+        "no reopen, accuracy 5": {
+          "ari": 0.4678,
+          "bcubed_f1": 0.8754,
+          "bcubed_precision": 0.9681,
+          "bcubed_recall": 0.7989,
+          "city_duplicates": 3749,
+          "city_duplicates_put_in_their_parents_ticket": 1275,
+          "extra_merges": 463,
+          "our_merges": 2380,
+          "pairs_f1": 0.4679,
+          "pairs_precision": 0.8113,
+          "pairs_recall": 0.3287
+        },
+        "no reopen, accuracy None": {
+          "ari": 0.5537,
+          "bcubed_f1": 0.8801,
+          "bcubed_precision": 0.9167,
+          "bcubed_recall": 0.8463,
+          "city_duplicates": 3749,
+          "city_duplicates_put_in_their_parents_ticket": 1818,
+          "extra_merges": 1115,
+          "our_merges": 3396,
+          "pairs_f1": 0.5538,
+          "pairs_precision": 0.6685,
+          "pairs_recall": 0.4727
+        },
+        "reopen, accuracy 10": {
+          "ari": 0.4879,
+          "bcubed_f1": 0.8597,
+          "bcubed_precision": 0.9005,
+          "bcubed_recall": 0.8225,
+          "city_duplicates": 3749,
+          "city_duplicates_put_in_their_parents_ticket": 1572,
+          "extra_merges": 1634,
+          "our_merges": 3516,
+          "pairs_f1": 0.488,
+          "pairs_precision": 0.6165,
+          "pairs_recall": 0.4038
+        },
+        "reopen, accuracy 20": {
+          "ari": 0.5484,
+          "bcubed_f1": 0.8524,
+          "bcubed_precision": 0.8274,
+          "bcubed_recall": 0.879,
+          "city_duplicates": 3749,
+          "city_duplicates_put_in_their_parents_ticket": 2192,
+          "extra_merges": 2649,
+          "our_merges": 4695,
+          "pairs_f1": 0.5485,
+          "pairs_precision": 0.5216,
+          "pairs_recall": 0.5782
+        },
+        "reopen, accuracy 5": {
+          "ari": 0.4437,
+          "bcubed_f1": 0.8606,
+          "bcubed_precision": 0.9314,
+          "bcubed_recall": 0.7998,
+          "city_duplicates": 3749,
+          "city_duplicates_put_in_their_parents_ticket": 1297,
+          "extra_merges": 1169,
+          "our_merges": 2906,
+          "pairs_f1": 0.4437,
+          "pairs_precision": 0.6751,
+          "pairs_recall": 0.3305
+        },
+        "reopen, accuracy None": {
+          "ari": 0.5181,
+          "bcubed_f1": 0.857,
+          "bcubed_precision": 0.8652,
+          "bcubed_recall": 0.8489,
+          "city_duplicates": 3749,
+          "city_duplicates_put_in_their_parents_ticket": 1850,
+          "extra_merges": 2119,
+          "our_merges": 4110,
+          "pairs_f1": 0.5182,
+          "pairs_precision": 0.5647,
+          "pairs_recall": 0.4788
+        }
+      }
+    }
+  },
+  "config": {
+    "accuracies": [
+      null,
+      5,
+      10,
+      20
+    ],
+    "bootstrap_resamples": 1000,
+    "reopen_window_days": 30,
+    "test_start": "2025-10-01",
+    "validation_start": "2025-07-01"
+  },
+  "meta": {
+    "git_commit": "3dc677f",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "scipy": "1.18.1",
+    "written": "2026-10-06T13:19:08+00:00"
+  }
+}
