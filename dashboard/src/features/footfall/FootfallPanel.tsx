@@ -16,14 +16,13 @@ type Props = {
   onForecast: () => void;
 };
 
-const PHONE = "(max-width: 700px)"; // the breakpoint in panels.css; folded on phones so it does not cover the map
 const GRADIENT = `linear-gradient(90deg, ${FOOTFALL_RAMP.map(([s, c]) => `${c} ${s * 100}%`).join(", ")})`;
 
 export default function FootfallPanel({ on, onToggle, when, pinned, onLive, data, error, onShow, forecastOpen, onForecast }: Props) {
   const top = data?.districts.slice(0, 5) ?? [];
   const at = `${DAY_LABEL[when.day]} ${String(when.hour).padStart(2, "0")}:00`;
   return (
-    <details className="panel side footfall" open={!matchMedia(PHONE).matches}>
+    <details className="panel side footfall">
       <summary className="panel-title">Foot traffic</summary>
       <div className="src">Predicted · transit hubs and districts</div>
 

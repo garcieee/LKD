@@ -324,6 +324,7 @@ details[open] > summary.panel-title::after {
 }
 .side {
   width: 230px;
+  flex: none; /* a layer panel keeps its height: the Tickets panel below takes the squeeze, not this one */
 }
 .src {
   margin: 2px 0 8px;
@@ -426,25 +427,6 @@ details[open] > summary.panel-title::after {
   bottom: var(--foot);
   width: 230px;
 }
-/* Auto-hide on devices with a pointer: fades in when the cursor is near, via ::before's extra hit area.
-   Touch screens cannot hover, so they keep it visible. */
-@media (hover: hover) {
-  .legend {
-    opacity: 0;
-    transform: translateY(6px);
-    transition: opacity 0.15s, transform 0.15s;
-  }
-  .legend::before {
-    content: "";
-    position: absolute;
-    inset: -32px;
-  }
-  .legend:hover,
-  .legend:focus-within {
-    opacity: 1;
-    transform: none;
-  }
-}
 .legend-bar {
   height: 8px;
   margin: 10px 0 6px;
@@ -503,7 +485,7 @@ details[open] > summary.panel-title::after {
   display: flex;
   flex-direction: column;
   width: 340px;
-  min-height: 0;
+  min-height: 200px; /* the main job: never squeezed to a sliver by the panels above it */
   padding: 0;
   overflow: hidden;
   animation: rise 180ms ease-out;
@@ -752,9 +734,9 @@ details[open] > summary.panel-title::after {
 
 @media (max-width: 700px) {
   .shell {
-    /* The legend's height (134px with its ticket key) plus the gap: the Tickets sheet and the toast
+    /* The legend's height (150px with its ticket key) plus the gap: the Tickets sheet and the toast
        stay above it. Retune if the legend grows. */
-    --legend-clear: 142px;
+    --legend-clear: 158px;
   }
   .brand small,
   .status .refreshed,
@@ -805,6 +787,13 @@ details[open] > summary.panel-title::after {
 /* The map never gives up the last 30%: past that the panel grows over it instead of squeezing it to nothing. */
 .shell.split .stage {
   right: min(var(--insights-w), 70vw);
+}
+/* Docked, the map is too narrow for the Lakad cluster and the HUD side by side (the cluster would sit on top of the
+   Tickets button): the HUD drops below the cluster. Phones have their own layout below. */
+@media (min-width: 701px) and (max-width: 960px) {
+  .shell.split .hud {
+    top: calc(var(--inset) * 2 + 44px);
+  }
 }
 .grip {
   position: absolute;
@@ -905,6 +894,7 @@ details[open] > summary.panel-title::after {
   margin: 8px 0 0;
   padding: 0;
   list-style: none;
+  --c: var(--accent); /* a row's own data-status or inline colour wins over this default */
 }
 .bars li {
   display: grid;
@@ -912,7 +902,6 @@ details[open] > summary.panel-title::after {
   align-items: center;
   gap: 10px;
   padding: 5px 0;
-  --c: var(--accent);
   font: 13px var(--grot);
 }
 .bars i {
@@ -1053,7 +1042,7 @@ details[open] > summary.panel-title::after {
 
 /* Foot traffic panel: day and hour pickers, then the busiest districts for that moment. */
 .footfall {
-  min-height: 0; /* the HUD column ends above Reset to Makati: shrink and scroll instead of running into it */
+  max-height: 25vh; /* a tall one scrolls inside itself, so the HUD column stays above Reset to Makati */
   overflow-y: auto;
 }
 .ff-hour {

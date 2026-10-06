@@ -34,6 +34,7 @@ export default function ForecastPanel({ districts, hourKey, cursor, onCursor, on
 
   // Dragging the dock wider does two things: text and controls grow a little (--k, a zoom on the body), and the
   // chart gets more width to draw in, at the same height, so it stretches sideways instead of just growing taller.
+  useEffect(() => document.getElementById("forecast-title")?.focus(), []); // see the same line in AnalyticsPanel
   const [dockW, setDockW] = useState(340);
   useEffect(() => {
     const el = panel.current;

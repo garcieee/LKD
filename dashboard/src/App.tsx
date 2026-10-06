@@ -26,8 +26,8 @@ export default function App() {
   const [now, setNow] = useState(() => new Date());
   // Starts closed on every load, nothing is remembered.
   const [navOpen, setNavOpen] = useState(false);
-  // Open on desktop; folded on phones so it does not sit over the map.
-  const [panelOpen, setPanelOpen] = useState(() => !matchMedia(PHONE).matches);
+  // Folded on load, like Foot traffic: the Tickets queue is this dashboard's main job and gets the height.
+  const [panelOpen, setPanelOpen] = useState(false);
   // The fix-it queue is this dashboard's main job: open on desktop. On phones it is one tap away
   // on the HUD's Tickets button, so the sheet doesn't cover the map on load.
   const [queueOpen, setQueueOpen] = useState(() => !matchMedia(PHONE).matches);
@@ -88,14 +88,18 @@ export default function App() {
     if (!keepSelection) setSelectedId(null);
   }
 
-  // The banner's way in: the oldest SOS still waiting, opened as a ticket and shown on the map.
+  // The banner's way in: the oldest SOS still waiting, opened as a ticket and shown on the map. On a phone the sheet
+  // would cover the map (showOnMap closes it), so the ticket wins: its video and Who must respond are what is needed,
+  // and Show on map is one tap away in it.
   function openSos(r: Report) {
     setNavOpen(false);
     closeInsights();
     closeForecast();
     setSelectedId(r.id);
     setQueueOpen(true);
-    showOnMap(r);
+    // Closing a docked panel resizes the map, which re-frames the city and would cancel a flight started now: fly
+    // two frames on, once that has settled (and the Tickets panel is there to measure).
+    if (!matchMedia(PHONE).matches) requestAnimationFrame(() => requestAnimationFrame(() => showOnMap(r)));
   }
 
   function closeInsights() {
