@@ -19,12 +19,16 @@ export default function App() {
   const [navOpen, setNavOpen] = useState(false);
   // Open on desktop; folded on phones so it does not sit over the map.
   const [panelOpen, setPanelOpen] = useState(() => !matchMedia(PHONE).matches);
-  const [queueOpen, setQueueOpen] = useState(false);
+  // The fix-it queue is this dashboard's main job: open on desktop. On phones it is one tap away
+  // on the HUD's Tickets button, so the sheet doesn't cover the map on load.
+  const [queueOpen, setQueueOpen] = useState(() => !matchMedia(PHONE).matches);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const tickets = useTickets();
   const toggle = useRef<HTMLButtonElement>(null);
   const mapView = useRef<MapHandle>(null);
   const unresolved = tickets.reports?.filter(isUnresolved).length ?? 0;
+  const urgent = tickets.reports?.some((r) => isUnresolved(r) && r.severity === 3) ?? false;
+  const level = !tickets.reports ? "unknown" : urgent ? "urgent" : unresolved ? "waiting" : "clear";
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
@@ -142,6 +146,18 @@ export default function App() {
 
         <div className="hud">
           <div className="hud-row">
+            {/* Always on screen, so tickets are one tap away even with the panel closed. */}
+            <button
+              className={`status tickets-btn${tickets.fresh.length ? " fresh" : ""}`}
+              aria-expanded={queueOpen}
+              aria-controls="queue"
+              onClick={() => (queueOpen ? closeQueue() : openView("tickets"))}
+            >
+              <i className="dot" data-level={level} />
+              Tickets
+              <b>{tickets.reports ? unresolved : "–"}</b>
+              <span className="sr-only">{urgent ? " unresolved, some urgent" : " unresolved"}</span>
+            </button>
             <div role="status">
               {!tickets.online && (
                 <div className="status offline">
@@ -150,7 +166,7 @@ export default function App() {
                 </div>
               )}
             </div>
-            <div className="status">
+            <div className="status live">
               <i className="dot" />
               <span>Live · {clock(now)}</span>
               <span className="refreshed">refreshed {clock(new Date(stamp))}</span>

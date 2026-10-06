@@ -59,7 +59,7 @@ export default function QueuePanel({
         : `Can't reach the Lakad API at ${ENV.apiBaseUrl}. Retrying.`
       : all.length
         ? "Nothing left to fix."
-        : "No reports yet. Photos sent from the app land here.";
+        : "No tickets yet. Hazards snapped in the Lakad app show up here within 10 seconds.";
 
   return (
     <section id="queue" ref={panel} className="panel queue" aria-labelledby="queue-title">
@@ -117,7 +117,14 @@ export default function QueuePanel({
               ))}
             </ol>
           ) : (
-            <p className="empty">{empty}</p>
+            <>
+              <p className="empty">{empty}</p>
+              {!online && (
+                <p className="empty">
+                  Start it from the repo: <code>cd server && .venv/bin/uvicorn app.main:app --host 0.0.0.0</code>
+                </p>
+              )}
+            </>
           )}
         </div>
       )}

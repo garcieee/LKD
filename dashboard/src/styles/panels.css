@@ -185,6 +185,51 @@
 }
 .hud-row {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  row-gap: var(--inset);
+}
+/* The way into the queue, always on screen. Dot: red when an urgent ticket is unresolved, amber
+   when tickets wait, green when all clear, grey before the API answers. */
+.tickets-btn {
+  margin-right: var(--inset);
+  color: var(--text);
+  font: 500 11px var(--grot);
+  cursor: pointer;
+}
+.tickets-btn b {
+  font-weight: 600;
+}
+.tickets-btn:hover {
+  background: var(--paper-deep);
+}
+.tickets-btn[aria-expanded="true"] {
+  background: var(--selected);
+  color: var(--accent);
+}
+.dot[data-level="urgent"] {
+  background: var(--danger);
+}
+.dot[data-level="waiting"] {
+  background: var(--warn);
+}
+.dot[data-level="unknown"] {
+  background: var(--edge-strong);
+}
+.tickets-btn.fresh {
+  animation: ping 1.2s ease-out 2;
+}
+@keyframes ping {
+  from {
+    box-shadow:
+      0 0 0 0 color-mix(in srgb, var(--accent) 40%, transparent),
+      var(--shadow-float);
+  }
+  to {
+    box-shadow:
+      0 0 0 10px transparent,
+      var(--shadow-float);
+  }
 }
 .status {
   display: flex;
@@ -548,6 +593,9 @@ details[open] > summary.panel-title::after {
   color: var(--muted);
   font-size: 12px;
 }
+.empty code {
+  overflow-wrap: anywhere;
+}
 
 .photo {
   display: block;
@@ -662,7 +710,8 @@ details[open] > summary.panel-title::after {
 @media (prefers-reduced-motion: reduce) {
   .queue,
   .toast > span,
-  .ticket.fresh {
+  .ticket.fresh,
+  .tickets-btn.fresh {
     animation: none;
   }
   .ticket.fresh {
@@ -686,7 +735,9 @@ details[open] > summary.panel-title::after {
     --legend-clear: 142px;
   }
   .brand small,
-  .status .refreshed {
+  .status .refreshed,
+  /* Offline, the clock gives way so the HUD row stays clear of the Lakad cluster. */
+  .hud-row:has(.offline) .live {
     display: none;
   }
   .cluster {
