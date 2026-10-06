@@ -88,8 +88,9 @@ def test_the_category_migration_keeps_every_row_and_takes_the_pwd_barriers(tmp_p
 
 
 def test_processes_opening_the_file_at_once_run_each_migration_once(tmp_path, monkeypatch):
-    # All four read user_version 0 and queue for the write lock; each later one must see the work done and skip it.
-    # The added last migration is slow (so the others really do wait) and cannot run twice (so a repeat fails).
+    # All four read the same user_version and queue for the write lock; each later one must see the work done and skip
+    # it. The added migration is slow (so the others really do wait) and cannot run twice (so a repeat fails).
+    Db(tmp_path / "lakad.db")  # the file exists, in WAL mode: four first-ever opens would race on switching to WAL
     slow = "create table slow as with recursive c(x) as (select 1 union all select x + 1 from c where x < 400000) select sum(x) as s from c;"
     monkeypatch.setattr(storage, "MIGRATIONS", (*MIGRATIONS, slow))
     errors = []
