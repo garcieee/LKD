@@ -56,20 +56,17 @@ export default function MapCanvas({ congestionOn, stamp, reports, selectedId, on
     map.current.once("load", () => setLoaded(true));
   }, []);
 
+  // Both layers are gated on "load" having fired rather than on isStyleLoaded(): that is false
+  // whenever any tiles are loading (mid-pan, mid-flyTo), and "load" fires only once, so a
+  // once("load") fallback would silently drop toggles, refreshes and poll updates.
   useEffect(() => {
     const m = map.current;
-    if (!m) return;
-    const apply = () => {
-      if (congestionOn && ENV.tomtomKey) addCongestion(m, ENV.tomtomKey, stamp);
-      else removeCongestion(m);
-    };
-    if (m.isStyleLoaded()) apply();
-    else m.once("load", apply);
-  }, [congestionOn, stamp]);
+    if (!loaded || !m) return;
+    if (congestionOn && ENV.tomtomKey) addCongestion(m, ENV.tomtomKey, stamp);
+    else removeCongestion(m);
+  }, [loaded, congestionOn, stamp]);
 
-  // Pins follow every poll and selection. Gated on "load" having fired rather than on
-  // isStyleLoaded(): that is false whenever any tiles are loading (mid-pan, mid-flyTo), and
-  // "load" fires only once, so a once("load") fallback would drop those updates.
+  // Pins follow every poll and selection.
   useEffect(() => {
     if (loaded && map.current) setReportPins(map.current, reports ?? [], selectedId);
   }, [loaded, reports, selectedId]);
