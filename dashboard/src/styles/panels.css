@@ -65,13 +65,15 @@
   background: none;
   cursor: pointer;
 }
-.nav-toggle svg {
+.nav-toggle svg,
+.icon-btn svg {
   width: 18px;
   height: 18px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.5;
   stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .nav-toggle:hover {
   background: var(--paper-deep);
@@ -137,23 +139,41 @@
 .nav-link {
   display: flex;
   align-items: center;
+  width: 100%;
   min-height: 35px;
   padding: 7px 12px;
+  border: 0;
   border-radius: var(--radius-card);
+  background: none;
   font: 12px var(--grot);
+  text-align: left;
+  cursor: pointer;
+}
+.nav-link:hover {
+  background: var(--paper-deep);
 }
 .nav-link.active {
   background: var(--panel);
   font-weight: 600;
   box-shadow: var(--shadow);
 }
+.count {
+  margin-left: auto;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: var(--selected);
+  color: var(--accent);
+  font: 500 10px var(--grot);
+}
 
-/* Top-right: live status over the Traffic flow panel. */
+/* Top-right: live status, then the Traffic flow panel, then the Tickets panel, which takes what
+   height is left down to Reset to Makati (32px button). Nothing in here resizes the map. */
 .hud {
   position: absolute;
   z-index: 1;
   top: var(--inset);
   right: var(--inset);
+  bottom: calc(var(--foot) + 32px + var(--inset));
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -162,6 +182,9 @@
 }
 .hud > * {
   pointer-events: auto;
+}
+.hud-row {
+  display: flex;
 }
 .status {
   display: flex;
@@ -182,11 +205,41 @@
   padding-left: 8px;
   border-left: 1px solid var(--line);
 }
+.status.offline {
+  margin-right: var(--inset);
+  color: var(--danger);
+}
 .dot {
+  flex: none;
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: var(--ok);
+}
+
+/* Ticket status colours, the same four as the map pins (layers/reports.ts) and the mobile app. */
+[data-status="open"] {
+  --c: var(--danger);
+}
+[data-status="verified"] {
+  --c: var(--warn);
+}
+[data-status="assigned"] {
+  --c: var(--accent);
+}
+[data-status="fixed"] {
+  --c: var(--ok);
+}
+.dot[data-status] {
+  background: var(--c);
+}
+.badge {
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--c) 9%, #fff);
+  color: var(--c);
+  font: 500 10px/1.5 var(--grot);
+  white-space: nowrap;
 }
 
 /* Panels float over the map. No blur. */
@@ -342,8 +395,296 @@ details[open] > summary.panel-title::after {
   color: var(--muted);
   font-size: 10px;
 }
+.legend-pins {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin: 9px 0 0;
+  padding: 9px 0 0;
+  border-top: 1px solid var(--line-soft);
+  list-style: none;
+  font: 500 10px var(--grot);
+  color: var(--muted);
+}
+.legend-pins li {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Tickets: the floating panel at the bottom of the HUD column. */
+.icon-btn {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: none;
+  cursor: pointer;
+}
+.icon-btn:hover {
+  background: var(--paper-deep);
+}
+.icon-btn svg {
+  width: 16px;
+  height: 16px;
+}
+.queue {
+  display: flex;
+  flex-direction: column;
+  width: 340px;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  animation: rise 180ms ease-out;
+}
+.queue-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px 8px 14px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.queue-head .icon-btn:first-child {
+  margin-left: -6px;
+}
+.queue-head h2 {
+  margin: 0;
+}
+.queue-head .src {
+  margin: 0;
+}
+.queue-head .close {
+  margin-left: auto;
+}
+.queue-list,
+.detail {
+  min-height: 0;
+  overflow-y: auto;
+  padding: 10px 14px 14px;
+}
+.queue-list .switch {
+  margin-top: 4px;
+}
+.tickets {
+  margin: 0 -14px -14px;
+  padding: 0;
+  list-style: none;
+}
+.ticket {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  align-items: center;
+  gap: 2px 10px;
+  width: 100%;
+  padding: 9px 14px;
+  border: 0;
+  border-top: 1px solid var(--line-soft);
+  background: none;
+  font: 12px var(--sans);
+  text-align: left;
+  cursor: pointer;
+}
+.ticket:hover {
+  background: var(--paper-deep);
+}
+/* Inside a scroller: draw the ring inwards so it is never clipped. */
+.ticket:focus-visible {
+  outline-offset: -2px;
+}
+.ticket.fresh {
+  animation: fresh 3s ease-out;
+}
+.ticket img {
+  grid-row: span 2;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius);
+  background: var(--paper-deep);
+  object-fit: cover;
+}
+.ticket b {
+  font: 600 12px var(--grot);
+}
+.ticket small {
+  display: flex;
+  grid-column: 2 / -1;
+  align-items: center;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.sev {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.sev-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 1.5px;
+  height: 9px;
+}
+.sev-bars i {
+  width: 3px;
+  height: 4px;
+  border-radius: 1px;
+  background: var(--line);
+}
+.sev-bars i:nth-child(2) {
+  height: 6.5px;
+}
+.sev-bars i:nth-child(3) {
+  height: 9px;
+}
+.sev-bars i.on {
+  background: var(--text);
+}
+.empty {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.photo {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--paper-deep);
+  cursor: zoom-in;
+}
+.photo img {
+  display: block;
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+}
+.detail-tags {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  color: var(--muted);
+  font: 500 11px var(--grot);
+}
+.detail-title {
+  margin: 8px 0 0;
+  font: 500 20px/1.2 var(--serif);
+  letter-spacing: -0.3px;
+}
+.note {
+  margin: 6px 0 0;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.stepper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 14px 0 6px;
+  padding: 0;
+  list-style: none;
+}
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: 500 10px var(--grot);
+  text-align: left;
+  cursor: pointer;
+}
+.step::before {
+  content: "";
+  height: 5px;
+  border-radius: 999px;
+  background: var(--line);
+}
+.step:hover::before {
+  background: var(--edge-strong);
+}
+.step.reached::before {
+  background: var(--accent);
+}
+.step[aria-current="step"] {
+  color: var(--text);
+  font-weight: 600;
+  cursor: default;
+}
+.error {
+  margin: 0 0 8px;
+  color: var(--danger);
+  font-size: 12px;
+}
+
+/* Bottom-centre, above the Mapbox strip. Says when a new ticket arrives. */
+.toast {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: var(--foot);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.toast > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  box-shadow: var(--shadow-float);
+  font: 500 11px var(--grot);
+  white-space: nowrap;
+  animation: rise 180ms ease-out;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+@keyframes fresh {
+  from {
+    background: var(--selected);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .queue,
+  .toast > span,
+  .ticket.fresh {
+    animation: none;
+  }
+  .ticket.fresh {
+    background: var(--selected);
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 
 @media (max-width: 700px) {
+  .shell {
+    /* The legend's height (134px with its ticket key) plus the gap: the Tickets sheet and the toast
+       stay above it. Retune if the legend grows. */
+    --legend-clear: 142px;
+  }
   .brand small,
   .status .refreshed {
     display: none;
@@ -354,5 +695,17 @@ details[open] > summary.panel-title::after {
   /* Leave room for Reset to Makati on the right. */
   .legend {
     width: min(230px, calc(100% - 136px));
+  }
+  /* Tickets become a full-width sheet: under the cluster and HUD, above the legend and Reset. */
+  .hud {
+    left: var(--inset);
+    bottom: calc(var(--foot) + var(--legend-clear));
+  }
+  .queue {
+    width: auto;
+    align-self: stretch;
+  }
+  .toast {
+    bottom: calc(var(--foot) + var(--legend-clear));
   }
 }

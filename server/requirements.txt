@@ -11,3 +11,4 @@ torch
 opencv-python
 mediapipe
 pillow
+pytest

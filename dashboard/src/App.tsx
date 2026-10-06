@@ -1,10 +1,15 @@
-import { useEffect, useRef, useState } from "react";
-import MapCanvas from "./map/MapCanvas";
+import { useCallback, useEffect, useRef, useState } from "react";
+import MapCanvas, { type MapHandle } from "./map/MapCanvas";
 import Legend from "./panels/Legend";
+import QueuePanel from "./features/queue/QueuePanel";
+import { useTickets } from "./features/queue/useTickets";
+import { isUnresolved } from "./features/queue/tickets";
 import { ENV } from "./config/env";
 import { REFRESH_MS } from "./layers/congestion";
+import type { Report } from "./types/api";
 
 const clock = (d: Date) => d.toLocaleTimeString([], { hour12: false });
+const PHONE = "(max-width: 700px)"; // the breakpoint in panels.css
 
 export default function App() {
   const [congestionOn, setCongestionOn] = useState(true);
@@ -13,8 +18,13 @@ export default function App() {
   // Starts closed on every load, nothing is remembered.
   const [navOpen, setNavOpen] = useState(false);
   // Open on desktop; folded on phones so it does not sit over the map.
-  const [panelOpen, setPanelOpen] = useState(() => !matchMedia("(max-width: 700px)").matches);
+  const [panelOpen, setPanelOpen] = useState(() => !matchMedia(PHONE).matches);
+  const [queueOpen, setQueueOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const tickets = useTickets();
   const toggle = useRef<HTMLButtonElement>(null);
+  const mapView = useRef<MapHandle>(null);
+  const unresolved = tickets.reports?.filter(isUnresolved).length ?? 0;
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
@@ -27,16 +37,51 @@ export default function App() {
     return () => clearInterval(id);
   }, [congestionOn]);
 
+  // Esc closes the sidebar first (focus back to its toggle), then the Tickets panel.
   useEffect(() => {
-    if (!navOpen) return;
+    if (!navOpen && !queueOpen) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
+      if (!navOpen) return closeQueue();
       setNavOpen(false);
       toggle.current?.focus();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [navOpen]);
+  }, [navOpen, queueOpen]);
+
+  // A pin click opens its ticket.
+  const selectPin = useCallback((id: string) => {
+    setSelectedId(id);
+    setQueueOpen(true);
+  }, []);
+
+  // keepSelection: the pin stays highlighted (phone "Show on map").
+  function closeQueue(keepSelection = false) {
+    if (document.getElementById("queue")?.contains(document.activeElement)) toggle.current?.focus();
+    setQueueOpen(false);
+    if (!keepSelection) setSelectedId(null);
+  }
+
+  function openView(view: "map" | "tickets") {
+    setNavOpen(false);
+    if (view === "map") {
+      closeQueue();
+      toggle.current?.focus();
+      return;
+    }
+    setSelectedId(null); // the list, even if a ticket was open
+    setQueueOpen(true);
+    document.getElementById("queue-title")?.focus(); // already open: keep focus out of the closing sidebar
+  }
+
+  // Phones: the sheet covers the map, so close it first. Desktop: centre the pin left of the panel.
+  function showOnMap(r: Report) {
+    const phone = matchMedia(PHONE).matches;
+    const left = document.getElementById("queue")?.getBoundingClientRect().left ?? innerWidth;
+    if (phone) closeQueue(true);
+    mapView.current?.show(r.lng, r.lat, phone ? 0 : innerWidth - left);
+  }
 
   return (
     <div className="shell">
@@ -62,20 +107,54 @@ export default function App() {
 
         <nav id="sidebar" className={`nav${navOpen ? " open" : ""}`} aria-label="Main" inert={!navOpen}>
           <div className="nav-label">OPERATIONS</div>
-          <div className="nav-link active" aria-current="page">
+          <button
+            className={queueOpen ? "nav-link" : "nav-link active"}
+            aria-current={queueOpen ? undefined : "page"}
+            onClick={() => openView("map")}
+          >
             Map
-          </div>
+          </button>
+          <button
+            className={queueOpen ? "nav-link active" : "nav-link"}
+            aria-current={queueOpen ? "page" : undefined}
+            onClick={() => openView("tickets")}
+          >
+            Tickets
+            {unresolved > 0 && (
+              <span className="count">
+                {unresolved}
+                <span className="sr-only"> unresolved</span>
+              </span>
+            )}
+          </button>
         </nav>
       </div>
 
       <main className="stage">
-        <MapCanvas congestionOn={congestionOn} stamp={stamp} />
+        <MapCanvas
+          ref={mapView}
+          congestionOn={congestionOn}
+          stamp={stamp}
+          reports={tickets.reports}
+          selectedId={selectedId}
+          onSelect={selectPin}
+        />
 
         <div className="hud">
-          <div className="status">
-            <i className="dot" />
-            <span>Live · {clock(now)}</span>
-            <span className="refreshed">refreshed {clock(new Date(stamp))}</span>
+          <div className="hud-row">
+            <div role="status">
+              {!tickets.online && (
+                <div className="status offline">
+                  <i className="dot" data-status="open" />
+                  API offline
+                </div>
+              )}
+            </div>
+            <div className="status">
+              <i className="dot" />
+              <span>Live · {clock(now)}</span>
+              <span className="refreshed">refreshed {clock(new Date(stamp))}</span>
+            </div>
           </div>
 
           <details
@@ -111,9 +190,32 @@ export default function App() {
               <p className="warn">No TomTom key. Set VITE_TOMTOM_API_KEY in .env.local.</p>
             )}
           </details>
+
+          {queueOpen && (
+            <QueuePanel
+              reports={tickets.reports}
+              online={tickets.online}
+              fresh={tickets.fresh}
+              now={now.getTime()}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
+              onClose={() => closeQueue()}
+              onStatus={tickets.changeStatus}
+              onShowOnMap={showOnMap}
+            />
+          )}
         </div>
 
         <Legend />
+
+        <div className="toast" role="status">
+          {tickets.toast && (
+            <span key={tickets.toast.id}>
+              <i className="dot" data-status="open" />
+              {tickets.toast.text}
+            </span>
+          )}
+        </div>
       </main>
     </div>
   );
