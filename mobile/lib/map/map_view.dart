@@ -233,7 +233,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     final fix = _location.fix;
     if (fix == null || !_trip.started) return;
     if (_pendingFollow) _follow(); // Start came before the first fix: the camera joins the user now
-    _trip.update(fix.latitude, fix.longitude);
+    _trip.update(fix.latitude, fix.longitude, weak: fix.accuracy > weakAccuracyM);
   }
 
   // The camera follows the pin and turns with the phone's heading, so the way ahead is up the screen. Mapbox's

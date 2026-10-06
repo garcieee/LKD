@@ -13,6 +13,9 @@ typedef LatLng = ({double lat, double lng});
 typedef RouteFn = Future<WalkRoute> Function(LatLng from, LatLng to, String mode);
 typedef CommuteFn = Future<List<CommuteOption>> Function(LatLng from, LatLng to, String mode);
 
+const rerouteAfterFixes = 3; // good fixes in a row off the path before a new route is asked for
+const rerouteEvery = Duration(seconds: 15); // at least this long between asks
+
 /// What the card shows: the walking routes to compare, then the ways to commute.
 enum TripStep { walk, commute }
 
@@ -36,6 +39,14 @@ class TripState extends ChangeNotifier {
   bool started = false; // the user pressed Start: the trip is on
   TripProgress? progress; // where the user is on the trip, once a fix has come in since Start
   int _leg = 0; // the leg the user is on; only ever goes up
+  List<CommuteLeg> _tripLegs = const [];
+  bool rerouting = false; // a new route from where the user is, is on its way
+  int _offFixes = 0; // good fixes in a row that were off the path
+  int _tripId = 0; // bumped when a trip starts or ends; a reroute that finds it changed is dropped
+  DateTime? _lastReroute;
+
+  /// What time it is, for the reroute cooldown. A field so a test can move it.
+  DateTime Function() clock = DateTime.now;
   bool loading = false;
   bool planned = false; // routes for this destination have been asked for
   int _round = 0; // bumped per destination; answers from an older one are dropped
@@ -43,6 +54,10 @@ class TripState extends ChangeNotifier {
   WalkRoute? get route => routes[mode];
   String? get error => errors[mode];
   bool get hasCommute => _fetchCommute != null;
+
+  /// The legs of the trip as it is being travelled. Once Start is pressed these are the trip's own copy: a reroute
+  /// replaces the leg the user left, and the planned routes stay as they were.
+  List<CommuteLeg> get legs => started ? _tripLegs : activeLegs;
   /// The legs of the trip being taken: the chosen commute option, or, with no ride (or started from the walking
   /// step), the chosen walking route all the way.
   List<CommuteLeg> get activeLegs {
@@ -72,9 +87,7 @@ class TripState extends ChangeNotifier {
     commuteLoading = false;
     selected = 0;
     _from = null;
-    started = false;
-    progress = null;
-    _leg = 0;
+    _endTrip();
     loading = false;
     planned = false;
     notifyListeners();
@@ -85,35 +98,79 @@ class TripState extends ChangeNotifier {
 
   void start() {
     if (!canStart || started) return;
+    _endTrip();
+    _tripLegs = List.of(activeLegs);
     started = true;
-    progress = null;
-    _leg = 0;
     notifyListeners();
   }
 
   void end() {
     if (!started) return;
-    started = false;
-    progress = null;
-    _leg = 0;
+    _endTrip();
     notifyListeners();
   }
 
+  // Forgets everything about a trip being travelled, and so drops a reroute still on its way.
+  void _endTrip() {
+    started = false;
+    progress = null;
+    _leg = 0;
+    _tripLegs = const [];
+    rerouting = false;
+    _offFixes = 0;
+    _lastReroute = null;
+    _tripId++;
+  }
+
   /// A new GPS fix while the trip is on. Listeners hear about it only when something worth showing changed: the
-  /// leg, arriving, going off the line, or the distance left by 10 m.
-  void update(double lat, double lng) {
+  /// leg, arriving, going off the line, the next turn, or the distance left by 10 m. A [weak] fix (a rough guess,
+  /// see weakAccuracyM) moves the user along but does not count towards being off the path.
+  ///
+  /// Off the path on a walk for [rerouteAfterFixes] good fixes in a row: ask for a new route from here to the end
+  /// of that leg, at most once per [rerouteEvery].
+  void update(double lat, double lng, {bool weak = false}) {
     if (!started) return;
-    final p = tripProgress(activeLegs, _leg, lat, lng), old = progress;
+    final p = tripProgress(legs, _leg, lat, lng), old = progress;
     if (p == null) return;
     _leg = p.leg;
     progress = p;
+    if (!p.offRoute) {
+      _offFixes = 0;
+    } else if (!weak) {
+      _offFixes++;
+    }
+    if (_offFixes >= rerouteAfterFixes) _reroute(lat, lng);
     if (old == null ||
         old.leg != p.leg ||
         old.arrived != p.arrived ||
         old.offRoute != p.offRoute ||
+        old.turn != p.turn ||
         (old.leftM / 10).round() != (p.leftM / 10).round()) {
       notifyListeners();
     }
+  }
+
+  // Replaces the leg the user is on with a walk from ([lat], [lng]) to where that leg ended, in the picked mode (so
+  // reported hazards are steered around as before). A failed ask keeps the old line; the next fix past the cooldown
+  // tries again while the user is still off it.
+  Future<void> _reroute(double lat, double lng) async {
+    final now = clock(), last = _lastReroute;
+    if (rerouting || (last != null && now.difference(last) < rerouteEvery)) return;
+    final i = _leg, old = _tripLegs[i], end = old.line.last, id = _tripId;
+    _lastReroute = now;
+    rerouting = true;
+    notifyListeners();
+    try {
+      final r = await _fetch((lat: lat, lng: lng), (lat: end[1], lng: end[0]), mode);
+      if (id != _tripId) return;
+      _tripLegs[i] = CommuteLeg.walk(r, old.label);
+      _offFixes = 0;
+      progress = tripProgress(_tripLegs, i, lat, lng);
+    } on ApiException {
+      if (id != _tripId) return;
+    }
+    rerouting = false;
+    notifyListeners();
   }
 
   void select(int i) {

@@ -27,7 +27,7 @@ class NavBar extends StatelessWidget {
   }
 
   Widget _body() {
-    final legs = trip.activeLegs, p = trip.progress;
+    final legs = trip.legs, p = trip.progress;
     if (p == null || p.leg >= legs.length) {
       return _Row(
         icon: Icons.my_location,
