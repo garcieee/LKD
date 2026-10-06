@@ -19,8 +19,8 @@ def ors_route(distance=480.5, duration=345.2, coords=LINE):
     return {"features": [{"geometry": {"type": "LineString", "coordinates": coords}, "properties": {"summary": {"distance": distance, "duration": duration}}}]}
 
 
-def report(rid, lat, lng, status="open"):
-    return {"id": rid, "category": "pothole", "lat": lat, "lng": lng, "heading": None, "note": "", "photo_url": f"/photos/{rid}.jpg", "status": status, "created_at": "2026-10-06T00:00:00+00:00", "updated_at": "2026-10-06T00:00:00+00:00"}
+def report(rid, lat, lng, status="open", category="pothole"):
+    return {"id": rid, "category": category, "lat": lat, "lng": lng, "heading": None, "note": "", "photo_url": f"/photos/{rid}.jpg", "status": status, "created_at": "2026-10-06T00:00:00+00:00", "updated_at": "2026-10-06T00:00:00+00:00"}
 
 
 @pytest.fixture(autouse=True)
@@ -76,6 +76,16 @@ def test_accessible_uses_the_wheelchair_profile_and_the_same_zones(tmp_path):
     assert seen[0].url.path == "/v2/directions/wheelchair/geojson"
     assert "avoid_polygons" in json.loads(seen[0].content)["options"]
     assert body["mode"] == "accessible"
+
+
+@pytest.mark.parametrize("mode, in_the_way", [("fastest", False), ("walkable", False), ("accessible", True)])
+def test_an_accessibility_barrier_counts_only_on_the_accessible_route(tmp_path, mode, in_the_way):
+    sent = []
+    barrier = report("ramp", 14.5540, 121.0230, category="missing_ramp")
+    c = make_client(tmp_path, lambda req: sent.append(json.loads(req.content)) or httpx.Response(200, json=ors_route()), [barrier])
+    body = c.get("/route/walk", params={**PARAMS, "mode": mode}).json()
+    assert ("options" in sent[0]) is in_the_way, "a zone only where a wheelchair cannot pass"
+    assert body["hazard_ids"] == (["ramp"] if in_the_way else [])
 
 
 def test_walkable_is_the_default_mode(tmp_path):

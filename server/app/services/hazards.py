@@ -8,6 +8,9 @@ import math
 M_PER_DEG = 111_320.0  # metres per degree of latitude; longitude shrinks with cos(lat)
 ZONE_HALF_M = 20.0  # a no-go zone is a square this far to each side of the report (40 m across)
 
+# Barriers to a wheelchair, a cane or a white cane, not to someone walking: only the Accessible route counts them.
+ACCESSIBILITY = {"missing_ramp", "blocked_tactile_paving", "broken_elevator", "unsafe_sidewalk"}
+
 
 def unresolved(reports: list[dict]) -> list[dict]:
     """Fixed and rejected are no longer in the way: assigned and verified still are. A rejected report was judged not
@@ -17,6 +20,11 @@ def unresolved(reports: list[dict]) -> list[dict]:
     close a street to everyone's routes (and it is not listed to the public app either, see /reports).
     """
     return [r for r in reports if r["status"] not in ("fixed", "rejected") and r.get("category") != "sos"]
+
+
+def for_mode(reports: list[dict], mode: str) -> list[dict]:
+    """The reports that are in the way in this route mode: accessibility barriers only for Accessible."""
+    return reports if mode == "accessible" else [r for r in reports if r.get("category") not in ACCESSIBILITY]
 
 
 def _metres(lat0: float, lat: float, lng0: float, lng: float) -> tuple[float, float]:

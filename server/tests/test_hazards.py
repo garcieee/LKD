@@ -57,3 +57,10 @@ def test_near_route_ignores_fixed_and_copes_with_tiny_routes():
     assert hazards.near_route(route, [report("a", status="fixed")]) == []
     assert hazards.near_route([], [report("a")]) == []
     assert hazards.near_route(line((0, 5)), [report("a")]) == ["a"]  # a single point is a route of length zero
+
+
+def test_accessibility_barriers_are_in_the_way_of_the_accessible_mode_only():
+    rs = [{**report("ramp"), "category": "missing_ramp"}, {**report("hole"), "category": "pothole"}]
+    assert [r["id"] for r in hazards.for_mode(rs, "accessible")] == ["ramp", "hole"]
+    for mode in ("fastest", "walkable"):
+        assert [r["id"] for r in hazards.for_mode(rs, mode)] == ["hole"]
