@@ -290,7 +290,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   }
 
   // A walking app opens at street level on the user, heading up, not on the whole city: once, on the first fix
-  // inside Makati (whether it comes before or after the map is framed). Reset still returns to the city.
+  // inside Makati (whether it comes before or after the map is framed).
   bool _startedNearUser = false;
 
   void _startNearUser() {
@@ -466,7 +466,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     await Future.wait([
       map.logo.updateSettings(LogoSettings(marginBottom: lift)),
       map.attribution.updateSettings(AttributionSettings(marginBottom: lift)),
-      map.compass.updateSettings(CompassSettings(enabled: false)), // under the status bar; Reset squares the map up and restores the tilt
+      map.compass.updateSettings(CompassSettings(enabled: false)), // under the status bar
       map.scaleBar.updateSettings(ScaleBarSettings(enabled: false)),
     ]);
     await _ready();
@@ -487,7 +487,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
       await map.setProjection(StyleProjection(name: StyleProjectionName.mercator));
       if (!_framed) {
         _framed = true;
-        await _frame(map, animate: false);
+        await _frame(map);
         _startNearUser(); // the fix may have arrived first
       }
     } catch (e) {
@@ -500,8 +500,8 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   // ponytail: native bounds constrain the camera CENTRE only (unlike GL JS maxBounds), so near an
   // edge the view can overhang the city by up to half a screen. Upgrade: on camera idle, shrink the
   // bounds by half the visible span (coordinateBoundsForCamera) and call setBounds again.
-  // Also worked out only on load and on Reset: redo it on window resize if the app gets split screen.
-  Future<void> _frame(MapboxMap map, {required bool animate}) async {
+  // Also worked out only on load: redo it on window resize if the app gets split screen.
+  Future<void> _frame(MapboxMap map) async {
     final fit = await map.cameraForCoordinateBounds(
       _home,
       MbxEdgeInsets(top: 0, left: 0, bottom: 0, right: 0),
@@ -520,16 +520,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
       ),
     );
     final camera = fits ? CameraOptions(center: fit.center, zoom: fit.zoom, bearing: 0, pitch: _pitch) : _fallback;
-    if (animate) {
-      await map.flyTo(camera, MapAnimationOptions(duration: 1200));
-    } else {
-      await map.setCamera(camera);
-    }
-  }
-
-  void _reset() {
-    final map = _map;
-    if (map != null) _frame(map, animate: true);
+    await map.setCamera(camera);
   }
 
   @override
@@ -565,7 +556,16 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [const _Brand(), Flexible(child: _ResetChip(onPressed: _reset))],
+                        children: [
+                          const _Brand(),
+                          // Shrinks a little rather than overflow, at 320 dp and large text.
+                          Flexible(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: CompassChip(bearing: _bearing, following: _following),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 10),
                       PlaceSearchBar(search: _search, trip: _trip, near: _near),
@@ -584,8 +584,6 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            CompassChip(bearing: _bearing, following: _following),
-                            const SizedBox(height: 10),
                             _LocateRow(location: _location, onLocate: _locate, onTransit: _nearbyHubs),
                             const SizedBox(height: 10),
                             _ReportButton(onPressed: _report),
@@ -722,20 +720,6 @@ class _Brand extends StatelessWidget {
           Text('MAKATI · LGU OPS', style: TextStyle(fontSize: 11, letterSpacing: 1.3)),
         ],
       ),
-    );
-  }
-}
-
-class _ResetChip extends StatelessWidget {
-  const _ResetChip({required this.onPressed});
-
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return ChipCard(
-      padding: EdgeInsets.zero,
-      child: TextButton(onPressed: onPressed, child: const Text('Reset to Makati')),
     );
   }
 }
