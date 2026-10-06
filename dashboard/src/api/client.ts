@@ -42,7 +42,7 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
     throw new Error("API offline");
   }
   const body = await res.json().catch(() => null);
-  if (!res.ok) throw Object.assign(new Error(detail(body) ?? `HTTP ${res.status}`), { status: res.status });
+  if (!res.ok) throw new Error(detail(body) ?? `HTTP ${res.status}`);
   return body as T;
 }
 

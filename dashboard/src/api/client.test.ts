@@ -51,8 +51,8 @@ test("a refusal keeps the server's message, and an unreachable server says so", 
     [`PATCH ${API}/reports/b`]: () => json({ detail: "Only an SOS has a kind." }, 422),
     [`PATCH ${API}/reports/gone`]: () => json({ detail: "No such report." }, 404),
   });
-  await assert.rejects(patchSosKind("b", "police"), { status: 422, message: "Only an SOS has a kind." });
-  await assert.rejects(patchStatus("gone", "fixed"), { status: 404, message: "No such report." });
+  await assert.rejects(patchSosKind("b", "police"), { message: "Only an SOS has a kind." });
+  await assert.rejects(patchStatus("gone", "fixed"), { message: "No such report." });
   t.mock.method(globalThis, "fetch", async () => {
     throw new TypeError("fetch failed");
   });

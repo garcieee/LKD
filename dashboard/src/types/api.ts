@@ -34,11 +34,6 @@ export type Report = {
   status: Status;
   created_at: string; // ISO 8601, UTC
   updated_at: string;
-  // Set by the server's ticket loop (models/tickets) a few seconds after the report arrives: its ticket's rank and
-  // where it is.
-  priority?: number; // 0..100
-  band?: "Critical" | "High" | "Medium" | "Low";
-  district_id?: number | null; // 1 or 2; null outside both
 };
 
 // PROVISIONAL: the routing API (server/app/routers/routes.py, GET /route/walk) is not built yet, so this is the
