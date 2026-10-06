@@ -13,8 +13,8 @@ CORS_ORIGINS = [
     if o.strip()
 ]
 
-# reports.json and photos/, created at runtime (git-ignored).
-STORAGE_DIR = SERVER_DIR / os.getenv("STORAGE_DIR", "storage")
+# reports.json and photos/ in the top-level db/ folder, created at runtime (git-ignored).
+STORAGE_DIR = SERVER_DIR / os.getenv("STORAGE_DIR", "../db")
 
 # west,south,east,north of the city reports are accepted for. Mirrors dashboard/src/config/makati.ts.
 CITY_BOUNDS = tuple(
