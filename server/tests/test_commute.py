@@ -18,8 +18,8 @@ JEEP_A, JEEP_B = hub("ja", 14.5502, ["jeepney"]), hub("jb", 14.5698, ["jeepney"]
 BUS_A, BUS_B = hub("ba", 14.5504, ["city_bus"]), hub("bb", 14.5696, ["city_bus"])
 
 
-# The routes the study lists: a jeepney route joins ja and jb, a city bus route joins ba and bb.
-LINKS = {"jeepney": {frozenset(("ja", "jb"))}, "city_bus": {frozenset(("ba", "bb"))}}
+# The routes the study lists: a jeepney route joins ja and jb. City bus stops need no route between them.
+LINKS = {"jeepney": {frozenset(("ja", "jb"))}}
 TRAIN_A, TRAIN_B = hub("ta", 14.5503, ["mrt3"]), hub("tb", 14.5697, ["mrt3"])
 
 
@@ -28,6 +28,10 @@ def test_a_road_ride_needs_a_route_that_joins_the_two_hubs():
     same_mode_no_route = commute.plan([JEEP_A, JEEP_B], RIDES, {}, START, END)
     assert same_mode_no_route == [], "two jeepney hubs are not a jeepney route"
     assert [o["id"] for o in commute.plan([JEEP_A, JEEP_B], RIDES, LINKS, START, END)] == ["jeepney:ja:jb"]
+
+
+def test_any_two_city_bus_stops_are_a_ride_without_a_listed_route():
+    assert [o["id"] for o in commute.plan([BUS_A, BUS_B], RIDES, {}, START, END)] == ["city_bus:ba:bb"]
 
 
 def test_a_route_runs_both_ways():

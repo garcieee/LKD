@@ -1,9 +1,9 @@
 """Commute options: walk to a hub, ride to another hub that shares the mode, walk to the destination.
 
 Everything here is an estimate. The PUV study has no stop order, route lines, fares or timetables. What it does have is
-the routes themselves, and routes are fixed: a jeepney or bus ride is only offered between the two end points of a route
-in the study (route_ends.json says which hub each end is), and a train ride between two stations of the same line. The
-ride's line is the street path between the two (routers/commute.py) and its time uses an assumed speed (ride_modes.json).
+the routes themselves, and routes are fixed: a jeepney ride is only offered between the two end points of a route in the
+study (route_ends.json says which hub each end is), a train ride between two stations of the same line, and a city bus
+ride between two of the city bus stops. The ride's line is the street path between the two (routers/commute.py) and its time uses an assumed speed (ride_modes.json).
 No fares: they are not in the data and do not decide the route.
 """
 import json
@@ -20,6 +20,7 @@ MIN_RIDE_M = 400  # not worth boarding for less
 HUBS_PER_END = 10
 ROAD_KINDS = {"jeepney", "uv_express", "city_bus", "p2p_bus"}  # run on streets; MRT-3 and LRT-1 run on rails
 RAIL_KINDS = {"mrt3", "lrt1"}
+SHARED_KINDS = RAIL_KINDS | {"city_bus"}  # ridden between any two hubs that serve the mode: a line, or a bus stop network
 
 log = logging.getLogger(__name__)
 
@@ -75,7 +76,8 @@ def plan(hubs: list[dict], rides: dict, links: dict, start: tuple, end: tuple, l
     """Up to `limit` options, quickest first, each {id, total_s, walk_s, tags, legs}.
 
     The best option of each mode comes first so the list shows different ways to go, then the next quickest fill it.
-    A ride is on a train line both hubs stand on, or on a road route that `links` (see load_links) says joins them.
+    A ride is on a train line or the city bus network both hubs stand on, or on a road route that `links` (see
+    load_links) says joins them.
     ponytail: one ride, no transfers, and the ride's line is a straight one here (routers/commute.py draws it along
     the streets). Upgrade when the data has stop order and lines.
     """
@@ -90,7 +92,7 @@ def plan(hubs: list[dict], rides: dict, links: dict, start: tuple, end: tuple, l
             if a["id"] == b["id"] or ride_m < MIN_RIDE_M:
                 continue
             joined = {m for m in ROAD_KINDS if frozenset((a["id"], b["id"])) in links.get(m, ())}
-            for mode in (set(a["modes"]) & set(b["modes"]) & RAIL_KINDS) | joined:
+            for mode in (set(a["modes"]) & set(b["modes"]) & SHARED_KINDS) | joined:
                 f = rides.get(mode)
                 if not f:
                     continue
