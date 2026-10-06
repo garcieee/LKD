@@ -61,12 +61,16 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     infiniteBounds: false,
   );
 
+  // The tilt every camera move ends on: flat in 2D.
+  bool _threeDShown = true; // what the camera and the buildings layer last matched
+  double get _pitch => _layers.threeD ? Makati.pitch : 0;
+
   // Where the camera is when the whole city cannot be fitted: Makati.zoom frames it on a ~390px phone.
-  static final _fallback = CameraOptions(
+  CameraOptions get _fallback => CameraOptions(
     center: Point(coordinates: Position(Makati.lng, Makati.lat)),
     zoom: Makati.zoom,
     bearing: 0,
-    pitch: Makati.pitch,
+    pitch: _pitch,
   );
 
   // The first frames, until the style loads and the whole city is framed.
@@ -183,7 +187,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     final fix = _location.fix;
     final dest = Point(coordinates: Position(place.lng, place.lat));
     if (fix == null || !inMakati(fix.latitude, fix.longitude)) {
-      await map.flyTo(CameraOptions(center: dest, zoom: 16, bearing: 0, pitch: Makati.pitch), MapAnimationOptions(duration: 1000));
+      await map.flyTo(CameraOptions(center: dest, zoom: 16, bearing: 0, pitch: _pitch), MapAnimationOptions(duration: 1000));
       return;
     }
     await _fit(map, [Point(coordinates: Position(fix.longitude, fix.latitude)), dest]);
@@ -199,7 +203,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     );
     // Points close together would zoom to street-corner level: stop at 17.
     final zoom = fit.zoom;
-    final camera = zoom != null && zoom.isFinite ? CameraOptions(center: fit.center, zoom: math.min(zoom, 17), bearing: 0, pitch: Makati.pitch) : fit;
+    final camera = zoom != null && zoom.isFinite ? CameraOptions(center: fit.center, zoom: math.min(zoom, 17), bearing: 0, pitch: _pitch) : fit;
     await map.flyTo(camera, MapAnimationOptions(duration: 1000));
   }
 
@@ -221,7 +225,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
         center: Point(coordinates: Position(fix.longitude, fix.latitude)),
         zoom: 17,
         bearing: 0,
-        pitch: Makati.pitch,
+        pitch: _pitch,
       ),
       MapAnimationOptions(duration: 1000),
     );
@@ -280,6 +284,20 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     } catch (e) {
       debugPrint('congestion layer: $e'); // a failed refresh must not take the app down
     }
+    try {
+      final threeD = _layers.threeD;
+      if (threeD != _threeDShown) {
+        _threeDShown = threeD;
+        await map.easeTo(CameraOptions(pitch: _pitch), MapAnimationOptions(duration: 600));
+      }
+      if (threeD) {
+        await addBuildings(map); // no-op once there
+      } else {
+        await removeBuildings(map);
+      }
+    } catch (e) {
+      debugPrint('buildings layer: $e'); // a flat map is fine
+    }
   }
 
   Future<void> _onMapCreated(MapboxMap map) async {
@@ -301,14 +319,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   Future<void> _ready() async {
     final map = _map;
     if (map == null || !await map.isStyleLoaded()) return;
-    _queue = _queue.then((_) async {
-      try {
-        await addBuildings(map); // first, so the pins and the route land above the blocks
-      } catch (e) {
-        debugPrint('buildings layer: $e'); // flat map is fine
-      }
-    });
-    _apply();
+    _apply(); // also redraws the buildings a new style dropped
     _loadReports();
     _puckOn = false; // a new style drops the puck
     _syncPuck();
@@ -349,7 +360,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
         maxZoom: Makati.maxZoom,
       ),
     );
-    final camera = fits ? CameraOptions(center: fit.center, zoom: fit.zoom, bearing: 0, pitch: Makati.pitch) : _fallback;
+    final camera = fits ? CameraOptions(center: fit.center, zoom: fit.zoom, bearing: 0, pitch: _pitch) : _fallback;
     if (animate) {
       await map.flyTo(camera, MapAnimationOptions(duration: 1200));
     } else {

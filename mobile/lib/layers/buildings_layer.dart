@@ -19,13 +19,17 @@ final _layer = {
   'minzoom': 15,
   'paint': {
     // Darker than light-v11's near-white ground, or the blocks vanish into it.
-    'fill-extrusion-color': '#cfcac4',
+    'fill-extrusion-color': '#bab6b0', // 10% darker than the first try, for a firmer block
     'fill-extrusion-height': ['case', ['>', _height, 0], _height, 10],
     'fill-extrusion-base': ['to-number', ['get', 'min_height'], 0],
     'fill-extrusion-opacity': 1,
     'fill-extrusion-vertical-gradient': true, // walls darken towards the ground
   },
 };
+
+Future<void> removeBuildings(MapboxMap map) async {
+  if (await map.styleLayerExists(_id)) await map.removeStyleLayer(_id);
+}
 
 /// Adds the extruded buildings under the labels, once per style load. Safe to call again.
 // ponytail: no setLights() sun. In Mapbox's 3D light model it would dim every other layer too;

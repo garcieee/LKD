@@ -30,6 +30,16 @@ class LayerSheet extends StatelessWidget {
               value: layers.congestionOn,
               onChanged: layers.setCongestion,
             ),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              title: const Text(
+                '3D map',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+              ),
+              value: layers.threeD,
+              onChanged: layers.setThreeD,
+            ),
             Row(
               children: [
                 Expanded(

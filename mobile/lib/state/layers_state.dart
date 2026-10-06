@@ -6,11 +6,17 @@ import 'package:flutter/foundation.dart';
 // because there is one layer. Add shared_preferences and layers/layer_registry.dart with the second.
 class LayersState extends ChangeNotifier {
   bool congestionOn = true; // on by default, as on the dashboard
+  bool threeD = true; // tilted map with extruded buildings; off is the flat top-down map
   DateTime stamp = DateTime.now(); // last refresh; also the tile cache-buster
 
   void setCongestion(bool on) {
     congestionOn = on;
     if (on) stamp = DateTime.now(); // switching on fetches fresh tiles
+    notifyListeners();
+  }
+
+  void setThreeD(bool on) {
+    threeD = on;
     notifyListeners();
   }
 
