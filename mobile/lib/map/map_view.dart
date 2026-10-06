@@ -19,6 +19,7 @@ import '../features/transfer_walk/route_card.dart';
 import '../layers/buildings_layer.dart';
 import '../layers/congestion_layer.dart';
 import '../layers/destination_layer.dart';
+import '../layers/hubs_layer.dart';
 import '../layers/reports_layer.dart';
 import '../layers/route_layer.dart';
 import '../state/layers_state.dart';
@@ -341,6 +342,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     final map = _map;
     if (map == null || !await map.isStyleLoaded()) return;
     _apply(); // also redraws the buildings a new style dropped
+    _queue = _queue.then((_) => showHubs(map).catchError((e) => debugPrint('hubs layer: $e'))); // before the report pins, so they stay on top
     _loadReports();
     _puckOn = false; // a new style drops the puck
     _syncPuck();
