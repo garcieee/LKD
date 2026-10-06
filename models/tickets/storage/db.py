@@ -48,7 +48,7 @@ MIGRATIONS = (
     create table if not exists ticket_events (
       id integer primary key,
       ticket_id text not null references tickets (id) on delete cascade,
-      actor text,  -- the analyst's Supabase user id; null when the server made the change (a reopen)
+      actor text,  -- who made the change; null when the server made it (a reopen)
       from_status text,
       to_status text not null,
       at text not null

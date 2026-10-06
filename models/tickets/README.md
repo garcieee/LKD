@@ -22,8 +22,8 @@ Everything that decides **what a report is**, **whether it is the same place as 
 2. Only `engine.py` uses `storage/`. Only the server uses `engine.py`.
 3. Imports go one way: rules, then storage, then engine, then server.
 4. Every tunable number is in `settings.py`. Nothing hides in the code.
-5. The dashboard and the phone never score, rank or merge. They display what `/tickets` returns.
-6. Runtime data lives in the top-level `db/` folder, which is git-ignored: the cache (`reports.json`) and the photos, written by the server, and the database (`lakad.db`), written by `storage/`. Supabase holds only sign-in and district roles (`supabase/`).
+5. The dashboard and the phone never score, rank or merge. They display what the server returns: `/reports`, with each report's ticket, district and priority.
+6. Runtime data lives in the top-level `db/` folder, which is git-ignored: the cache (`reports.json`) and the photos, written by the server, and the database (`lakad.db`), written by `storage/`.
 7. Additive only: `/reports` keeps its URL and shape and only gains fields, and a ticket reuses its first report's id, so nothing the dashboard, the phone or the routing code reads today breaks.
 
 ## Tuning
@@ -34,7 +34,7 @@ Edit `settings.py`, run the tests. The weights are judgment calls: show a few pe
 
 **Built and tested:** `matching/`, `ranking/`, `classification/`, `resources/`, `engine.py` and `storage/` (standard library only), with every number in `settings.py`. `resources/districts.json` holds the boundaries of Makati's 23 barangays after the EMBO ruling (OpenStreetMap, ODbL; rebuilt by `resources/build_districts.py`), and `district_of` puts a point in District 1, District 2 or neither.
 
-**Attached:** a loop inside the server (`server/app/services/ticket_sync.py`, every `SYNC_EVERY_S`) calls `engine.sync_once`: each new report joins or opens a ticket, the ticket gets its district and priority, tickets, sightings and every status change are kept in SQLite (`db/lakad.db`), and `/reports` gains `ticket_id`, `district_id`, `priority` and `band`. Analysts sign in with Supabase Auth and use `GET` and `PATCH /tickets`, which show and change only the tickets of their districts (`engine.tickets_for`, `engine.set_status`).
+**Attached:** a loop inside the server (`server/app/services/ticket_sync.py`, every `SYNC_EVERY_S`) calls `engine.sync_once`: each new report joins or opens a ticket, the ticket gets its district and priority, tickets, sightings and every status change are kept in SQLite (`db/lakad.db`), and `/reports` gains `ticket_id`, `district_id`, `priority` and `band`. The dashboard reads and changes `/reports`; `engine.tickets_for` and `engine.set_status` (with a district scope) are ready for a ticket view behind a sign-in, which Lakad does not have.
 
 **Evaluated:** see the Results section of `EVALUATION.md` for what met its targets, what missed, and the decisions waiting for the team. Nothing in the rules or `settings.py` was changed because of it.
 
