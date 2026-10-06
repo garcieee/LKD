@@ -1,4 +1,5 @@
-// The server's report API (server/app/routers/reports.py) at Env.apiBaseUrl.
+// The server's API at Env.apiBaseUrl: reports (server/app/routers/reports.py) and place search
+// (server/app/routers/geocode.py).
 // Report mirrors server/app/db/models.py, minus severity and updated_at, which the app never shows.
 import 'dart:convert';
 import 'dart:math' as math;
@@ -47,6 +48,18 @@ class Report {
   String get label => categoryLabels[category] ?? 'Other';
 }
 
+/// A place the search found: GET /geocode answers a list of these.
+class Place {
+  Place.fromJson(Map<String, dynamic> json)
+    : label = json['label'] as String,
+      lat = (json['lat'] as num).toDouble(),
+      lng = (json['lng'] as num).toDouble();
+
+  final String label; // e.g. "Ayala Triangle Gardens, Makati, Philippines"
+  final double lat;
+  final double lng;
+}
+
 /// A failed call, with a message fit to show the user.
 class ApiException implements Exception {
   const ApiException(this.message);
@@ -72,6 +85,15 @@ class ApiClient {
   Future<List<Report>> reports() async {
     final body = await _send(http.AbortableRequest('GET', Uri.parse('$base/reports'), abortTrigger: _deadline()));
     return [for (final r in body as List) Report.fromJson(r as Map<String, dynamic>)];
+  }
+
+  /// Places in Makati matching [text], best first. [near] (lat, lng) ranks nearby places higher.
+  Future<List<Place>> geocode(String text, {({double lat, double lng})? near}) async {
+    final url = Uri.parse('$base/geocode').replace(
+      queryParameters: {'q': text, if (near != null) ...{'lat': '${near.lat}', 'lng': '${near.lng}'}},
+    );
+    final body = await _send(http.AbortableRequest('GET', url, abortTrigger: _deadline()));
+    return [for (final p in body as List) Place.fromJson(p as Map<String, dynamic>)];
   }
 
   /// Files a report. [onProgress] gets the share of the photo uploaded so far, 0..1.
