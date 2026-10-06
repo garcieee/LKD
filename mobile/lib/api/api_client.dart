@@ -17,6 +17,11 @@ const categoryLabels = {
   'flooded_drain': 'Flooded drain',
   'broken_streetlight': 'Broken streetlight',
   'blocked_sidewalk': 'Blocked sidewalk',
+  // Accessibility barriers for persons with disability: only the Accessible route steers around them.
+  'missing_ramp': 'Missing or broken ramp',
+  'blocked_tactile_paving': 'Blocked or missing tactile paving',
+  'broken_elevator': 'Broken elevator or escalator',
+  'unsafe_sidewalk': 'Steep or broken sidewalk',
   'other': 'Other',
 };
 
