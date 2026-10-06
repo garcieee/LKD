@@ -125,6 +125,10 @@ def test_severity_for_every_category(client):
         "pothole": 2,
         "broken_streetlight": 2,
         "blocked_sidewalk": 2,
+        "missing_ramp": 2,
+        "blocked_tactile_paving": 2,
+        "broken_elevator": 2,
+        "unsafe_sidewalk": 2,
         "other": 1,
     }
     # A new category needs a severity, or it silently ranks as low. "sos" is the one nobody picks: POST /sos files it.

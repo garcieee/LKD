@@ -4,8 +4,10 @@ from typing import Literal
 from pydantic import BaseModel
 
 # "sos" is not a hazard a person picks: only POST /sos files one, from the app's hold-to-record button.
+# The four after "blocked_sidewalk" are accessibility barriers for persons with disability (services/hazards.py).
 Category = Literal[
-    "pothole", "open_manhole", "flooded_drain", "broken_streetlight", "blocked_sidewalk", "other", "sos"
+    "pothole", "open_manhole", "flooded_drain", "broken_streetlight", "blocked_sidewalk",
+    "missing_ramp", "blocked_tactile_paving", "broken_elevator", "unsafe_sidewalk", "other", "sos"
 ]
 # "rejected": a person at the dashboard looked at a new ticket and decided it is not real. It is hidden everywhere
 # (public list, map, routes) but kept, and can be reopened.

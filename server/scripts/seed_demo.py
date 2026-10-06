@@ -19,6 +19,7 @@ NOTES = ["", "", "Near the corner", "Been like this for weeks", "Kids walk here 
 # category: relative weight. Statuses and ages are mixed below so every Insights card has data.
 CATEGORIES = {
     "pothole": 20, "blocked_sidewalk": 16, "broken_streetlight": 10, "flooded_drain": 8, "open_manhole": 4, "other": 4,
+    "missing_ramp": 5, "unsafe_sidewalk": 3, "blocked_tactile_paving": 2, "broken_elevator": 2,
 }
 # Clusters (lat, lng) so Hotspots finds piles, plus scatter across the city.
 CLUSTERS = [(14.5547, 121.0244), (14.5656, 121.0150), (14.5509, 121.0176)]

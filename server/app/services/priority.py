@@ -9,6 +9,10 @@ SEVERITY = {
     "pothole": 2,
     "broken_streetlight": 2,
     "blocked_sidewalk": 2,
+    "missing_ramp": 2,  # missing or broken ramp or curb cut
+    "blocked_tactile_paving": 2,
+    "broken_elevator": 2,  # elevator or escalator at a station or overpass
+    "unsafe_sidewalk": 2,  # too steep or too broken for a wheelchair
     "other": 1,
 }
 
