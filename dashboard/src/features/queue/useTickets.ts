@@ -14,6 +14,8 @@ export function useTickets() {
   const [fresh, setFresh] = useState<string[]>([]);
   const [toast, setToast] = useState<{ id: number; text: string; sos?: boolean } | null>(null);
   const known = useRef<Set<string> | null>(null);
+  // Counts saved changes. A poll that set out before one brings older data than the screen shows, so it is dropped.
+  const saves = useRef(0);
 
   useEffect(() => {
     let alive = true;
@@ -22,8 +24,13 @@ export function useTickets() {
     let hide = 0;
     const poll = async () => {
       try {
+        const asked = saves.current;
         const next = await listReports();
         if (!alive) return;
+        if (saves.current !== asked) {
+          timer = window.setTimeout(poll, POLL_MS); // the next answer is newer than the change
+          return;
+        }
         const added = newReports(known.current, next);
         known.current = new Set(next.map((r) => r.id));
         // Same answer as last time: keep the old array so the map and list don't redo work.
@@ -68,6 +75,7 @@ export function useTickets() {
     setPending((p) => ({ ...p, [id]: status }));
     try {
       const saved = await patchStatus(id, status);
+      saves.current++;
       setReports((rs) => rs && rs.map((r) => (r.id === id ? saved : r)));
       return null;
     } catch (e) {
@@ -88,6 +96,7 @@ export function useTickets() {
   const changeKind = async (id: string, kind: SosKind): Promise<string | null> => {
     try {
       const saved = await patchSosKind(id, kind);
+      saves.current++;
       setReports((rs) => rs && rs.map((r) => (r.id === id ? saved : r)));
       return null;
     } catch (e) {

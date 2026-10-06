@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import CORS_ORIGINS, FOOTFALL_DIR, STORAGE_DIR, TRANSIT_DIR
 from app.db.store import ReportStore
-from app.routers import commute as commute_routes, footfall as footfall_routes, geocode, reports, routes, tickets, transit as transit_routes
+from app.routers import commute as commute_routes, footfall as footfall_routes, geocode, reports, routes, transit as transit_routes
 from app.services import commute, footfall, ticket_sync, transit
 
 
@@ -32,7 +32,6 @@ def create_app(storage: Path = STORAGE_DIR) -> FastAPI:
         CORSMiddleware, allow_origins=CORS_ORIGINS, allow_methods=["*"], allow_headers=["*"]
     )
     app.include_router(reports.router)
-    app.include_router(tickets.router)
     app.include_router(geocode.router)
     app.include_router(routes.router)
     app.include_router(commute_routes.router)

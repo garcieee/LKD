@@ -1,9 +1,5 @@
-"""Every test starts with analyst sign-in off, whatever server/.env says. The sign-in tests turn it on themselves."""
-import pytest
+"""The tests never touch the real db/: importing app.main builds an app there, so point it at a temp folder first."""
+import os
+import tempfile
 
-from app import config
-
-
-@pytest.fixture(autouse=True)
-def sign_in_off(monkeypatch):
-    monkeypatch.setattr(config, "SUPABASE_URL", "")
+os.environ.setdefault("STORAGE_DIR", tempfile.mkdtemp(prefix="lakad-tests-"))

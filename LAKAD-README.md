@@ -18,11 +18,11 @@ Both clients use the same API, so a phone report and a dashboard status change h
 
 ## Not built yet
 
-"Still there?" verification, exports, barangay leaderboard, heatmap, satellite toggle, face blur, CLIP tagging. Their files are empty stubs. Layer state is not persisted. The public API has no accounts; only the analyst dashboard signs in, through Supabase, when it is configured ([supabase/README.md](supabase/README.md)).
+"Still there?" verification, exports, barangay leaderboard, heatmap, satellite toggle, face blur, CLIP tagging. Their files are empty stubs. Layer state is not persisted. There are no accounts: anyone who can reach the API can use it, and anyone who can open the dashboard can triage.
 
 ## Reviewing new tickets: Confirm or Reject
 
-A new ticket shows a review card at the top of its detail view. **Confirm** moves it to *Verified*, from where the stepper takes it on to Assigned and Fixed. **Reject** marks it *Rejected*: it disappears from the queue (unless *Show rejected* is on), the map, the Insights numbers, the phone's list and route avoidance, but stays on the server and can be reopened. Rejecting an SOS asks once more first. The queue header counts tickets still waiting for review. Nothing is deleted. Without sign-in configured, anyone who can open the dashboard can confirm or reject; with it, only an analyst of the ticket's district, or a citywide one.
+A new ticket shows a review card at the top of its detail view. **Confirm** moves it to *Verified*, from where the stepper takes it on to Assigned and Fixed. **Reject** marks it *Rejected*: it disappears from the queue (unless *Show rejected* is on), the map, the Insights numbers, the phone's list and route avoidance, but stays on the server and can be reopened. Rejecting an SOS asks once more first. The queue header counts tickets still waiting for review. A change made on one row goes to its ticket, so every report of the same hazard follows. Nothing is deleted: a ticket fixed or rejected more than 30 days ago leaves the dashboard's list but stays in `db/lakad.db`. There is no sign-in: anyone who can open the dashboard can confirm or reject.
 
 ## Accessibility (PWD) reports
 
@@ -40,7 +40,7 @@ In the ticket rules (`models/tickets/`) the four have a danger value of 0.5, lik
 
 **At the city.** The SOS tops the Tickets queue as a red row, its pin blinks red on the map with a ripple, a red banner and a red Tickets button call for attention, and the ticket plays the video. Whoever watches it picks who must respond: **Police** (crime, violence or a threat), **Medical** (injury, collapse or illness) or **Fire and rescue** (fire, flood or someone trapped). Until then the row reads *SOS · Unsorted* and stays above the sorted ones; every open SOS stays above every hazard. Sorting does not change the status: the SOS moves through open, verified, assigned and fixed like any ticket, and the blinking stops when it is fixed. People who asked their system for reduced motion get a steady red instead of blinking.
 
-**Server.** `POST /sos` takes the video (MP4, MOV or WebM, read from the bytes, up to 40 MB) and a location in Makati, and files an urgent `sos` ticket with a `video_url`. Clips are served from `/videos/`. `GET /reports` leaves SOS out unless asked (`include_sos=true`, which the dashboard does), so the public app's map and AR view never show where someone called for help. An SOS is never a no-go zone for routes. The dashboard sorts one with `PATCH /reports/{id}` (or `/tickets/{id}` with sign-in) and `{"sos_kind": "police" | "medical" | "fire_rescue"}`, which the server, the engine and `lakad.db` all refuse on a hazard. The SOS rules (never joined to another ticket, never scored: priority 100, band Critical) are in `models/ticket_sos/`, which the ticket engine calls. Tests: `server/tests/test_sos.py`, `models/ticket_sos/tests/test_sos.py`, `dashboard/src/features/queue/tickets.test.ts`, `mobile/test/sos_hold_test.dart`, and the SOS case in `mobile/test/api_contract_test.dart`, which uploads from the real phone client to a real server.
+**Server.** `POST /sos` takes the video (MP4, MOV or WebM, read from the bytes, up to 40 MB) and a location in Makati, and files an urgent `sos` ticket with a `video_url`. Clips are served from `/videos/`. `GET /reports` leaves SOS out unless asked (`include_sos=true`, which the dashboard does), so the public app's map and AR view never show where someone called for help. An SOS is never a no-go zone for routes. The dashboard sorts one with `PATCH /reports/{id}` and `{"sos_kind": "police" | "medical" | "fire_rescue"}`, which the server, the engine and `lakad.db` all refuse on a hazard. The SOS rules (never joined to another ticket, never scored: priority 100, band Critical) are in `models/ticket_sos/`, which the ticket engine calls. Tests: `server/tests/test_sos.py`, `models/ticket_sos/tests/test_sos.py`, `dashboard/src/features/queue/tickets.test.ts`, `mobile/test/sos_hold_test.dart`, and the SOS case in `mobile/test/api_contract_test.dart`, which uploads from the real phone client to a real server.
 
 **Limits, stated plainly**
 - **Video only, no sound, by design.** The microphone permission is stripped from the app. Recording other people's conversations is legally sensitive in the Philippines; get advice before enabling audio.
@@ -49,7 +49,7 @@ In the ticket rules (`models/tickets/`) the four have a danger value of 0.5, lik
 - **No accounts.** Anyone who can reach the API can file an SOS or list them. Hiding SOS from the public list is a convenience, not security. Put the dashboard and `include_sos` behind a login before anyone real depends on it. False alarms are limited only by the hold and the one-second minimum.
 - **Needs a GPS fix inside Makati**, the same as a photo report, so it cannot start without one.
 - **Hold-and-slide is hard for some people.** There is no alternative for screen-reader or switch users yet.
-- **Clips sit unencrypted in `server/storage/videos/` with no retention limit.** Treat the folder as sensitive: it is not git-ignored yet, so do not `git add` it.
+- **Clips sit unencrypted in `db/videos/` with no retention limit.** Treat the folder as sensitive. It is git-ignored, with the rest of `db/`.
 - **Not run on a physical phone.** Verified with analyzer, widget and unit tests, and a real upload to a real server. The recording itself (camera plugin, Android recorder, haptics) needs a device test.
 
 ## Commute routes are estimated
@@ -115,7 +115,6 @@ See [SETUP.md](SETUP.md).
 | Mobile | Flutter, mapbox_maps_flutter, http, camera, geolocator, sensors_plus, wakelock_plus (keeps the screen on during a trip) | Open source. Mapbox free tier |
 | Dashboard | React, Vite, TypeScript, mapbox-gl | Open source. Mapbox free tier |
 | Server | FastAPI, JSON file store | Open source |
-| Analyst sign-in and district roles | Supabase: Auth for analyst accounts, and Postgres with row level security for their district roles (`supabase/`). The dashboard uses `@supabase/supabase-js` | Third-party service, free tier. Holds analyst accounts and their district roles only. Tickets stay on the Lakad server in SQLite, and photos and videos stay on the Lakad server |
 | Traffic | TomTom Traffic flow tiles | Third-party API, free-tier key |
 | Search and routing | OpenRouteService, called by our server | Third-party API, free-tier key. Search text and an optional nearby point go to it through the server |
 | Map data | OpenStreetMap, incl. an Overpass snapshot of MRT-3 and LRT-1 stations (`server/data/transit/stations.geojson`) | Open data (ODbL). Credit OSM |

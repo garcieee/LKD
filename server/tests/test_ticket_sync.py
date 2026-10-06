@@ -17,12 +17,6 @@ AYALA = (14.5547, 121.0244)  # Urdaneta, District 1
 FIVE_M = 5 / 111_195  # degrees of latitude
 
 
-@pytest.fixture(autouse=True)
-def sign_in_off(monkeypatch):
-    """Off whatever server/.env says; sign_in_on turns it on where a test needs it."""
-    monkeypatch.setattr(config, "SUPABASE_URL", "")
-
-
 @pytest.fixture
 def app(tmp_path):
     return create_app(tmp_path)
@@ -31,12 +25,6 @@ def app(tmp_path):
 @pytest.fixture
 def client(app):
     return TestClient(app)  # not a context manager: the loop does not start, tick() drives it
-
-
-@pytest.fixture
-def sign_in_on(monkeypatch):
-    monkeypatch.setattr(config, "SUPABASE_URL", "https://example.supabase.co")
-    monkeypatch.setattr(config, "SUPABASE_PUBLISHABLE_KEY", "sb_publishable_test")
 
 
 def post(client, lat=AYALA[0], lng=AYALA[1], category="pothole") -> dict:
@@ -63,6 +51,25 @@ def test_a_tick_puts_reports_metres_apart_on_one_ticket(app, client):
     rows = {t["id"]: t for t in app.state.sync.db.tickets()}
     assert set(rows) == {a["id"], far["id"]} and rows[a["id"]]["reporters"] == 2
     assert app.state.sync.tick().attached == 0  # a second turn finds nothing to do
+
+
+def test_a_change_on_one_row_goes_to_its_ticket_and_every_report_of_it(app, client):
+    a, b = post(client), post(client, lat=AYALA[0] + FIVE_M)
+    app.state.sync.tick()
+    assert client.patch(f"/reports/{b['id']}", json={"status": "assigned"}).json()["status"] == "assigned"
+    assert {r["id"]: r["status"] for r in client.get("/reports").json()} == {a["id"]: "assigned", b["id"]: "assigned"}
+    assert [t["status"] for t in app.state.sync.db.tickets()] == ["assigned"]
+    events = app.state.sync.db._conn.execute("select ticket_id, actor, from_status, to_status from ticket_events")
+    assert [tuple(e) for e in events] == [(a["id"], None, "open", "assigned")]
+
+
+def test_an_sos_sorted_after_the_loop_has_its_kind_on_the_ticket_too(app, client):
+    sid = sos(client)["id"]
+    app.state.sync.tick()
+    saved = client.patch(f"/reports/{sid}", json={"sos_kind": "police", "status": "verified"}).json()
+    assert (saved["sos_kind"], saved["status"]) == ("police", "verified")
+    t = app.state.sync.db.tickets()[0]
+    assert (t["sos_kind"], t["status"]) == ("police", "verified")
 
 
 def test_every_category_the_server_takes_gets_its_ticket(app, client):
@@ -141,16 +148,7 @@ def test_an_sos_sorted_before_the_loop_reaches_it_gets_its_ticket_with_that_kind
     assert (t["id"], t["sos_kind"], t["priority"], t["band"]) == (sos_id, "fire_rescue", 100.0, "Critical")
 
 
-def test_with_sign_in_on_reports_are_read_only_and_never_list_sos_or_rejected(app, client, sign_in_on):
-    rid = post(client)["id"]
-    sos(client)
-    r = client.patch(f"/reports/{rid}", json={"status": "fixed"})
-    assert r.status_code == 403 and r.json()["detail"] == "Status changes go through the analyst dashboard."
-    app.state.store.update(rid, status="rejected")
-    assert client.get("/reports", params={"include_sos": "true", "include_rejected": "true"}).json() == []
-
-
-def test_with_sign_in_off_reports_work_as_before(client):
+def test_reports_change_and_list_sos_and_rejected_ones_only_when_asked(client):
     rid = post(client)["id"]
     sos_id = sos(client)["id"]
     assert client.patch(f"/reports/{rid}", json={"status": "rejected"}).json()["status"] == "rejected"

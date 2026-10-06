@@ -5,8 +5,8 @@ attach       for one report: the ticket it joins or opens, the ticket's district
 sync_once    one turn of the server's loop: attach every cached report that has no ticket yet, save the rows to
              lakad.db, write the outcome back onto the cached reports, let long-closed reports leave the cache
 database     the SQLite file the tickets live in (storage/db.py)
-tickets_for  the tickets an analyst may see, and the changes they may make, set_status and set_sos_kind (who must
-             respond to an SOS): the one place a district scope is checked
+tickets_for  the tickets a district scope may see, and the changes made to them, set_status and set_sos_kind (who
+             must respond to an SOS): the one place a scope is checked. The server, with no sign-in, passes "all"
 backlog      reports still waiting for a ticket, and those that gave up, for /health
 """
 import time
@@ -232,9 +232,9 @@ def tickets_for(db: Db, scope) -> list[dict]:
     return [t for t in db.tickets() if _visible(t, scope)]
 
 
-def set_status(db: Db, cache: Cache, ticket_id: str, status: str, scope, actor: str, now: float | None = None) -> dict | None:
-    """An analyst's status change: on the ticket, in its history under their user id, and on its cached reports so
-    the public map follows. None when the ticket is missing or outside the scope, which look the same on purpose."""
+def set_status(db: Db, cache: Cache, ticket_id: str, status: str, scope, actor: str | None, now: float | None = None) -> dict | None:
+    """A status change: on the ticket, in its history under who made it (None: nobody signed in), and on its cached
+    reports so the public map follows. None when the ticket is missing or outside the scope, which look the same."""
     at = _iso(time.time() if now is None else now)
     ticket = db.set_status(ticket_id, status, actor, at, allowed=lambda t: _visible(t, scope))
     if ticket is not None:
@@ -245,9 +245,9 @@ def set_status(db: Db, cache: Cache, ticket_id: str, status: str, scope, actor: 
 
 
 def set_sos_kind(db: Db, cache: Cache, ticket_id: str, kind: str, scope, now: float | None = None) -> dict | None:
-    """An analyst sorting an SOS by who must respond (sos.KINDS): on the ticket and on its cached reports, so /reports
-    agrees with /tickets. ValueError for an unknown kind or a ticket that is not an SOS; None when the ticket is
-    missing or outside the scope, like set_status. Not logged in the ticket's history, which holds status changes."""
+    """Sorting an SOS by who must respond (sos.KINDS): on the ticket and on its cached reports, so every row agrees.
+    ValueError for an unknown kind or a ticket that is not an SOS; None when the ticket is missing or outside the
+    scope, like set_status. Not logged in the ticket's history, which holds status changes."""
     sos.check_kind(kind)
     at = _iso(time.time() if now is None else now)
     ticket = db.set_sos_kind(ticket_id, kind, at, allowed=lambda t: _visible(t, scope))

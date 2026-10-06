@@ -8,8 +8,8 @@ from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
 
 from app.config import in_city
 from app.db.models import Category, Report, TicketChange
-from app.services import auth
 from app.services.priority import severity
+from app.services.ticket_sync import engine
 
 router = APIRouter()
 
@@ -122,12 +122,9 @@ def list_reports(request: Request, include_sos: bool = False, include_rejected: 
     so the public app's map and AR view never show where someone called for help. Rejected tickets (judged not
     real at the dashboard) are left out unless `include_rejected=true`.
 
-    ponytail: the API has no accounts yet, so this only keeps SOS out of the app's own lists; anyone who knows
+    ponytail: the API has no accounts, so this only keeps SOS out of the app's own lists; anyone who knows
     the query can still ask. Put the dashboard behind a login before anyone real depends on SOS.
-    With analyst sign-in configured, that login exists (/tickets), so both flags are ignored here.
     """
-    if auth.configured():
-        include_sos = include_rejected = False
     # Stored in arrival order, so reversed is newest first.
     return [
         _out(r)
@@ -146,13 +143,22 @@ def get_report(report_id: str, request: Request):
 
 @router.patch("/reports/{report_id}", response_model=Report)
 def update_report(report_id: str, body: TicketChange, request: Request):
-    """A new status, an SOS's kind (who must respond), or both: only the fields sent change."""
-    if auth.configured():  # analysts sign in and change the ticket: PATCH /tickets/{id}
-        raise HTTPException(403, "Status changes go through the analyst dashboard.")
-    store = request.app.state.store
-    if body.sos_kind and any(r["id"] == report_id and r["category"] != "sos" for r in store.all()):
-        raise HTTPException(422, "Only an SOS has a kind.")
-    report = store.update(report_id, **body.model_dump(exclude_none=True), updated_at=_now())
+    """A new status, an SOS's kind (who must respond), or both: only the fields sent change. Once the loop has given
+    the report its ticket, the change goes to the ticket (lakad.db and its history) and to every report of it, so the
+    rows of one hazard never disagree. Before that it goes onto the report, and the loop carries it into the ticket."""
+    state = request.app.state
+    report = next((r for r in state.store.all() if r["id"] == report_id), None)
     if report is None:
         raise HTTPException(404, "No such report.")
-    return _out(report)
+    if body.sos_kind and report["category"] != "sos":
+        raise HTTPException(422, "Only an SOS has a kind.")
+    ticket_id, db = report.get("ticket_id"), state.sync.db
+    # No sign-in: the whole city's tickets ("all"), and no one to name in the history.
+    done = bool(ticket_id)
+    if done and body.sos_kind:
+        done = engine.set_sos_kind(db, state.store, ticket_id, body.sos_kind, "all") is not None
+    if done and body.status:
+        done = engine.set_status(db, state.store, ticket_id, body.status, "all", None) is not None
+    if not done:  # not on a ticket yet, or its ticket is missing from lakad.db
+        state.store.update(report_id, **body.model_dump(exclude_none=True), updated_at=_now())
+    return _out(next(r for r in state.store.all() if r["id"] == report_id))
