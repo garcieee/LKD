@@ -90,7 +90,7 @@ void main() {
 
     test('reads an SOS: a video and no photo, and it is labelled as one', () {
       final r = Report.fromJson(serverSos());
-      expect((r.category, r.isSos, r.label), ('sos', true, 'SOS · Crime signal'));
+      expect((r.category, r.isSos, r.label), ('sos', true, 'SOS'));
       expect((r.photoUrl, r.videoUrl), ('', '/videos/9c1d.mp4'));
       expect(Report.fromJson(serverReport()).videoUrl, isNull, reason: 'a hazard report has no video');
       expect(Report.fromJson(serverReport()).isSos, isFalse);

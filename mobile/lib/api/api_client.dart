@@ -28,7 +28,7 @@ const categoryLabels = {
 
 /// The category of an SOS. Not in [categoryLabels]: nobody picks it. Only the shutter's hold-to-record files one.
 const sosCategory = 'sos';
-const sosLabel = 'SOS · Crime signal';
+const sosLabel = 'SOS';
 
 /// Open -> Verified -> Assigned -> Fixed, set by the dashboard.
 const statusLabels = {'open': 'Open', 'verified': 'Verified', 'assigned': 'Assigned', 'fixed': 'Fixed'};
