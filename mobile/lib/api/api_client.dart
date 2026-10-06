@@ -1,4 +1,5 @@
-// The server's report API (server/app/routers/reports.py) at Env.apiBaseUrl.
+// The server's API at Env.apiBaseUrl: reports (server/app/routers/reports.py), place search
+// (server/app/routers/geocode.py) and walking routes (server/app/routers/routes.py).
 // Report mirrors server/app/db/models.py, minus severity and updated_at, which the app never shows.
 import 'dart:convert';
 import 'dart:math' as math;
@@ -47,6 +48,41 @@ class Report {
   String get label => categoryLabels[category] ?? 'Other';
 }
 
+/// The route modes the server takes, with their labels, in the order the toggle shows them.
+const routeModes = {'fastest': 'Fastest', 'walkable': 'Walkable', 'accessible': 'Accessible'};
+
+/// A walking route: GET /route/walk answers one of these per mode.
+class WalkRoute {
+  WalkRoute.fromJson(Map<String, dynamic> json)
+    : mode = json['mode'] as String,
+      distanceM = (json['distance_m'] as num).toDouble(),
+      durationS = (json['duration_s'] as num).toDouble(),
+      line = [
+        for (final p in json['geometry'] as List) [for (final n in p as List) (n as num).toDouble()],
+      ],
+      hazardIds = [for (final id in json['hazard_ids'] as List) id as String],
+      avoidsHazards = json['avoids_hazards'] as bool;
+
+  final String mode; // a key of routeModes
+  final double distanceM;
+  final double durationS;
+  final List<List<double>> line; // [[lng, lat], ...], the order Mapbox takes
+  final List<String> hazardIds; // unresolved reports within 20 m of the line
+  final bool avoidsHazards; // false for Fastest, and when the server could not route around hazards
+}
+
+/// A place the search found: GET /geocode answers a list of these.
+class Place {
+  Place.fromJson(Map<String, dynamic> json)
+    : label = json['label'] as String,
+      lat = (json['lat'] as num).toDouble(),
+      lng = (json['lng'] as num).toDouble();
+
+  final String label; // e.g. "Ayala Triangle Gardens, Makati, Philippines"
+  final double lat;
+  final double lng;
+}
+
 /// A failed call, with a message fit to show the user.
 class ApiException implements Exception {
   const ApiException(this.message);
@@ -72,6 +108,34 @@ class ApiClient {
   Future<List<Report>> reports() async {
     final body = await _send(http.AbortableRequest('GET', Uri.parse('$base/reports'), abortTrigger: _deadline()));
     return [for (final r in body as List) Report.fromJson(r as Map<String, dynamic>)];
+  }
+
+  /// Places in Makati matching [text], best first. [near] (lat, lng) ranks nearby places higher.
+  Future<List<Place>> geocode(String text, {({double lat, double lng})? near}) async {
+    final url = Uri.parse('$base/geocode').replace(
+      queryParameters: {'q': text, if (near != null) ...{'lat': '${near.lat}', 'lng': '${near.lng}'}},
+    );
+    final body = await _send(http.AbortableRequest('GET', url, abortTrigger: _deadline()));
+    return [for (final p in body as List) Place.fromJson(p as Map<String, dynamic>)];
+  }
+
+  /// A walking route between two points in Makati. A 404 ("No walking route found…") is an ApiException.
+  Future<WalkRoute> route({
+    required ({double lat, double lng}) from,
+    required ({double lat, double lng}) to,
+    required String mode,
+  }) async {
+    final url = Uri.parse('$base/route/walk').replace(
+      queryParameters: {
+        'from_lat': '${from.lat}',
+        'from_lng': '${from.lng}',
+        'to_lat': '${to.lat}',
+        'to_lng': '${to.lng}',
+        'mode': mode,
+      },
+    );
+    final body = await _send(http.AbortableRequest('GET', url, abortTrigger: _deadline()));
+    return WalkRoute.fromJson(body as Map<String, dynamic>);
   }
 
   /// Files a report. [onProgress] gets the share of the photo uploaded so far, 0..1.

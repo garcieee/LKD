@@ -25,8 +25,9 @@ What to download, which keys to get, and how to run each app. Do this before kic
 | Mapbox public token (`pk.`) | account.mapbox.com | The map in all three apps | `VITE_MAPBOX_TOKEN` in the dashboards, `MAPBOX_TOKEN` in `mobile/env.json` |
 | Mapbox downloads token (`sk.`, scope DOWNLOADS:READ) | account.mapbox.com | Android build only. Create it only if Gradle asks for it | `MAPBOX_DOWNLOADS_TOKEN` in `~/.gradle/gradle.properties`. Never in the repo |
 | TomTom API key | developer.tomtom.com | The congestion layer | `VITE_TOMTOM_API_KEY` in the dashboards, `TOMTOM_API_KEY` in `mobile/env.json` and `server/.env` |
+| OpenRouteService API key | openrouteservice.org | Destination search in the app, and walking routes next | `ORS_API_KEY` in `server/.env` only. The app never holds it |
 
-At kickoff, ask the organizers whether the Mapbox and TomTom free tiers count as allowed. The rules ban paid services.
+At kickoff, ask the organizers whether the Mapbox, TomTom and OpenRouteService free tiers count as allowed. The rules ban paid services.
 
 - If Mapbox is not allowed: switch to MapLibre with OpenFreeMap tiles, which needs no key.
 - If TomTom is not allowed: remove `congestion` and `incidents` from each layer registry and their switches disappear everywhere.

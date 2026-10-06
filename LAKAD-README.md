@@ -61,6 +61,7 @@ Update at every progress check. Undisclosed tools are penalized.
 | Mobile app | Flutter (Dart), mapbox_maps_flutter, image_picker, geolocator, http, shared_preferences | Open-source framework and packages. Mapbox free tier |
 | Dashboards | React, Vite, TypeScript, mapbox-gl | Open-source libraries. Mapbox free tier |
 | Congestion | TomTom Traffic API | Third-party API, free-tier key |
+| Place search and routing | OpenRouteService API, called by our server | Third-party API, free-tier key. The app's search text and an optional nearby point go to it through the server |
 | Map data | OpenStreetMap through osmnx | Open data (ODbL). Credit OSM |
 | API | FastAPI, networkx, a JSON file store | Open-source libraries |
 | Image AI | CLIP (open_clip ViT-B-32), MediaPipe and OpenCV | AI models, open weights, run locally |
