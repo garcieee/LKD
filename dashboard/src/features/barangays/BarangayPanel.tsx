@@ -1,6 +1,6 @@
 // The Barangays menu: a list of Makati's 23 barangays to find one by name (or district) and zoom the map to it, with how
-// many tickets each has, and the switch for the boundaries and names drawn on the map. Docked beside the map like
-// Insights and Forecast.
+// many tickets each has, and the switch for the boundaries and names drawn on the map. Picking one also narrows the
+// queue, the pins and Insights to it (App). Docked beside the map like Insights and Forecast.
 import { useMemo, useState } from "react";
 import ResizeGrip from "../../panels/ResizeGrip";
 import { BARANGAYS, DISTRICTS } from "../../data/barangays";
@@ -11,8 +11,8 @@ import "./barangays.css";
 type Props = {
   reports: Report[] | null; // null until the API first answers
   selectedId: string | null;
-  onSelect: (b: Barangay) => void; // zoom the map to it
-  onClear: () => void; // back to the whole city
+  onSelect: (b: Barangay) => void; // zoom the map to it, and narrow the queue, pins and Insights to it
+  onClear: () => void; // back to the whole city: everything shown again
   show: boolean; // the boundaries and names are drawn on the map
   onShow: (on: boolean) => void;
   onClose: () => void;
@@ -114,7 +114,8 @@ export default function BarangayPanel({ reports, selectedId, onSelect, onClear, 
             <p className="brgy-summary">
               {selectedTally
                 ? `${plural(selectedTally.unresolved, "unresolved ticket")}${selectedTally.sos ? `, ${selectedTally.sos} SOS` : ""}${selectedTally.urgent ? `, ${selectedTally.urgent} urgent` : ""}.`
-                : "No ticket counts yet."}
+                : "No ticket counts yet."}{" "}
+              The queue, the map's pins and Insights show only this barangay.
             </p>
             <div className="triage-actions">
               <button className="btn" onClick={() => onSelect(selected)}>

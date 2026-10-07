@@ -5,18 +5,23 @@ import { photoUrl } from "../../api/client";
 import { ENV } from "../../config/env";
 import type { Category, Report, SosKind, Status } from "../../types/api";
 import DetailPanel, { Urgency } from "../../panels/DetailPanel";
+import ScopeChip from "../barangays/ScopeChip";
+import type { Barangay } from "../barangays/barangays";
 import { CATEGORY_LABEL, STATUS_LABEL, isRejected, isSos, isSosActive, isUnresolved, needsReview, rank, sightings, sightingsLabel, ticketCode, ticketLabel, timeAgo } from "./tickets";
-import { DEFAULT_FILTERS, STATUS_FILTERS, applyFilters, isFiltered, isSearching, statusCounts, type Filters } from "./filters";
+import { DEFAULT_FILTERS, STATUS_FILTERS, applyFilters, filterSummary, isFiltered, isSearching, poolFor, statusCounts, type Filters } from "./filters";
 
 type Props = {
-  reports: Report[] | null; // null until the API first answers
+  reports: Report[] | null; // null until the API first answers: every ticket, which a search and an open ticket look at
+  scoped: Report[]; // those in the picked barangay: all of them when none is picked, none until the API answers
+  barangay: Barangay | null; // the barangay picked in the Barangays menu, if any
+  onShowAll: () => void; // drop the barangay: back to all of Makati
   online: boolean;
   fresh: string[]; // ids that just arrived, highlighted for a moment
   now: number;
   selectedId: string | null;
   onSelect: (id: string | null) => void;
   onClose: () => void;
-  onStatus: (id: string, status: Status) => Promise<string | null>;
+  onStatus: (id: string, status: Status, note?: string) => Promise<string | null>;
   onKind: (id: string, kind: SosKind) => Promise<string | null>;
   onAssign: (id: string, handler: string, status?: Status) => Promise<string | null>;
   onShowOnMap: (report: Report) => void;
@@ -30,6 +35,9 @@ const Icon = ({ d }: { d: string }) => (
 
 export default function QueuePanel({
   reports,
+  scoped,
+  barangay,
+  onShowAll,
   online,
   fresh,
   now,
@@ -46,13 +54,15 @@ export default function QueuePanel({
   const panel = useRef<HTMLElement>(null);
   const last = useRef<string | null>(null);
   const all = reports ?? [];
-  const selected = all.find((r) => r.id === selectedId);
-  const open = all.filter(isUnresolved).length;
-  const review = all.filter(needsReview).length;
+  const selected = all.find((r) => r.id === selectedId); // from every ticket: one opened from outside the barangay still opens
+  // The barangay narrows the header counts, the chips' counts and the list; a search ignores it (poolFor).
+  const open = scoped.filter(isUnresolved).length;
+  const review = scoped.filter(needsReview).length;
   const count = sightings(all);
-  const rows = applyFilters(rank(all), filters);
-  const counts = statusCounts(all, filters.category);
+  const rows = applyFilters(rank(poolFor(filters, all, scoped)), filters);
+  const counts = statusCounts(scoped, filters.category);
   const searching = isSearching(filters);
+  const place = barangay?.name ?? null;
 
   // Keyboard focus follows the view: into the ticket, then back to its row (or the title).
   useEffect(() => {
@@ -71,8 +81,12 @@ export default function QueuePanel({
         ? isFiltered(filters)
           ? searching
             ? "No ticket has an ID starting with that."
-            : "No tickets match these filters."
-          : "Nothing left to fix."
+            : scoped.length
+              ? "No tickets match these filters."
+              : `No tickets in ${place}.`
+          : scoped.length
+            ? `Nothing left to fix${place ? ` in ${place}` : ""}.`
+            : `No tickets in ${place}.`
         : "No tickets yet. Hazards snapped in the Lakad app show up here within 10 seconds.";
 
   return (
@@ -110,6 +124,7 @@ export default function QueuePanel({
       ) : (
         <div className="queue-list">
           <div className="src">Ranked: SOS first (unsorted on top), then by priority, severity, oldest</div>
+          <ScopeChip barangay={barangay} onClear={onShowAll} />
           <div className="filters">
             <input
               type="search"
@@ -121,8 +136,8 @@ export default function QueuePanel({
               autoComplete="off"
               onChange={(e) => setFilters({ ...filters, query: e.target.value })}
             />
-            {/* A search looks at every ticket, so while one is typed no status chip is pressed. Picking a chip or a
-                category leaves the search. */}
+            {/* A search looks at every ticket in Makati, whatever the barangay picked, so while one is typed no status
+                chip is pressed. Picking a chip or a category leaves the search. */}
             <div className="fchips" role="group" aria-label="Show tickets">
               {STATUS_FILTERS.map((f) => (
                 <button
@@ -151,9 +166,7 @@ export default function QueuePanel({
               ))}
             </select>
             <div className="filter-status" role="status">
-              <span>
-                {searching ? `Searching all tickets: ${rows.length} found` : `Showing ${rows.length} of ${all.length} tickets`}
-              </span>
+              <span>{filterSummary({ searching, shown: rows.length, total: scoped.length, barangay: place })}</span>
               {isFiltered(filters) && (
                 <button className="linklike" onClick={() => setFilters(DEFAULT_FILTERS)}>
                   Clear filters

@@ -5,15 +5,17 @@ import { useEffect, useRef, useState } from "react";
 import { HANDLERS } from "../../config/handlers";
 import type { Report, Status } from "../../types/api";
 import { OTHER, nameOf, stageOf, startingChoice } from "./handler";
+import { NOTE_MAX, cleanNote } from "./notes";
 
 type Props = {
   report: Report;
   onAssign: (handler: string, status?: Status) => Promise<string | null>; // null when saved, else why not
-  onStatus: (status: Status) => void;
+  onStatus: (status: Status, note?: string) => void; // a note for the reporter can go with it
 };
 
 export default function HandlerCard({ report, onAssign, onStatus }: Props) {
   const [editing, setEditing] = useState(false);
+  const [resolveNote, setResolveNote] = useState(""); // for the reporter: optional
   const stage = stageOf(report);
   if (stage === null) return null;
 
@@ -50,8 +52,18 @@ export default function HandlerCard({ report, onAssign, onStatus }: Props) {
             <b id={`resolve-${report.id}`}>Is this ticket resolved?</b>
             <span>Mark it resolved once the work is done.</span>
           </div>
+          <label className="note-field">
+            <span>Note for the reporter (optional)</span>
+            <textarea
+              rows={2}
+              maxLength={NOTE_MAX}
+              value={resolveNote}
+              placeholder="e.g. Filled and sealed on Oct 8."
+              onChange={(e) => setResolveNote(e.target.value)}
+            />
+          </label>
           <div className="triage-actions">
-            <button className="btn confirm" onClick={() => onStatus("fixed")}>
+            <button className="btn confirm" onClick={() => onStatus("fixed", cleanNote(resolveNote))}>
               Yes, mark resolved
             </button>
           </div>

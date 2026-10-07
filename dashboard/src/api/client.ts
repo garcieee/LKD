@@ -23,7 +23,9 @@ export const getFootfall = (day: Day, hour: number) => call<Footfall>(`/footfall
 export const getSeries = (zone: string) =>
   call<Series>(`/footfall/series?zone=${encodeURIComponent(zone)}&past_days=7&future_days=3`);
 
-export const patchStatus = (id: string, status: Status) => patch(id, { status });
+// A note for the reporter can go with a status: required to reject (the server refuses a rejection without one, 422),
+// optional to confirm or resolve.
+export const patchStatus = (id: string, status: Status, status_note?: string) => patch(id, { status, status_note });
 
 // Assigns a handler (a name). With `status` ("assigned") the ticket moves on in the same save; without, the name of
 // an assigned or resolved ticket changes. The server refuses a handler before the ticket is verified (422).
@@ -32,7 +34,7 @@ export const patchHandler = (id: string, handler: string, status?: Status) => pa
 // Who must respond to an SOS. The server refuses a kind on anything else (422).
 export const patchSosKind = (id: string, sos_kind: SosKind) => patch(id, { sos_kind });
 
-function patch(id: string, change: { status?: Status; sos_kind?: SosKind; handler?: string }) {
+function patch(id: string, change: { status?: Status; sos_kind?: SosKind; handler?: string; status_note?: string }) {
   const init = { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(change) };
   return call<Report>(`/reports/${encodeURIComponent(id)}`, init);
 }

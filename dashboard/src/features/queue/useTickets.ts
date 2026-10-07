@@ -71,10 +71,10 @@ export function useTickets() {
 
   // Optimistic: shows the new status at once. Resolves to null when saved, or the error message
   // when the server refused, in which case the old status comes back (the override is dropped).
-  const changeStatus = async (id: string, status: Status): Promise<string | null> => {
+  const changeStatus = async (id: string, status: Status, note?: string): Promise<string | null> => {
     setPending((p) => ({ ...p, [id]: status }));
     try {
-      const saved = await patchStatus(id, status);
+      const saved = await patchStatus(id, status, note);
       saves.current++;
       setReports((rs) => rs && rs.map((r) => (r.id === id ? saved : r)));
       return null;

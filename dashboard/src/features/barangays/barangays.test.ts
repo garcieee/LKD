@@ -2,7 +2,9 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { Report } from "../../types/api.ts";
 import { BARANGAYS } from "../../data/barangays.ts";
-import { barangayAt, boundsOf, norm, pointInRing, searchBarangays, sortBarangays, tally, type Barangay } from "./barangays.ts";
+import { summarize } from "../analytics/metrics.ts";
+import { toGeoJSON } from "../queue/tickets.ts";
+import { barangayAt, boundsOf, inBarangay, norm, pinReports, pointInRing, searchBarangays, sortBarangays, sosElsewhere, tally, type Barangay } from "./barangays.ts";
 
 const names = (list: Barangay[]) => list.map((b) => b.name);
 
@@ -126,4 +128,73 @@ test("sortBarangays: A to Z as given, or the busiest first with SOS before every
   assert.deepEqual(sortBarangays(BARANGAYS, "name", counts).map((b) => b.id), BARANGAYS.map((b) => b.id));
   assert.deepEqual(sortBarangays(BARANGAYS, "busiest", counts).slice(0, 3).map((b) => b.name), ["Magallanes", "Poblacion", "San Lorenzo"]);
   assert.equal(sortBarangays(BARANGAYS, "busiest", counts)[3].name, "Bangkal", "then the quiet ones A to Z");
+});
+
+test("inBarangay: only the picked barangay's reports, by the rule the counts use; null is every report, as given", () => {
+  const reports = [
+    report("a", ...SAN_LORENZO),
+    report("b", ...SAN_LORENZO, { status: "fixed" }),
+    report("c", ...POBLACION),
+    report("far", 121.1, 14.6), // outside all 23
+  ];
+  const ids = (rs: Report[]) => rs.map((r) => r.id);
+  assert.deepEqual(ids(inBarangay(BARANGAYS, "san-lorenzo", reports)), ["a", "b"], "every status, so the filters can still choose");
+  assert.deepEqual(ids(inBarangay(BARANGAYS, "poblacion", reports)), ["c"]);
+  assert.deepEqual(inBarangay(BARANGAYS, "bangkal", reports), []);
+  assert.deepEqual(inBarangay(BARANGAYS, "not-a-barangay", reports), []);
+  assert.equal(inBarangay(BARANGAYS, null, reports), reports, "the same array: nothing is copied or lost, the one outside included");
+  assert.equal(inBarangay(BARANGAYS, "poblacion", []).length, 0);
+  // The list and the menu's count agree, for every barangay.
+  const counts = tally(BARANGAYS, reports);
+  for (const b of BARANGAYS) assert.equal(inBarangay(BARANGAYS, b.id, reports).length, counts.get(b.id)!.total, b.name);
+});
+
+test("a picked barangay narrows the map's pins and the Insights numbers to its reports", () => {
+  const reports = [
+    report("a", ...SAN_LORENZO, { band: "Critical", severity: 3 }),
+    report("b", ...SAN_LORENZO, { status: "fixed" }),
+    report("c", ...POBLACION),
+    report("d", ...POBLACION, { category: "sos", severity: 3 }),
+    report("far", 121.1, 14.6),
+  ];
+  const mine = inBarangay(BARANGAYS, "san-lorenzo", reports);
+  assert.deepEqual(toGeoJSON(mine, null).features.map((f) => f.properties.id), ["a", "b"], "the pins");
+  const s = summarize(mine, Date.parse("2026-10-07T01:00:00Z"));
+  assert.equal(s.total, 2);
+  assert.equal(s.unresolved, 1);
+  assert.equal(s.urgent, 1);
+  assert.equal(s.sos.active, 0, "an SOS in Poblacion is not in San Lorenzo's numbers");
+  assert.equal(summarize(inBarangay(BARANGAYS, null, reports), Date.parse("2026-10-07T01:00:00Z")).total, 5, "none picked: all of them");
+});
+
+test("pinReports: the barangay's pins, rejected ones never, and the open ticket even from another barangay", () => {
+  const reports = [
+    report("a", ...SAN_LORENZO),
+    report("rej", ...SAN_LORENZO, { status: "rejected" }),
+    report("c", ...POBLACION),
+    report("far", 121.1, 14.6),
+  ];
+  const ids = (rs: Report[]) => rs.map((r) => r.id);
+  const mine = inBarangay(BARANGAYS, "san-lorenzo", reports);
+  assert.deepEqual(ids(pinReports(reports, mine, null)), ["a"]);
+  assert.deepEqual(ids(pinReports(reports, mine, "a")), ["a"], "an open ticket already in it is not doubled");
+  assert.deepEqual(ids(pinReports(reports, mine, "c")), ["a", "c"], "found by an ID search in Poblacion, so it has a pin");
+  assert.deepEqual(ids(pinReports(reports, mine, "far")), ["a", "far"], "even one outside all 23");
+  assert.deepEqual(ids(pinReports(reports, mine, "rej")), ["a"], "but not a rejected one");
+  assert.deepEqual(ids(pinReports(reports, mine, "gone")), ["a"], "a ticket that is no longer there is ignored");
+  assert.deepEqual(ids(pinReports(reports, reports, null)), ["a", "c", "far"], "no barangay picked: every ticket but the rejected");
+});
+
+test("sosElsewhere counts the open SOS calls a barangay hides, and an SOS that is fixed is not one", () => {
+  const reports = [
+    report("here", ...SAN_LORENZO, { category: "sos" }),
+    report("there", ...POBLACION, { category: "sos" }),
+    report("far", 121.1, 14.6, { category: "sos" }),
+    report("done", ...POBLACION, { category: "sos", status: "fixed" }),
+    report("pothole", ...POBLACION),
+  ];
+  assert.equal(sosElsewhere(reports, inBarangay(BARANGAYS, "san-lorenzo", reports)), 2, "Poblacion's and the one outside all 23");
+  assert.equal(sosElsewhere(reports, inBarangay(BARANGAYS, "poblacion", reports)), 2);
+  assert.equal(sosElsewhere(reports, inBarangay(BARANGAYS, "bangkal", reports)), 3);
+  assert.equal(sosElsewhere(reports, inBarangay(BARANGAYS, null, reports)), 0, "nothing is hidden with no barangay picked");
 });

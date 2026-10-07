@@ -97,3 +97,48 @@
 .brgy-note {
   margin: 28px 0 0;
 }
+
+/* "Showing: <barangay> ✕": where the data is narrowed to the picked barangay. On the map it floats like the status pills. */
+.scope-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 28px;
+  padding: 0 3px 0 12px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--selected);
+  color: var(--accent);
+  font: 500 11px var(--grot);
+  white-space: nowrap;
+}
+.scope-chip b {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+}
+.scope-chip .icon-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+.scope-chip .icon-btn:hover {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.hud .scope-chip {
+  background: var(--panel);
+  box-shadow: var(--shadow-float);
+}
+.queue-list > .scope-chip {
+  margin: 0 0 8px;
+}
+.scope-sos {
+  padding-left: 6px;
+  border-left: 1px solid var(--line);
+  color: var(--sos);
+  font-style: normal;
+  font-weight: 600;
+}

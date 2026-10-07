@@ -1758,3 +1758,56 @@ details[open] > summary.panel-title::after {
   text-decoration: underline;
   cursor: pointer;
 }
+
+/* A note for the reporter: the box beside a decision, and the notes already left. */
+.note-field {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+.note-field span {
+  font: 600 11px var(--grot);
+}
+.note-field textarea {
+  width: 100%;
+  min-height: 52px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--text);
+  font: 12px/1.4 var(--sans);
+  resize: vertical;
+}
+.note-hint {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.triage-reason {
+  margin: 0 0 10px;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.reporter-notes {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 4px;
+}
+.reporter-notes p {
+  margin: 0;
+  padding: 8px 10px;
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--paper-deep);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.reporter-notes b {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--muted);
+  font: 600 10px var(--grot);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}

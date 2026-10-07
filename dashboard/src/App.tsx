@@ -4,12 +4,14 @@ import Legend from "./panels/Legend";
 import QueuePanel from "./features/queue/QueuePanel";
 import AnalyticsPanel from "./features/analytics/AnalyticsPanel";
 import BarangayPanel from "./features/barangays/BarangayPanel";
-import { boundsOf, type Barangay } from "./features/barangays/barangays";
+import ScopeChip from "./features/barangays/ScopeChip";
+import { barangayAt, boundsOf, inBarangay, pinReports, sosElsewhere, type Barangay } from "./features/barangays/barangays";
+import { BARANGAYS } from "./data/barangays";
 import FootfallPanel from "./features/footfall/FootfallPanel";
 import ForecastPanel from "./features/footfall/ForecastPanel";
 import { useFootfall } from "./features/footfall/useFootfall";
 import { useTickets } from "./features/queue/useTickets";
-import { isRejected, isSosActive, isUnresolved, isUrgent } from "./features/queue/tickets";
+import { isSosActive, isUnresolved, isUrgent } from "./features/queue/tickets";
 import { ENV } from "./config/env";
 import { REFRESH_MS } from "./layers/congestion";
 import { manilaNow } from "./layers/footfall";
@@ -38,7 +40,8 @@ export default function App() {
   // Shares that dock with Insights: opening one closes the other.
   const [forecastOpen, setForecastOpen] = useState(false);
   // Barangays shares the dock too. Their outlines and names are on the map from the start (zoomed out they say where
-  // each barangay is); the panel's switch turns them off. barangayId is the one picked and tinted.
+  // each barangay is); the panel's switch turns them off. barangayId is the one picked: the map zooms to it and tints it,
+  // and the queue, the report pins and Insights show only its tickets until Show all of Makati (or the chip's x).
   const [barangaysOpen, setBarangaysOpen] = useState(false);
   const [barangaysOn, setBarangaysOn] = useState(true);
   const [barangayId, setBarangayId] = useState<string | null>(null);
@@ -50,8 +53,18 @@ export default function App() {
   const mapView = useRef<MapHandle>(null);
   const unresolved = tickets.reports?.filter(isUnresolved).length ?? 0;
   const urgent = tickets.reports?.some(isUrgent) ?? false;
+  // The tickets in the picked barangay (all of them when none is picked), for the queue, the map and Insights. The HUD's
+  // Tickets button, its dot, the SOS banner and the toasts stay city-wide on purpose: a call for help anywhere in
+  // Makati must never be hidden by where someone happens to be looking. Traffic and foot traffic are not tickets, and
+  // foot traffic's districts are not barangays, so they are left alone.
+  const barangay = useMemo(() => BARANGAYS.find((b) => b.id === barangayId) ?? null, [barangayId]);
+  const scoped = useMemo(() => inBarangay(BARANGAYS, barangayId, tickets.reports ?? []), [barangayId, tickets.reports]);
   // Rejected tickets stay off the map: they were judged not real (they are still in the queue's "Show rejected").
-  const mapReports = useMemo(() => tickets.reports?.filter((r) => !isRejected(r)) ?? null, [tickets.reports]);
+  const mapReports = useMemo(
+    () => (tickets.reports ? pinReports(tickets.reports, scoped, selectedId) : null),
+    [tickets.reports, scoped, selectedId],
+  );
+  const hiddenSos = sosElsewhere(tickets.reports ?? [], scoped);
   const sosActive = tickets.reports?.some(isSosActive) ?? false;
   // SOS nobody has opened yet (status still "open"): the banner asks for them until someone verifies one.
   // Oldest first: the one that has waited longest is the one the banner opens.
@@ -105,6 +118,8 @@ export default function App() {
     closeInsights();
     closeForecast();
     closeBarangays();
+    // A call for help outside the picked barangay is not in the narrowed queue or on the narrowed map: show all of Makati.
+    if (barangayId && barangayAt(BARANGAYS, r.lng, r.lat)?.id !== barangayId) setBarangayId(null);
     setSelectedId(r.id);
     setQueueOpen(true);
     // Closing a docked panel resizes the map, which re-frames the city and would cancel a flight started now: fly
@@ -123,24 +138,27 @@ export default function App() {
     setCursor(null); // the map goes back to live
   }
 
-  // The tint goes with the panel, except on a phone, where the panel is a sheet over the map and closes to show it.
-  function closeBarangays(keepSelection = false) {
+  // Closing the panel keeps the barangay picked, with its tint and its narrowing of the queue, pins and Insights: Insights
+  // takes the panel's place in the dock, and the map is meant to be seen at the barangay. The chip on the map, and the
+  // ones in the queue and Insights, say it is picked and clear it (showWholeCity).
+  function closeBarangays() {
     if (document.getElementById("barangays")?.contains(document.activeElement)) toggle.current?.focus();
     setBarangaysOpen(false);
-    if (!keepSelection) setBarangayId(null);
   }
 
-  // Zooms the map to a barangay and tints it. Desktop: leave room for the panels over the map's right edge, which are
-  // measured, not guessed. Phone: the list is a sheet that covers the map, so it closes, keeping the tint.
+  // Zooms the map to a barangay, tints it and narrows the queue, pins and Insights to it. Desktop: leave room for the
+  // panels over the map's right edge, which are measured, not guessed. Phone: the list is a sheet that covers the map,
+  // so it closes, keeping the barangay.
   function pickBarangay(b: Barangay) {
     setBarangayId(b.id);
     const phone = matchMedia(PHONE).matches;
     const stageRight = document.querySelector(".stage")?.getBoundingClientRect().right ?? innerWidth;
     const hudLeft = document.querySelector(".hud")?.getBoundingClientRect().left ?? stageRight;
-    if (phone) closeBarangays(true);
+    if (phone) closeBarangays();
     mapView.current?.fit(boundsOf(b), phone ? 0 : Math.max(0, stageRight - hudLeft));
   }
 
+  // Back to all of Makati: every ticket again, the tint gone, the map zoomed out. The panel's button and every chip do this.
   function showWholeCity() {
     setBarangayId(null);
     mapView.current?.home();
@@ -321,6 +339,9 @@ export default function App() {
             </div>
           )}
 
+          {/* On the map whatever panel is open: pins are hidden outside the barangay, so it must always say so. */}
+          <ScopeChip barangay={barangay} sosElsewhere={hiddenSos} onClear={showWholeCity} />
+
           <details
             className="panel side"
             open={panelOpen}
@@ -374,6 +395,9 @@ export default function App() {
           {queueOpen && (
             <QueuePanel
               reports={tickets.reports}
+              scoped={scoped}
+              barangay={barangay}
+              onShowAll={showWholeCity}
               online={tickets.online}
               fresh={tickets.fresh}
               now={now.getTime()}
@@ -422,7 +446,15 @@ export default function App() {
       )}
 
       {insightsOpen && (
-        <AnalyticsPanel reports={tickets.reports} online={tickets.online} now={now.getTime()} onClose={closeInsights} onShow={showOnMap} />
+        <AnalyticsPanel
+          reports={tickets.reports && scoped}
+          barangay={barangay}
+          onShowAll={showWholeCity}
+          online={tickets.online}
+          now={now.getTime()}
+          onClose={closeInsights}
+          onShow={showOnMap}
+        />
       )}
     </div>
   );

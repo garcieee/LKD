@@ -6,6 +6,7 @@ import Lightbox from "./Lightbox";
 import type { Report, SosKind, Status } from "../types/api";
 import HandlerCard from "../features/queue/HandlerCard";
 import SosKindCard from "../features/queue/SosKindCard";
+import { notesFor } from "../features/queue/notes";
 import StatusStepper from "../features/queue/StatusStepper";
 import TriageCard from "../features/queue/TriageCard";
 import { SEVERITY_LABEL, STATUS_LABEL, bandOf, isSos, sightingsLabel, ticketCode, ticketLabel, timeAgo } from "../features/queue/tickets";
@@ -43,7 +44,7 @@ type Props = {
   report: Report;
   sightings?: ReadonlyMap<string, number>; // reports per ticket_id, to say "3 reports" on a ticket several people filed
   now: number;
-  onStatus: (id: string, status: Status) => Promise<string | null>;
+  onStatus: (id: string, status: Status, note?: string) => Promise<string | null>; // a note is for the reporter
   onKind: (id: string, kind: SosKind) => Promise<string | null>;
   onAssign: (id: string, handler: string, status?: Status) => Promise<string | null>;
   onShowOnMap: (report: Report) => void;
@@ -61,9 +62,9 @@ export default function DetailPanel({ report: r, sightings, now, onStatus, onKin
   useEffect(() => {
     if (document.activeElement === document.body) title.current?.focus();
   }, [r.status]);
-  const change = async (status: Status) => {
+  const change = async (status: Status, note?: string) => {
     setError(null);
-    setError(await onStatus(r.id, status));
+    setError(await onStatus(r.id, status, note));
   };
 
   return (
@@ -123,6 +124,18 @@ export default function DetailPanel({ report: r, sightings, now, onStatus, onKin
           marked resolved. The bars below only show how far it has come. */}
       <TriageCard report={r} onChange={change} />
       <HandlerCard report={r} onAssign={(handler, status) => onAssign(r.id, handler, status)} onStatus={change} />
+      {/* What the reporter was told: the notes left on confirming and on resolving (the reason for a rejection is in the
+          rejected banner). */}
+      {notesFor(r).length > 0 && (
+        <div className="reporter-notes" role="group" aria-label="Notes for the reporter">
+          {notesFor(r).map((n) => (
+            <p key={n.label}>
+              <b>{n.label}</b>
+              {n.text}
+            </p>
+          ))}
+        </div>
+      )}
       {r.status !== "open" && r.status !== "rejected" && <StatusStepper status={r.status} />}
       {error && (
         <p className="error" role="alert">

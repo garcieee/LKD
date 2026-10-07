@@ -1,6 +1,6 @@
-// Filtering the ticket list: by status (unverified or verified, and the rest), by category, and a search by ticket ID.
-// No React, so `node --test` runs it (filters.test.ts). The list is ranked first (tickets.ts rank), then filtered, so
-// the order never changes.
+// Filtering the ticket list: by status (unverified or verified, and the rest), by category, and a search by ticket ID;
+// the barangay picked in the Barangays menu narrows it before any of these (poolFor). No React, so `node --test` runs it
+// (filters.test.ts). The list is ranked first (tickets.ts rank), then filtered, so the order never changes.
 import type { Category, Report } from "../../types/api.ts";
 import { isUnresolved, ticketCode } from "./tickets.ts";
 
@@ -56,6 +56,19 @@ export function matchesId(r: Report, text: string): boolean {
 // A search looks at every ticket whatever its status or category: someone with an ID wants that ticket, even a
 // resolved one, and a filter that hid it would read as "not found".
 export const isSearching = (f: Filters) => idQuery(f.query) !== "";
+
+// The tickets the list starts from. `scoped` is those in the barangay picked in the Barangays menu (every ticket when none
+// is). A search looks at every ticket in Makati: just as it ignores status and category, it ignores the barangay, so an
+// ID that is typed finds its ticket wherever it is, and the list says so (filterSummary).
+export const poolFor = (f: Filters, all: Report[], scoped: Report[]): Report[] => (isSearching(f) ? all : scoped);
+
+// The line under the filters: what is shown, out of what, and where. `barangay` is the name picked, if any.
+export function filterSummary(o: { searching: boolean; shown: number; total: number; barangay: string | null }): string {
+  if (o.searching) {
+    return o.barangay ? `Searching all of Makati, not just ${o.barangay}: ${o.shown} found` : `Searching all tickets: ${o.shown} found`;
+  }
+  return `Showing ${o.shown} of ${o.total} tickets${o.barangay ? ` in ${o.barangay}` : ""}`;
+}
 
 export function applyFilters(ranked: Report[], f: Filters): Report[] {
   if (isSearching(f)) return ranked.filter((r) => matchesId(r, f.query));

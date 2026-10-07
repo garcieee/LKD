@@ -35,6 +35,10 @@ export type Report = {
   video_url?: string | null; // SOS only: path on the API, e.g. /videos/<id>.mp4
   sos_kind?: SosKind | null; // SOS only: who must respond, picked here; null until sorted
   handler?: string | null; // who was assigned to fix it, picked here once the ticket is verified
+  // Notes left here for the reporter, who sees them in the phone's My tickets. The public list leaves them out.
+  verified_note?: string | null; // on confirming: optional
+  rejected_note?: string | null; // on rejecting: why, always given
+  resolved_note?: string | null; // on marking resolved: optional
   status: Status;
   created_at: string; // ISO 8601, UTC
   updated_at: string;

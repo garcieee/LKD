@@ -3,11 +3,15 @@
 import { useEffect, useMemo } from "react";
 import ResizeGrip from "../../panels/ResizeGrip";
 import type { Report } from "../../types/api";
+import ScopeChip from "../barangays/ScopeChip";
+import type { Barangay } from "../barangays/barangays";
 import { CATEGORY_LABEL, STATUS_LABEL, timeAgo } from "../queue/tickets";
 import { duration, summarize } from "./metrics";
 
 type Props = {
-  reports: Report[] | null; // null until the API first answers
+  reports: Report[] | null; // null until the API first answers; only those in the picked barangay when one is picked
+  barangay: Barangay | null; // the barangay picked in the Barangays menu, if any
+  onShowAll: () => void; // drop the barangay: back to all of Makati
   online: boolean;
   now: number;
   onClose: () => void;
@@ -46,7 +50,7 @@ function Bars({ rows, unit }: { rows: Row[]; unit?: string }) {
   );
 }
 
-export default function AnalyticsPanel({ reports, online, now, onClose, onShow }: Props) {
+export default function AnalyticsPanel({ reports, barangay, onShowAll, online, now, onClose, onShow }: Props) {
   // Re-derived on each poll and each minute, not each second of the HUD clock.
   const minute = Math.floor(now / 60_000);
   const s = useMemo(() => reports && summarize(reports, minute * 60_000), [reports, minute]);
@@ -69,10 +73,13 @@ export default function AnalyticsPanel({ reports, online, now, onClose, onShow }
       </header>
 
       <div className="queue-list">
+        <ScopeChip barangay={barangay} onClear={onShowAll} />
         {!s ? (
           <p className="empty">{online ? "Loading reports…" : "Can't reach the Lakad API. Retrying."}</p>
         ) : !s.total ? (
-          <p className="empty">No reports yet. Insights fill in as hazards come in from the Lakad app.</p>
+          <p className="empty">
+            {barangay ? `No reports in ${barangay.name} yet.` : "No reports yet. Insights fill in as hazards come in from the Lakad app."}
+          </p>
         ) : (
           <>
             <dl className="tiles">

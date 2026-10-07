@@ -1,7 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { Report } from "../../types/api.ts";
-import { DEFAULT_FILTERS, STATUS_FILTERS, applyFilters, idQuery, isFiltered, isSearching, matchesId, matchesStatus, statusCounts } from "./filters.ts";
+import { BARANGAYS } from "../../data/barangays.ts";
+import { inBarangay } from "../barangays/barangays.ts";
+import { DEFAULT_FILTERS, STATUS_FILTERS, applyFilters, filterSummary, idQuery, isFiltered, isSearching, matchesId, matchesStatus, poolFor, statusCounts } from "./filters.ts";
+import { rank } from "./tickets.ts";
 
 const report = (id: string, over: Partial<Report> = {}): Report => ({
   id,
@@ -95,4 +98,48 @@ test("isFiltered: only a change from the default view offers Clear filters", () 
 test("the status filters are the five the chips show, each with a hint", () => {
   assert.deepEqual(STATUS_FILTERS.map((f) => f.id), ["active", "unverified", "verified", "resolved", "rejected"]);
   for (const f of STATUS_FILTERS) assert.ok(f.label && f.hint);
+});
+
+// Two barangays' tickets and one far outside Makati. Greenbelt is in San Lorenzo, Makati Avenue and Jupiter in Poblacion.
+const lorenzo = report("1a1a1a1a1a", { lng: 121.0235, lat: 14.5528 });
+const lorenzoFixed = report("2b2b2b2b2b", { lng: 121.0235, lat: 14.5528, status: "fixed" });
+const poblacion = report("3c3c3c3c3c", { lng: 121.03, lat: 14.564, category: "open_manhole" });
+const poblacionFixed = report("4d4d4d4d4d", { lng: 121.03, lat: 14.564, status: "fixed" });
+const faraway = report("5e5e5e5e5e", { lng: 121.1, lat: 14.6 });
+const city = [lorenzo, lorenzoFixed, poblacion, poblacionFixed, faraway];
+
+// What the queue does with the barangay picked in the Barangays menu: narrow first (poolFor), then rank and filter.
+const listed = (f: typeof DEFAULT_FILTERS, barangayId: string | null) =>
+  ids(applyFilters(rank(poolFor(f, city, inBarangay(BARANGAYS, barangayId, city))), f));
+
+test("a barangay picked narrows the list to its tickets: the others, and those outside all 23, are not listed", () => {
+  assert.deepEqual(listed(DEFAULT_FILTERS, null).sort(), ["1", "3", "5"], "no barangay: every active ticket, even outside the 23");
+  assert.deepEqual(listed(DEFAULT_FILTERS, "san-lorenzo"), ["1"]);
+  assert.deepEqual(listed(DEFAULT_FILTERS, "poblacion"), ["3"]);
+  assert.deepEqual(listed({ ...DEFAULT_FILTERS, status: "resolved" }, "poblacion"), ["4"], "the status chips work inside it");
+  assert.deepEqual(listed({ ...DEFAULT_FILTERS, category: "open_manhole" }, "san-lorenzo"), [], "and the category");
+  assert.deepEqual(listed(DEFAULT_FILTERS, "bangkal"), [], "a barangay with no tickets lists none");
+});
+
+test("the status chips count only the picked barangay's tickets", () => {
+  assert.deepEqual(statusCounts(inBarangay(BARANGAYS, "san-lorenzo", city), "all"), { active: 1, unverified: 1, verified: 0, resolved: 1, rejected: 0 });
+  assert.deepEqual(statusCounts(inBarangay(BARANGAYS, null, city), "all"), { active: 3, unverified: 3, verified: 0, resolved: 2, rejected: 0 });
+});
+
+test("a search ignores the barangay too: an ID finds its ticket, resolved or in another barangay", () => {
+  assert.deepEqual(listed({ ...DEFAULT_FILTERS, query: "LKD-3C3C3C" }, "san-lorenzo"), ["3"], "a ticket in Poblacion, with San Lorenzo picked");
+  assert.deepEqual(listed({ ...DEFAULT_FILTERS, query: "4d4d" }, "san-lorenzo"), ["4"], "a resolved one as well");
+  assert.deepEqual(listed({ ...DEFAULT_FILTERS, query: "5e5e5e" }, "poblacion"), ["5"], "and one outside all 23 barangays");
+  assert.deepEqual(listed({ ...DEFAULT_FILTERS, query: "1a1a" }, "poblacion"), ["1"]);
+  assert.equal(poolFor({ ...DEFAULT_FILTERS, query: "1a" }, city, []), city, "a search starts from every ticket");
+  assert.equal(poolFor(DEFAULT_FILTERS, city, []).length, 0, "anything else starts from the barangay's");
+  assert.deepEqual(listed({ ...DEFAULT_FILTERS, query: "   " }, "poblacion"), ["3"], "spaces are not a search, so the barangay still narrows");
+});
+
+test("filterSummary says what is shown, out of what, and where, and that a search left the barangay", () => {
+  const sum = (o: Partial<Parameters<typeof filterSummary>[0]> = {}) => filterSummary({ searching: false, shown: 3, total: 9, barangay: null, ...o });
+  assert.equal(sum(), "Showing 3 of 9 tickets");
+  assert.equal(sum({ barangay: "Poblacion" }), "Showing 3 of 9 tickets in Poblacion");
+  assert.equal(sum({ searching: true }), "Searching all tickets: 3 found");
+  assert.equal(sum({ searching: true, barangay: "Poblacion" }), "Searching all of Makati, not just Poblacion: 3 found");
 });

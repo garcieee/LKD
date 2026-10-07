@@ -2,7 +2,7 @@
 // barangay by what someone types, which barangay a ticket is in, and how many tickets each one has. The boundaries
 // are data/barangays.ts (Makati's 23 barangays, OpenStreetMap), built by scripts/build_barangays.py.
 import type { Report } from "../../types/api.ts";
-import { isSosActive, isUnresolved, isUrgent } from "../queue/tickets.ts";
+import { isRejected, isSosActive, isUnresolved, isUrgent } from "../queue/tickets.ts";
 
 export type LngLat = [number, number];
 export type Ring = LngLat[]; // closed: the first point repeats at the end
@@ -92,6 +92,26 @@ export function barangayAt(list: readonly Barangay[], lng: number, lat: number):
   }
   return null;
 }
+
+// The reports in one barangay, by the same rule tally counts them (barangayAt), so a barangay's count in the menu and the
+// tickets shown for it always agree. null is no barangay picked: every report, outside the 23 or not, and the very same
+// array, so whatever is memoised on it keeps its work. A report outside every barangay is in none, so it is left out
+// while one is picked.
+export function inBarangay(list: readonly Barangay[], id: string | null, reports: Report[]): Report[] {
+  if (id === null) return reports;
+  return reports.filter((r) => barangayAt(list, r.lng, r.lat)?.id === id);
+}
+
+// What the map draws: the reports in the picked barangay (`scoped`), plus the open ticket even when it is outside (an ID
+// search finds tickets anywhere, and Show on map needs its pin), and never a rejected one: those were judged not real.
+export function pinReports(all: Report[], scoped: Report[], openId: string | null): Report[] {
+  const open = all.find((r) => r.id === openId);
+  return (open && !scoped.includes(open) ? [...scoped, open] : scoped).filter((r) => !isRejected(r));
+}
+
+// How many open SOS calls are outside the picked barangay, so hidden by it: the one thing narrowing must never hide
+// quietly. `scoped` is inBarangay's answer for `all`; with no barangay picked it is `all` and this is 0.
+export const sosElsewhere = (all: Report[], scoped: Report[]): number => all.filter(isSosActive).length - scoped.filter(isSosActive).length;
 
 export type Tally = {
   unresolved: number; // tickets still to do (not fixed, not rejected)
