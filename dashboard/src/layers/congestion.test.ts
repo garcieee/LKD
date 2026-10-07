@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { CONGESTION_RAMP, congestionLayer, congestionTileUrl } from "./congestion.ts";
+import { CLIPPED_ID, CONGESTION_ID, CONGESTION_RAMP, clippedLayer, congestionLayer, congestionTileUrl, tilesLayer } from "./congestion.ts";
 
 test("keeps the tile placeholders mapbox substitutes", () => {
   const url = congestionTileUrl("abc123");
@@ -44,4 +44,18 @@ test("zoom only drives the top-level interpolate of width and offset", () => {
     assert.equal(paint[prop][0], "interpolate");
     assert.deepEqual(paint[prop][2], ["zoom"]);
   }
+});
+
+test("the clipped layer paints like the vector one, from its own GeoJSON source; the tiles layer draws nothing", () => {
+  const vector = congestionLayer();
+  const clipped = clippedLayer();
+  assert.equal(clipped.id, CLIPPED_ID);
+  assert.equal(clipped.source, CLIPPED_ID);
+  assert.equal("source-layer" in clipped, false, "a GeoJSON source has no source layer");
+  assert.deepEqual(clipped.paint, vector.paint);
+  assert.deepEqual(clipped.layout, vector.layout);
+  const tiles = tilesLayer();
+  assert.equal(tiles.id, CONGESTION_ID);
+  assert.equal(tiles.paint!["line-opacity"], 0, "it only loads the tiles");
+  assert.equal(vector.paint!["line-opacity"], undefined, "the plain layer is unchanged");
 });

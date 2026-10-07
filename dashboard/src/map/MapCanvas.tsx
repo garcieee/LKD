@@ -7,7 +7,7 @@ import { MAKATI, lockBounds } from "../config/makati";
 import { MAP_STYLES, DEFAULT_MAP_STYLE } from "../config/mapStyles";
 import { addCongestion, removeCongestion } from "../layers/congestion";
 import { BARANGAYS } from "../data/barangays";
-import { addBarangays, removeBarangays, selectBarangay } from "../layers/barangays";
+import { addBarangays, addFocus, removeBarangays, selectBarangay } from "../layers/barangays";
 import { removeFootfall, setFootfall } from "../layers/footfall";
 import { animateSos, bindReportPins, setReportPins } from "../layers/reports";
 import type { Footfall, Report } from "../types/api";
@@ -80,7 +80,7 @@ export default function MapCanvas({ congestionOn, stamp, footfall, barangays, re
   useEffect(() => {
     const m = map.current;
     if (!loaded || !m) return;
-    if (congestionOn && ENV.tomtomKey) addCongestion(m, ENV.tomtomKey, stamp);
+    if (congestionOn && ENV.tomtomKey) addCongestion(m, ENV.tomtomKey, stamp, BARANGAYS);
     else removeCongestion(m);
   }, [loaded, congestionOn, stamp]);
 
@@ -91,6 +91,12 @@ export default function MapCanvas({ congestionOn, stamp, footfall, barangays, re
     if (footfall) setFootfall(m, footfall);
     else removeFootfall(m);
   }, [loaded, footfall]);
+
+  // Makati's focus: the dimmed surroundings and the city's edge. Always on, whatever the barangays switch says.
+  useEffect(() => {
+    const m = map.current;
+    if (loaded && m) addFocus(m, BARANGAYS);
+  }, [loaded]);
 
   // The barangays' outlines and names: drawn while switched on, and the selected one tinted (the second effect runs
   // right after the first, so a layer just added gets its tint). A draw that fails is logged and the map goes on.

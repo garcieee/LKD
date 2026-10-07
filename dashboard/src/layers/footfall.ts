@@ -1,13 +1,17 @@
 // Modeled foot traffic: a heat layer over the transit hubs and district anchors, plus a ring on each district.
 // The values are a relative 0-100 index from GET /footfall, an estimate and not a count (see
 // server/app/services/footfall.py). Drawn under the TomTom lines when those are on, else under the basemap labels.
-import type { CircleLayerSpecification, GeoJSONSource, HeatmapLayerSpecification, Map as MapboxMap } from "mapbox-gl";
+import type { CanvasSource, Map as MapboxMap } from "mapbox-gl";
 import type { Day, Footfall } from "../types/api.ts";
+import { BARANGAYS } from "../data/barangays.ts";
+import { inside } from "./clip.ts";
+import { cityLoops, restackFocus } from "./barangays.ts";
 import { CONGESTION_ID } from "./congestion.ts";
 
 export const FOOTFALL_ID = "footfall";
-const RINGS_ID = "footfall-districts";
-const RINGS_SOURCE = "footfall-districts";
+const city = cityLoops(BARANGAYS);
+const loops = [...city.outer, ...city.enclaves];
+const inCity = (p: { lng: number; lat: number }) => inside([p.lng, p.lat], loops);
 
 // Cool to warm so it never reads as TomTom's red/green: faint blue, violet, magenta, amber at the peak.
 export const FOOTFALL_RAMP = [
@@ -39,7 +43,7 @@ export function manilaNow(now = new Date()): { day: Day; hour: number } {
 export function heatGeoJSON(data: Footfall) {
   return {
     type: "FeatureCollection" as const,
-    features: data.points.map((p) => ({
+    features: data.points.filter(inCity).map((p) => ({
       type: "Feature" as const,
       geometry: { type: "Point" as const, coordinates: [p.lng, p.lat] },
       properties: { id: p.id, kind: p.kind, w: Math.min(1, Math.max(0, p.index / 100)) },
@@ -51,7 +55,7 @@ export function heatGeoJSON(data: Footfall) {
 export function ringsGeoJSON(data: Footfall) {
   return {
     type: "FeatureCollection" as const,
-    features: data.districts.map((d) => ({
+    features: data.districts.filter(inCity).map((d) => ({
       type: "Feature" as const,
       geometry: { type: "Point" as const, coordinates: [d.lng, d.lat] },
       properties: { id: d.id, name: d.name, tier: d.tier, radius_m: d.radius_m, w: Math.min(1, d.index / 100) },
@@ -59,63 +63,100 @@ export function ringsGeoJSON(data: Footfall) {
   };
 }
 
-const heat: HeatmapLayerSpecification = {
-  id: FOOTFALL_ID,
-  type: "heatmap",
-  source: FOOTFALL_ID,
-  paint: {
-    "heatmap-weight": ["get", "w"],
-    "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 11, 2.4, 16, 3],
-    "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 11, 40, 14, 70, 16, 110, 18, 170],
-    "heatmap-opacity": 0.95,
-    "heatmap-color": ["interpolate", ["linear"], ["heatmap-density"], ...FOOTFALL_RAMP.flat()],
-  },
-};
+// Clip the rendered pixels, not only point centres: soft heat and rings must not bleed over the edge.
+const SIZE = 2048;
+const positions = city.outer.flat();
+const west = Math.min(...positions.map((p) => p[0]));
+const east = Math.max(...positions.map((p) => p[0]));
+const south = Math.min(...positions.map((p) => p[1]));
+const north = Math.max(...positions.map((p) => p[1]));
+const mercatorY = (lat: number) => Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360));
+const top = mercatorY(north);
+const height = top - mercatorY(south);
+const HEIGHT = Math.round(SIZE * height / ((east - west) * Math.PI / 180));
+const pixel = (lng: number, lat: number): [number, number] => [
+  (lng - west) / (east - west) * SIZE, (top - mercatorY(lat)) / height * HEIGHT,
+];
 
-// A thin ring marks where a district is; it is a rough circle (radius_m), not a boundary.
-// metres per px at the equator is 156543 / 2^zoom, times cos(lat) ~ 0.968 at Makati.
-const ringRadius = (zoom: number, metres: number) => metres / ((156543.03 * 0.968) / 2 ** zoom);
-const rings: CircleLayerSpecification = {
-  id: RINGS_ID,
-  type: "circle",
-  source: RINGS_SOURCE,
-  paint: {
-    "circle-radius": [
-      "interpolate",
-      ["exponential", 2],
-      ["zoom"],
-      11,
-      ["*", ["get", "radius_m"], ringRadius(11, 1)],
-      19,
-      ["*", ["get", "radius_m"], ringRadius(19, 1)],
-    ],
-    "circle-color": "rgba(0,0,0,0)",
-    "circle-stroke-color": ["match", ["get", "tier"], 1, "#212e4a", 2, "#4f5f86", "#8a93ab"],
-    "circle-stroke-width": ["match", ["get", "tier"], 1, 1.8, 1.1],
-    "circle-stroke-opacity": 0.8,
-  },
-};
-
-function firstLabelLayerId(map: MapboxMap): string | undefined {
-  return map.getStyle()?.layers?.find((l) => l.type === "symbol")?.id;
+export function drawFootfall(canvas: HTMLCanvasElement, data: Footfall, zoom: number): void {
+  canvas.width = SIZE;
+  canvas.height = HEIGHT;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  ctx.save();
+  ctx.beginPath();
+  for (const loop of loops) {
+    loop.forEach(([lng, lat], i) => {
+      const [x, y] = pixel(lng, lat);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.closePath();
+  }
+  ctx.clip("evenodd");
+  const scale = SIZE / ((east - west) / 360 * 512 * 2 ** zoom);
+  const z = Math.min(18, Math.max(11, zoom));
+  const radius = (z <= 14 ? 40 + (z - 11) * 10 : z <= 16 ? 70 + (z - 14) * 20 : 110 + (z - 16) * 30) * scale;
+  for (const p of data.points.filter(inCity)) {
+    const weight = Math.min(1, Math.max(0, p.index / 100));
+    if (!weight) continue;
+    const [x, y] = pixel(p.lng, p.lat);
+    const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+    for (const [stop, color] of [...FOOTFALL_RAMP].reverse()) gradient.addColorStop(1 - stop, color);
+    ctx.globalAlpha = weight;
+    ctx.fillStyle = gradient;
+    ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+  }
+  ctx.globalAlpha = 0.8;
+  for (const d of data.districts.filter(inCity)) {
+    const [x, y] = pixel(d.lng, d.lat);
+    const metresPerPixel = 40075016.686 * Math.cos(d.lat * Math.PI / 180) * (east - west) / 360 / SIZE;
+    ctx.beginPath();
+    ctx.arc(x, y, d.radius_m / metresPerPixel, 0, 2 * Math.PI);
+    ctx.strokeStyle = d.tier === 1 ? "#212e4a" : d.tier === 2 ? "#4f5f86" : "#8a93ab";
+    ctx.lineWidth = (d.tier === 1 ? 1.8 : 1.1) * scale;
+    ctx.stroke();
+  }
+  ctx.restore();
 }
 
-// Adds the layers on first call; later calls only swap the data, so moving the hour slider does not flicker.
+type Overlay = { data: Footfall; redraw: () => void };
+const overlays = new WeakMap<MapboxMap, Overlay>();
+
 export function setFootfall(map: MapboxMap, data: Footfall): void {
-  const heatSource = map.getSource<GeoJSONSource>(FOOTFALL_ID);
-  if (heatSource) {
-    heatSource.setData(heatGeoJSON(data));
-    map.getSource<GeoJSONSource>(RINGS_SOURCE)?.setData(ringsGeoJSON(data));
+  const existing = overlays.get(map);
+  if (existing && map.getSource(FOOTFALL_ID)) {
+    existing.data = data;
+    existing.redraw();
     return;
   }
-  const before = map.getLayer(CONGESTION_ID) ? CONGESTION_ID : firstLabelLayerId(map);
-  map.addSource(FOOTFALL_ID, { type: "geojson", data: heatGeoJSON(data) });
-  map.addSource(RINGS_SOURCE, { type: "geojson", data: ringsGeoJSON(data) });
-  map.addLayer(heat, before);
-  map.addLayer(rings, before);
+  if (existing) map.off("zoomend", existing.redraw);
+  const canvas = document.createElement("canvas");
+  const overlay: Overlay = { data, redraw: () => {
+    drawFootfall(canvas, overlay.data, map.getZoom());
+    const source = map.getSource<CanvasSource>(FOOTFALL_ID);
+    source?.play();
+    map.triggerRepaint();
+    map.once("render", () => source?.pause());
+  } };
+  drawFootfall(canvas, data, map.getZoom());
+  map.addSource(FOOTFALL_ID, {
+    type: "canvas", canvas, animate: false,
+    coordinates: [[west, north], [east, north], [east, south], [west, south]],
+  });
+  const before = map.getLayer(CONGESTION_ID) ? CONGESTION_ID :
+    map.getStyle()?.layers?.find((l) => l.type === "symbol")?.id;
+  map.addLayer({ id: FOOTFALL_ID, type: "raster", source: FOOTFALL_ID,
+    paint: { "raster-opacity": 0.95, "raster-fade-duration": 0 } }, before);
+  overlays.set(map, overlay);
+  map.on("zoomend", overlay.redraw);
+  restackFocus(map);
 }
 
 export function removeFootfall(map: MapboxMap): void {
-  for (const id of [RINGS_ID, FOOTFALL_ID]) if (map.getLayer(id)) map.removeLayer(id);
-  for (const id of [RINGS_SOURCE, FOOTFALL_ID]) if (map.getSource(id)) map.removeSource(id);
+  const overlay = overlays.get(map);
+  if (overlay) map.off("zoomend", overlay.redraw);
+  overlays.delete(map);
+  if (map.getLayer(FOOTFALL_ID)) map.removeLayer(FOOTFALL_ID);
+  if (map.getSource(FOOTFALL_ID)) map.removeSource(FOOTFALL_ID);
 }

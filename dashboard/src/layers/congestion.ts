@@ -8,8 +8,11 @@
 // and the bands stack into one blob. As vectors each carriageway is its own feature, so width,
 // colour, side and paint order are ours. Mobile draws the same layer
 // (mobile/lib/layers/congestion_layer.dart): keep the two in step.
-import type { ExpressionSpecification, LineLayerSpecification, Map as MapboxMap } from "mapbox-gl";
+import type { ExpressionSpecification, GeoJSONSource, LineLayerSpecification, Map as MapboxMap } from "mapbox-gl";
 import { MAKATI } from "../config/makati.ts"; // .ts so `node --test` can resolve it
+import type { Barangay } from "../features/barangays/barangays.ts";
+import { cityLoops, restackFocus } from "./barangays.ts";
+import { clipFeatures } from "./clip.ts";
 
 export const CONGESTION_ID = "congestion";
 export const CONGESTION_STYLE = "relative";
@@ -97,7 +100,50 @@ function firstLabelLayerId(map: MapboxMap): string | undefined {
   return map.getStyle()?.layers?.find((l) => l.type === "symbol")?.id;
 }
 
-export function addCongestion(map: MapboxMap, key: string, stamp = 0): void {
+export const CLIPPED_ID = "congestion-clipped"; // the same lines, cut to the city (clip.ts)
+const REDRAW_MS = 80; // tiles arrive one by one: redraw once they stop
+
+// The lines the clipped layer draws: the vector layer's look, from a GeoJSON source.
+export function clippedLayer(): LineLayerSpecification {
+  const { "source-layer": _tiles, ...look } = congestionLayer();
+  return { ...look, id: CLIPPED_ID, source: CLIPPED_ID };
+}
+
+// The vector layer kept only to load the tiles: drawn at no opacity, so nothing outside the city shows.
+export function tilesLayer(): LineLayerSpecification {
+  const layer = congestionLayer();
+  return { ...layer, paint: { ...layer.paint, "line-opacity": 0 } };
+}
+
+const watching = new WeakMap<MapboxMap, () => void>();
+
+// Draws the traffic cut to the city: whenever tiles arrive, the road segments of the loaded tiles are cut to the city's
+// outline and handed to the clipped layer.
+function watchTiles(map: MapboxMap, city: readonly Barangay[]): void {
+  const { outer, enclaves } = cityLoops(city);
+  const loops = [...outer, ...enclaves];
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const redraw = () => {
+    const source = map.getSource<GeoJSONSource>(CLIPPED_ID);
+    if (!source || !map.isSourceLoaded(CONGESTION_ID)) return;
+    // The features do carry a geometry; mapbox-gl's typings for them leave it out.
+    const features = map.querySourceFeatures(CONGESTION_ID, { sourceLayer: SOURCE_LAYER }) as unknown as Parameters<typeof clipFeatures>[0];
+    source.setData(clipFeatures(features, loops));
+  };
+  const onData = (e: { sourceId?: string }) => {
+    if (e.sourceId !== CONGESTION_ID) return;
+    clearTimeout(timer);
+    timer = setTimeout(redraw, REDRAW_MS);
+  };
+  map.on("sourcedata", onData);
+  watching.set(map, () => {
+    clearTimeout(timer);
+    map.off("sourcedata", onData);
+  });
+}
+
+// With `city`, traffic shows only inside it (a line crossing the border is cut at the border). Without, as TomTom sends it.
+export function addCongestion(map: MapboxMap, key: string, stamp = 0, city?: readonly Barangay[]): void {
   removeCongestion(map);
   map.addSource(CONGESTION_ID, {
     type: "vector",
@@ -105,10 +151,21 @@ export function addCongestion(map: MapboxMap, key: string, stamp = 0): void {
     bounds: [...MAKATI.bounds[0], ...MAKATI.bounds[1]], // only request tiles over the city (API quota)
     attribution: "Traffic © TomTom",
   });
-  map.addLayer(congestionLayer(), firstLabelLayerId(map));
+  const below = firstLabelLayerId(map);
+  if (city?.length) {
+    map.addSource(CLIPPED_ID, { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+    map.addLayer(tilesLayer(), below);
+    map.addLayer(clippedLayer(), below);
+    watchTiles(map, city);
+  } else {
+    map.addLayer(congestionLayer(), below);
+  }
+  restackFocus(map); // Makati's edge and the barangay borders stay over the traffic
 }
 
 export function removeCongestion(map: MapboxMap): void {
-  if (map.getLayer(CONGESTION_ID)) map.removeLayer(CONGESTION_ID);
-  if (map.getSource(CONGESTION_ID)) map.removeSource(CONGESTION_ID);
+  watching.get(map)?.();
+  watching.delete(map);
+  for (const id of [CLIPPED_ID, CONGESTION_ID]) if (map.getLayer(id)) map.removeLayer(id);
+  for (const id of [CLIPPED_ID, CONGESTION_ID]) if (map.getSource(id)) map.removeSource(id);
 }
