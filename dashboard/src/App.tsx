@@ -341,6 +341,8 @@ export default function App() {
             </div>
           </div>
 
+          {sosNew.length > 0 && <div className="sos-hud-spacer" aria-hidden="true" />}
+
           {/* On the map whatever panel is open: pins are hidden outside the barangay, so it must always say so. */}
           <ScopeChip barangay={barangay} sosElsewhere={hiddenSos} onClear={showWholeCity} />
 
@@ -355,11 +357,12 @@ export default function App() {
             <label className="switch">
               <input
                 type="checkbox"
+                role="switch"
                 checked={congestionOn}
                 onChange={(e) => setCongestionOn(e.target.checked)}
               />
               <span>Congestion layer</span>
-              <span className={`chip ${congestionOn ? "on" : ""}`}>{congestionOn ? "On" : "Off"}</span>
+              <span className="switch-track" aria-hidden="true" />
             </label>
 
             <dl className="readout">
@@ -416,16 +419,21 @@ export default function App() {
             />
           )}
 
-          <label className="panel side switch ticket-pins-toggle">
-            <input
-              type="checkbox"
-              checked={ticketsOn}
-              onChange={(e) => setTicketsOn(e.target.checked)}
-            />
-            <span>Ticket pins on map</span>
-            <span className={`chip ${ticketsOn ? "on" : ""}`}>{ticketsOn ? "On" : "Off"}</span>
-          </label>
+          <button className="map-reset" onClick={() => mapView.current?.home()}>
+            Reset to Makati
+          </button>
         </div>
+
+        <label className="panel side switch ticket-pins-toggle">
+          <input
+            type="checkbox"
+            role="switch"
+            checked={ticketsOn}
+            onChange={(e) => setTicketsOn(e.target.checked)}
+          />
+          <span>Ticket pins</span>
+          <span className="switch-track" aria-hidden="true" />
+        </label>
 
         <Legend ticketsOn={ticketsOn} />
 

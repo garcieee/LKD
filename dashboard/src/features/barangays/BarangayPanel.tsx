@@ -62,9 +62,9 @@ export default function BarangayPanel({ reports, selectedId, onSelect, onClear, 
 
       <div className="queue-list">
         <label className="switch">
-          <input type="checkbox" checked={show} onChange={(e) => onShow(e.target.checked)} />
+          <input type="checkbox" role="switch" checked={show} onChange={(e) => onShow(e.target.checked)} />
           <span>Boundaries and names on the map</span>
-          <span className={`chip ${show ? "on" : ""}`}>{show ? "On" : "Off"}</span>
+          <span className="switch-track" aria-hidden="true" />
         </label>
 
         <div className="brgy-tools">

@@ -160,12 +160,6 @@ export default function MapCanvas({ congestionOn, stamp, footfall, barangays, re
   return (
     <div className="map-wrap">
       <div ref={container} className="map-canvas" />
-      <button
-        className="map-reset"
-        onClick={() => map.current?.fitBounds(map.current.getMaxBounds()!)} // the lock is the home view
-      >
-        Reset to Makati
-      </button>
     </div>
   );
 }

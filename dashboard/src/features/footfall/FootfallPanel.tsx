@@ -27,9 +27,9 @@ export default function FootfallPanel({ on, onToggle, when, pinned, onLive, data
       <div className="src">Predicted · transit hubs and districts</div>
 
       <label className="switch">
-        <input type="checkbox" checked={on} onChange={(e) => onToggle(e.target.checked)} />
+        <input type="checkbox" role="switch" checked={on} onChange={(e) => onToggle(e.target.checked)} />
         <span>Live layer</span>
-        <span className={`chip ${on ? "on" : ""}`}>{on ? "On" : "Off"}</span>
+        <span className="switch-track" aria-hidden="true" />
       </label>
 
       {on && (

@@ -1,20 +1,26 @@
-"""Fill db/reports.json with ~60 fake reports so the dashboard queue and Insights have something to show.
+"""Fill db/reports.json with 30 fake reports so the dashboard queue and Insights have something to show.
 
 Run from server/: python scripts/seed_demo.py          (add --clear to just remove them)
-Demo ids start with "demo-", so re-running replaces them and never touches real reports.
+Demo ids start with "demo-"; older synthetic reports carry a "Synthetic demo" note.
+Re-running replaces either kind and never touches real reports.
 """
 import random
 import struct
 import sys
 import zlib
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 sys.path.insert(0, ".")
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from app.config import STORAGE_DIR
 from app.db.store import ReportStore
+from models.tickets.classification.routing import district_of
+from models.tickets.resources.load import load_districts
 
 random.seed(7)
 PREFIX = "demo-"
+COUNT = 30
 NOTES = ["", "", "Near the corner", "Been like this for weeks", "Kids walk here to school", "Hard to see at night", "Water pooling after rain"]
 # category: relative weight. Statuses and ages are mixed below so every Insights card has data.
 CATEGORIES = {
@@ -33,7 +39,7 @@ def png(path):  # 1x1 grey PNG, so every demo photo_url resolves
 
 def main():
     store = ReportStore(STORAGE_DIR / "reports.json")
-    real = [r for r in store.all() if not r["id"].startswith(PREFIX)]
+    real = [r for r in store.all() if not r["id"].startswith(PREFIX) and not r.get("note", "").startswith("Synthetic demo")]
     if "--clear" in sys.argv:
         store._write(real)
         return print(f"Removed demo reports, {len(real)} real kept.")
@@ -43,18 +49,24 @@ def main():
     now = datetime.now(timezone.utc)
     iso = lambda t: t.isoformat(timespec="seconds")
     cats = [c for c, w in CATEGORIES.items() for _ in range(w)]
+    districts = load_districts()
     demo = []
-    for i in range(60):
+    for i in range(COUNT):
         created = now - timedelta(hours=random.uniform(0.2, 9 * 24))
         age_h = (now - created).total_seconds() / 3600
         status = random.choices(["open", "verified", "assigned", "fixed"], [3, 2, 2, 4 if age_h > 6 else 0])[0]
         # Fixed within 3 h .. 4 d of reporting, but never in the future.
         updated = min(now, created + timedelta(hours=random.uniform(3, 96))) if status != "open" else created
-        if random.random() < 0.55:
-            lat, lng = random.choice(CLUSTERS)
-            lat, lng = lat + random.gauss(0, 0.0006), lng + random.gauss(0, 0.0006)
+        for _ in range(1000):
+            if random.random() < 0.55:
+                lat, lng = random.choice(CLUSTERS)
+                lat, lng = lat + random.gauss(0, 0.0006), lng + random.gauss(0, 0.0006)
+            else:
+                lat, lng = random.uniform(14.535, 14.575), random.uniform(121.005, 121.045)
+            if district_of(lat, lng, districts) is not None:
+                break
         else:
-            lat, lng = random.uniform(14.535, 14.575), random.uniform(121.005, 121.045)
+            raise RuntimeError("Could not find a synthetic point inside Makati")
         demo.append({
             "id": f"{PREFIX}{i:03d}", "category": random.choice(cats), "lat": lat, "lng": lng,
             "heading": random.choice([None, round(random.uniform(0, 360))]), "note": random.choice(NOTES),
