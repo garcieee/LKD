@@ -142,6 +142,7 @@ class CommuteLeg {
       durationS = (json['duration_s'] as num).toDouble(),
       distanceM = (json['distance_m'] as num).toDouble(),
       label = json['label'] as String,
+      connectionEstimated = json['connection_estimated'] == true,
       line = [
         for (final p in json['geometry'] as List) [for (final n in p as List) (n as num).toDouble()],
       ],
@@ -150,12 +151,14 @@ class CommuteLeg {
   /// A walking route as a single leg, for a trip with no ride.
   CommuteLeg.walk(WalkRoute r, this.label)
     : kind = 'walk',
+      connectionEstimated = false,
       durationS = r.durationS,
       distanceM = r.distanceM,
       line = r.line,
       steps = r.steps;
 
   final String kind; // 'walk', or a key of hubModeLabels
+  final bool connectionEstimated;
   final double durationS;
   final double distanceM;
   final String label; // e.g. "Walk to Ayala Terminal"

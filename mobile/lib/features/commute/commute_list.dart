@@ -114,6 +114,12 @@ class _Tile extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 LegStrip(legs: option.legs),
+                if (option.legs.any((leg) => leg.connectionEstimated))
+                  const Padding(
+                    padding: EdgeInsets.only(top: 6),
+                    child: Text('Short walks at boarding points are estimated. Use a safe crossing.',
+                      style: TextStyle(fontSize: 11, color: muted)),
+                  ),
                 if (option.isEarliest) ...[
                   const SizedBox(height: 8),
                   const Align(alignment: Alignment.centerRight, child: _Badge('Earliest arrival')),

@@ -1,6 +1,5 @@
-// The route: a thick blue line with a white casing and white arrowheads pointing the way, under the report and
-// destination pins. map/map_view.dart draws what the user has chosen (state/trip_state.dart): a walking route, or
-// a commute option made of several legs, where each walking leg is a thinner blue line and each ride the navy one.
+// Walking routes and legs are dotted blue in previews and green during navigation.
+// Rides stay solid with a white casing and directional arrowheads, below the map pins.
 import 'dart:convert';
 import 'dart:ui' show Color;
 
@@ -41,7 +40,7 @@ List<Object> _widths(List<List<num>> stops) => [
   ],
 ];
 
-// On a trip every feature carries trip: true (the line is green), and a walking one also dotted: true.
+// Walking is dotted in previews and during navigation. Trip mode changes its colour to green.
 final _dotted = [
   '==',
   ['get', 'dotted'],
@@ -67,6 +66,7 @@ final _chevrons = {
   'id': _chevronId,
   'type': 'symbol',
   'source': _id,
+  'filter': ['!=', ['get', 'dotted'], true],
   'layout': {
     'symbol-placement': 'line',
     'symbol-spacing': 38,
@@ -91,13 +91,13 @@ final _chevrons = {
 Map<String, Object> walkGeoJson(WalkRoute route) => {
   'type': 'Feature',
   'geometry': {'type': 'LineString', 'coordinates': route.line},
-  'properties': {'mode': route.mode},
+  'properties': {'mode': route.mode, 'dotted': true},
 };
 
 Map<String, Object> _feature(CommuteLeg leg, List<List<double>> line, {required bool thin, bool trip = false}) => {
   'type': 'Feature',
   'geometry': {'type': 'LineString', 'coordinates': line},
-  'properties': {'kind': leg.kind, 'thin': thin, 'trip': trip, 'dotted': trip && leg.isWalk},
+  'properties': {'kind': leg.kind, 'thin': thin, 'trip': trip, 'dotted': leg.isWalk},
 };
 
 /// The GeoJSON for a commute option: one line per leg, in order.
@@ -163,6 +163,7 @@ Future<void> _draw(MapboxMap map, Map<String, Object>? geojson) async {
             [16, 15, 10],
             [19, 22, 15],
           ]),
+          filter: ['!=', ['get', 'dotted'], true],
         ),
       ),
       below,
@@ -206,12 +207,12 @@ Future<void> _draw(MapboxMap map, Map<String, Object>? geojson) async {
     );
   }
   if (!await map.styleLayerExists(_dotsId)) {
-    // A walking leg of a trip: the same green line, dotted.
+    // Every walk is dotted: blue in the preview and green during navigation.
     await map.addStyleLayer(
       jsonEncode(
         _line(
           _dotsId,
-          _green,
+          ['case', ['==', ['get', 'trip'], true], _green, _blue],
           _widths([
             [12, 5, 4],
             [16, 10, 7],

@@ -28,6 +28,7 @@ class Leg(BaseModel):
     label: str
     geometry: list[list[float]]  # [[lng, lat], ...], the order Mapbox takes
     steps: list[Step] = []  # a street-routed walking leg only; rides and straight-line estimates have none
+    connection_estimated: bool = False  # short sidewalk-to-boarding/drop-off link
 
 
 class Option(BaseModel):
@@ -41,6 +42,41 @@ class Option(BaseModel):
 def _ends(leg: dict) -> tuple:
     (a, b), (c, d) = leg["geometry"][0], leg["geometry"][-1]
     return (b, a), (d, c)  # (lat, lng) pairs
+
+
+def _connect_transfers(legs: list[dict]) -> None:
+    """Join nearby walking/vehicle snaps with an explicitly estimated walking connection.
+
+    ORS's walking and driving profiles can snap one stop to different sides of a
+    road. Preserve both routes and their turn indices; account for the short link
+    in walking distance/time. Never invent a long path across unmapped terrain.
+    """
+    for left, right in zip(legs, legs[1:]):
+        if (left["kind"] == "walk") == (right["kind"] == "walk"):
+            continue
+        a, b = left["geometry"][-1], right["geometry"][0]
+        gap = commute.distance_m(a[1], a[0], b[1], b[0])
+        if gap == 0 or gap > 40:
+            continue
+        boarding = left["kind"] == "walk"
+        walk = left if boarding else right
+        line = walk["geometry"]
+        steps = [dict(s) for s in walk.get("steps", [])]
+        if boarding:
+            walk["geometry"] = [*line, list(b)]
+            steps = [s for s in steps if s["type"] != 10]
+            at = len(line) - 1
+        else:
+            walk["geometry"] = [list(a), *line]
+            steps = [{**s, "at": s["at"] + 1} for s in steps]
+            at = 0
+        step = {"type": 6, "text": "Walk to the boarding point (connection estimated)" if boarding else
+                "Walk from the drop-off point to the footpath (connection estimated)",
+                "name": "", "distance_m": gap, "at": at}
+        walk["steps"] = [*steps, step] if boarding else [step, *steps]
+        walk["distance_m"] += gap
+        walk["duration_s"] += gap / commute.WALK_MPS
+        walk["connection_estimated"] = True
 
 
 def _refine(options: list[dict], mode: str, reports: list, client, rides: dict) -> None:
@@ -79,6 +115,7 @@ def _refine(options: list[dict], mode: str, reports: list, client, rides: dict) 
                     duration_s=f["wait_min"] * 60 + route["distance_m"] / (f["speed_kmh"] / 3.6),
                     steps=[],
                 )
+        _connect_transfers(o["legs"])
         o["total_s"] = sum(leg["duration_s"] for leg in o["legs"])
         o["walk_s"] = sum(leg["duration_s"] for leg in o["legs"] if leg["kind"] == "walk")
 

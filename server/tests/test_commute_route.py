@@ -182,3 +182,40 @@ def test_a_jeepney_ride_is_only_offered_on_a_route_the_study_lists(tmp_path):
     rides = _rides_between(tmp_path, "washington-terminal", "landmark-terminal")
     assert ("jeepney", "Washington Terminal to Landmark Terminal") not in rides
     assert ("jeepney", "Washington Terminal to One Ayala") in rides
+
+
+def test_iacademy_glorietta_transfer_snaps_connect_and_keep_turn_indices():
+    from app.routers.commute import _connect_transfers
+    # ORS endpoints for Washington Terminal -> One Ayala, 7 Oct 2026.
+    legs = [
+        {"kind": "walk", "geometry": [[121.007969, 14.559923], [121.010285, 14.558631]],
+         "distance_m": 300, "duration_s": 240, "steps": [
+             {"type": 11, "at": 0, "text": "Start", "name": "Yakal", "distance_m": 300},
+             {"type": 10, "at": 1, "text": "Arrive", "name": "", "distance_m": 0}]},
+        {"kind": "jeepney", "geometry": [[121.01038, 14.558472], [121.028369, 14.550643]],
+         "distance_m": 2500, "duration_s": 900},
+        {"kind": "walk", "geometry": [[121.028151, 14.550464], [121.025139, 14.550356]],
+         "distance_m": 400, "duration_s": 300, "steps": [
+             {"type": 11, "at": 0, "text": "Start", "name": "Ayala", "distance_m": 400}]},
+    ]
+    _connect_transfers(legs)
+    assert all(a["geometry"][-1] == b["geometry"][0] for a, b in zip(legs, legs[1:]))
+    assert legs[0]["distance_m"] == pytest.approx(320.4, abs=0.2)
+    assert legs[2]["distance_m"] == pytest.approx(430.8, abs=0.2)
+    assert legs[2]["steps"][1]["at"] == 1
+    assert "estimated" in legs[0]["steps"][-1]["text"]
+    assert legs[1]["distance_m"] == 2500
+    before = json.dumps(legs, sort_keys=True)
+    _connect_transfers(legs)
+    assert json.dumps(legs, sort_keys=True) == before
+
+
+def test_transfer_connection_never_draws_a_long_unverified_shortcut():
+    from app.routers.commute import _connect_transfers
+    legs = [
+        {"kind": "walk", "geometry": [[121.0, 14.55], [121.001, 14.55]], "distance_m": 100, "duration_s": 80},
+        {"kind": "city_bus", "geometry": [[121.02, 14.55], [121.03, 14.55]], "distance_m": 1000, "duration_s": 200},
+    ]
+    before = json.dumps(legs)
+    _connect_transfers(legs)
+    assert json.dumps(legs) == before

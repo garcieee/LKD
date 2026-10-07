@@ -39,6 +39,7 @@ void main() {
     final features = (geo['features'] as List).cast<Map<String, Object>>();
     expect([for (final f in features) (f['properties'] as Map)['kind']], ['walk', 'city_bus', 'walk']);
     expect([for (final f in features) (f['properties'] as Map)['thin']], [true, false, true]);
+    expect([for (final f in features) (f['properties'] as Map)['dotted']], [true, false, true]);
     expect((features[1]['geometry'] as Map)['coordinates'], [
       [121.1, 14.6],
       [121.2, 14.7],
@@ -60,6 +61,7 @@ void main() {
     final geo = walkGeoJson(route);
     expect(geo['type'], 'Feature');
     expect((geo['properties'] as Map).containsKey('thin'), isFalse);
+    expect((geo['properties'] as Map)['dotted'], isTrue);
     expect((geo['geometry'] as Map)['type'], 'LineString');
   });
 }
