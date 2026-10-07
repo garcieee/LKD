@@ -74,7 +74,7 @@ Future<TripState> tripWith(WidgetTester tester, {List<CommuteOption> options = c
 void main() {
   setUpAll(loadRoboto);
 
-  testWidgets('the route card compares the walks, then lists the rides', (tester) async {
+  testWidgets('the route card fits commute and walk choices', (tester) async {
     final trip = await tripWith(
       tester,
       options: [
@@ -83,9 +83,10 @@ void main() {
         commuteOption('c', total: 3000, walk: 900, kind: 'uv_express'),
       ],
     );
-    await fitsEveryPhone(tester, () => onTheMap(RouteCard(trip: trip)));
-    await tester.runAsync(trip.toCommute);
-    await fitsEveryPhone(tester, () => onTheMap(RouteCard(trip: trip)));
+    Widget card() => onTheMap(SingleChildScrollView(child: RouteCard(trip: trip)));
+    await fitsEveryPhone(tester, card);
+    trip.backToWalk();
+    await fitsEveryPhone(tester, card);
     trip.dispose();
   });
 

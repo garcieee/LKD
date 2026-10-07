@@ -116,63 +116,64 @@ void main() {
     failing.dispose();
   });
 
-  testWidgets('the card compares the walks first; Next brings the rides, and the back chip names the mode', (tester) async {
-    final trip = tripWith([option('a', total: 2100, walk: 360, tags: ['earliest'])]);
+  testWidgets('the card shows Commute immediately and switches directly to Walk', (tester) async {
+    final trip = tripWith([
+      option('a', total: 2100, walk: 360, tags: ['earliest']),
+    ]);
     trip.setDestination(greenbelt, from: here);
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
     await show(tester, RouteCard(trip: trip));
-    expect(find.text('Fastest'), findsOneWidget, reason: 'the walking comparison comes first');
+    expect(trip.step, TripStep.commute);
+    expect(find.text('Commute'), findsOneWidget);
+    expect(find.text('Walk'), findsOneWidget);
+    expect(find.text('1 suggested route'), findsOneWidget);
+    expect(find.text('Walking preference for transit legs'), findsNothing);
+    expect(find.text('Fastest'), findsNothing);
+    expect(find.text('Walkable'), findsNothing);
+    expect(find.text('Accessible'), findsNothing);
+    expect(find.text('Next: trip options'), findsNothing);
+
+    await tester.tap(find.text('Walk'));
+    await tester.pump();
+    expect(trip.step, TripStep.walk);
+    expect(find.text('Fastest'), findsOneWidget);
     expect(find.text('Walkable'), findsOneWidget);
     expect(find.text('Accessible'), findsOneWidget);
     expect(find.text('480 m · 6 min'), findsOneWidget);
-    expect(find.textContaining('suggested route'), findsNothing);
-
-    await tester.tap(find.text('Accessible'));
-    await tester.pump();
-    await tester.tap(find.text('Next: trip options'));
-    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
-    await tester.pump();
-    expect(trip.step, TripStep.commute);
-    expect(find.text('1 suggested route'), findsOneWidget);
-    expect(find.text('Walking: Accessible'), findsOneWidget);
-    expect(find.text('Fastest'), findsNothing);
-    expect(find.text('Next: trip options'), findsNothing);
-
-    await tester.tap(find.text('Walking: Accessible'));
-    await tester.pump();
-    expect(find.text('Fastest'), findsOneWidget);
     expect(find.text('1 suggested route'), findsNothing);
+    await tester.tap(find.text('Commute'));
+    await tester.pump();
+    expect(find.text('1 suggested route'), findsOneWidget);
     trip.dispose();
   });
 
-  testWidgets('Next waits for a walking route', (tester) async {
+  testWidgets('Commute waits for a location before enabling Start', (tester) async {
     final trip = tripWith([]);
     trip.setDestination(greenbelt);
     await show(tester, RouteCard(trip: trip));
+    expect(find.text('Waiting for your location…'), findsOneWidget);
     expect(tester.widget<FilledButton>(find.byType(FilledButton)).onPressed, isNull);
     trip.dispose();
   });
 
-  testWidgets('without a commute source the card is the walking card, with no Next', (tester) async {
+  testWidgets('without a commute source the card shows Walk only', (tester) async {
     final trip = TripState((from, to, mode) async => walk(mode));
     trip.setDestination(greenbelt, from: here);
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
     await show(tester, RouteCard(trip: trip));
-    expect(find.text('Next: trip options'), findsNothing);
+    expect(find.text('Commute'), findsNothing);
+    expect(find.text('Start walking'), findsOneWidget);
     expect(find.text('Fastest'), findsOneWidget);
     trip.dispose();
   });
 
   testWidgets('Start trip begins the trip with the chosen option', (tester) async {
-    final trip = tripWith([option('a', total: 2100, walk: 360, tags: ['earliest'])]);
+    final trip = tripWith([
+      option('a', total: 2100, walk: 360, tags: ['earliest']),
+    ]);
     trip.setDestination(greenbelt, from: here);
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
     await show(tester, RouteCard(trip: trip));
-    expect(find.text('Start trip'), findsNothing, reason: 'not on the commute step yet');
-    await tester.tap(find.text('Next: trip options'));
-    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
-    await tester.pump();
-
     expect(find.text('Start trip'), findsOneWidget);
     await tester.tap(find.text('Start trip'));
     await tester.pump();
@@ -185,6 +186,8 @@ void main() {
     trip.setDestination(greenbelt, from: here);
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
     await show(tester, RouteCard(trip: trip));
+    await tester.tap(find.text('Walk'));
+    await tester.pump();
     await tester.tap(find.text('Start walking'));
     await tester.pump();
     expect(trip.started, isTrue);
@@ -193,20 +196,21 @@ void main() {
     trip.dispose();
   });
 
-  testWidgets('with no ride the button says Start walking, and it waits while the options load', (tester) async {
+  testWidgets('with no ride the Commute button stays disabled and offers Walk instead', (tester) async {
     final pending = Completer<List<CommuteOption>>();
     final trip = TripState((from, to, mode) async => walk(mode), (from, to, mode) => pending.future);
     trip.setDestination(greenbelt, from: here);
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
     await show(tester, RouteCard(trip: trip));
-    await tester.tap(find.text('Next: trip options'));
-    await tester.pump();
     expect(tester.widget<FilledButton>(find.byType(FilledButton)).onPressed, isNull, reason: 'still loading');
 
     pending.complete([]);
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
     await tester.pump();
     expect(find.text('No ride found near both ends of this trip.'), findsOneWidget);
+    expect(tester.widget<FilledButton>(find.byType(FilledButton)).onPressed, isNull);
+    await tester.tap(find.text('Walk instead'));
+    await tester.pump();
     expect(find.text('Start walking'), findsOneWidget);
     await tester.tap(find.text('Start walking'));
     await tester.pump();

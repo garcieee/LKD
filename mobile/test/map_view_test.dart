@@ -32,14 +32,15 @@ void main() {
       trip.routes[mode] = walkRoute(mode, hazards: ['a'], avoids: false);
     }
     trip.errors.clear();
-    trip.setMode('fastest'); // any change tells the page
-    trip.setMode('walkable');
     trip.commute = [
       commuteOption('a', total: 2100, walk: 360, earliest: true),
       commuteOption('b', total: 2700, walk: 600, kind: 'mrt3'),
       commuteOption('c', total: 3000, walk: 900, kind: 'uv_express'),
     ];
     trip.commuteMode = trip.mode;
+    trip.commuteError = null;
+    trip.commuteLoading = false;
+    trip.select(1); // announce the test routes without launching another API request
     await tester.pump(const Duration(milliseconds: 100));
     return trip;
   }

@@ -44,7 +44,10 @@ void main() {
       expect(hazardLabel(route('fastest', avoids: false)), 'No reported hazards on this route');
       expect(hazardLabel(route('fastest', hazards: ['a'], avoids: false)), 'Passes 1 reported hazard');
       expect(hazardLabel(route('walkable', hazards: ['a', 'b'])), 'Passes 2 reported hazards');
-      expect(hazardLabel(route('accessible', hazards: ['a'], avoids: false)), 'Passes 1 reported hazard (no way around)');
+      expect(
+        hazardLabel(route('accessible', hazards: ['a'], avoids: false)),
+        'Passes 1 reported hazard (no way around)',
+      );
     });
   });
 
@@ -52,16 +55,23 @@ void main() {
     Future<TripState> mount(WidgetTester tester, RouteFn fetch, {bool withStart = true}) async {
       final trip = TripState(fetch);
       trip.setDestination(greenbelt, from: withStart ? here : null);
-      await tester.pumpWidget(MaterialApp(home: Scaffold(body: RouteCard(trip: trip))));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(body: RouteCard(trip: trip)),
+        ),
+      );
       return trip;
     }
 
     testWidgets('shows each mode with its time, and the chosen mode in full; tapping switches', (tester) async {
-      await mount(tester, (from, to, mode) async => switch (mode) {
-        'fastest' => route(mode, m: 400, s: 300, hazards: ['a', 'b'], avoids: false),
-        'walkable' => route(mode, m: 520, s: 400),
-        _ => route(mode, m: 560, s: 480),
-      });
+      await mount(
+        tester,
+        (from, to, mode) async => switch (mode) {
+          'fastest' => route(mode, m: 400, s: 300, hazards: ['a', 'b'], avoids: false),
+          'walkable' => route(mode, m: 520, s: 400),
+          _ => route(mode, m: 560, s: 480),
+        },
+      );
       await tester.pump();
       expect(find.text('Greenbelt, Makati'), findsOneWidget);
       expect(find.text('5 min'), findsOneWidget);
@@ -76,6 +86,25 @@ void main() {
       expect(find.text('Passes 2 reported hazards'), findsOneWidget);
     });
 
+    testWidgets('Fastest time and line use the quickest returned walking route', (tester) async {
+      final handle = tester.ensureSemantics();
+      final trip = await mount(
+        tester,
+        (from, to, mode) async => switch (mode) {
+          'fastest' => route(mode, m: 600, s: 480),
+          'walkable' => route(mode, m: 420, s: 300),
+          _ => route(mode, m: 500, s: 360),
+        },
+      );
+      await tester.pump();
+      expect(find.semantics.byLabel('Fastest, 5 min'), findsOneWidget);
+      await tester.tap(find.text('Fastest'));
+      await tester.pump();
+      expect(find.text('420 m · 5 min'), findsOneWidget);
+      expect(trip.activeLegs.single.distanceM, 420);
+      handle.dispose();
+    });
+
     testWidgets('a screen reader can pick a mode', (tester) async {
       final handle = tester.ensureSemantics();
       final trip = await mount(tester, (from, to, mode) async => route(mode));
@@ -88,7 +117,11 @@ void main() {
 
     testWidgets('waiting, loading and failing each say so', (tester) async {
       final wait = Completer<WalkRoute>();
-      final trip = await mount(tester, (from, to, mode) => mode == 'walkable' ? wait.future : Future.value(route(mode)), withStart: false);
+      final trip = await mount(
+        tester,
+        (from, to, mode) => mode == 'walkable' ? wait.future : Future.value(route(mode)),
+        withStart: false,
+      );
       expect(find.text('Waiting for your location…'), findsOneWidget);
 
       unawaited(trip.plan(here));

@@ -260,9 +260,9 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _queue = _queue.then((_) async {
       final map = _map, place = _trip.destination, started = _trip.started;
       if (map == null) return;
-      // The commute step draws the chosen option; until one lands, or when there is none, the walking route.
+      // Only draw the chosen kind of trip: Commute waits for a ride option, Walk draws the full walking route.
       final option = _trip.step == TripStep.commute ? _trip.option : null;
-      final route = option == null ? _trip.route : null;
+      final route = _trip.step == TripStep.walk ? _trip.route : null;
       try {
         if (!await map.isStyleLoaded()) return; // _ready() draws it once the style is up
         if (started && place != null && place == _pinsFor) {

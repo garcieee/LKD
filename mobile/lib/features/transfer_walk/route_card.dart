@@ -1,6 +1,4 @@
-// The trip card over the map: where to, then either the trip options (walk-ride-walk commutes) or the walking routes
-// (mode toggle, what the chosen route is like: length, time, how many reported hazards it still passes, and Start
-// for a walk all the way).
+// The trip card over the map: Commute or Walk first, then the relevant options and Start.
 import 'package:flutter/material.dart';
 
 import '../../api/api_client.dart';
@@ -54,19 +52,32 @@ class RouteCard extends StatelessWidget {
                 style: const TextStyle(fontSize: 12, color: muted),
               ),
               const SizedBox(height: 8),
+              if (trip.hasCommute) ...[_TripKindToggle(trip: trip), const SizedBox(height: 10)],
               if (trip.step == TripStep.commute) ...[
-                _BackToWalk(trip: trip),
-                const SizedBox(height: 6),
                 CommuteList(trip: trip),
+                if (!trip.commuteLoading &&
+                    trip.commute.isEmpty &&
+                    (trip.commuteMode != null || trip.commuteError != null)) ...[
+                  const SizedBox(height: 4),
+                  TextButton.icon(
+                    onPressed: trip.backToWalk,
+                    icon: const Icon(Icons.directions_walk, size: 18),
+                    label: const Text('Walk instead'),
+                  ),
+                ],
                 const SizedBox(height: 10),
                 FilledButton.icon(
                   onPressed: trip.canStart ? trip.start : null,
                   style: FilledButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: radiusButton)),
                   icon: const Icon(Icons.navigation, size: 18),
-                  // With no ride to take, the trip is the walk alone.
-                  label: Text(trip.option == null ? 'Start walking' : 'Start trip'),
+                  label: const Text('Start trip'),
                 ),
               ] else ...[
+                const Text(
+                  'Walking route',
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: muted),
+                ),
+                const SizedBox(height: 6),
                 ModeToggle(trip: trip),
                 const SizedBox(height: 10),
                 if (route != null) ...[
@@ -87,21 +98,12 @@ class RouteCard extends StatelessWidget {
                     style: const TextStyle(fontSize: 12, color: muted),
                   ),
                 const SizedBox(height: 10),
-                // Not commuting: walk the whole way in the picked mode. Otherwise look at the ways to ride.
                 FilledButton.icon(
                   onPressed: trip.canStart ? trip.start : null,
                   style: FilledButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: radiusButton)),
                   icon: const Icon(Icons.directions_walk, size: 18),
                   label: const Text('Start walking'),
                 ),
-                if (trip.hasCommute) ...[
-                  const SizedBox(height: 6),
-                  OutlinedButton(
-                    onPressed: route == null ? null : trip.toCommute,
-                    style: OutlinedButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: radiusButton)),
-                    child: const Text('Next: trip options'),
-                  ),
-                ],
               ],
             ],
           ),
@@ -111,21 +113,32 @@ class RouteCard extends StatelessWidget {
   }
 }
 
-/// The way back to the walking comparison, naming the mode the commute's walking legs use.
-class _BackToWalk extends StatelessWidget {
-  const _BackToWalk({required this.trip});
+/// The first decision stays visible while either kind of route is being compared.
+class _TripKindToggle extends StatelessWidget {
+  const _TripKindToggle({required this.trip});
 
   final TripState trip;
 
   @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: TextButton.icon(
-        onPressed: trip.backToWalk,
-        icon: const Icon(Icons.arrow_back, size: 16),
-        label: Text('Walking: ${routeModes[trip.mode]}'),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => SegmentedButton<TripStep>(
+    segments: const [
+      ButtonSegment(value: TripStep.commute, icon: Icon(Icons.directions_transit, size: 16), label: Text('Commute')),
+      ButtonSegment(value: TripStep.walk, icon: Icon(Icons.directions_walk, size: 16), label: Text('Walk')),
+    ],
+    selected: {trip.step},
+    showSelectedIcon: false,
+    onSelectionChanged: (selected) {
+      if (selected.single == TripStep.commute) {
+        trip.toCommute();
+      } else {
+        trip.backToWalk();
+      }
+    },
+    style: SegmentedButton.styleFrom(
+      selectedBackgroundColor: navy,
+      selectedForegroundColor: paper,
+      foregroundColor: ink,
+      side: const BorderSide(color: hairline),
+    ),
+  );
 }

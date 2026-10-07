@@ -22,7 +22,7 @@ class ModeToggle extends StatelessWidget {
               child: _Segment(
                 label: label,
                 // The time once it is known; "–" when this mode has no route; "…" while it is on its way.
-                detail: switch (trip.routes[mode]) {
+                detail: switch (mode == 'fastest' ? trip.fastestRoute : trip.routes[mode]) {
                   final r? => durationLabel(r.durationS),
                   null => trip.errors.containsKey(mode) || !trip.loading ? '–' : '…',
                 },
@@ -67,7 +67,10 @@ class _Segment extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(label, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: color)),
+                Text(
+                  label,
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: color),
+                ),
                 const SizedBox(height: 2),
                 Text(detail, style: TextStyle(fontSize: 11, color: color)),
               ],

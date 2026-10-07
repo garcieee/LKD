@@ -1,9 +1,11 @@
 // Where the user wants to go, the walking routes there in each mode, and the commute options (walk, ride, walk).
-// The trip goes in steps: compare the walking routes and pick a mode, then pick a commute option (its walking legs
-// use that mode). The map draws the pin and the chosen route's line. The start is the user's live location, given
+// Choose Commute or Walk directly. Commute uses walkable legs; Walk compares three modes. The map draws
+// the pin and the chosen route's line. The start is the user's live location, given
 // when the destination is picked.
 // ponytail: the routes are worked out once from that start and not redone as the user walks. Upgrade:
 // re-plan when the location drifts a block from the line.
+import 'dart:async' show unawaited;
+
 import 'package:flutter/foundation.dart';
 
 import '../api/api_client.dart';
@@ -16,11 +18,11 @@ typedef CommuteFn = Future<List<CommuteOption>> Function(LatLng from, LatLng to,
 const rerouteAfterFixes = 3; // good fixes in a row off the path before a new route is asked for
 const rerouteEvery = Duration(seconds: 15); // at least this long between asks
 
-/// What the card shows: the walking routes to compare, then the ways to commute.
+/// What the card shows: ways to commute, or walking routes all the way there.
 enum TripStep { walk, commute }
 
 class TripState extends ChangeNotifier {
-  TripState(this._fetch, [this._fetchCommute]);
+  TripState(this._fetch, [this._fetchCommute]) : step = _fetchCommute == null ? TripStep.walk : TripStep.commute;
 
   final RouteFn _fetch;
   final CommuteFn? _fetchCommute; // null: no commute options (walking only)
@@ -29,13 +31,13 @@ class TripState extends ChangeNotifier {
   String mode = 'walkable'; // the mode being shown: a key of routeModes
   final routes = <String, WalkRoute>{}; // filled as each mode's answer arrives
   final errors = <String, String>{}; // why a mode has no route, fit to show
-  TripStep step = TripStep.walk;
-  List<CommuteOption> commute = const []; // quickest first, for walking mode [commuteMode]
+  TripStep step;
+  List<CommuteOption> commute = const []; // quickest first, with walkable legs
   String? commuteError; // why there are no commute options, fit to show
   String? commuteMode; // the walking mode the commute options were asked for
   bool commuteLoading = false;
   int selected = 0; // index into commute: the one drawn on the map
-  LatLng? _from; // where the trip starts, kept from plan() so the commute options can be asked for later
+  LatLng? _from; // where the trip starts, kept from plan() for mode changes
   bool started = false; // the user pressed Start: the trip is on
   TripProgress? progress; // where the user is on the trip, once a fix has come in since Start
   int _leg = 0; // the leg the user is on; only ever goes up
@@ -50,26 +52,38 @@ class TripState extends ChangeNotifier {
   bool loading = false;
   bool planned = false; // routes for this destination have been asked for
   int _round = 0; // bumped per destination; answers from an older one are dropped
+  int _commuteRequest = 0; // bumped per destination; stale options are dropped
 
-  WalkRoute? get route => routes[mode];
+  // ORS can report a shorter ETA for Walkable or Accessible than for its Fastest preference. The Fastest tab
+  // must show the quickest route the app actually found, with that route's own line, steps and hazard details.
+  WalkRoute? get fastestRoute {
+    final fastest = routes['fastest'];
+    if (fastest == null) return null;
+    return routes.values.fold<WalkRoute>(
+      fastest,
+      (best, candidate) => candidate.durationS < best.durationS ? candidate : best,
+    );
+  }
+
+  WalkRoute? get route => mode == 'fastest' ? fastestRoute : routes[mode];
+
   String? get error => errors[mode];
   bool get hasCommute => _fetchCommute != null;
 
   /// The legs of the trip as it is being travelled. Once Start is pressed these are the trip's own copy: a reroute
   /// replaces the leg the user left, and the planned routes stay as they were.
   List<CommuteLeg> get legs => started ? _tripLegs : activeLegs;
-  /// The legs of the trip being taken: the chosen commute option, or, with no ride (or started from the walking
-  /// step), the chosen walking route all the way.
+
+  /// The legs of the chosen commute, or the walking route all the way.
   List<CommuteLeg> get activeLegs {
-    final o = step == TripStep.commute ? option : null, r = route;
-    if (o != null) return o.legs;
+    if (step == TripStep.commute) return option?.legs ?? const [];
+    final r = route;
     if (r == null) return const [];
     return [CommuteLeg.walk(r, 'Walk to ${destination?.label ?? 'your destination'}')];
   }
 
-  /// Whether Start can be pressed: on the walking step once there is a route (a walk all the way), on the commute
-  /// step once the options have landed (or failed) and there is a trip.
-  bool get canStart => step == TripStep.commute ? !commuteLoading && activeLegs.isNotEmpty : route != null;
+  /// Whether Start can be pressed for the selected kind of trip.
+  bool get canStart => step == TripStep.commute ? !commuteLoading && option != null : route != null;
 
   CommuteOption? get option => selected < commute.length ? commute[selected] : null;
 
@@ -80,11 +94,12 @@ class TripState extends ChangeNotifier {
     _round++;
     routes.clear();
     errors.clear();
-    step = TripStep.walk;
+    step = hasCommute ? TripStep.commute : TripStep.walk;
     commute = const [];
     commuteError = null;
     commuteMode = null;
     commuteLoading = false;
+    _commuteRequest++;
     selected = 0;
     _from = null;
     _endTrip();
@@ -185,32 +200,31 @@ class TripState extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Moves to the commute step and asks for the options with walking in the chosen [mode]. Options already fetched
-  /// for this mode are kept, so stepping back and forward again costs nothing; a different mode asks again.
+  /// Selects Commute and asks for options with walkable first/last legs, independent of the Walk comparison.
   Future<void> toCommute() async {
     step = TripStep.commute;
     final place = destination, from = _from, fetch = _fetchCommute;
-    if (place == null || from == null || fetch == null || commuteMode == mode) {
+    if (place == null || from == null || fetch == null || commuteMode == 'walkable') {
       notifyListeners();
       return;
     }
     commute = const [];
     commuteError = null;
-    commuteMode = mode;
+    commuteMode = 'walkable';
     commuteLoading = true;
     selected = 0;
-    final round = _round, asked = mode;
+    final round = _round, request = ++_commuteRequest;
     notifyListeners();
     try {
-      final o = await fetch(from, (lat: place.lat, lng: place.lng), asked);
-      if (round == _round) commute = o;
+      final o = await fetch(from, (lat: place.lat, lng: place.lng), 'walkable');
+      if (round == _round && request == _commuteRequest) commute = o;
     } on ApiException catch (e) {
-      if (round == _round) {
+      if (round == _round && request == _commuteRequest) {
         commuteError = e.message;
         commuteMode = null; // a failed ask is worth repeating
       }
     }
-    if (round != _round) return;
+    if (round != _round || request != _commuteRequest) return;
     commuteLoading = false;
     notifyListeners();
   }
@@ -221,8 +235,8 @@ class TripState extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Fetches every walking mode in parallel from [from] to the destination. Each answer shows as it lands, so
-  /// the quickest mode draws first, and one mode failing leaves the others alone.
+  /// Fetches all walking modes and, when Commute is selected, its options in parallel. Each answer shows as it
+  /// lands, and one walking mode failing leaves the others alone.
   Future<void> plan(LatLng from) async {
     final place = destination;
     if (place == null || planned) return;
@@ -231,6 +245,7 @@ class TripState extends ChangeNotifier {
     loading = true;
     final round = _round;
     notifyListeners();
+    if (step == TripStep.commute) unawaited(toCommute());
     final to = (lat: place.lat, lng: place.lng);
     await Future.wait([
       for (final m in routeModes.keys)
