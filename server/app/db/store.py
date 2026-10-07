@@ -48,9 +48,16 @@ class ReportStore:
 
     def _read(self) -> list[dict]:
         try:
-            return json.loads(self.path.read_text())
+            reports = json.loads(self.path.read_text())
         except FileNotFoundError:
             return []
+        except json.JSONDecodeError:
+            reports = None
+        if isinstance(reports, list):
+            return reports
+        # Not a list (hand-edited, or cut off): every report would fail on it. Keep the file as it was, aside, and start empty.
+        self.path.replace(self.path.with_suffix(".json.bad"))
+        return []
 
     def _write(self, reports: list[dict]) -> None:
         # Temp file, then rename: a crash mid-write never leaves half a JSON file behind.
