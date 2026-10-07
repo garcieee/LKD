@@ -605,29 +605,19 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          // On a trip the next turn rides along the top, and the buttons go down the right side.
+                          // On a trip the next turn rides along the top; the buttons sit above the trip panel.
                           if (started) ...[NavBanner(trip: _trip), const SizedBox(height: 10)],
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: started ? MainAxisAlignment.spaceBetween : MainAxisAlignment.end,
                             children: [
                               if (started) menu,
-                              // Shrinks a little rather than overflow, at 320 dp and large text.
+                              // Shrinks a little rather than overflow, at 320 dp and large text. On a trip it is the
+                              // burger's opposite, under the turn directions.
                               Flexible(
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      CompassChip(bearing: _bearing, following: _following),
-                                      if (started) ...[
-                                        const SizedBox(height: 10),
-                                        _LocateButton(onLocate: _locate),
-                                        const SizedBox(height: 10),
-                                        _ReportButton(onPressed: _report),
-                                      ],
-                                    ],
-                                  ),
+                                  child: CompassChip(bearing: _bearing, following: _following),
                                 ),
                               ),
                             ],
@@ -653,7 +643,18 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              if (started) NavPanel(trip: _trip),
+                              if (started) ...[
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    _LocateButton(onLocate: _locate),
+                                    const SizedBox(height: 10),
+                                    _ReportButton(onPressed: _report),
+                                    const SizedBox(height: 10),
+                                  ],
+                                ),
+                                NavPanel(trip: _trip),
+                              ],
                               // Kept in the tree on a trip, so the field still holds the destination afterwards.
                               Offstage(
                                 offstage: started,
