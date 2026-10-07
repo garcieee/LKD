@@ -6,18 +6,26 @@ import { ENV } from "../config/env";
 import { MAKATI, lockBounds } from "../config/makati";
 import { MAP_STYLES, DEFAULT_MAP_STYLE } from "../config/mapStyles";
 import { addCongestion, removeCongestion } from "../layers/congestion";
+import { BARANGAYS } from "../data/barangays";
+import { addBarangays, removeBarangays, selectBarangay } from "../layers/barangays";
 import { removeFootfall, setFootfall } from "../layers/footfall";
 import { animateSos, bindReportPins, setReportPins } from "../layers/reports";
 import type { Footfall, Report } from "../types/api";
 
 // Camera commands for the panels. `coveredRight`: px of map hidden under a panel on the right,
 // so the pin lands in the middle of what is still visible.
-export type MapHandle = { show: (lng: number, lat: number, coveredRight?: number) => void };
+// fit: zooms to a box (a barangay); home: back to the whole city.
+export type MapHandle = {
+  show: (lng: number, lat: number, coveredRight?: number) => void;
+  fit: (bounds: [[number, number], [number, number]], coveredRight?: number) => void;
+  home: () => void;
+};
 
 type Props = {
   congestionOn: boolean;
   stamp: number;
   footfall: Footfall | null; // null: the layer is off
+  barangays: { on: boolean; selectedId: string | null }; // their outlines and names; the one tinted
 
   reports: Report[] | null;
   selectedId: string | null;
@@ -25,7 +33,7 @@ type Props = {
   ref?: Ref<MapHandle>;
 };
 
-export default function MapCanvas({ congestionOn, stamp, footfall, reports, selectedId, onSelect, ref }: Props) {
+export default function MapCanvas({ congestionOn, stamp, footfall, barangays, reports, selectedId, onSelect, ref }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [loaded, setLoaded] = useState(false);
@@ -84,6 +92,18 @@ export default function MapCanvas({ congestionOn, stamp, footfall, reports, sele
     else removeFootfall(m);
   }, [loaded, footfall]);
 
+  // The barangays' outlines and names: drawn while switched on, and the selected one tinted (the second effect runs
+  // right after the first, so a layer just added gets its tint). A draw that fails is logged and the map goes on.
+  useEffect(() => {
+    const m = map.current;
+    if (!loaded || !m) return;
+    if (barangays.on) addBarangays(m, BARANGAYS, null);
+    else removeBarangays(m);
+  }, [loaded, barangays.on]);
+  useEffect(() => {
+    if (loaded && map.current && barangays.on) selectBarangay(map.current, barangays.selectedId);
+  }, [loaded, barangays.on, barangays.selectedId]);
+
   // Pins follow every poll and selection.
   useEffect(() => {
     if (loaded && map.current) setReportPins(map.current, reports ?? [], selectedId);
@@ -101,6 +121,19 @@ export default function MapCanvas({ congestionOn, stamp, footfall, reports, sele
       show(lng, lat, coveredRight = 0) {
         const m = map.current;
         m?.flyTo({ center: [lng, lat], zoom: Math.max(m.getZoom(), 16), offset: [-coveredRight / 2, 0] });
+      },
+      // Zooms to show a box: the padding keeps it clear of the panels over the map's right edge. Still for people who
+      // asked for less motion.
+      fit(bounds, coveredRight = 0) {
+        map.current?.fitBounds(bounds, {
+          padding: { top: 70, bottom: 70, left: 50, right: 50 + coveredRight },
+          maxZoom: 16,
+          duration: matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 900,
+        });
+      },
+      home() {
+        const m = map.current;
+        m?.fitBounds(m.getMaxBounds()!, { duration: matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 900 });
       },
     }),
     [],
