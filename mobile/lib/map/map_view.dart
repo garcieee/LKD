@@ -20,6 +20,9 @@ import '../features/report/ar_math.dart' show inMakati;
 import '../features/report/report_screen.dart';
 import '../features/search/place_search.dart';
 import '../features/search/search_bar.dart';
+import '../features/tickets/my_tickets_drawer.dart';
+import '../features/tickets/ticket_notifier.dart';
+import '../features/tickets/ticket_text.dart';
 import '../features/transfer_walk/hub_picker.dart';
 import '../features/transfer_walk/route_card.dart';
 import '../layers/buildings_layer.dart';
@@ -30,6 +33,8 @@ import '../layers/reports_layer.dart';
 import '../layers/route_layer.dart';
 import '../state/layers_state.dart';
 import '../state/location_state.dart';
+import '../state/my_tickets.dart';
+import '../state/ticket_watch.dart';
 import '../state/trip_state.dart';
 import '../theme.dart';
 import '../widgets/layer_sheet.dart';
@@ -39,9 +44,16 @@ import 'pin_chip.dart';
 const _ornamentBand = 40.0;
 
 class MapView extends StatefulWidget {
-  const MapView({super.key, @visibleForTesting this.mapboxToken = Env.mapboxToken});
+  const MapView({
+    super.key,
+    @visibleForTesting this.mapboxToken = Env.mapboxToken,
+    @visibleForTesting this.myTickets,
+    this.notifier,
+  });
 
   final String mapboxToken; // a test builds the page without a real token
+  final MyTickets? myTickets; // a test brings its own, so no phone storage or server is needed
+  final TicketNotifier? notifier; // the phone's notification tray; none (a test, or no way to show them) means banners only
 
   @override
   State<MapView> createState() => _MapViewState();
@@ -55,6 +67,12 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     (from, to, mode) => api.commute(from: from, to: to, mode: mode),
   );
   late final _search = PlaceSearch((text, near) => api.geocode(text, near: near));
+  late final MyTickets _mine = widget.myTickets ?? MyTickets(); // the tickets this phone filed (the burger menu)
+  late final _watch = TicketWatch(_mine, notifier: widget.notifier, onNews: _announce); // and the city's changes to them
+  final _scaffold = GlobalKey<ScaffoldState>();
+  bool _drawerOpen = false;
+  bool _onCamera = false; // the report screen is up
+  List<TicketUpdate> _held = const []; // news that came in while it was
   MapboxMap? _map;
   Timer? _timer;
   Timer? _reportsTimer;
@@ -102,6 +120,8 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _location.addListener(_startNearUser);
     _location.addListener(_trackTrip);
     _location.start();
+    widget.notifier?.whenTapped(_openTicket);
+    _watch.start(); // what the phone kept, then what the city says now (the menu's dot), then every 30 s: the notices
     _trip.addListener(_onTrip);
     _trip.addListener(_syncAwake);
     _trip.addListener(_syncFollow);
@@ -120,6 +140,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _timer?.cancel();
     _reportsTimer?.cancel();
     if (_awake) WakelockPlus.disable();
+    _watch.dispose();
     for (final s in _gestures) {
       s.cancel();
     }
@@ -130,6 +151,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _location.dispose();
     _trip.dispose();
     _search.dispose();
+    if (widget.myTickets == null) _mine.dispose(); // a test's own is the test's to dispose
     super.dispose();
   }
 
@@ -137,6 +159,49 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed && _location.status != Gps.ok) _location.start();
+    unawaited(_watch.lifecycle(state)); // away: stop asking about the tickets (or ask less, for a notification)
+  }
+
+  // The city changed tickets while the app is open: a notice over the map, naming the ticket and what happened.
+  // Not while the menu is open (the list shows it) and not over the camera, where it waits for the person's return.
+  void _announce(List<TicketUpdate> updates) {
+    if (!mounted || _drawerOpen) return;
+    if (_onCamera) {
+      _held = mergeUpdates([..._held, ...updates]);
+      return;
+    }
+    _notice(updates);
+  }
+
+  void _notice(List<TicketUpdate> updates) {
+    final alert = TicketAlert(updates);
+    final messenger = ScaffoldMessenger.of(context);
+    void open() {
+      messenger.hideCurrentSnackBar();
+      _openTicket(alert.only?.id ?? '');
+    }
+
+    messenger.showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        persist: false, // an action would keep it up for good: this one goes after a few seconds, and swipes away
+        duration: const Duration(seconds: 8),
+        content: GestureDetector(behavior: HitTestBehavior.opaque, onTap: open, child: Text(alert.text)),
+        action: SnackBarAction(label: alert.only == null ? 'Open' : 'View', onPressed: open),
+      ),
+    );
+  }
+
+  // A ticket's card, or the list when [id] is empty or the ticket is gone. It is read: no longer news.
+  void _openTicket(String id) {
+    final ticket = _mine.tickets.where((t) => t.id == id).firstOrNull;
+    if (!mounted) return;
+    if (ticket == null) {
+      _scaffold.currentState?.openDrawer();
+      return;
+    }
+    unawaited(_mine.markRead(id));
+    showReportSheet(context, ticket, mine: true);
   }
 
   // The pin: Mapbox's location puck (dot, heading arrow, accuracy ring), on while we have GPS.
@@ -447,11 +512,19 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   }
 
   Future<void> _report() async {
+    _onCamera = true;
     final sent = await Navigator.push<Report>(
       context,
       MaterialPageRoute(builder: (_) => const ReportScreen()),
     );
-    if (sent == null || !mounted) return;
+    _onCamera = false;
+    if (!mounted) return;
+    final held = _held.where((u) => _mine.isNews(u.now)).toList(); // not what they have looked at since
+    _held = const [];
+    if (held.isNotEmpty) _notice(held);
+    if (sent == null) return;
+    unawaited(_mine.add(sent)); // it shows in the menu, and its status is followed from here
+    unawaited(_watch.askOnce()); // the first ticket is the time to ask to tell them when the city answers
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(sent.isSos ? 'SOS sent. The city has your video and location.' : 'Report sent. Thanks!')),
     );
@@ -580,7 +653,18 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     // The keyboard is up: the search suggestions need the room the chips would take.
     final typing = MediaQuery.viewInsetsOf(context).bottom > 0;
     return Scaffold(
+      key: _scaffold,
       resizeToAvoidBottomInset: false, // the keyboard covers the page; the map is not squeezed under it
+      drawer: MyTicketsDrawer(mine: _mine, onOpen: (ticket) => showReportSheet(context, ticket, mine: true)),
+      drawerEnableOpenDragGesture: false, // an edge swipe is the map's pan, not the menu
+      onDrawerChanged: (open) {
+        _drawerOpen = open;
+        if (open) {
+          _mine.refresh(); // fresh statuses on the way in
+        } else {
+          _mine.markSeen(); // looked at: the dot goes
+        }
+      },
       body: Stack(
         children: [
           Positioned.fill(
@@ -606,14 +690,21 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const _Brand(),
-                          // Shrinks a little rather than overflow, at 320 dp and large text.
+                          _MenuButton(mine: _mine),
+                          const SizedBox(width: 10),
+                          // Both shrink a little rather than overflow, at 320 dp and large text.
                           Flexible(
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: CompassChip(bearing: _bearing, following: _following),
+                            child: FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: const _Brand()),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: CompassChip(bearing: _bearing, following: _following),
+                              ),
                             ),
                           ),
                         ],
@@ -743,6 +834,35 @@ class _LocateRow extends StatelessWidget {
     final weak = accuracy > weakAccuracyM ? 'Weak signal' : '';
     final parts = [where, a.isEmpty ? '' : (weak.isEmpty ? a : '$a, $weak')].where((s) => s.isNotEmpty);
     return parts.isEmpty ? 'Located' : parts.join(' · ');
+  }
+}
+
+// The burger button, top left. Opens the menu: the tickets this phone filed. A dot says one has news.
+class _MenuButton extends StatelessWidget {
+  const _MenuButton({required this.mine});
+
+  final MyTickets mine;
+
+  @override
+  Widget build(BuildContext context) {
+    return Builder(
+      builder: (context) => ChipCard(
+        padding: EdgeInsets.zero,
+        child: ListenableBuilder(
+          listenable: mine,
+          builder: (context, _) => IconButton(
+            tooltip: mine.news > 0 ? 'Menu: my tickets, ${mine.news} with news' : 'Menu: my tickets',
+            onPressed: () => Scaffold.of(context).openDrawer(),
+            icon: Badge(
+              isLabelVisible: mine.news > 0,
+              smallSize: 9,
+              backgroundColor: sosRed,
+              child: const Icon(Icons.menu, size: 24, color: navy),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

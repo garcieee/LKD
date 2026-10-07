@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' show MapboxOptions;
 
 import 'config/env.dart';
+import 'features/tickets/local_ticket_notifier.dart';
+import 'features/tickets/ticket_notifier.dart';
 import 'map/map_view.dart';
 import 'theme.dart';
 
@@ -23,11 +25,13 @@ void main() {
   );
   // Before any MapWidget exists. A missing token shows a message on the map page instead.
   if (Env.mapboxToken.isNotEmpty) MapboxOptions.setAccessToken(Env.mapboxToken);
-  runApp(const LakadApp());
+  runApp(LakadApp(notifier: LocalTicketNotifier()));
 }
 
 class LakadApp extends StatelessWidget {
-  const LakadApp({super.key});
+  const LakadApp({super.key, this.notifier});
+
+  final TicketNotifier? notifier; // how the map page tells the person the city changed a ticket
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +39,7 @@ class LakadApp extends StatelessWidget {
       title: 'Lakad',
       debugShowCheckedModeBanner: false,
       theme: origamiTheme(),
-      home: const MapView(),
+      home: MapView(notifier: notifier),
     );
   }
 }

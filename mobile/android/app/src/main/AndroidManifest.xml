@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!-- Notifications when the city changes a ticket (Android 13+ asks the person once, after their first report). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <!-- The camera plugin asks for the microphone; reports are photos and SOS clips are silent video (enableAudio: false). -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove"/>
     <!-- usesCleartextTraffic: the API runs as plain HTTP on the laptop's hotspot IP.

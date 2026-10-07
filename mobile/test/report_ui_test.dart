@@ -77,8 +77,7 @@ void main() {
     test('category and status labels', () {
       // The dashboard also labels the SOS, which the app files from the shutter and never lists in its picker.
       expect({...categoryLabels, sosCategory: sosLabel}, dashboardTable('features/queue/tickets.ts', 'CATEGORY_LABEL'));
-      // The dashboard also has "rejected", a ticket judged not real. The server never sends those to the app.
-      expect({...statusLabels, 'rejected': 'Rejected'}, dashboardTable('features/queue/tickets.ts', 'STATUS_LABEL'));
+      expect(statusLabels, dashboardTable('features/queue/tickets.ts', 'STATUS_LABEL')); // "rejected" too
     });
 
     test('pin colours, with none for fixed reports (not drawn)', () {

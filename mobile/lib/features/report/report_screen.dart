@@ -118,7 +118,7 @@ class _ReportScreenState extends State<ReportScreen>
     await _startGps();
     try {
       final all = await api.reports();
-      if (mounted) setState(() => _filed = [for (final r in all) if (r.status != 'fixed') r]);
+      if (mounted) setState(() => _filed = [for (final r in all) if (r.status != 'fixed' && r.status != 'rejected') r]);
     } catch (e) {
       debugPrint('nearby reports: $e'); // only a hint: reporting works without them
     }

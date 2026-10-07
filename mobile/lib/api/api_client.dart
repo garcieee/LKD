@@ -1,8 +1,8 @@
 // The server's API at Env.apiBaseUrl: reports (server/app/routers/reports.py), place search
 // (server/app/routers/geocode.py), walking routes (server/app/routers/routes.py) and transit hubs
 // (server/app/routers/transit.py). An SOS goes up as a video to POST /sos (server/app/routers/reports.py).
-// Report mirrors server/app/db/models.py, minus what the app never shows: severity, updated_at and the dashboard's
-// ticket fields (sos_kind, ticket_id, district_id, priority, band). A field it does not list is ignored.
+// Report mirrors server/app/db/models.py, minus what the app never shows: severity and the ticket engine's fields
+// (sos_kind, district_id, priority, band). A field it does not list is ignored.
 import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:typed_data';
@@ -31,8 +31,15 @@ const categoryLabels = {
 const sosCategory = 'sos';
 const sosLabel = 'SOS';
 
-/// Open -> Verified -> Assigned -> Fixed, set by the dashboard.
-const statusLabels = {'open': 'Open', 'verified': 'Verified', 'assigned': 'Assigned', 'fixed': 'Fixed'};
+/// Open -> Verified -> Assigned -> Fixed, set by the dashboard. Rejected: the city judged it not real. The public list
+/// never sends one, but /my-tickets does, to the phone that filed it.
+const statusLabels = {
+  'open': 'Open',
+  'verified': 'Verified',
+  'assigned': 'Assigned',
+  'fixed': 'Fixed',
+  'rejected': 'Rejected',
+};
 
 class Report {
   /// A status this app does not know reads as open, so the report still shows.
@@ -46,7 +53,14 @@ class Report {
       photoUrl = json['photo_url'] as String,
       videoUrl = json['video_url'] as String?,
       status = statusLabels.containsKey(json['status']) ? json['status'] as String : 'open',
-      createdAt = DateTime.parse(json['created_at'] as String);
+      createdAt = DateTime.parse(json['created_at'] as String),
+      updatedAt = DateTime.tryParse('${json['updated_at']}') ?? DateTime.parse(json['created_at'] as String),
+      ticketId = json['ticket_id'] as String?,
+      handler = json['handler'] as String?,
+      verifiedNote = json['verified_note'] as String?,
+      rejectedNote = json['rejected_note'] as String?,
+      resolvedNote = json['resolved_note'] as String?,
+      source = json;
 
   final String id;
   final String category;
@@ -58,8 +72,19 @@ class Report {
   final String? videoUrl; // an SOS only: a path on the server, e.g. /videos/<id>.mp4
   final String status;
   final DateTime createdAt;
+  final DateTime updatedAt; // when the status last changed, so a phone can tell a ticket has news
+  final String? ticketId; // the ticket this report is a sighting of, once the server has made one
+  final String? handler; // who was assigned to fix it, once the city has
+  // Notes the city left for the reporter. Only /my-tickets sends them: the public list leaves them out.
+  final String? verifiedNote; // when it confirmed the report (optional)
+  final String? rejectedNote; // why it rejected it (always given)
+  final String? resolvedNote; // when it marked it resolved (optional)
+  final Map<String, dynamic> source; // the JSON this came from, so a phone can keep the ticket and read it back
 
   bool get isSos => category == sosCategory;
+
+  /// "LKD-3F2A9C": what the dashboard shows as the ticket's ID, so someone can read it out and be found there.
+  String get code => 'LKD-${(ticketId ?? id).substring(0, math.min(6, (ticketId ?? id).length)).toUpperCase()}';
 
   String get label => isSos ? sosLabel : categoryLabels[category] ?? 'Other';
 }
@@ -252,6 +277,16 @@ class ApiClient {
   /// Every report, newest first.
   Future<List<Report>> reports() async {
     final body = await _send(http.AbortableRequest('GET', Uri.parse('$base/reports'), abortTrigger: _deadline()));
+    return [for (final r in body as List) Report.fromJson(r as Map<String, dynamic>)];
+  }
+
+  /// The reports this phone filed, by [ids] (at most 100), in the order asked, with the city's notes to the reporter.
+  /// There are no accounts: only the phone that filed a ticket knows its id, so asking for it is the proof it is
+  /// theirs, and an SOS or a rejected ticket comes back too. An id the server does not know is left out.
+  Future<List<Report>> myTickets(List<String> ids) async {
+    if (ids.isEmpty) return const [];
+    final url = Uri.parse('$base/my-tickets').replace(queryParameters: {'ids': ids.join(',')});
+    final body = await _send(http.AbortableRequest('GET', url, abortTrigger: _deadline()));
     return [for (final r in body as List) Report.fromJson(r as Map<String, dynamic>)];
   }
 

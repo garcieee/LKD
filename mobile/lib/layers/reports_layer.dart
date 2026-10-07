@@ -50,7 +50,7 @@ Future<void> showReports(MapboxMap map, List<Report> reports) async {
       'type': 'FeatureCollection',
       'features': [
         for (final r in reports)
-          if (r.status != 'fixed')
+          if (r.status != 'fixed' && r.status != 'rejected')
             {
               'type': 'Feature',
               'geometry': {
