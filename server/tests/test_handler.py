@@ -63,7 +63,7 @@ def test_a_ticket_takes_a_handler_only_once_it_is_verified(client):
     rid = post(client)  # open
     assert patch(client, rid, handler="Ana Reyes").status_code == 422
     assert patch(client, rid, status="verified", handler="Ana Reyes").status_code == 422, "verified is not assigned yet"
-    assert patch(client, rid, status="rejected", handler="Ana Reyes").status_code == 422
+    assert patch(client, rid, status="rejected", status_note="Not real.", handler="Ana Reyes").status_code == 422
     assert client.get(f"/reports/{rid}").json()["handler"] is None
     patch(client, rid, status="assigned")
     assert patch(client, rid, handler="Ana Reyes").status_code == 200

@@ -151,7 +151,7 @@ def test_an_sos_sorted_before_the_loop_reaches_it_gets_its_ticket_with_that_kind
 def test_reports_change_and_list_sos_and_rejected_ones_only_when_asked(client):
     rid = post(client)["id"]
     sos_id = sos(client)["id"]
-    assert client.patch(f"/reports/{rid}", json={"status": "rejected"}).json()["status"] == "rejected"
+    assert client.patch(f"/reports/{rid}", json={"status": "rejected", "status_note": "Not a real hazard."}).json()["status"] == "rejected"
     assert client.get("/reports").json() == []
     listed = client.get("/reports", params={"include_sos": "true", "include_rejected": "true"}).json()
     assert [r["id"] for r in listed] == [sos_id, rid]

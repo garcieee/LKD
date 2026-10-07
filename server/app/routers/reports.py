@@ -4,10 +4,10 @@ POST /sos files an SOS the same way, from a video: an urgent ticket that tops th
 import uuid
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
+from fastapi import APIRouter, File, Form, HTTPException, Query, Request, UploadFile
 
 from app.config import in_city
-from app.db.models import Category, Report, TicketChange
+from app.db.models import NOTE_FIELD, Category, Report, TicketChange
 from app.services.priority import severity
 from app.services.ticket_sync import engine
 
@@ -116,6 +116,11 @@ def create_sos(
     return _out(request.app.state.store.add(report))
 
 
+def _public(report: Report) -> Report:
+    """Without the dashboard's notes to the reporter: those are for the person who filed the ticket (/my-tickets)."""
+    return report.model_copy(update={"verified_note": None, "rejected_note": None, "resolved_note": None})
+
+
 @router.get("/reports", response_model=list[Report])
 def list_reports(request: Request, include_sos: bool = False, include_rejected: bool = False):
     """Newest first. SOS tickets are left out unless asked for (`include_sos=true`, which the dashboard does),
@@ -125,12 +130,30 @@ def list_reports(request: Request, include_sos: bool = False, include_rejected: 
     ponytail: the API has no accounts, so this only keeps SOS out of the app's own lists; anyone who knows
     the query can still ask. Put the dashboard behind a login before anyone real depends on SOS.
     """
-    # Stored in arrival order, so reversed is newest first.
+    # Stored in arrival order, so reversed is newest first. The dashboard (which asks for SOS or rejected ones)
+    # sees the notes; everyone else gets the list without them.
+    staff = include_sos or include_rejected
     return [
-        _out(r)
+        _out(r) if staff else _public(_out(r))
         for r in reversed(request.app.state.store.all())
         if (include_sos or r["category"] != "sos") and (include_rejected or r["status"] != "rejected")
     ]
+
+
+MAX_MINE = 100
+
+
+@router.get("/my-tickets", response_model=list[Report])
+def my_tickets(request: Request, ids: str = Query("", description="report ids, comma-separated")):
+    """The reports a phone filed, by id, in the order asked, with the dashboard's notes to the reporter.
+
+    There are no accounts: an id is only known to the phone that filed it, so asking for it is the proof it is theirs.
+    An SOS and a rejected ticket come back too, which the public list never shows. An id that is not found (pruned,
+    or mistyped) is left out. At most MAX_MINE.
+    """
+    wanted = list(dict.fromkeys(i.strip() for i in ids.split(",") if i.strip()))[:MAX_MINE]
+    by_id = {r["id"]: r for r in request.app.state.store.all()}
+    return [_out(by_id[i]) for i in wanted if i in by_id]
 
 
 @router.get("/reports/{report_id}", response_model=Report)
@@ -144,6 +167,7 @@ def get_report(report_id: str, request: Request):
 @router.patch("/reports/{report_id}", response_model=Report)
 def update_report(report_id: str, body: TicketChange, request: Request):
     """A new status, an SOS's kind (who must respond), a handler, or any of them: only the fields sent change.
+    A status may carry a `status_note` for the reporter: required to reject, optional to confirm or resolve.
 
     A handler (who was assigned to fix it) is picked after the ticket is verified, so only a ticket that is, or becomes,
     assigned or fixed takes one. It goes on the report and on every report of its ticket. A status or kind goes, once
@@ -166,9 +190,15 @@ def update_report(report_id: str, body: TicketChange, request: Request):
     if done and body.status:
         done = engine.set_status(db, state.store, ticket_id, body.status, "all", None) is not None
     if not done:  # not on a ticket yet, or its ticket is missing from lakad.db
-        state.store.update(report_id, **body.model_dump(exclude_none=True, exclude={"handler"}), updated_at=_now())
-    if body.handler:  # the rows of one ticket agree on who has it, as they do on its status
+        state.store.update(report_id, **body.model_dump(exclude_none=True, exclude={"handler", "status_note"}), updated_at=_now())
+    # The handler and the note for this status go on every report of the ticket: its rows agree on who has it and on
+    # what the reporter was told, as they do on its status. A status with no note clears the old one: that was for an
+    # earlier decision.
+    extra = {"handler": body.handler} if body.handler else {}
+    if body.status in NOTE_FIELD:
+        extra[NOTE_FIELD[body.status]] = body.status_note
+    if extra:
         mates = [r["id"] for r in state.store.all() if ticket_id and r.get("ticket_id") == ticket_id]
         for rid in mates or [report_id]:
-            state.store.update(rid, handler=body.handler, updated_at=_now())
+            state.store.update(rid, **extra, updated_at=_now())
     return _out(next(r for r in state.store.all() if r["id"] == report_id))

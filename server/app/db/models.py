@@ -29,6 +29,10 @@ class Report(BaseModel):
     video_url: str | None = None  # SOS only: path on this server, e.g. /videos/<id>.mp4
     sos_kind: SosKind | None = None  # SOS only: who must respond, set at the dashboard; None until sorted
     handler: str | None = None  # who was assigned to fix it, picked at the dashboard once the ticket is verified
+    # Notes the person at the dashboard left for the reporter. Only the public lists leave them out.
+    verified_note: str | None = None  # when confirming it: optional
+    rejected_note: str | None = None  # when rejecting it: why, always given
+    resolved_note: str | None = None  # when marking it resolved: optional
     status: Status
     created_at: str  # ISO 8601, UTC
     updated_at: str
@@ -39,15 +43,29 @@ class Report(BaseModel):
     band: str | None = None  # Critical, High, Medium or Low
 
 
+# The statuses that take a note for the reporter, and the report field each one's note is kept in.
+NOTE_FIELD = {"verified": "verified_note", "rejected": "rejected_note", "fixed": "resolved_note"}
+
+
 class TicketChange(BaseModel):
-    """PATCH /reports/{id}: a new status, an SOS's kind, a handler, or any of them together."""
+    """PATCH /reports/{id}: a new status, an SOS's kind, a handler, or any of them together.
+
+    `status_note` goes with the status: optional for verified and fixed (resolved), required for rejected, and the
+    reporter sees it. A blank one counts as none.
+    """
 
     status: Status | None = None
     sos_kind: SosKind | None = None
     handler: str | None = Field(None, min_length=1, max_length=60)  # a name, as picked or typed at the dashboard
+    status_note: str | None = Field(None, max_length=280)
 
     @model_validator(mode="after")
     def _not_empty(self):
+        self.status_note = (self.status_note or "").strip() or None
+        if self.status_note and self.status not in NOTE_FIELD:
+            raise ValueError("A note goes with confirming, rejecting or resolving a ticket.")
+        if self.status == "rejected" and not self.status_note:
+            raise ValueError("Say why the ticket is rejected: the reporter will see it.")
         if self.handler is not None:
             self.handler = self.handler.strip()
             if not self.handler:

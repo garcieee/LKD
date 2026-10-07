@@ -107,14 +107,14 @@ def photo_report(client, **fields):
 def test_a_new_ticket_can_be_confirmed_to_verified_or_rejected_and_reopened(client):
     first, second = photo_report(client), photo_report(client)
     assert client.patch(f"/reports/{first}", json={"status": "verified"}).json()["status"] == "verified"
-    assert client.patch(f"/reports/{second}", json={"status": "rejected"}).json()["status"] == "rejected"
+    assert client.patch(f"/reports/{second}", json={"status": "rejected", "status_note": "Not a real hazard."}).json()["status"] == "rejected"
     assert client.patch(f"/reports/{second}", json={"status": "open"}).json()["status"] == "open", "reopened"
     assert client.patch(f"/reports/{second}", json={"status": "nonsense"}).status_code == 422
 
 
 def test_a_rejected_ticket_is_hidden_from_the_public_list_but_kept_and_still_readable(client):
     keep, drop = photo_report(client), photo_report(client)
-    client.patch(f"/reports/{drop}", json={"status": "rejected"})
+    client.patch(f"/reports/{drop}", json={"status": "rejected", "status_note": "Not a real hazard."})
     assert [r["id"] for r in client.get("/reports").json()] == [keep]
     everything = client.get("/reports", params={"include_rejected": "true"}).json()
     assert sorted(r["id"] for r in everything) == sorted([keep, drop])
@@ -125,7 +125,7 @@ def test_a_rejected_ticket_is_hidden_from_the_public_list_but_kept_and_still_rea
 
 def test_sos_and_rejected_filters_are_independent(client):
     sos_id = sos(client).json()["id"]
-    client.patch(f"/reports/{sos_id}", json={"status": "rejected"})
+    client.patch(f"/reports/{sos_id}", json={"status": "rejected", "status_note": "Not a real hazard."})
     assert client.get("/reports", params={"include_sos": "true"}).json() == [], "a rejected SOS stays hidden"
     both = client.get("/reports", params={"include_sos": "true", "include_rejected": "true"}).json()
     assert [r["id"] for r in both] == [sos_id]
