@@ -3,16 +3,18 @@
 import 'package:flutter/material.dart';
 
 import '../../api/api_client.dart';
+import '../../state/recent_places.dart';
 import '../../state/trip_state.dart';
 import '../../theme.dart';
 import 'place_search.dart';
 
 class PlaceSearchBar extends StatefulWidget {
-  const PlaceSearchBar({super.key, required this.search, required this.trip, this.near});
+  const PlaceSearchBar({super.key, required this.search, required this.trip, this.near, this.recents});
 
   final PlaceSearch search;
   final TripState trip;
   final Near? Function()? near; // the user's position, to rank nearby places first
+  final RecentPlaces? recents; // listed under the empty field
 
   @override
   State<PlaceSearchBar> createState() => _PlaceSearchBarState();
@@ -67,6 +69,7 @@ class _PlaceSearchBarState extends State<PlaceSearchBar> {
     _focus.unfocus();
     widget.search.clear();
     widget.trip.setDestination(place, from: widget.near?.call());
+    widget.recents?.add(place);
   }
 
   void _clear() {
@@ -80,7 +83,7 @@ class _PlaceSearchBarState extends State<PlaceSearchBar> {
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: widget.search,
+      listenable: Listenable.merge([widget.search, widget.recents]),
       builder: (context, _) {
         final s = widget.search;
         final hasText = _text.text.isNotEmpty;
@@ -118,6 +121,28 @@ class _PlaceSearchBarState extends State<PlaceSearchBar> {
               ChipCard(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 child: Text(s.error!, style: const TextStyle(fontSize: 12, color: warn)),
+              ),
+            ] else if (!_picked && !hasText && (widget.recents?.places.isNotEmpty ?? false)) ...[
+              const SizedBox(height: 8),
+              ChipCard(
+                padding: EdgeInsets.zero,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
+                      child: Text('Recent', style: TextStyle(fontSize: 12, color: muted)),
+                    ),
+                    for (final p in widget.recents!.places)
+                      ListTile(
+                        dense: true,
+                        leading: const Icon(Icons.history, size: 20, color: muted),
+                        title: Text(p.label, maxLines: 2, overflow: TextOverflow.ellipsis),
+                        onTap: () => _pick(p),
+                      ),
+                  ],
+                ),
               ),
             ] else if (!_picked && s.results != null) ...[
               const SizedBox(height: 8),

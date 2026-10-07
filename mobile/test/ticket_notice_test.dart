@@ -43,7 +43,7 @@ void main() {
 
   // The Report button, and the camera screen once its route has come in.
   Future<void> openCamera(WidgetTester tester) async {
-    await tester.tap(find.text('Report'));
+    await tester.tap(find.byTooltip('Report'));
     await tester.pump(const Duration(milliseconds: 100));
     await tester.pump(const Duration(milliseconds: 500));
     expect(find.byType(ReportScreen), findsOneWidget, reason: 'the camera screen is up');
