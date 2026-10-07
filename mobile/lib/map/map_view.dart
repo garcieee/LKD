@@ -54,7 +54,8 @@ class MapView extends StatefulWidget {
 
   final String mapboxToken; // a test builds the page without a real token
   final MyTickets? myTickets; // a test brings its own, so no phone storage or server is needed
-  final TicketNotifier? notifier; // the phone's notification tray; none (a test, or no way to show them) means banners only
+  final TicketNotifier?
+  notifier; // the phone's notification tray; none (a test, or no way to show them) means banners only
 
   @override
   State<MapView> createState() => _MapViewState();
@@ -69,7 +70,11 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   );
   late final _search = PlaceSearch((text, near) => api.geocode(text, near: near));
   late final MyTickets _mine = widget.myTickets ?? MyTickets(); // the tickets this phone filed (the burger menu)
-  late final _watch = TicketWatch(_mine, notifier: widget.notifier, onNews: _announce); // and the city's changes to them
+  late final _watch = TicketWatch(
+    _mine,
+    notifier: widget.notifier,
+    onNews: _announce,
+  ); // and the city's changes to them
   final _scaffold = GlobalKey<ScaffoldState>();
   bool _drawerOpen = false;
   bool _onCamera = false; // the report screen is up
@@ -353,6 +358,18 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   }
 
   // The camera moves every frame while following: read the bearing for the compass one at a time.
+  // The compass: starts the camera following the phone's heading (the map turns with where the user is looking), or lets
+  // go of it and turns the map back north-up. The same follow a trip starts with; it needs a fix inside Makati.
+  void _toggleFollow() {
+    if (_following.value) {
+      _stopFollowing(northUp: true);
+    } else if (!_follow() && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Waiting for your location inside Makati to follow where you look.')),
+      );
+    }
+  }
+
   Future<void> _readBearing() async {
     final map = _map;
     if (map == null || _readingBearing) return;
@@ -547,7 +564,13 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
       final threeD = _layers.threeD;
       if (threeD != _threeDShown) {
         _threeDShown = threeD;
-        await map.easeTo(CameraOptions(pitch: _pitch), MapAnimationOptions(duration: 600));
+        if (_following.value) {
+          // The follow viewport owns the camera, so a plain easeTo would be overridden: say the new tilt there, at the zoom it has.
+          final zoom = (await map.getCameraState()).zoom;
+          _viewport.moveTo(FollowPuckViewportState(zoom: zoom, pitch: _pitch));
+        } else {
+          await map.easeTo(CameraOptions(pitch: _pitch), MapAnimationOptions(duration: 600));
+        }
       }
       if (threeD) {
         await addBuildings(map); // no-op once there
@@ -709,7 +732,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
                               Flexible(
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
-                                  child: CompassChip(bearing: _bearing, following: _following),
+                                  child: CompassChip(bearing: _bearing, following: _following, onTap: _toggleFollow),
                                 ),
                               ),
                             ],

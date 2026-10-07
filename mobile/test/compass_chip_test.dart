@@ -73,4 +73,24 @@ void main() {
     expect(find.descendant(of: find.byType(CompassChip), matching: find.byType(InkWell)), findsNothing);
     expect(tester.getSize(find.byType(CompassChip)).height, greaterThanOrEqualTo(48));
   });
+
+  testWidgets('given onTap, a tap calls it and the chip says what it does', (tester) async {
+    final bearing = ValueNotifier(0.0), following = ValueNotifier(false);
+    var taps = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: CompassChip(bearing: bearing, following: following, onTap: () => taps++),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.byType(CompassChip));
+    expect(taps, 1);
+    expect(find.bySemanticsLabel(RegExp('Tap to follow your heading')), findsOneWidget);
+    following.value = true;
+    await tester.pump();
+    expect(find.bySemanticsLabel(RegExp('Tap to stop following')), findsOneWidget);
+  });
 }
