@@ -1086,16 +1086,6 @@ details[open] > summary.panel-title::after {
     background: var(--selected);
   }
 }
-.card.pending {
-  border-style: dashed;
-  background: none;
-}
-.pending ul {
-  margin: 6px 0 0;
-  padding-left: 18px;
-  color: var(--muted);
-  font: 13px/1.6 var(--grot);
-}
 .spots b {
   min-width: 32px;
   font: 500 24px/1 var(--serif);

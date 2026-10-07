@@ -198,17 +198,6 @@ export default function AnalyticsPanel({ reports, barangay, onShowAll, online, n
                   <p className="empty">Nothing unresolved.</p>
                 )}
               </section>
-
-              <section className="card pending">
-                <h3 className="sec">Walking routes</h3>
-                <div className="src">Not recorded yet: the server answers GET /route/walk but does not log the routes people take</div>
-                <ul>
-                  <li>Mode share: Fastest, Walkable, Accessible</li>
-                  <li>Detour accepted to take the Walkable route</li>
-                  <li>Meters of road without a sidewalk avoided</li>
-                  <li>Open hazards steered around, to rank the fix-it queue</li>
-                </ul>
-              </section>
             </div>
           </>
         )}
