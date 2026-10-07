@@ -1,0 +1,99 @@
+/* The Barangays menu: search, filters and the list. It reuses the queue's panel, chip and switch styles
+   (styles/panels.css); only what is new is here. */
+.brgy-tools {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0 10px;
+}
+.brgy-tools input[type="search"] {
+  width: 100%;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--text);
+  font: 12px var(--grot);
+}
+.brgy-sort {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font: 500 11px var(--grot);
+}
+.brgy-sort .fchip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.brgy-selected {
+  margin: 0 0 10px;
+}
+.brgy-summary {
+  margin: 0 0 10px;
+  font-size: 12px;
+}
+.brgy-list {
+  margin: 0 -14px -14px;
+  padding: 0;
+  list-style: none;
+}
+.brgy-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 14px;
+  border: 0;
+  border-top: 1px solid var(--line-soft);
+  background: none;
+  font: 12px var(--sans);
+  text-align: left;
+  cursor: pointer;
+}
+.brgy-row:hover {
+  background: var(--paper-deep);
+}
+/* Inside a scroller: draw the focus ring inwards so it is never clipped. */
+.brgy-row:focus-visible {
+  outline-offset: -2px;
+}
+.brgy-row[aria-pressed="true"] {
+  background: var(--selected);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.brgy-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font: 600 12px var(--grot);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.brgy-d {
+  color: var(--muted);
+  font: 500 10px var(--grot);
+}
+.brgy-urgent {
+  color: var(--danger);
+  font: 600 10px var(--grot);
+  white-space: nowrap;
+}
+.brgy-count {
+  min-width: 24px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--paper-deep);
+  font: 600 11px var(--grot);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.brgy-count[data-zero] {
+  background: none;
+  color: var(--faint);
+  font-weight: 500;
+}
+.brgy-note {
+  margin: 28px 0 0;
+}

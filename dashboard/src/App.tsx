@@ -3,6 +3,8 @@ import MapCanvas, { type MapHandle } from "./map/MapCanvas";
 import Legend from "./panels/Legend";
 import QueuePanel from "./features/queue/QueuePanel";
 import AnalyticsPanel from "./features/analytics/AnalyticsPanel";
+import BarangayPanel from "./features/barangays/BarangayPanel";
+import { boundsOf, type Barangay } from "./features/barangays/barangays";
 import FootfallPanel from "./features/footfall/FootfallPanel";
 import ForecastPanel from "./features/footfall/ForecastPanel";
 import { useFootfall } from "./features/footfall/useFootfall";
@@ -35,6 +37,11 @@ export default function App() {
   const [insightsOpen, setInsightsOpen] = useState(false);
   // Shares that dock with Insights: opening one closes the other.
   const [forecastOpen, setForecastOpen] = useState(false);
+  // Barangays shares the dock too. Their outlines and names are on the map from the start (zoomed out they say where
+  // each barangay is); the panel's switch turns them off. barangayId is the one picked and tinted.
+  const [barangaysOpen, setBarangaysOpen] = useState(false);
+  const [barangaysOn, setBarangaysOn] = useState(true);
+  const [barangayId, setBarangayId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const tickets = useTickets();
   const when = manilaNow(cursor ?? now);
@@ -64,16 +71,18 @@ export default function App() {
 
   // Esc closes the sidebar first (focus back to its toggle), then the Tickets panel.
   useEffect(() => {
-    if (!navOpen && !queueOpen && !insightsOpen && !forecastOpen) return;
+    if (!navOpen && !queueOpen && !insightsOpen && !forecastOpen && !barangaysOpen) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
-      if (!navOpen) return queueOpen ? closeQueue() : insightsOpen ? closeInsights() : closeForecast();
+      if (!navOpen) {
+        return queueOpen ? closeQueue() : insightsOpen ? closeInsights() : forecastOpen ? closeForecast() : closeBarangays();
+      }
       setNavOpen(false);
       toggle.current?.focus();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [navOpen, queueOpen, insightsOpen, forecastOpen]);
+  }, [navOpen, queueOpen, insightsOpen, forecastOpen, barangaysOpen]);
 
   // A pin click opens its ticket.
   const selectPin = useCallback((id: string) => {
@@ -95,6 +104,7 @@ export default function App() {
     setNavOpen(false);
     closeInsights();
     closeForecast();
+    closeBarangays();
     setSelectedId(r.id);
     setQueueOpen(true);
     // Closing a docked panel resizes the map, which re-frames the city and would cancel a flight started now: fly
@@ -113,17 +123,49 @@ export default function App() {
     setCursor(null); // the map goes back to live
   }
 
-  function openView(view: "map" | "tickets" | "insights" | "forecast") {
+  // The tint goes with the panel, except on a phone, where the panel is a sheet over the map and closes to show it.
+  function closeBarangays(keepSelection = false) {
+    if (document.getElementById("barangays")?.contains(document.activeElement)) toggle.current?.focus();
+    setBarangaysOpen(false);
+    if (!keepSelection) setBarangayId(null);
+  }
+
+  // Zooms the map to a barangay and tints it. Desktop: leave room for the panels over the map's right edge, which are
+  // measured, not guessed. Phone: the list is a sheet that covers the map, so it closes, keeping the tint.
+  function pickBarangay(b: Barangay) {
+    setBarangayId(b.id);
+    const phone = matchMedia(PHONE).matches;
+    const stageRight = document.querySelector(".stage")?.getBoundingClientRect().right ?? innerWidth;
+    const hudLeft = document.querySelector(".hud")?.getBoundingClientRect().left ?? stageRight;
+    if (phone) closeBarangays(true);
+    mapView.current?.fit(boundsOf(b), phone ? 0 : Math.max(0, stageRight - hudLeft));
+  }
+
+  function showWholeCity() {
+    setBarangayId(null);
+    mapView.current?.home();
+  }
+
+  function openView(view: "map" | "barangays" | "tickets" | "insights" | "forecast") {
     setNavOpen(false);
     if (view === "map") {
       closeQueue();
       closeInsights();
       closeForecast();
+      closeBarangays();
       toggle.current?.focus();
+      return;
+    }
+    if (view === "barangays") {
+      closeForecast();
+      setInsightsOpen(false);
+      setBarangaysOpen(true);
+      document.getElementById("barangays-title")?.focus();
       return;
     }
     if (view === "forecast") {
       setInsightsOpen(false);
+      closeBarangays();
       setFootfallOn(true); // the chart drives the map's foot-traffic layer
       setForecastOpen(true);
       document.getElementById("forecast-title")?.focus();
@@ -131,6 +173,7 @@ export default function App() {
     }
     if (view === "insights") {
       closeForecast();
+      closeBarangays();
       setInsightsOpen(true);
       document.getElementById("insights-title")?.focus();
       return;
@@ -150,12 +193,13 @@ export default function App() {
       closeQueue(true);
       closeInsights();
       closeForecast();
+      closeBarangays();
     }
     mapView.current?.show(r.lng, r.lat, phone ? 0 : stageRight - left);
   }
 
   return (
-    <div className={insightsOpen || forecastOpen ? "shell split" : "shell"}>
+    <div className={insightsOpen || forecastOpen || barangaysOpen ? "shell split" : "shell"}>
       <div className="chrome">
         <header className="cluster">
           <button
@@ -179,11 +223,18 @@ export default function App() {
         <nav id="sidebar" className={`nav${navOpen ? " open" : ""}`} aria-label="Main" inert={!navOpen}>
           <div className="nav-label">OPERATIONS</div>
           <button
-            className={queueOpen || insightsOpen || forecastOpen ? "nav-link" : "nav-link active"}
-            aria-current={queueOpen || insightsOpen || forecastOpen ? undefined : "page"}
+            className={queueOpen || insightsOpen || forecastOpen || barangaysOpen ? "nav-link" : "nav-link active"}
+            aria-current={queueOpen || insightsOpen || forecastOpen || barangaysOpen ? undefined : "page"}
             onClick={() => openView("map")}
           >
             Map
+          </button>
+          <button
+            className={barangaysOpen ? "nav-link active" : "nav-link"}
+            aria-current={barangaysOpen ? "page" : undefined}
+            onClick={() => openView("barangays")}
+          >
+            Barangays
           </button>
           <button
             className={queueOpen ? "nav-link active" : "nav-link"}
@@ -221,6 +272,7 @@ export default function App() {
           congestionOn={congestionOn}
           stamp={stamp}
           footfall={footfallOn ? footfall.data : null}
+          barangays={{ on: barangaysOn, selectedId: barangayId }}
           reports={mapReports}
           selectedId={selectedId}
           onSelect={selectPin}
@@ -348,6 +400,17 @@ export default function App() {
         </div>
       </main>
 
+      {barangaysOpen && (
+        <BarangayPanel
+          reports={tickets.reports}
+          selectedId={barangayId}
+          onSelect={pickBarangay}
+          onClear={showWholeCity}
+          show={barangaysOn}
+          onShow={setBarangaysOn}
+          onClose={() => closeBarangays()}
+        />
+      )}
       {forecastOpen && (
         <ForecastPanel
           districts={footfall.data?.districts ?? []}
