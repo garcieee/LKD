@@ -48,3 +48,5 @@ models/tickets/eval/data/raw/
 models/tickets/eval/data/cache/
 server/cache
 server/storage
+# Claude Code: local settings and agent worktrees
+.claude/
