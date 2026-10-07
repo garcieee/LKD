@@ -2,8 +2,7 @@
 // A plain ChangeNotifier: the map view and the layer sheet both listen to it.
 import 'package:flutter/foundation.dart';
 
-// ponytail: not remembered between launches (the dashboard does not either) and no registry,
-// because there is one layer. Add shared_preferences and layers/layer_registry.dart with the second.
+// Map preferences last for this app session.
 enum MapMode { auto, flat, tilted }
 
 class LayersState extends ChangeNotifier {
@@ -11,12 +10,19 @@ class LayersState extends ChangeNotifier {
   MapMode mode = MapMode.auto; // auto: tilted while navigating, flat otherwise
   bool navigating = false; // a trip is under way (set by the map page)
   bool get threeD => mode == MapMode.tilted || (mode == MapMode.auto && navigating); // tilted with extruded buildings
+  bool ticketsOn = true; // public ticket pins on the map
   bool hubsOn = true; // transit terminals and stops
   DateTime stamp = DateTime.now(); // last refresh; also the tile cache-buster
 
   void setCongestion(bool on) {
     congestionOn = on;
     if (on) stamp = DateTime.now(); // switching on fetches fresh tiles
+    notifyListeners();
+  }
+
+  void setTickets(bool on) {
+    if (ticketsOn == on) return;
+    ticketsOn = on;
     notifyListeners();
   }
 

@@ -483,7 +483,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _queue = _queue.then((_) async {
       final map = _map;
       try {
-        if (map != null && await map.isStyleLoaded()) await showReports(map, _reports);
+        if (map != null && await map.isStyleLoaded()) await showReports(map, _layers.ticketsOn ? _reports : const []);
       } catch (e) {
         debugPrint('reports layer: $e'); // a failed redraw must not take the app down
       }
@@ -515,6 +515,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   void _walkTo(Hub hub) => _trip.setDestination(hub.place, from: _near());
 
   void _openReport(String id) {
+    if (!_layers.ticketsOn) return;
     final report = _reports.where((r) => r.id == id).firstOrNull;
     if (report != null && mounted) showReportSheet(context, report);
   }
@@ -546,6 +547,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     if (map == null) return;
     try {
       if (!await map.isStyleLoaded()) return; // _ready() comes back here once it has
+      await showReports(map, _layers.ticketsOn ? _reports : const []);
       final key = Env.tomtomKey;
       if (_layers.congestionOn && key.isNotEmpty) {
         await addCongestion(map, key, _layers.stamp);

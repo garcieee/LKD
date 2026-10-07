@@ -1,4 +1,4 @@
-// The burger menu's sheet: how the map is drawn (Auto / 2D / 3D) and the traffic layer.
+// The burger menu's sheet: how the map is drawn (Auto / 2D / 3D) and visible map details.
 import 'package:flutter/material.dart';
 
 import '../config/env.dart';
@@ -37,6 +37,12 @@ Future<void> showMapMenu(BuildContext context, LayersState layers) => showModalB
           ),
           const Divider(height: 28, color: hairline),
           const Text('Map details', style: TextStyle(fontFamily: serif, fontSize: 22, fontWeight: FontWeight.w500)),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Show tickets on map', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+            value: layers.ticketsOn,
+            onChanged: layers.setTickets,
+          ),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             title: const Text('Traffic flow', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
