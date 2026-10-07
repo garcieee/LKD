@@ -3,10 +3,10 @@ import assert from "node:assert/strict";
 import type { Map as MapboxMap } from "mapbox-gl";
 import type { Report } from "../types/api.ts";
 import { toGeoJSON } from "../features/queue/tickets.ts";
-import { RIPPLE_MS, REPORTS_ID, SOS_COLOR, SOS_ID, STATUS_COLOR, STILL_FRAME, bindReportPins, paintSos, setReportPins, sosFrame } from "./reports.ts";
+import { RIPPLE_MS, REPORTS_ID, SOS_ID, STATUS_COLOR, STILL_FRAME, bindReportPins, paintSos, setReportPins, sosFrame } from "./reports.ts";
 
 type Handler = (e?: unknown) => void;
-type Layer = { id: string; paint: Record<string, unknown[]> };
+type Layer = { id: string; type: string; paint: Record<string, unknown[]>; layout: Record<string, unknown> };
 
 // Just enough of a mapbox-gl Map to record what the layer code asks of it.
 function fakeMap() {
@@ -22,7 +22,10 @@ function fakeMap() {
     },
   };
   const paint: string[] = [];
+  const images = new Map<string, unknown>();
   const map = {
+    hasImage: (id: string) => images.has(id),
+    addImage: (id: string, data: unknown) => images.set(id, data),
     getLayer: (id: string) => layers[id],
     setPaintProperty: (id: string, name: string, value: unknown) => paint.push(`${id} ${name} ${value}`),
     getSource: () => (data === undefined ? undefined : source),
@@ -70,9 +73,11 @@ test("setReportPins: source, then the ring under the pins, once; later polls onl
 test("pins take their status colour, and a status the dashboard doesn't know reads as open", () => {
   const m = fakeMap();
   setReportPins(m.map, [], null);
-  const color = m.layers[REPORTS_ID].paint["circle-color"];
-  for (const [status, hex] of Object.entries(STATUS_COLOR)) assert.equal(match(color, status), hex);
-  assert.equal(match(color, "triaged"), STATUS_COLOR.open);
+  const color = m.layers[REPORTS_ID].layout["icon-image"] as unknown[];
+  assert.equal(m.layers[REPORTS_ID].type, "symbol");
+  assert.equal(m.layers[REPORTS_ID].layout["icon-anchor"], "bottom");
+  for (const status of Object.keys(STATUS_COLOR)) assert.equal(match(color, status), `ticket-pin-${status}`);
+  assert.equal(match(color, "triaged"), "ticket-pin-open");
 });
 
 test("bindReportPins: a click selects the pin's ticket, hover points, unbinding removes every handler", () => {
@@ -97,7 +102,7 @@ const sosReport = (id: string, status: Report["status"] = "open") => ({ ...repor
 test("an open SOS is drawn by its own red layers, and the ordinary pins leave it out", () => {
   const m = fakeMap();
   setReportPins(m.map, [sosReport("s")], null);
-  assert.equal(m.layers[SOS_ID].paint["circle-color"] as unknown, SOS_COLOR);
+  assert.equal(m.layers[SOS_ID].layout["icon-image"], "ticket-pin-sos");
   assert.deepEqual((m.layers[SOS_ID] as unknown as { filter: unknown }).filter, ["==", ["get", "alert"], true]);
   assert.deepEqual((m.layers[REPORTS_ID] as unknown as { filter: unknown }).filter, ["!=", ["get", "alert"], true]);
 });
@@ -126,8 +131,7 @@ test("paintSos moves the ripple and the pin, and does nothing until the layers e
   assert.deepEqual(m.paint, [
     "reports-sos-halo circle-radius 24",
     "reports-sos-halo circle-opacity 0.3",
-    "reports-sos circle-opacity 1",
-    "reports-sos circle-stroke-opacity 1",
+    "reports-sos icon-opacity 1",
   ]);
 });
 

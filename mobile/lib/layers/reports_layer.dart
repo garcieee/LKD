@@ -1,6 +1,8 @@
-// Report pins: a dot per report that is not fixed, coloured by status, drawn above every other layer.
+// Report pins: a teardrop per active report, coloured by status, with its tip at the location.
 // map/map_view.dart fetches and redraws them; tapping one opens its card (map/pin_chip.dart).
 import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/painting.dart' show Color;
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
@@ -15,29 +17,59 @@ const statusColors = {'open': Color(0xFFA63722), 'verified': warn, 'assigned': n
 
 const _id = 'reports';
 
-String _hex(Color c) => '#${(c.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0')}';
+final _images = <String, Uint8List>{};
+
+Future<Uint8List> _pin(Color color) async {
+  final recorder = ui.PictureRecorder();
+  final canvas = ui.Canvas(recorder)..scale(3);
+  ui.Path shape(double radius, double tip) => ui.Path.combine(
+    ui.PathOperation.union,
+    ui.Path()..addOval(ui.Rect.fromCircle(center: const ui.Offset(16, 15), radius: radius)),
+    ui.Path()
+      ..moveTo(16 - radius * 0.85, 20)
+      ..lineTo(16, tip)
+      ..lineTo(16 + radius * 0.85, 20)
+      ..close(),
+  );
+  canvas.drawPath(shape(14, 42), ui.Paint()..color = const Color(0xFFFFFFFF));
+  canvas.drawPath(shape(12, 38), ui.Paint()..color = color);
+  canvas.drawCircle(const ui.Offset(16, 15), 4, ui.Paint()..color = const Color(0xFFFFFFFF));
+  final picture = recorder.endRecording();
+  final image = await picture.toImage(96, 126);
+  final bytes = (await image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+  image.dispose();
+  picture.dispose();
+  return bytes;
+}
 
 final _layer = {
   'id': _id,
-  'type': 'circle',
+  'type': 'symbol',
   'source': _id,
-  'paint': {
-    'circle-color': [
-      'match',
-      ['get', 'status'],
-      for (final MapEntry(:key, :value) in statusColors.entries) ...[key, _hex(value)],
-      _hex(statusColors['open']!),
+  'layout': {
+    'icon-image': [
+      'match', ['get', 'status'],
+      for (final status in statusColors.keys) ...[status, 'ticket-pin-$status'],
+      'ticket-pin-open',
     ],
-    // A dot at city scale, an easy target up close.
-    'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 5, 16, 8, 19, 11],
-    'circle-stroke-width': 2,
-    'circle-stroke-color': '#ffffff',
+    'icon-anchor': 'bottom',
+    'icon-size': ['interpolate', ['linear'], ['zoom'], 12, 0.65, 16, 0.9, 19, 1.1],
+    'icon-allow-overlap': true,
+    'icon-ignore-placement': true,
+    'icon-pitch-alignment': 'viewport',
   },
 };
 
 /// Draws [reports]. Adds the source, and the layer on top of all others, when a style load has
 /// cleared them. Raw style-spec JSON, like congestion_layer.dart.
 Future<void> showReports(MapboxMap map, List<Report> reports) async {
+  for (final entry in statusColors.entries) {
+    final id = 'ticket-pin-${entry.key}';
+    if (!await map.hasStyleImage(id)) {
+      final bytes = _images[id] ??= await _pin(entry.value);
+      await map.addImage(id, 3, StyleImage.bytes(bytes));
+    }
+  }
   // Data goes in after the add, as the typed GeoJsonSource.addToStyle does in 3.0.0.
   if (!await map.styleSourceExists(_id)) {
     await map.addStyleSource(_id, jsonEncode({'type': 'geojson', 'data': ''}));

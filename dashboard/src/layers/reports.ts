@@ -1,4 +1,4 @@
-// Report pins, all statuses: one circle per ticket, coloured by status, drawn over the congestion
+// Report pins, all statuses: one teardrop per ticket, coloured by status, drawn over the congestion
 // lines (those sit under the basemap labels; these go on top of everything). The selected ticket
 // gets a navy ring. Clicking a pin selects its ticket (bindReportPins).
 //
@@ -10,9 +10,11 @@ import type {
   GeoJSONSource,
   Map as MapboxMap,
   MapMouseEvent,
+  SymbolLayerSpecification,
 } from "mapbox-gl";
 import type { Report, Status } from "../types/api.ts";
 import { toGeoJSON } from "../features/queue/tickets.ts";
+import { ticketPinImage } from "./ticketPin.ts";
 
 export const REPORTS_ID = "reports";
 const RING_ID = "reports-selected";
@@ -33,17 +35,19 @@ export const STATUS_COLOR: Record<Status, string> = {
 const isSelected: ExpressionSpecification = ["==", ["get", "selected"], true];
 const isAlert: ExpressionSpecification = ["==", ["get", "alert"], true];
 
-const pins: CircleLayerSpecification = {
+const pins: SymbolLayerSpecification = {
   id: REPORTS_ID,
-  type: "circle",
+  type: "symbol",
   source: REPORTS_ID,
   filter: ["!=", ["get", "alert"], true], // an open SOS has its own layers
-  layout: { "circle-sort-key": ["case", isSelected, 1, 0] }, // the selected pin draws on top
-  paint: {
-    "circle-color": ["match", ["get", "status"], ...Object.entries(STATUS_COLOR).flat(), STATUS_COLOR.open],
-    "circle-radius": ["interpolate", ["linear"], ["zoom"], 11, 5, 16, 8],
-    "circle-stroke-color": "#ffffff",
-    "circle-stroke-width": 2,
+  layout: {
+    "symbol-sort-key": ["case", isSelected, 1, 0],
+    "icon-image": ["match", ["get", "status"], ...Object.keys(STATUS_COLOR).flatMap((s) => [s, `ticket-pin-${s}`]), "ticket-pin-open"],
+    "icon-anchor": "bottom",
+    "icon-size": ["interpolate", ["linear"], ["zoom"], 11, 0.65, 16, 0.9, 19, 1.1],
+    "icon-allow-overlap": true,
+    "icon-ignore-placement": true,
+    "icon-pitch-alignment": "viewport",
   },
 };
 
@@ -70,16 +74,18 @@ const sosHalo: CircleLayerSpecification = {
   paint: { "circle-color": SOS_COLOR, "circle-radius": 18, "circle-opacity": 0.4, "circle-pitch-alignment": "map" },
 };
 
-const sosPin: CircleLayerSpecification = {
+const sosPin: SymbolLayerSpecification = {
   id: SOS_ID,
-  type: "circle",
+  type: "symbol",
   source: REPORTS_ID,
   filter: isAlert,
-  paint: {
-    "circle-color": SOS_COLOR,
-    "circle-radius": ["interpolate", ["linear"], ["zoom"], 11, 8, 16, 11, 19, 14],
-    "circle-stroke-color": "#ffffff",
-    "circle-stroke-width": 2.5,
+  layout: {
+    "icon-image": "ticket-pin-sos",
+    "icon-anchor": "bottom",
+    "icon-size": ["interpolate", ["linear"], ["zoom"], 11, 0.8, 16, 1.05, 19, 1.25],
+    "icon-allow-overlap": true,
+    "icon-ignore-placement": true,
+    "icon-pitch-alignment": "viewport",
   },
 };
 
@@ -87,6 +93,10 @@ const sosPin: CircleLayerSpecification = {
 let hasAlert = false;
 
 export function setReportPins(map: MapboxMap, reports: Report[], selectedId: string | null): void {
+  for (const [status, color] of Object.entries({ ...STATUS_COLOR, sos: SOS_COLOR })) {
+    const id = `ticket-pin-${status}`;
+    if (!map.hasImage(id)) map.addImage(id, ticketPinImage(color), { pixelRatio: 3 });
+  }
   const data = toGeoJSON(reports, selectedId);
   hasAlert = data.features.some((f) => f.properties.alert);
   const source = map.getSource<GeoJSONSource>(REPORTS_ID);
@@ -120,8 +130,7 @@ export function paintSos(map: MapboxMap, frame: ReturnType<typeof sosFrame>): vo
     map.setPaintProperty(SOS_HALO_ID, "circle-opacity", frame.haloOpacity);
   }
   if (map.getLayer(SOS_ID)) {
-    map.setPaintProperty(SOS_ID, "circle-opacity", frame.pinOpacity);
-    map.setPaintProperty(SOS_ID, "circle-stroke-opacity", frame.pinOpacity);
+    map.setPaintProperty(SOS_ID, "icon-opacity", frame.pinOpacity);
   }
 }
 
