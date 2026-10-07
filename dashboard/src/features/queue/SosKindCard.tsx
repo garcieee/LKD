@@ -19,6 +19,11 @@ export default function SosKindCard({ report, onChange }: Props) {
       <div className="triage-head">
         <b id="sos-kind-title">Who must respond?</b>
       </div>
+      {needsSorting(report) && report.suggested_sos_kind && (
+        <p className="note" role="status">
+          AI video suggestion: <b>{SOS_KIND_LABEL[report.suggested_sos_kind]}</b>. Watch the clip and choose the response type below.
+        </p>
+      )}
       <div className="sos-kinds">
         {SOS_KINDS.map((kind) => (
           <button

@@ -60,5 +60,7 @@ class TicketSync:
 async def lifespan(app):
     if config.TICKETS_SYNC:
         app.state.sync.start()
+    app.state.sos_suggest.start()
     yield
+    app.state.sos_suggest.stop()
     app.state.sync.stop()

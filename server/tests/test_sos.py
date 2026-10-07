@@ -39,6 +39,23 @@ def test_an_sos_becomes_an_open_urgent_ticket_with_its_video(client):
     assert clip.content == MP4
 
 
+def test_video_suggestion_is_visible_but_staff_still_selects_the_kind(client):
+    report_id = sos(client).json()["id"]
+
+    class StubClassifier:
+        def classify(self, path):
+            return "medical"
+
+    client.app.state.sos_suggest.classifier = StubClassifier()
+    client.app.state.sos_suggest.tick()
+    suggested = client.get(f"/reports/{report_id}").json()
+    assert suggested["suggested_sos_kind"] == "medical"
+    assert suggested["sos_kind"] is None
+    chosen = client.patch(f"/reports/{report_id}", json={"sos_kind": "fire_rescue"}).json()
+    assert chosen["sos_kind"] == "fire_rescue"
+    assert chosen["suggested_sos_kind"] == "medical"
+
+
 def test_the_clip_can_be_sought_into(client):
     url = sos(client).json()["video_url"]
     part = client.get(url, headers={"Range": "bytes=4-7"})

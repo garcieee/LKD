@@ -34,6 +34,7 @@ export type Report = {
   photo_url: string; // path on the API, e.g. /photos/<id>.jpg. Empty for an SOS
   video_url?: string | null; // SOS only: path on the API, e.g. /videos/<id>.mp4
   sos_kind?: SosKind | null; // SOS only: who must respond, picked here; null until sorted
+  suggested_sos_kind?: SosKind | null; // SOS only: optional video suggestion; a person still picks sos_kind
   handler?: string | null; // who was assigned to fix it, picked here once the ticket is verified
   // Notes left here for the reporter, who sees them in the phone's My tickets. The public list leaves them out.
   verified_note?: string | null; // on confirming: optional

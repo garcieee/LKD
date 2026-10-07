@@ -11,7 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from app.config import CORS_ORIGINS, FOOTFALL_DIR, STORAGE_DIR, TRANSIT_DIR
 from app.db.store import ReportStore
 from app.routers import commute as commute_routes, footfall as footfall_routes, geocode, reports, routes, transit as transit_routes
-from app.services import commute, footfall, ticket_sync, transit
+from app.services import commute, footfall, sos_suggest, ticket_sync, transit
 
 
 def create_app(storage: Path = STORAGE_DIR) -> FastAPI:
@@ -24,6 +24,7 @@ def create_app(storage: Path = STORAGE_DIR) -> FastAPI:
     app.state.sync = ticket_sync.TicketSync(app.state.store, storage / "lakad.db")
     app.state.photo_dir = photo_dir
     app.state.video_dir = video_dir
+    app.state.sos_suggest = sos_suggest.SosSuggestionWorker(app.state.store, video_dir)
     app.state.hubs = transit.load_hubs(TRANSIT_DIR)
     app.state.rides = commute.load_ride_modes(TRANSIT_DIR)
     app.state.links = commute.load_links(TRANSIT_DIR, app.state.hubs)

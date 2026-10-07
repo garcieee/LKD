@@ -28,6 +28,7 @@ class Report(BaseModel):
     photo_url: str  # path on this server, e.g. /photos/<id>.jpg. Empty for an SOS, which has a video instead
     video_url: str | None = None  # SOS only: path on this server, e.g. /videos/<id>.mp4
     sos_kind: SosKind | None = None  # SOS only: who must respond, set at the dashboard; None until sorted
+    suggested_sos_kind: SosKind | None = None  # SOS only: optional video-model hint; never the staff decision
     handler: str | None = None  # who was assigned to fix it, picked at the dashboard once the ticket is verified
     # Notes the person at the dashboard left for the reporter. Only the public lists leave them out.
     verified_note: str | None = None  # when confirming it: optional
