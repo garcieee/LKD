@@ -56,7 +56,12 @@ Future<TripState> started() async {
 Future<void> show(WidgetTester tester, TripState trip) => tester.pumpWidget(
   MaterialApp(
     home: Scaffold(
-      body: NavBar(trip: trip, now: () => DateTime(2026, 10, 6, 21, 0)),
+      body: Column(
+        children: [
+          NavBanner(trip: trip),
+          NavPanel(trip: trip, now: () => DateTime(2026, 10, 6, 21, 0)),
+        ],
+      ),
     ),
   ),
 );
@@ -84,7 +89,9 @@ void main() {
     expect(find.text('Walk to Ayala Terminal'), findsOneWidget);
     expect(find.text('111 m left on this leg'), findsOneWidget);
     // Half of the 200 s walk is left, plus the 800 s ride: 900 s is 15 min, so 9:15 PM from 9:00 PM.
-    expect(find.text('15 min · 1.0 km left · arrive at 9:15 PM'), findsOneWidget);
+    expect(find.text('9:15 PM'), findsOneWidget);
+    expect(find.text('15 min'), findsOneWidget);
+    expect(find.text('1.0 km'), findsOneWidget);
     expect(find.text('Then: City bus: Ayala Terminal to Dian'), findsOneWidget);
     expect(find.byIcon(Icons.directions_walk), findsOneWidget);
     trip.dispose();

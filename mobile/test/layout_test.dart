@@ -16,11 +16,10 @@ import 'package:lakad/features/search/search_bar.dart';
 import 'package:lakad/features/transfer_walk/hub_picker.dart';
 import 'package:lakad/features/transfer_walk/mode_toggle.dart';
 import 'package:lakad/features/transfer_walk/route_card.dart';
-import 'package:lakad/layers/hubs_layer.dart';
 import 'package:lakad/map/pin_chip.dart';
 import 'package:lakad/state/layers_state.dart';
 import 'package:lakad/state/trip_state.dart';
-import 'package:lakad/widgets/layer_sheet.dart';
+import 'package:lakad/widgets/map_menu.dart';
 
 import 'test_support.dart';
 
@@ -105,7 +104,15 @@ void main() {
     final trip = await tripWith(tester, options: [commuteOption('a', total: 2100, walk: 360)]);
     await tester.runAsync(trip.toCommute);
     trip.start();
-    Widget bar() => onTheMap(NavBar(trip: trip));
+    Widget bar() => onTheMap(
+      Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          NavBanner(trip: trip),
+          NavPanel(trip: trip),
+        ],
+      ),
+    );
     await fitsEveryPhone(tester, bar); // before the first fix
     trip.update(14.5540, 121.0230); // on the ride
     await fitsEveryPhone(tester, bar);
@@ -233,12 +240,9 @@ void main() {
     await fitsEveryPhone(tester, () => opens((c) => showReportSheet(c, report)), after: tapOpen);
   });
 
-  testWidgets('the traffic panel fits, with the transit legend', (tester) async {
+  testWidgets('the map menu fits', (tester) async {
     final layers = LayersState();
-    await fitsEveryPhone(
-      tester,
-      () => onTheMap(LayerSheet(layers: layers, legend: [for (final e in hubIcons.values) e])),
-    );
+    await fitsEveryPhone(tester, () => opens((c) => showMapMenu(c, layers)));
   });
 
   testWidgets('the category picker fits with a PWD barrier chosen', (tester) async {

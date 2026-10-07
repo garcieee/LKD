@@ -30,9 +30,10 @@ import '../layers/reports_layer.dart';
 import '../layers/route_layer.dart';
 import '../state/layers_state.dart';
 import '../state/location_state.dart';
+import '../state/recent_places.dart';
 import '../state/trip_state.dart';
 import '../theme.dart';
-import '../widgets/layer_sheet.dart';
+import '../widgets/map_menu.dart';
 import 'pin_chip.dart';
 
 // Strip at the bottom kept free of chips for the Mapbox logo and the attribution button.
@@ -55,6 +56,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     (from, to, mode) => api.commute(from: from, to: to, mode: mode),
   );
   late final _search = PlaceSearch((text, near) => api.geocode(text, near: near));
+  final _recents = RecentPlaces();
   MapboxMap? _map;
   Timer? _timer;
   Timer? _reportsTimer;
@@ -65,17 +67,13 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
 
   // The camera's home and lock: the city plus Makati.lockMargin on every side.
   static final _home = CoordinateBounds(
-    southwest: Point(
-      coordinates: Position(Makati.west - Makati.lockMargin, Makati.south - Makati.lockMargin),
-    ),
-    northeast: Point(
-      coordinates: Position(Makati.east + Makati.lockMargin, Makati.north + Makati.lockMargin),
-    ),
+    southwest: Point(coordinates: Position(Makati.west - Makati.lockMargin, Makati.south - Makati.lockMargin)),
+    northeast: Point(coordinates: Position(Makati.east + Makati.lockMargin, Makati.north + Makati.lockMargin)),
     infiniteBounds: false,
   );
 
   // The tilt every camera move ends on: flat in 2D.
-  bool _threeDShown = true; // what the camera and the buildings layer last matched
+  bool _threeDShown = false; // what the camera and the buildings layer last matched
   double get _pitch => _layers.threeD ? Makati.pitch : 0;
 
   // Where the camera is when the whole city cannot be fitted: Makati.zoom frames it on a ~390px phone.
@@ -102,6 +100,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _location.addListener(_startNearUser);
     _location.addListener(_trackTrip);
     _location.start();
+    _recents.load();
     _trip.addListener(_onTrip);
     _trip.addListener(_syncAwake);
     _trip.addListener(_syncFollow);
@@ -130,6 +129,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     _location.dispose();
     _trip.dispose();
     _search.dispose();
+    _recents.dispose();
     super.dispose();
   }
 
@@ -158,11 +158,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
           puckBearingEnabled: true,
           puckBearing: PuckBearing.HEADING,
           locationPuck: LocationPuck(
-            locationPuck2D: LocationPuck2D(
-              topImage: Uint8List(0),
-              bearingImage: arrow,
-              shadowImage: Uint8List(0),
-            ),
+            locationPuck2D: LocationPuck2D(topImage: Uint8List(0), bearingImage: arrow, shadowImage: Uint8List(0)),
           ),
         ),
       );
@@ -281,6 +277,7 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   // Start puts the camera on the user, turning with them; End returns it to north-up. Off a trip the map stays
   // north-up and only the arrow turns.
   void _syncFollow() {
+    _layers.setNavigating(_trip.started); // before the camera moves: Auto's tilt follows it
     if (_trip.started == _wasStarted) return;
     _wasStarted = _trip.started;
     if (_wasStarted) {
@@ -345,7 +342,10 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
     final fix = _location.fix;
     final dest = Point(coordinates: Position(place.lng, place.lat));
     if (fix == null || !inMakati(fix.latitude, fix.longitude)) {
-      await map.flyTo(CameraOptions(center: dest, zoom: 16, bearing: 0, pitch: _pitch), MapAnimationOptions(duration: 1000));
+      await map.flyTo(
+        CameraOptions(center: dest, zoom: 16, bearing: 0, pitch: _pitch),
+        MapAnimationOptions(duration: 1000),
+      );
       return;
     }
     await _fit(map, [Point(coordinates: Position(fix.longitude, fix.latitude)), dest]);
@@ -353,15 +353,12 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
 
   // Frames [points] clear of the search field above and the buttons below.
   Future<void> _fit(MapboxMap map, List<Point> points) async {
-    final fit = await map.cameraForCoordinates(
-      points,
-      MbxEdgeInsets(top: 190, left: 60, bottom: 300, right: 60),
-      0,
-      0,
-    );
+    final fit = await map.cameraForCoordinates(points, MbxEdgeInsets(top: 190, left: 60, bottom: 300, right: 60), 0, 0);
     // Points close together would zoom to street-corner level: stop at 17.
     final zoom = fit.zoom;
-    final camera = zoom != null && zoom.isFinite ? CameraOptions(center: fit.center, zoom: math.min(zoom, 17), bearing: 0, pitch: _pitch) : fit;
+    final camera = zoom != null && zoom.isFinite
+        ? CameraOptions(center: fit.center, zoom: math.min(zoom, 17), bearing: 0, pitch: _pitch)
+        : fit;
     await map.flyTo(camera, MapAnimationOptions(duration: 1000));
   }
 
@@ -373,9 +370,8 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
       return;
     }
     if (!inMakati(fix.latitude, fix.longitude)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("You're outside Makati. Lakad covers the city only.")),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("You're outside Makati. Lakad covers the city only.")));
       return;
     }
     if (_trip.started) {
@@ -436,21 +432,13 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
   // "Walk here" on a hub: it becomes the destination, so the route card and line work as for a searched place.
   void _walkTo(Hub hub) => _trip.setDestination(hub.place, from: _near());
 
-  void _nearbyHubs() {
-    _loadHubs(); // if the first try failed
-    showNearbyHubs(context, _hubs, from: _near(), onWalk: _walkTo);
-  }
-
   void _openReport(String id) {
     final report = _reports.where((r) => r.id == id).firstOrNull;
     if (report != null && mounted) showReportSheet(context, report);
   }
 
   Future<void> _report() async {
-    final sent = await Navigator.push<Report>(
-      context,
-      MaterialPageRoute(builder: (_) => const ReportScreen()),
-    );
+    final sent = await Navigator.push<Report>(context, MaterialPageRoute(builder: (_) => const ReportScreen()));
     if (sent == null || !mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(sent.isSos ? 'SOS sent. The city has your video and location.' : 'Report sent. Thanks!')),
@@ -597,71 +585,130 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
           // Chips sit inside the system bars and the display cutout, with at least 14px around.
           SafeArea(
             minimum: const EdgeInsets.all(14),
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: ListenableBuilder(
+              listenable: _trip,
+              builder: (context, _) {
+                final started = _trip.started;
+                final menu = ChipCard(
+                  padding: EdgeInsets.zero,
+                  child: IconButton(
+                    tooltip: 'Map menu',
+                    onPressed: () => showMapMenu(context, _layers),
+                    icon: const Icon(Icons.menu, size: 22, color: navy),
+                  ),
+                );
+                return Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          const _Brand(),
-                          // Shrinks a little rather than overflow, at 320 dp and large text.
-                          Flexible(
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: CompassChip(bearing: _bearing, following: _following),
-                            ),
+                          // On a trip the next turn rides along the top, and the buttons go down the right side.
+                          if (started) ...[NavBanner(trip: _trip), const SizedBox(height: 10)],
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: started ? MainAxisAlignment.spaceBetween : MainAxisAlignment.end,
+                            children: [
+                              if (started) menu,
+                              // Shrinks a little rather than overflow, at 320 dp and large text.
+                              Flexible(
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      CompassChip(bearing: _bearing, following: _following),
+                                      if (started) ...[
+                                        const SizedBox(height: 10),
+                                        _LocateButton(onLocate: _locate),
+                                        const SizedBox(height: 10),
+                                        _ReportButton(onPressed: _report),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
-                      PlaceSearchBar(search: _search, trip: _trip, near: _near),
-                    ],
-                  ),
-                ),
-                Offstage(
-                  offstage: typing,
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: _ornamentBand),
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 420),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            _LocateRow(location: _location, onLocate: _locate, onTransit: _nearbyHubs),
-                            const SizedBox(height: 10),
-                            _ReportButton(onPressed: _report),
-                            const SizedBox(height: 10),
-                            // With a trip on, the card takes the traffic panel's place: the report button
-                            // and the locate row stay. On a short screen or at large text it scrolls.
-                            Flexible(
-                              child: SingleChildScrollView(
-                                clipBehavior: Clip.none, // keeps the chip's soft shadow
-                                child: ListenableBuilder(
-                                  listenable: _trip,
-                                  builder: (context, _) =>
-                                      _trip.destination == null
-                                      ? LayerSheet(layers: _layers, legend: hubLegend(_hubs))
-                                      : _trip.started
-                                      ? NavBar(trip: _trip)
-                                      : RouteCard(trip: _trip),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        // The keyboard is up: the search sits on top of it.
+                        padding: EdgeInsets.only(
+                          bottom: typing
+                              ? math.max(
+                                  0,
+                                  MediaQuery.viewInsetsOf(context).bottom - MediaQuery.viewPaddingOf(context).bottom,
+                                )
+                              : _ornamentBand,
+                        ),
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 420),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              if (started) NavPanel(trip: _trip),
+                              // Kept in the tree on a trip, so the field still holds the destination afterwards.
+                              Offstage(
+                                offstage: started,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    Offstage(
+                                      offstage: typing,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          _LocateRow(location: _location, onLocate: _locate),
+                                          const SizedBox(height: 10),
+                                          // The menu sits on the left, just above the search field.
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              menu,
+                                              _ReportButton(onPressed: _report),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 10),
+                                        ],
+                                      ),
+                                    ),
+                                    PlaceSearchBar(search: _search, trip: _trip, near: _near, recents: _recents),
+                                  ],
                                 ),
                               ),
-                            ),
-                          ],
+                              // With a destination, its route card sits under the search field. On a short screen
+                              // or at large text it scrolls.
+                              if (!started)
+                                Flexible(
+                                  child: Offstage(
+                                    offstage: typing,
+                                    child: SingleChildScrollView(
+                                      clipBehavior: Clip.none, // keeps the chip's soft shadow
+                                      child: _trip.destination == null
+                                          ? const SizedBox.shrink()
+                                          : Padding(
+                                              padding: const EdgeInsets.only(top: 10),
+                                              child: RouteCard(trip: _trip),
+                                            ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-              ],
+                  ],
+                );
+              },
             ),
           ),
         ],
@@ -672,11 +719,10 @@ class _MapViewState extends State<MapView> with WidgetsBindingObserver {
 
 // The GPS accuracy (or why there is no pin) next to the locate button.
 class _LocateRow extends StatelessWidget {
-  const _LocateRow({required this.location, required this.onLocate, required this.onTransit});
+  const _LocateRow({required this.location, required this.onLocate});
 
   final LocationState location;
   final VoidCallback onLocate;
-  final VoidCallback onTransit;
 
   @override
   Widget build(BuildContext context) {
@@ -703,10 +749,7 @@ class _LocateRow extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Flexible(
-                      child: Text(
-                        text,
-                        style: TextStyle(fontSize: 12, color: weak ? warn : ink),
-                      ),
+                      child: Text(text, style: TextStyle(fontSize: 12, color: weak ? warn : ink)),
                     ),
                     if (action != null) TextButton(onPressed: onAction, child: Text(action)),
                   ],
@@ -714,23 +757,7 @@ class _LocateRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
-            ChipCard(
-              padding: EdgeInsets.zero,
-              child: IconButton(
-                tooltip: 'Transit near me',
-                onPressed: onTransit,
-                icon: const Icon(Icons.directions_bus_outlined, size: 22, color: navy),
-              ),
-            ),
-            const SizedBox(width: 10),
-            ChipCard(
-              padding: EdgeInsets.zero,
-              child: IconButton(
-                tooltip: 'Show my location',
-                onPressed: onLocate,
-                icon: const Icon(Icons.my_location, size: 22, color: navy),
-              ),
-            ),
+            _LocateButton(onLocate: onLocate),
           ],
         );
       },
@@ -746,30 +773,19 @@ class _LocateRow extends StatelessWidget {
   }
 }
 
-class _Brand extends StatelessWidget {
-  const _Brand();
+class _LocateButton extends StatelessWidget {
+  const _LocateButton({required this.onLocate});
+
+  final VoidCallback onLocate;
 
   @override
   Widget build(BuildContext context) {
-    return const ChipCard(
-      padding: EdgeInsets.fromLTRB(14, 9, 14, 10),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Lakad',
-            style: TextStyle(
-              fontFamily: serif,
-              fontSize: 25,
-              height: 1,
-              fontWeight: FontWeight.w500,
-              letterSpacing: -0.25,
-            ),
-          ),
-          SizedBox(height: 4),
-          Text('MAKATI · LGU OPS', style: TextStyle(fontSize: 11, letterSpacing: 1.3)),
-        ],
+    return ChipCard(
+      padding: EdgeInsets.zero,
+      child: IconButton(
+        tooltip: 'Show my location',
+        onPressed: onLocate,
+        icon: const Icon(Icons.my_location, size: 22, color: navy),
       ),
     );
   }
@@ -789,15 +805,13 @@ class _ReportButton extends StatelessWidget {
         borderRadius: radiusChip,
         boxShadow: [BoxShadow(color: Color(0x2959534E), blurRadius: 18, offset: Offset(0, 4))],
       ),
-      child: FilledButton.icon(
+      child: IconButton.filled(
+        tooltip: 'Report',
         onPressed: onPressed,
-        icon: const Icon(Icons.photo_camera_outlined, size: 20),
-        label: const Text('Report'),
-        style: FilledButton.styleFrom(
-          minimumSize: const Size(0, 48),
-          padding: const EdgeInsets.symmetric(horizontal: 18),
+        icon: const Icon(Icons.add_a_photo_outlined, size: 26),
+        style: IconButton.styleFrom(
+          minimumSize: const Size(56, 56),
           shape: const RoundedRectangleBorder(borderRadius: radiusChip),
-          textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
         ),
       ),
     );

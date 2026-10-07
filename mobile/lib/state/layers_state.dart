@@ -4,9 +4,13 @@ import 'package:flutter/foundation.dart';
 
 // ponytail: not remembered between launches (the dashboard does not either) and no registry,
 // because there is one layer. Add shared_preferences and layers/layer_registry.dart with the second.
+enum MapMode { auto, flat, tilted }
+
 class LayersState extends ChangeNotifier {
   bool congestionOn = true; // on by default, as on the dashboard
-  bool threeD = true; // tilted map with extruded buildings; off is the flat top-down map
+  MapMode mode = MapMode.auto; // auto: tilted while navigating, flat otherwise
+  bool navigating = false; // a trip is under way (set by the map page)
+  bool get threeD => mode == MapMode.tilted || (mode == MapMode.auto && navigating); // tilted with extruded buildings
   bool hubsOn = true; // transit terminals and stops
   DateTime stamp = DateTime.now(); // last refresh; also the tile cache-buster
 
@@ -16,8 +20,14 @@ class LayersState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setThreeD(bool on) {
-    threeD = on;
+  void setMode(MapMode m) {
+    mode = m;
+    notifyListeners();
+  }
+
+  void setNavigating(bool on) {
+    if (on == navigating) return;
+    navigating = on;
     notifyListeners();
   }
 
