@@ -5,6 +5,8 @@ types. These similarities are not probabilities, so close or weak results abstai
 """
 from pathlib import Path
 
+from . import cues
+
 PROMPTS = {
     "police": (
         "A video of a violent attack or a physical fight between people.",
@@ -90,4 +92,6 @@ class VideoClassifier:
         scores = {}
         for i, kind in enumerate(PROMPTS):
             scores[kind] = float(similarities[:, i * 2 : i * 2 + 2].max())
+        for kind, boost in cues.boosts(path).items():  # OpenCV flame and motion cues back up the comparison
+            scores[kind] += boost
         return suggestion(scores)

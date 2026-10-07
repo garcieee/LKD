@@ -4,7 +4,7 @@ An SOS is the phone's hold-to-record video (`POST /sos`, category `sos`): someon
 
 ## Who must respond
 
-A background OpenCLIP pass samples up to five frames of the silent video and may suggest one of three kinds. The dashboard presents it as a **video suggestion**, never as the assigned kind. A person watches the clip and sorts the SOS into one of these kinds:
+A background OpenCLIP pass samples up to five frames of the silent video and may suggest one of three kinds. OpenCV adds two cheap cues from the same clip (`cues.py`): a flickering patch of flame colour nudges fire and rescue, and sustained heavy motion nudges police. The clip is never blurred or altered. The dashboard presents it as a **video suggestion**, never as the assigned kind. A person watches the clip and sorts the SOS into one of these kinds:
 
 | Kind | Label | Covers |
 |---|---|---|

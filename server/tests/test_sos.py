@@ -185,3 +185,15 @@ def test_only_an_sos_takes_a_kind_and_only_one_of_the_three(client):
 
 def test_the_kinds_are_the_models_kinds_in_the_same_order():
     assert get_args(SosKind) == tuple(engine.sos.KINDS)  # models/ticket_sos/sos.py, as the engine uses it
+
+
+def test_an_sos_clip_is_saved_untouched_by_the_face_blur(client, monkeypatch):
+    """Only photo reports are blurred: the clip is stored byte for byte so a person can see what is happening."""
+    from app.services import face_blur
+
+    def boom(*a, **k):
+        raise AssertionError("the face blur must not run on an SOS")
+
+    monkeypatch.setattr(face_blur, "blur_faces", boom)
+    body = sos(client).json()
+    assert client.get(body["video_url"]).content == MP4

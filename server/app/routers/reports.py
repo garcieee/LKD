@@ -8,6 +8,7 @@ from fastapi import APIRouter, File, Form, HTTPException, Query, Request, Upload
 
 from app.config import in_city
 from app.db.models import NOTE_FIELD, Category, Report, TicketChange
+from app.services import face_blur
 from app.services.priority import severity
 from app.services.ticket_sync import engine
 
@@ -60,7 +61,7 @@ def create_report(
         raise HTTPException(422, "Photo must be a JPEG or PNG.")
 
     report_id = uuid.uuid4().hex
-    (request.app.state.photo_dir / f"{report_id}.{ext}").write_bytes(data)
+    (request.app.state.photo_dir / f"{report_id}.{ext}").write_bytes(face_blur.blur_faces(data, ext))
     now = _now()
     report = {
         "id": report_id,
