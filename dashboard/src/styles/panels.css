@@ -166,8 +166,8 @@
   font: 500 10px var(--grot);
 }
 
-/* Top-right: live status, then the Traffic flow panel, then the Tickets panel, which takes what
-   height is left down to Reset to Makati (32px button). Nothing in here resizes the map. */
+/* Top-right: live status and map layers, then the Tickets panel. The pin switch anchors the
+   bottom of the column above Reset to Makati (32px button). Nothing in here resizes the map. */
 .hud {
   position: absolute;
   z-index: 1;
@@ -189,7 +189,7 @@
   justify-content: flex-end;
   row-gap: var(--inset);
 }
-/* The way into the queue, always on screen. Dot: red when an urgent ticket is unresolved, amber
+/* The way into the queue, always on screen. Dot: purple when an urgent ticket is unresolved, amber
    when tickets wait, green when all clear, grey before the API answers. */
 .tickets-btn {
   margin-right: var(--inset);
@@ -208,7 +208,7 @@
   color: var(--accent);
 }
 .dot[data-level="urgent"] {
-  background: var(--danger);
+  background: var(--priority);
 }
 .dot[data-level="waiting"] {
   background: var(--warn);
@@ -264,7 +264,7 @@
 
 /* Ticket status colours, the same four as the map pins (layers/reports.ts) and the mobile app. */
 [data-status="open"] {
-  --c: var(--danger);
+  --c: var(--priority);
 }
 [data-status="verified"] {
   --c: var(--warn);
@@ -281,9 +281,9 @@
 .dot[data-status] {
   background: var(--c);
 }
-/* The ticket engine's band, on the same chip as a status: Critical red, High amber, Medium blue, Low grey. */
+/* The ticket engine's band, on the same chip as a status: Critical purple, High amber, Medium blue, Low grey. */
 [data-band="Critical"] {
-  --c: var(--danger);
+  --c: var(--priority);
 }
 [data-band="High"] {
   --c: var(--warn);
@@ -357,6 +357,13 @@ details[open] > summary.panel-title::after {
 }
 .switch input {
   accent-color: var(--accent);
+}
+.ticket-pins-toggle {
+  min-height: 42px;
+  margin-top: auto;
+  padding: 0 12px;
+  border-top: 1px solid var(--line);
+  box-shadow: var(--shadow-float);
 }
 .chip {
   margin-left: auto;
@@ -474,7 +481,7 @@ details[open] > summary.panel-title::after {
   gap: 5px;
 }
 
-/* Tickets: the floating panel at the bottom of the HUD column. */
+/* Tickets: the floating panel above the HUD's bottom pin switch. */
 .icon-btn {
   display: grid;
   flex: none;
@@ -870,8 +877,8 @@ details[open] > summary.panel-title::after {
   background: var(--paper-deep);
 }
 .tiles div[data-alert] {
-  border-color: color-mix(in srgb, var(--danger) 40%, #fff);
-  background: color-mix(in srgb, var(--danger) 7%, #fff);
+  border-color: color-mix(in srgb, var(--priority) 40%, #fff);
+  background: color-mix(in srgb, var(--priority) 7%, #fff);
 }
 .tiles dt {
   font: 600 11px var(--grot);
@@ -884,7 +891,7 @@ details[open] > summary.panel-title::after {
 }
 .tiles div[data-alert] dd,
 .tiles div[data-alert] small {
-  color: var(--danger);
+  color: var(--priority);
 }
 .tiles small {
   font: 600 11px var(--grot);
@@ -1382,8 +1389,9 @@ details[open] > summary.panel-title::after {
   display: flex;
   align-items: center;
   gap: 8px;
-  width: 230px; /* the side panels' width */
-  padding: 9px 12px;
+  width: 100%; /* match the Lakad/menu cluster directly above it */
+  height: 44px;
+  padding: 0 12px;
   border: 1px solid var(--sos);
   border-radius: var(--radius-card);
   background: var(--sos);
@@ -1392,6 +1400,9 @@ details[open] > summary.panel-title::after {
   font: 500 12px var(--grot);
   text-align: left;
   cursor: pointer;
+}
+.sos-alert {
+  width: 100%;
 }
 .sos-banner:hover {
   filter: brightness(1.08);

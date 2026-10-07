@@ -22,6 +22,7 @@ const PHONE = "(max-width: 700px)"; // the breakpoint in panels.css
 
 export default function App() {
   const [congestionOn, setCongestionOn] = useState(true);
+  const [ticketsOn, setTicketsOn] = useState(true);
   // Foot traffic is live when on: the estimate for this hour in Manila, following the clock. The Forecast panel can
   // pin the map to another moment (cursor); null means live.
   const [footfallOn, setFootfallOn] = useState(false);
@@ -61,8 +62,8 @@ export default function App() {
   const scoped = useMemo(() => inBarangay(BARANGAYS, barangayId, tickets.reports ?? []), [barangayId, tickets.reports]);
   // Rejected tickets stay off the map: they were judged not real (they are still in the queue's "Show rejected").
   const mapReports = useMemo(
-    () => (tickets.reports ? pinReports(tickets.reports, scoped, selectedId) : null),
-    [tickets.reports, scoped, selectedId],
+    () => (ticketsOn ? (tickets.reports ? pinReports(tickets.reports, scoped, selectedId) : null) : []),
+    [ticketsOn, tickets.reports, scoped, selectedId],
   );
   const hiddenSos = sosElsewhere(tickets.reports ?? [], scoped);
   const sosActive = tickets.reports?.some(isSosActive) ?? false;
@@ -114,6 +115,7 @@ export default function App() {
   // would cover the map (showOnMap closes it), so the ticket wins: its video and Who must respond are what is needed,
   // and Show on map is one tap away in it.
   function openSos(r: Report) {
+    setTicketsOn(true);
     setNavOpen(false);
     closeInsights();
     closeForecast();
@@ -238,6 +240,18 @@ export default function App() {
           </div>
         </header>
 
+        {sosNew.length > 0 && (
+          <div role="alert" className="sos-alert">
+            <button className="sos-banner" onClick={() => openSos(sosNew[0])}>
+              <i className="dot" data-level="sos" />
+              <span>
+                <b>SOS</b> · {sosNew.length === 1 ? "1 new call" : `${sosNew.length} new calls`}
+              </span>
+              <em>Open</em>
+            </button>
+          </div>
+        )}
+
         <nav id="sidebar" className={`nav${navOpen ? " open" : ""}`} aria-label="Main" inert={!navOpen}>
           <div className="nav-label">OPERATIONS</div>
           <button
@@ -327,18 +341,6 @@ export default function App() {
             </div>
           </div>
 
-          {sosNew.length > 0 && (
-            <div role="alert">
-              <button className="sos-banner" onClick={() => openSos(sosNew[0])}>
-                <i className="dot" data-level="sos" />
-                <span>
-                  <b>SOS</b> · {sosNew.length === 1 ? "1 new call" : `${sosNew.length} new calls`}
-                </span>
-                <em>Open</em>
-              </button>
-            </div>
-          )}
-
           {/* On the map whatever panel is open: pins are hidden outside the barangay, so it must always say so. */}
           <ScopeChip barangay={barangay} sosElsewhere={hiddenSos} onClear={showWholeCity} />
 
@@ -407,12 +409,25 @@ export default function App() {
               onStatus={tickets.changeStatus}
               onKind={tickets.changeKind}
               onAssign={tickets.changeHandler}
-              onShowOnMap={showOnMap}
+              onShowOnMap={(r) => {
+                setTicketsOn(true);
+                showOnMap(r);
+              }}
             />
           )}
+
+          <label className="panel side switch ticket-pins-toggle">
+            <input
+              type="checkbox"
+              checked={ticketsOn}
+              onChange={(e) => setTicketsOn(e.target.checked)}
+            />
+            <span>Ticket pins on map</span>
+            <span className={`chip ${ticketsOn ? "on" : ""}`}>{ticketsOn ? "On" : "Off"}</span>
+          </label>
         </div>
 
-        <Legend />
+        <Legend ticketsOn={ticketsOn} />
 
         <div className="toast" role="status">
           {tickets.toast && (
@@ -453,7 +468,10 @@ export default function App() {
           online={tickets.online}
           now={now.getTime()}
           onClose={closeInsights}
-          onShow={showOnMap}
+          onShow={(r) => {
+            setTicketsOn(true);
+            showOnMap(r);
+          }}
         />
       )}
     </div>

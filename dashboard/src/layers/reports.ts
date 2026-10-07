@@ -25,7 +25,7 @@ const PIN_LAYERS = [REPORTS_ID, SOS_ID];
 
 // Same values as the status tokens in styles/tokens.css and the mobile pins.
 export const STATUS_COLOR: Record<Status, string> = {
-  open: "#a63722",
+  open: "#70449a",
   verified: "#8a6736",
   assigned: "#212e4a",
   fixed: "#41755e",

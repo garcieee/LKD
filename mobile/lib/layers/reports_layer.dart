@@ -12,8 +12,8 @@ import '../theme.dart';
 
 const reportsRefresh = Duration(seconds: 60);
 
-/// Pin colour per status (the dashboard's danger, warn and navy). Fixed reports are not drawn.
-const statusColors = {'open': Color(0xFFA63722), 'verified': warn, 'assigned': navy};
+/// Pin colour per status (the dashboard's purple priority, warn and navy). Fixed reports are not drawn.
+const statusColors = {'open': Color(0xFF70449A), 'verified': warn, 'assigned': navy};
 
 const _id = 'reports';
 

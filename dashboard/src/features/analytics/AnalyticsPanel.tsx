@@ -24,10 +24,10 @@ const Icon = ({ d }: { d: string }) => (
   </svg>
 );
 
-const SEV_COLOR = { 1: "var(--faint)", 2: "var(--warn)", 3: "var(--danger)" } as const;
+const SEV_COLOR = { 1: "var(--faint)", 2: "var(--warn)", 3: "var(--priority)" } as const;
 
-// Older is worse: calm for under a day, red past a week.
-const AGE_COLOR: Record<string, string> = { "< 1 d": "var(--ok)", "1-3 d": "var(--accent)", "3-7 d": "var(--warn)", "> 7 d": "var(--danger)" };
+// Older is worse: calm for under a day, purple past a week.
+const AGE_COLOR: Record<string, string> = { "< 1 d": "var(--ok)", "1-3 d": "var(--accent)", "3-7 d": "var(--warn)", "> 7 d": "var(--priority)" };
 
 type Row = { label: string; value: number; color?: string; status?: string };
 
