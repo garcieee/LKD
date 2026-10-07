@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lakad/api/api_client.dart';
 import 'package:lakad/features/search/place_search.dart';
 import 'package:lakad/features/search/search_bar.dart';
+import 'package:lakad/state/recent_places.dart';
 import 'package:lakad/state/trip_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Place place(String label) => Place.fromJson({'label': label, 'lat': 14.5547, 'lng': 121.0244});
 
@@ -72,5 +74,30 @@ void main() {
     trip.clear();
     await tester.pump();
     expect(tester.widget<TextField>(find.byType(TextField)).controller!.text, isEmpty);
+  });
+
+  testWidgets('a picked place is remembered and listed under the empty field', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final recents = RecentPlaces();
+    trip = TripState((from, to, mode) async => throw UnimplementedError('no route fetch without a start'));
+    search = PlaceSearch((text, near) async => [place('Ayala Museum')], delay: const Duration(milliseconds: 10));
+    await tester.pumpWidget(
+      MaterialApp(home: Scaffold(body: PlaceSearchBar(search: search, trip: trip, recents: recents))),
+    );
+    expect(find.text('Recent'), findsNothing);
+
+    await tester.enterText(find.byType(TextField), 'Ayala');
+    await tester.pump(const Duration(milliseconds: 50));
+    await tester.pump();
+    await tester.tap(find.text('Ayala Museum'));
+    await tester.pump();
+    await tester.tap(find.byTooltip('Clear'));
+    await tester.pump();
+    expect(find.text('Recent'), findsOneWidget);
+    expect(find.text('Ayala Museum'), findsOneWidget);
+
+    final reloaded = RecentPlaces();
+    await tester.runAsync(reloaded.load);
+    expect(reloaded.places.map((p) => p.label), ['Ayala Museum'], reason: 'kept between launches');
   });
 }

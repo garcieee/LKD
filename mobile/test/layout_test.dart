@@ -104,7 +104,15 @@ void main() {
     final trip = await tripWith(tester, options: [commuteOption('a', total: 2100, walk: 360)]);
     await tester.runAsync(trip.toCommute);
     trip.start();
-    Widget bar() => onTheMap(NavBar(trip: trip));
+    Widget bar() => onTheMap(
+      Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          NavBanner(trip: trip),
+          NavPanel(trip: trip),
+        ],
+      ),
+    );
     await fitsEveryPhone(tester, bar); // before the first fix
     trip.update(14.5540, 121.0230); // on the ride
     await fitsEveryPhone(tester, bar);

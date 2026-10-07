@@ -81,17 +81,17 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(MaterialApp(theme: testTheme(), home: page()));
     await tester.pump(const Duration(milliseconds: 100));
-    expect(find.text('Report'), findsOneWidget);
+    expect(find.byTooltip('Report'), findsOneWidget);
 
     tester.view.viewInsets = const FakeViewPadding(bottom: 300);
     await tester.pump();
-    expect(find.text('Report'), findsNothing, reason: 'lifted by the keyboard, it would cover the suggestions');
+    expect(find.byTooltip('Report'), findsNothing, reason: 'lifted by the keyboard, it would cover the suggestions');
     expect(find.byType(PlaceSearchBar), findsOneWidget);
     expect(find.byType(CompassChip), findsOneWidget, reason: 'the compass sits at the top, clear of the keyboard');
 
     tester.view.resetViewInsets();
     await tester.pump();
-    expect(find.text('Report'), findsOneWidget);
+    expect(find.byTooltip('Report'), findsOneWidget);
     await leave(tester);
   });
 
