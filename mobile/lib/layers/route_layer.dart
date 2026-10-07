@@ -13,6 +13,7 @@ import '../theme.dart';
 
 const _id = 'route';
 const _casingId = 'route-casing';
+const _dotsId = 'route-dots';
 const _chevronId = 'route-chevrons';
 const _chevronImage = 'route-chevron';
 
@@ -20,6 +21,7 @@ String _hex(Color c) => '#${(c.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(
 
 String get _navy => _hex(navy);
 String get _blue => _hex(routeBlue);
+String get _green => _hex(routeGreen);
 
 // A commute's walking legs carry thin: true; the walking route and every ride do not. A ride carries a kind.
 final _thin = [
@@ -39,12 +41,25 @@ List<Object> _widths(List<List<num>> stops) => [
   ],
 ];
 
-Map<String, Object> _line(String id, Object color, List<Object> width) => {
+// On a trip every feature carries trip: true (the line is green), and a walking one also dotted: true.
+final _dotted = [
+  '==',
+  ['get', 'dotted'],
+  true,
+];
+
+Map<String, Object> _line(String id, Object color, List<Object> width, {Object? filter, bool dots = false}) => {
   'id': id,
   'type': 'line',
   'source': _id,
   'layout': {'line-cap': 'round', 'line-join': 'round'},
-  'paint': {'line-color': color, 'line-width': width},
+  'paint': {
+    'line-color': color,
+    'line-width': width,
+    // A zero-length dash with a round cap is a dot.
+    if (dots) 'line-dasharray': [0, 1.8],
+  },
+  'filter': ?filter,
 };
 
 // White arrowheads along the line, turned the way the route goes (the line runs from the user to the destination).
@@ -79,10 +94,10 @@ Map<String, Object> walkGeoJson(WalkRoute route) => {
   'properties': {'mode': route.mode},
 };
 
-Map<String, Object> _feature(CommuteLeg leg, List<List<double>> line, {required bool thin}) => {
+Map<String, Object> _feature(CommuteLeg leg, List<List<double>> line, {required bool thin, bool trip = false}) => {
   'type': 'Feature',
   'geometry': {'type': 'LineString', 'coordinates': line},
-  'properties': {'kind': leg.kind, 'thin': thin},
+  'properties': {'kind': leg.kind, 'thin': thin, 'trip': trip, 'dotted': trip && leg.isWalk},
 };
 
 /// The GeoJSON for a commute option: one line per leg, in order.
@@ -104,6 +119,7 @@ Map<String, Object> tripGeoJson(List<CommuteLeg> legs, TripProgress? progress) {
           legs[i],
           i == from && progress != null ? progress.ahead : legs[i].line,
           thin: legs[i].isWalk && legs.length > 1,
+          trip: true,
         ),
     ],
   };
@@ -124,7 +140,7 @@ Future<void> showTrip(MapboxMap map, List<CommuteLeg> legs, TripProgress? progre
 /// cleared them. Raw style-spec JSON, like reports_layer.dart.
 Future<void> _draw(MapboxMap map, Map<String, Object>? geojson) async {
   if (geojson == null) {
-    for (final id in [_chevronId, _id, _casingId]) {
+    for (final id in [_chevronId, _dotsId, _id, _casingId]) {
       if (await map.styleLayerExists(id)) await map.removeStyleLayer(id);
     }
     if (await map.styleSourceExists(_id)) await map.removeStyleSource(_id);
@@ -153,9 +169,16 @@ Future<void> _draw(MapboxMap map, Map<String, Object>? geojson) async {
     );
   }
   if (!await map.styleLayerExists(_id)) {
-    // A ride (it has a kind) is navy; a walk, the whole route or a leg of a commute, is blue.
+    // On a trip all of it is green; before one, a ride (it has a kind) is navy and a walk, the whole route
+    // or a leg of a commute, is blue.
     final color = [
       'case',
+      [
+        '==',
+        ['get', 'trip'],
+        true,
+      ],
+      _green,
       _thin,
       _blue,
       ['has', 'kind'],
@@ -172,6 +195,30 @@ Future<void> _draw(MapboxMap map, Map<String, Object>? geojson) async {
             [16, 10, 7],
             [19, 16, 11],
           ]),
+          filter: [
+            '!=',
+            ['get', 'dotted'],
+            true,
+          ],
+        ),
+      ),
+      below,
+    );
+  }
+  if (!await map.styleLayerExists(_dotsId)) {
+    // A walking leg of a trip: the same green line, dotted.
+    await map.addStyleLayer(
+      jsonEncode(
+        _line(
+          _dotsId,
+          _green,
+          _widths([
+            [12, 5, 4],
+            [16, 10, 7],
+            [19, 16, 11],
+          ]),
+          filter: _dotted,
+          dots: true,
         ),
       ),
       below,
