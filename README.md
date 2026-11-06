@@ -111,9 +111,7 @@ An SOS never joins another ticket and is never scored: priority 100, band Critic
 ## Limits
 
 - **No accounts.** Anyone who can reach the API can file reports or triage. Put the dashboard behind a login before real use.
-- **Not tested on a physical phone:** AR camera, SOS recording, compass, trip tracking, notifications. Notifications are local, not push, so nothing arrives once Android closes the app.
-- **Estimates, not data:** commute ride times, foot traffic, and the SOS suggestion (not evaluated on real footage).
-- **Stubs, not built:** "Still there?" verification, exports, barangay leaderboard, report heatmap, satellite toggle, hazard-photo CLIP tagging.
+- **Estimates, no live data:** commute ride times, foot traffic, and the SOS suggestion (not evaluated on real footage).
 - **Evaluation data is synthetic** (AI-written notes and rater judgments, plus Chicago 311 for the matcher), and is labelled as such in [EVALUATION.md](models/tickets/EVALUATION.md).
 - SOS clips are stored unencrypted in `db/videos/`. Word lists (English and Filipino) were not reviewed by a native speaker.
 
