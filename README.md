@@ -1,9 +1,14 @@
 # Lakad
 
-Walking navigation and crowd reporting for Makati. Commuters pick a destination, compare walking routes that steer around reported hazards, choose a commute and are tracked along the trip. They photograph problems in an AR camera view, or hold the camera button to send an SOS video. The city sees the reports as a ranked ticket queue, with traffic and foot-traffic layers beside it.
+Lakad is a smart urban mobility concept prototype designed to make walking and commuting in Makati safer and more accessible. Commuters can compare walking routes that account for reported hazards, submit geotagged reports through an AR camera interface, and send SOS video alerts. For city authorities, a web dashboard consolidates incident reports into a prioritized ticket queue alongside traffic and pedestrian activity insights.
 
-Smart Urban Living Hackathon · iACADEMY MPH · Oct 6–7, 2026 · Team **Lakad Kinetic Development**
-Project documentation: [Google Doc](https://docs.google.com/document/d/1-KtQXQGzGgUjQvdE_HK4or0s5GL7DViF/) · Setup: [SETUP.md](SETUP.md)
+The project was primarily pitched as a proof of concept, demonstrating how these features could operate at a citywide scale once Makati's existing camera networks, traffic monitoring systems, and other relevant data streams are integrated into a unified platform. With access to reliable real-time data feeds, Lakad could support more accurate pedestrian monitoring, proactive hazard detection, and data-driven urban mobility management.
+
+Smart Urban Living Hackathon · iACADEMY MPH · October 6–7, 2026 · Team Lakad Kinetic Development
+
+Project documentation: https://docs.google.com/document/d/1-KtQXQGzGgUjQvdE_HK4or0s5GL7DViF/
+
+Setup: SETUP.md
 
 ## How it fits together
 
